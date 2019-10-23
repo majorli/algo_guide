@@ -15,9 +15,7 @@ C++算法编程指南
    2_basic_algos
 
 
-索引和列表
+全文检索
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
