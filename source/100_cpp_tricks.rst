@@ -4,8 +4,8 @@ C++语言常用技巧
 .. toctree::
    :maxdepth: 2
 
-   ch01/1.1_running_time
-   ch01/1.2_random_nums
+   110_running_time
+   120_random_nums
 
 
 这一章所列举的是在学习算法编程时经常会用到的一些有用的技巧，和算法本身并无多大关系，但是学会这些技巧对于提高学习和解题效率一定会受益良多。
