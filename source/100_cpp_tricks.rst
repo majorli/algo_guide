@@ -16,6 +16,6 @@ C++语言常用技巧
 .. toctree::
    :maxdepth: 2
 
-   110_running_time
-   120_random_nums
+   ch01/110_running_time
+   ch01/120_random_nums
 
