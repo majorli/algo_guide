@@ -9,11 +9,16 @@ C++算法编程指南
 .. toctree::
    :maxdepth: 3
    :numbered:
-
+   
    0_preface
    1_cpp_tricks
    2_basic_algos
-
+   3_basic_data_structure
+   4_basic_algo_design
+   5_medium_algos
+   6_advanced_topics
+   7_problems
+   
 
 全文检索
 ==================
