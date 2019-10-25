@@ -29,7 +29,7 @@
 
 下面的示例程序，使用一个单循环计算从1到100,000的十万个正整数的平方，并存放在一个数组中。为了测试运行速度，我们加入了测定运行时间的功能。
 
-.. literalinclude:: ../codes/1.1_running_time.cpp
+.. literalinclude:: ../codes/110_running_time.cpp
    :language: c++
    :linenos:
    :emphasize-lines: 6-8,16-17
