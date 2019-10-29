@@ -18,3 +18,4 @@
    :maxdepth: 2
 
    sec01/211_gcd_lcm
+   sec01/212_primes

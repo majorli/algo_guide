@@ -44,6 +44,7 @@
 用一个结束条件是某一次辗转相除的时候取得的余数为0的循环即可实现辗转相除法。
 
 .. code-block:: c++
+   :linenos:
 
     int gcd(int a, int b)
     {
@@ -64,6 +65,7 @@
 利用c++ 的三元运算，可以把上面这个函数的代码进一步简化。
 
 .. code-block:: c++
+   :linenos:
 
     int gcd(int a, int b)
     {
@@ -91,6 +93,7 @@
 写成C++程序，唯一要注意的是两个整数相乘的积可能会整数超限，所以用先除后乘的方法处理即可，代码如下。
 
 .. code-block:: c++
+   :linenos:
 
     int lcm(a, b)
     {
@@ -118,7 +121,8 @@
 下面是用来判断一个整数数组中的数是否互质的一个简单的函数。
 
 .. code-block:: c++
-
+   :linenos:
+   
     template <int N>
     bool is_coprime(int (&a)[N])
     {
