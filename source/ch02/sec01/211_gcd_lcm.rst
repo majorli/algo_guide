@@ -28,15 +28,11 @@
 
 .. admonition:: 示例
 
-    .. math::
-    
-        \begin{align}
-        &\gcd(16, 12) = \gcd(4, 12) = \gcd(4, 0) = 4\\
-        &\gcd(14, 3) = \gcd(2, 3) = \gcd(2, 1) = \gcd(0, 1) = 1\\
-        &\gcd(48, 36) = \gcd(12, 36) = \gcd(12, 0) = 12\\
-        &\gcd(105, 21) = \gcd(0, 21) = 21\\
-        &\gcd(7, 7) = \gcd(0, 7) = 7\\
-        \end{align}
+   1. :math:`\gcd(16, 12) = \gcd(4, 12) = \gcd(4, 0) = 4`
+   2. :math:`\gcd(14, 3) = \gcd(2, 3) = \gcd(2, 1) = \gcd(0, 1) = 1`
+   3. :math:`\gcd(48, 36) = \gcd(12, 36) = \gcd(12, 0) = 12`
+   4. :math:`\gcd(105, 21) = \gcd(0, 21) = 21`
+   5. :math:`\gcd(7, 7) = \gcd(0, 7) = 7`
 
 
 **算法实现**
@@ -44,7 +40,6 @@
 用一个结束条件是某一次辗转相除的时候取得的余数为0的循环即可实现辗转相除法。
 
 .. code-block:: c++
-   :linenos:
 
     int gcd(int a, int b)
     {
@@ -65,7 +60,6 @@
 利用c++ 的三元运算，可以把上面这个函数的代码进一步简化。
 
 .. code-block:: c++
-   :linenos:
 
     int gcd(int a, int b)
     {
@@ -93,7 +87,6 @@
 写成C++程序，唯一要注意的是两个整数相乘的积可能会整数超限，所以用先除后乘的方法处理即可，代码如下。
 
 .. code-block:: c++
-   :linenos:
 
     int lcm(a, b)
     {
@@ -121,8 +114,7 @@
 下面是用来判断一个整数数组中的数是否互质的一个简单的函数。
 
 .. code-block:: c++
-   :linenos:
-   
+
     template <int N>
     bool is_coprime(int (&a)[N])
     {

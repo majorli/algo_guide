@@ -31,8 +31,7 @@
 
 .. literalinclude:: ../codes/110_running_time.cpp
    :language: c++
-   :linenos:
-   :emphasize-lines: 6-8,16-17
+   :emphasize-lines: 6,7,11,16-17
 
 运行这个小程序得到结果可能是这样的（具体数值因不同的运行环境而异）：
 

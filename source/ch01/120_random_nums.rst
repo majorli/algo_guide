@@ -22,7 +22,6 @@
 
 .. literalinclude:: ../codes/120_random_nums.cpp
    :language: c++
-   :linenos:
    :lines: 1,3-6,8-12
 
 我可以保证，不管运行多少次，你都会得到同样的一百个数，如果你也使用NOI Linux下的g++ 4.8.4的话，十有八九会是这样的：
@@ -49,7 +48,6 @@
 
 .. literalinclude:: ../codes/120_random_nums.cpp
    :language: c++
-   :linenos:
    :emphasize-lines: 2,7
 
 多运行几次，你会发现现在每次都会得到100个完全看不出规律的不同的随机数。
