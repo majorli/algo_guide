@@ -92,17 +92,63 @@
 
 **欧拉函数的几个计算性质**
 
-1. 对于质数 :math:`p`，:math:`\varphi(p)=p-1`。这个从质数和互质的数学定义可以直接得出。
-2. 若 :math:`p` 为质数，:math:`n` 是 :math:`p` 的幂，即 :math:`n=p^k,(k\in\Bbb{Z}^+,k>1)`，则 :math:`\varphi(n)=p^k-p^{k-1}`。这是从函数的计算公式推导出来的：:math:`\varphi(n)=n\left(1-{1\over p}\right)=p^k\left(1-{1\over p}\right)=p^k-p^{k-1}`。
-3. 积性：若 :math:`m` 和 :math:`n` 互质，则 :math:`\varphi(m\cdot n)=\varphi(m)\cdot\varphi(n)`。这也是从计算公式直接推导出来的。
-4. 非完全积性：若 :math:`p` 是质数，:math:`n=kp` 是其倍数，则 :math:`\varphi(n\cdot p)=\varphi(n)\cdot p`。这也是从计算公式推导出来的。
+1. 对于质数 :math:`p`，:math:`\varphi(p)=p-1`。
+2. 若 :math:`p` 为质数，:math:`n` 是 :math:`p` 的幂，即 :math:`n=p^k,(k\in\Bbb{Z}^+,k>1)`，则 :math:`\varphi(n)=p^k-p^{k-1}`。
+3. 积性：若 :math:`m` 和 :math:`n` 互质，则 :math:`\varphi(m\cdot n)=\varphi(m)\cdot\varphi(n)`。
+4. 非完全积性：若 :math:`p` 是质数，:math:`n=kp` 是其倍数，则 :math:`\varphi(n\cdot p)=\varphi(n)\cdot p`。
+5. 若 :math:`n` 为奇数，则 :math:`\varphi(2n)=\varphi(n)`。
 
-后面两个计算性质的推导过程有兴趣可以自己尝试一下，其实并不难。
+.. admonition:: 证明
+
+   1. 根据与质数互质的数的数学性质可直接推出结论，或者用欧拉函数的计算公式推出：
+
+   .. math::
+
+      \varphi(p)=p\left(1-{1\over p}\right)=p-1
+
+   2. 利用欧拉函数的计算公式推导：
+
+   .. math::
+
+      \varphi(n)=n\left(1-{1\over p}\right)=p^k\left(1-{1\over p}\right)=p^k-p^{k-1}
+
+   3. 利用欧拉函数的计算公式推导，设 :math:`m` 有 :math:`k` 个质因数 :math:`p_1,\dots,p_k`，:math:`n` 有 :math:`l` 个质因数 :math:`q_1,\dots,q_l`，因为 :math:`m` 和 :math:`n` 互质，所以这些质因数全无重复，且恰为 :math:`mn` 的所有质因数，因此：
+
+   .. math::
+
+      \begin{align}
+      \varphi(m\cdot n)&=mn\prod_{i=1}^k\left(1-{1\over{p_i}}\right)\prod_{j=1}^l\left(1-{1\over{q_j}}\right)\notag\\
+      &=\left[m\prod_{i=1}^k\left(1-{1\over{p_i}}\right)\right]\cdot\left[n\prod_{j=1}^l\left(1-{1\over{q_j}}\right)\right]\notag\\
+      &=\varphi(m)\varphi(n)
+      \end{align}
+
+   4. 利用欧拉函数的计算公式推导，:math:`n\cdot p=n\cdot p^2`，它和 :math:`n` 有完全相同的质因数，假设它们是 :math:`p_1,\cdots,p_n`，其中包含 :math:`p`。于是：
+
+   .. math::
+      
+      \varphi(n\cdot p)=np\prod_{i=1}^n\left(1-{1\over{p_i}}\right)=\left[n\prod_{i=1}^n\left(1-{1\over{p_i}}\right)\right]\cdot p=\varphi(n)\cdot p
+
+   5. 若 :math:`n` 为奇数，那么它一定和2互质，所以根据性质1和3可直接得出：
+
+   .. math::
+
+      \varphi(2n)=\varphi(n)\cdot\varphi(2)=\varphi(n)\cdot(2-1)=\varphi(n)
+
+
 
 **欧拉函数的算法**
 
 首先来看如何直接通过欧拉函数的表达式来计算函数值。这很简单，我们只要从2开始逐个找出x的所有质因数，然后按照函数表达式陆续计算即可。
 
+.. literalinclude:: ../../codes/511_euler_phi.cpp
+   :language: c++
+   :lines: 8-24
 
+这个小函数很好理解，唯一的小窍门就是将 :math:`n(1-1/p)` 改成了 :math:`n-n/p`。很多网上的代码直接按数学公式计算 :math:`n(p-1)/p`，并且为了避免中间结果超限而使用了先除后乘两行代码。而这里采用的写法把一除一乘两次复杂运算改成了一行代码里的一次除法和一次减法，并且同时避免了乘法超限隐患。
+
+
+**用欧拉线性筛打表欧拉函数**
+
+前面已经说过，欧拉线性筛的一个主要用途就是
 
 
