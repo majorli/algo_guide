@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 
 const int MAXN = 1e6;
 
@@ -44,26 +45,24 @@ void phi_by_erato_seive(int n)
 
 void phi_by_euler_seive(int n)
 {
-	// 初始化为phi[i] = i，一方面先保存好原数值
-	// 另一方面作为该数是否被处理过的标志
-	for (int i = 1; i <= n; i++)
-		phi_euler[i] = i;
+	// 初始化为phi[i] = 0，作为该数是否质数的标志
+	memset(phi_euler, 0, (n + 1) * sizeof(int));
+	phi_euler[1] = 1;	// 特判：phi[1] = 1
 
 	int p = 0;		// 已知质数的个数
 	for (int i = 2; i <= n; i++) {
-		if (phi_euler[i] == i) {
-			// 说明i是一个质数
-			primes[p++] = i;
-			phi_euler[i]--;
+		if (phi_euler[i] == 0) {		// 说明i是一个质数
+			primes[p++] = i;		// 收录进已知质数表
+			phi_euler[i] = i - 1;		// phi函数计算性质1
 		}
 		for (int j = 0; j < p && i * primes[j] <= n; j++) {
-			if (i % primes[j] == 0) {
-				// phi函数计算性质5
+			if (i % primes[j] == 0) {	// i是primes[j]的倍数
+				// phi函数计算性质4
 				phi_euler[i * primes[j]] =
 					phi_euler[i] * primes[j];
 				break;
-			} else {
-				// phi函数计算性质4
+			} else {			// i和primes[j]互质
+				// phi函数计算性质3
 				phi_euler[i * primes[j]] =
 					phi_euler[i] * phi_euler[primes[j]];
 			}

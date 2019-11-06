@@ -41,16 +41,15 @@
 
 .. code-block:: c++
 
-    int gcd(int a, int b)
-    {
-        while (a && b)
-            if (a > b)
-                a %= b;
-            else
-                b %= a;
-        
-        return a + b;
-    }
+   int gcd(int a, int b)
+   {
+           while (a && b)
+                   if (a > b)
+                           a %= b;
+                   else
+                           b %= a;
+           return a + b;
+   }
 
 .. note::
 
@@ -61,11 +60,11 @@
 
 .. code-block:: c++
 
-    int gcd(int a, int b)
-    {
-        while (a && b && (a > b ? a %= b : b %= a));
-        return a + b;
-    }
+   int gcd(int a, int b)
+   {
+           while (a && b && (a > b ? a %= b : b %= a));
+           return a + b;
+   }
 
 利用多个整数最大公因数的数学性质 :math:`\gcd(a, b, c)=\gcd(\gcd(a,b),c)` 可以方便地循环调用上面的 ``gcd()`` 函数求出任意个正整数的最大公因数。
 
@@ -88,10 +87,10 @@
 
 .. code-block:: c++
 
-    int lcm(a, b)
-    {
-        return a / gcd(a, b) * b;
-    }
+   int lcm(a, b)
+   {
+           return a / gcd(a, b) * b;
+   }
 
 和最大公因数的情况一下，多个数的最小公倍数也可以拆分成两两链式求解：:math:`\text{lcm}(a,b,c)=\text{lcm}(\text{lcm}(a,b),c)`。也可以先求出所有数的最大公因数，然后利用数学规律 *n个数的最小公倍数等于它们的乘积除以它们的最大公因数的n-1次方* 来求解。
 
@@ -115,13 +114,13 @@
 
 .. code-block:: c++
 
-    template <int N>
-    bool is_coprime(int (&a)[N])
-    {
-        for (int i = 0; i < N - 1; i++)
-            for (int j = i + 1; j < N; j++)
-                if (gcd(a[i], a[j]) != 1)
-                    return false;
-        return true;
-    }
+   template <int N>
+   bool is_coprime(int (&a)[N])
+   {
+           for (int i = 0; i < N - 1; i++)
+                   for (int j = i + 1; j < N; j++)
+                           if (gcd(a[i], a[j]) != 1)
+                                   return false;
+           return true;
+   }
 

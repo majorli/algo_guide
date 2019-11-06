@@ -18,4 +18,5 @@ C++语言常用技巧
 
    ch01/110_running_time
    ch01/120_random_nums
+   ch01/130_mem_block
 
