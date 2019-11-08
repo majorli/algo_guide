@@ -20,4 +20,4 @@ C++语言常用技巧
    ch01/120_random_nums
    ch01/130_mem_block
    ch01/140_cpp_template
-
+   ch01/150_pointers_refs
