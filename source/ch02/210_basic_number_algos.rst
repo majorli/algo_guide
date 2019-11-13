@@ -19,3 +19,4 @@
 
    sec01/211_gcd_lcm
    sec01/212_primes
+   sec01/213_palindrome_numbers
