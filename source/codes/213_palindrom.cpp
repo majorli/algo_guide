@@ -6,16 +6,16 @@ int digit_at(int num, int d)
 	return num % 10;
 }
 
-int reverse(int n)
+long long reverse(int n)
 {
-	int r = n % 10;
+	long long r = n % 10;
 	while (n /= 10) r = 10 * r + n % 10;
 	return r;
 }
 
 bool is_palin_num(int n)
 {
-	return reverse(n) == n;
+	return reverse(n) == (long long)n;
 }
 
 int main()
