@@ -62,3 +62,5 @@ html_theme = 'sphinxdoc'
 html_static_path = ['_static']
 
 master_doc = 'index'
+
+mathjax_path = 'https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML'
