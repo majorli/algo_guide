@@ -1,6 +1,4 @@
-#include <iostream>
-
-using namespace std;
+#include <cstdio>
 
 bool is_prime(int a);
 bool is_palindrome(int n);
@@ -8,14 +6,14 @@ bool is_palindrome(int n);
 int main()
 {
 	int a, b;
-	cin >> a >> b;
+	scanf("%d %d", &a, &b);
 
 	if (a <= 5 && b >= 5)
-		cout << "5" << endl;
+		printf("5\n");
 	if (a <= 7 && b >= 7)
-		cout << "7" << endl;
+		printf("7\n");
 	if (a <= 11 && b >= 11)
-		cout << "11" << endl;
+		printf("11\n");
 	a = a > 101 ? a : 101;
 	b = b > 9989899 ? 9989899 : b;
 
@@ -23,7 +21,7 @@ int main()
 		if (i % 2 == 0 || i % 3 == 0 || i % 5 == 0 || i % 7 == 0)
 			continue;
 		if (is_palindrome(i) && is_prime(i))
-			cout << i << endl;
+			printf("%d\n", i);
 	}
 
 	return 0;
