@@ -21,3 +21,4 @@
    sec01/212_primes
    sec01/213_palindrome_numbers
    sec01/214_palin_primes
+   sec01/215_long_decimal
