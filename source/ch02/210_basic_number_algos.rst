@@ -22,5 +22,5 @@
    sec01/213_palindrome_numbers
    sec01/214_palin_primes
    sec01/215_long_decimal
-   sec01/216_quick_power
+   sec01/216_fast_power
    
