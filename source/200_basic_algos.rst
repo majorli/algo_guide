@@ -8,11 +8,6 @@
 
 1. 简单数值算法
 2. 简单在线统计
-
-   * 求最长单调区间
-   * 求最大区间和
-   * 前缀和及其应用
-
 3. 简单字符串处理
 
    * 求最长不重复子串
@@ -42,4 +37,6 @@
 .. toctree::
    :maxdepth: 2
 
-   ch02/210_basic_number_algos   
+   ch02/210_basic_number_algos
+   ch02/220_basic_online_algos
+
