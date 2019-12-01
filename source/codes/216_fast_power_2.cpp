@@ -2,14 +2,12 @@
 
 long long bi_fast_power(int a, unsigned int n)
 {
-	if (n == 0) return 1;
-	long long ans = 1, b = a;
-	while (n > 1) {
-		if (n % 2) ans *= b;
+	long long ans = 1, base = a;
+	while (n) {
+		if (n % 2) ans *= base;
 		n /= 2;
-		b *= b;
+		base *= base;
 	}
-	ans *= b;
 	return ans;
 }
 
