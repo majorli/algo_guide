@@ -124,7 +124,7 @@ main函数中测试了几组幂运算，运行后得到的结果如下：
 
                 WHILE :math:`n > 1`
 
-                        IF :math:`n % 2 = 1` THEN :math:`ans \leftarrow ans \times a`
+                        IF :math:`n` is odd THEN :math:`ans \leftarrow ans \times a`
 
                         :math:`n\leftarrow \lfloor{n\over2}\rfloor`
 
