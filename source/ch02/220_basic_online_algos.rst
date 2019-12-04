@@ -21,4 +21,7 @@
    sec02/221_mono_intervals
    sec02/222_road_block
    sec02/223_kadanes_algo
-   
+   sec02/224_prefix_sum
+   sec02/225_prefix_sum_p1147
+   sec02/226_prefix_sum_p1114
+   sec02/227_prefix_sum_p3397
