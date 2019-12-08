@@ -13,7 +13,7 @@
 1. 单调区间统计
 2. 最大区间和
 3. 前缀和与差分法
-4. 尺读法
+4. 尺取法
 
 
 .. toctree::
@@ -23,4 +23,4 @@
    sec02/222_road_block
    sec02/223_kadanes_algo
    sec02/224_prefix_sum
-   sec02/225_ruler_read
+   sec02/225_two_points
