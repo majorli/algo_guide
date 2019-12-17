@@ -9,3 +9,8 @@
    * 递归
 
 3. 动态规划
+
+.. toctree::
+   :maxdepth: 2
+
+   ch04/410_greedy
