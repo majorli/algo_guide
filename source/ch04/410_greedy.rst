@@ -45,16 +45,13 @@
 .. toctree::
    :maxdepth: 2
 
-   sec01/411_greedy_samples_1
+   sec01/411_greedy_bag_problems
+   sec01/412_greedy_complex_scheduling
 
 
-《分割线》
+《分割线，下面是编写计划，请忽略》
 
 贪心法要讲的例题：
-
-背包问题二种，可拆与0-1，0-1背包不可用贪心算法
-
-复杂任务调度问题，双机调度，区间调度
 
 找零问题，能够使用贪心算法和货币的种类有关
 
