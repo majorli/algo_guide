@@ -23,4 +23,5 @@
    sec02/222_road_block
    sec02/223_kadanes_algo
    sec02/224_prefix_sum
-   sec02/225_two_points
+   sec02/225_diff
+   sec02/226_two_points
