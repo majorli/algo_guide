@@ -33,5 +33,9 @@
 
    sec01/311_sequence_list
    sec01/312_big_int_1
+   sec01/313_big_int_2
+   sec01/314_big_int_3
+   sec01/315_big_int_4
+   sec01/316_big_int_5
 
    
