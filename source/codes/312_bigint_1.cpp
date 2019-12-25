@@ -27,58 +27,10 @@ struct BigInt {
 		_assign(str);
 		return *this;
 	}
-
-	BigInt &operator=(const BigInt &bi) {
-		_s.clear();
-		_s.assign(bi._s.begin(), bi._s.end());
-		return *this;
-	}
 };
 
 ostream &operator<<(ostream &os, const BigInt &bi);
 istream &operator>>(istream &is, BigInt &bi);
-
-int main()
-{
-	BigInt b1, b2(347), b3(123456789000012), b4(100001);
-	cout << "Testing initialization" << endl;
-	cout << "======================" << endl;
-	cout << b1 << endl;	// 0
-	cout << b2 << endl;	// 347
-	cout << b3 << endl;	// 123456789000012
-	cout << b4 << endl;	// 100001
-	cout << "Testing assigning" << endl;
-	cout << "======================" << endl;
-	BigInt b5 = 0, b6 = 9207358;
-	b1 = 37 + 73;
-	cout << b1 << endl;		// 110
-	cout << (b2 = 666) << endl;	// 666
-	cout << (b3 = b4) << endl;	// 100001
-	b4 = b6;
-	cout << b4 << endl;		// 9207358
-	cout << b5 << endl;		// 0
-	cout << b6 << endl;		// 9207358
-	cout << "Testing string init" << endl;
-	cout << "======================" << endl;
-	string s1 = "", s2 = "31415926535";
-	BigInt b7(s1), b8("987654321012345678909876543210123456789000");
-	cout << b7 << endl;		// 0
-	cout << b8 << endl;		// 987654321012345678909876543210123456789000
-	cout << "Testing string assign" << endl;
-	cout << "======================" << endl;
-	b7 = s2;
-	b8 = "0";
-	cout << b7 << endl;		// 31415926535
-	cout << b8 << endl;		// 0
-	cout << "Testing cin input" << endl;
-	cout << "======================" << endl;
-	cin >> b7;
-	cout << b7 << endl;
-	cin >> b7 >> b8;
-	cout << b7 << " and " << b8 << endl;
-
-	return 0;
-}
 
 void BigInt::_assign(unsigned long long value) {
 	_s.push_back(value % _BASE);
@@ -120,3 +72,7 @@ istream &operator>>(istream &is, BigInt &bi)
 	return is;
 }
 
+int main()
+{
+	return 0;
+}
