@@ -125,7 +125,7 @@ BigInt构造器：初始化
 
 .. literalinclude:: ../../codes/312_bigint_1.cpp
    :language: c++
-   :lines: 1, 4-17, 30, 34-53
+   :lines: 1, 4-17, 30, 34-54
 
 .. note::
 
@@ -238,7 +238,7 @@ BigInt输入输出
 
 .. literalinclude:: ../../codes/312_bigint_1.cpp
    :language: c++
-   :lines: 1-73
+   :lines: 1-74
 
 .. attention::
 

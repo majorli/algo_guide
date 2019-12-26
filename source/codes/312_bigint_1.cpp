@@ -50,6 +50,7 @@ void BigInt::_assign(const string &str) {
 			_s.push_back(v);
 			p -= _WIDTH;
 		}
+	while (_s.size() > 1 && _s.back() == 0) _s.pop_back();
 }
 
 ostream &operator<<(ostream &os, const BigInt &bi)
