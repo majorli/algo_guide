@@ -30,6 +30,11 @@ struct BigInt {
 	}
 
 	BigInt &operator+=(const BigInt &a) { return _add(*this, a); }
+
+	BigInt operator+(const BigInt &a) const {
+		BigInt temp = a;		// 生成一个临时的BigInt变量等于加数a
+		return temp += *this;		// 直接返回temp加上自身之后的值
+	}
 };
 
 ostream &operator<<(ostream &os, const BigInt &bi);
@@ -78,16 +83,17 @@ istream &operator>>(istream &is, BigInt &bi)
 
 BigInt &BigInt::_add(BigInt &b1, const BigInt &b2)
 {
-	while (b1._s.size() < b2._s.size()) b1._s.push_back(0);
-	int carry = 0, i = 0;
-	while (i < b1._s.size()) {
-		b1._s[i] += carry;
-		b1._s[i] += (i < b2._s.size() ? b2._s[i] : 0);
-		carry = b1._s[i] / _BASE;
-		b1._s[i] %= _BASE;
-		i++;
+	if (b1._s.size() < b2._s.size())	// 把b1的长度调整到不短于b2，方法是在高位补0
+		b1._s.resize(b2._s.size(), 0);	// 使用vector容器的resize成员函数一次性补足
+	int carry = 0, i = 0;			// carry：进位数，初始为0
+	while (i < b1._s.size()) {		// 循环到b1所有节全部计算完为止
+		b1._s[i] += carry;		// 加上从前面来的进位
+		b1._s[i] += (i < b2._s.size() ? b2._s[i] : 0);	// b2有可能比b1短
+		carry = b1._s[i] / _BASE;	// 本节产生的进位
+		b1._s[i] %= _BASE;		// 本节的和
+		i++;				// 进入下一节
 	}
-	if (carry) b1._s.push_back(carry);
+	if (carry) b1._s.push_back(carry);	// 最后有可能还有一次进位，要进成更高的一节
 
 	return b1;
 }
