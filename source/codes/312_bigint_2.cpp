@@ -18,32 +18,13 @@ struct BigInt {
 	BigInt(unsigned long long value = 0) { _assign(value); }
 	BigInt(const string &str) { _assign(str); }
 	// 赋值运算
-	BigInt &operator=(unsigned long long value)
-	{
-		_s.clear();
-		_assign(value);
-		return *this;
-	}
-	BigInt &operator=(const string &str)
-	{
-		_s.clear();
-		_assign(str);
-		return *this;
-	}
+	BigInt &operator=(unsigned long long value);
+	BigInt &operator=(const string &str);
 	// 加法运算
 	BigInt &operator+=(const BigInt &a);
-	BigInt operator+(const BigInt &a) const
-	{
-		BigInt temp = a;		// 生成一个临时的BigInt变量等于加数a
-		return temp += *this;		// 直接返回temp加上自身之后的值
-	}
+	BigInt operator+(const BigInt &a) const;
 	BigInt &operator++() { return *this += 1; }	// 前置++
-	BigInt operator++(int)				// 后置++
-	{
-		BigInt temp = *this;
-		*this += 1;
-		return temp;
-	}
+	BigInt operator++(int);				// 后置++
 	// 乘法运算
 	BigInt operator*(const BigInt &a) const;
 	BigInt &operator*=(const BigInt &a) { return *this = *this * a; }
@@ -73,24 +54,17 @@ void BigInt::_assign(const string &str) {
 	while (_s.size() > 1 && _s.back() == 0) _s.pop_back();
 }
 
-ostream &operator<<(ostream &os, const BigInt &bi)
+BigInt &BigInt::operator=(unsigned long long value)
 {
-	int i = bi._s.size();
-	os << bi._s[--i];
-	while (--i >= 0)
-		os << right << setw(4) << setfill('0') << bi._s[i];
-
-	return os;
+	_s.clear();
+	_assign(value);
+	return *this;
 }
-
-istream &operator>>(istream &is, BigInt &bi)
+BigInt &BigInt::operator=(const string &str)
 {
-	string str;
-	is >> str;
-	bi._s.clear();
-	bi._assign(str);
-
-	return is;
+	_s.clear();
+	_assign(str);
+	return *this;
 }
 
 BigInt &BigInt::operator+=(const BigInt &a)
@@ -108,6 +82,19 @@ BigInt &BigInt::operator+=(const BigInt &a)
 	if (carry) _s.push_back(carry);		// 最后有可能还有一次进位，要进成更高的一节
 
 	return *this;
+}
+
+BigInt BigInt::operator+(const BigInt &a) const
+{
+	BigInt temp = a;		// 生成一个临时的BigInt变量等于加数a
+	return temp += *this;		// 直接返回temp加上自身之后的值
+}
+
+BigInt BigInt::operator++(int)
+{
+	BigInt temp = *this;
+	*this += 1;
+	return temp;
 }
 
 BigInt BigInt::operator*(const BigInt &a) const
@@ -133,18 +120,27 @@ BigInt BigInt::operator*(const BigInt &a) const
 	return p;
 }
 
+ostream &operator<<(ostream &os, const BigInt &bi)
+{
+	int i = bi._s.size();
+	os << bi._s[--i];
+	while (--i >= 0)
+		os << right << setw(4) << setfill('0') << bi._s[i];
+
+	return os;
+}
+
+istream &operator>>(istream &is, BigInt &bi)
+{
+	string str;
+	is >> str;
+	bi._s.clear();
+	bi._assign(str);
+
+	return is;
+}
+
 int main()
 {
-	BigInt b1 = 4, b2 = 8;
-	cout << b1 << " + " << b2 << " = " << b1 + b2 << endl;
-
-	cout << b1 << endl;
-	for (int i = 1; i <= 50; i++)
-		cout << (b1 += b1) << endl;
-
-	int x = 13;
-	cout << b1 + (b2 += x) << endl;
-	cout << b1 << endl << b2 << endl;
-
 	return 0;
 }
