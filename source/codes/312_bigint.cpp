@@ -187,7 +187,8 @@ BigInt &BigInt::operator-=(const BigInt &a)
 			_s[i] += _BASE;		// 加上借到的位
 		}
 	}
-	do { _s.pop_back(); } while (_s.size() > 1 && _s.back() == 0);	// 去除被减数被增加的位并清除高位上的0
+	// 去除被减数被增加的位并清除高位上的0
+	do { _s.pop_back(); } while (_s.size() > 1 && _s.back() == 0);
 
 	return *this;
 }
