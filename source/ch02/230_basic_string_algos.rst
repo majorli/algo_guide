@@ -21,4 +21,5 @@ C-string现在还有许多人喜欢用，许多算法竞赛、考试的笔试部
    :maxdepth: 2
    
    sec03/231_string_basic_1
+   sec03/232_string_basic_2
 

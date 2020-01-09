@@ -91,6 +91,7 @@ C++语言的C标准库 ``cstring`` 中有两个常用的块操作函数，用以
    memset(&a, 0, sizeof(S));       // 清空结构体a
    memset(b, 0, 100 * sizeof(S));  // 清空结构S数组b中的所有结构体
 
+.. _ref_130_memset:
 
 2、批量给数组中的全部或部分元素赋值
 
