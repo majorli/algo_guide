@@ -88,19 +88,17 @@ string是一个定义完好的C++类，它除了速度比C-string略慢外，其
 
    :math:`\text{Min_Period}(s):`
 
-      :math:`n \leftarrow \text{len}(s)`
+      :math:`n \leftarrow \text{length of }s`
 
-      FOR :math:`p = 1 \to n/2`
+      :math:`\text{FOR  } p \leftarrow 1 \text{  TO  } n/2 \text{  DO}`
 
-         IF :math:`n \neq 0 \mod p` THEN continue
+         :math:`\text{IF  } n \neq 0 \mod p \text{  THEN continue}`
 
-         IF :math:`\text{IsPeriod}(s, n, p) = \text{true}`
+         :math:`\text{IF Is_Period}(s, n, p) = \text{true THEN RETURN  } p`
 
-         THEN Return :math:`p`
+      :math:`\text{RETURN  } n`
 
-      Return :math:`n`
-
-第二步要解决如何判断一个数是不是周期的问题，也就是算法中调用的那个子算法 :math:`\text{IsPeriod}(s, n, p)`。
+第二步要解决如何判断一个数是不是周期的问题，也就是算法中调用的那个子算法 :math:`\text{Is_Period}(s, n, p)`。
 
 测试的原理也很简单，我们只要对原字符串 :math:`s` 的所有长度为 :math:`p` 的分段进行逐个比较是否相等即可，设 :math:`n=kp`，则有：
 
@@ -112,13 +110,13 @@ string是一个定义完好的C++类，它除了速度比C-string略慢外，其
 
 .. admonition:: 判断是否周期算法
 
-   :math:`\text{IsPeriod}(s, n, p):`
+   :math:`\text{Is_Period}(s, n, p):`
 
-      FOR :math:`j = p \to n-p`
+      :math:`\text{FOR  } j \leftarrow p \text{  TO  } n-p \text{  DO}`
 
-         IF :math:`s[0:p-1] \neq s[j:j+p-1]` THEN Return :math:`\text{false}`
+         :math:`\text{IF  } s[0:p-1] \neq s[j:j+p-1] \text{  THEN RETURN false}`
 
-      Return :math:`\text{true}`
+      :math:`\text{RETURN true}`
 
 
 **程序编写**
@@ -178,17 +176,17 @@ cstring库提供了两个函数 ``strcmp()`` 和 ``strncmp()`` 来比较字符�
 
       :math:`m\leftarrow \text{len}(s), n\leftarrow \text{len}(t), i\leftarrow0, j\leftarrow 0`
 
-      FOR :math:`i = 0 \to m-1`
+      :math:`\text{FOR  } i \leftarrow 0 \text{  TO  } m-1 \text{  DO}`
 
-         WHILE :math:`j \lt n` AND :math:`t[j] \neq s[i]`
+         :math:`\text{WHILE  } j \lt n \text{  AND  } t[j] \neq s[i] \text{  DO}`
 
             :math:`j \leftarrow j+1`
 
-         IF :math:`j=n` THEN Return false
+         :math:`\text{IF  } j=n \text{  THEN RETURN false}`
 
-         ELSE :math:`j \leftarrow j+1`
+            :math:`\text{ELSE  } j \leftarrow j+1`
 
-      Return true
+      :math:`\text{RETURN true}`
 
 下面是具体的代码，对于能够匹配到子序列的情况，我们输出 "Yes"，否则输出 "No"：
 
