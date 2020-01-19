@@ -35,12 +35,80 @@
 C语言标准库cstring中的 ``strcmp()`` 和 ``strncmp()`` 两个函数就是根据字典序来比较两个字符串（或字符串片段）的大小的。而对于C++ string则更加简单直观，我们可以直接用关系比较运算符 ``==, !=, <, >, <=, >=`` 来对两个string进行字典序比较。
 
 
-含空白符的字符串
+C-string小结
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+现在我们对字符串处理的一些基本概念和最基本的一些操作都已经学完了。字符串是一类重要的信息类型，字符串处理是计算机信息处理中最为重要的技术之一。从概念本身来讲，字符串就是由一连串连续字符构成的信息串，只是不同的编程语言对于字符串的表示形式各有不同，其内在本质都是相同的。
 
+在C++语言来说，C-string和C++ string类都是其表示字符串的形式。从C语言继承而来的C-string最大的优势是速度快，所以现在许多的程序还在坚持使用C-string来进行字符串处理。常用的C-string处理都采用cstring库中的C语言标准库函数，前面已经看到过许多，在cstdio库中也提供了几套用于字符和C-string输入输出的库函数。这些库函数最大的特点也是速度非常的快，如果用C-string来进行字符串处理，就离不开这些库函数的使用。下面对它们进行一个小结。
 
-C-string输入输出小结
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**8个C-string常用库函数**
+
+与C-string基本处理相关的库函数全部由cstring库提供，使用前必须引入 ``#include <cstring>``。
+
+1. ``size_t strlen(const char *s);``
+
+   获取C-string ``s`` 的实际长度。
+
+2. ``size_t strlen(const char *s, size_t maxlen);``
+
+   获取C-string ``s`` 的实际长度，但以 ``maxlen`` 为上限，即如果长度超过 ``maxlen`` 则返回 ``maxlen`` 的值。
+
+3. ``char *strcpy(char * dst, const char * src);``
+
+   将C-string ``src`` 的内容复制到C-string ``dst`` 中，返回值就是指向 ``dst`` 的指针。
+
+   需注意，此函数复制时并不考虑 ``dst`` 的长度是否足够，因此可能引起超限错误，需要程序自己确保足够的空间。
+
+4. ``char *strncpy(char * dst, const char * src, size_t len);``
+
+   将C-string ``src`` 中最多 ``len`` 个字符复制到C-string ``dst`` 中，返回值就是指向 ``dst`` 的指针。
+
+   需注意，若 ``src`` 的实际长度超过 ``len``，那么复制之后不会自动在 ``dst`` 中添加空字符 ``'\0'`` 作为结尾标志，因此这种情况下 ``dst`` 不保证有正确的结尾。
+
+5. ``int strcmp(const char *s1, const char *s2);``
+
+   比较 ``s1`` 和 ``s2`` 的字典序，若二者相等，则返回0；若 ``s1`` 先于（小于）``s2`` 则返回一个负数；若 ``s1`` 后于（大于）``s2`` 则返回一个正数。
+
+6. ``int strncmp(const char *s1, const char *s2, size_t n);``
+
+   比较 ``s1`` 和 ``s2`` 的字典序，返回值的规则和 ``strcmp()`` 函数相同，但是最多只比较前 ``n`` 个字符。
+
+7. ``char *strcat(char *restrict s1, const char *restrict s2);``
+
+   将 ``s2`` 的内容拼接到 ``s1`` 的后面，返回指向 ``s1`` 的指针。
+
+   需注意：此函数并不考虑 ``s1`` 中的长度是否足够，因此可能引起超限错误，需要程序自己确保足够的空间。
+
+8. ``char *strncat(char *restrict s1, const char *restrict s2, size_t n);``
+
+   将 ``s2`` 中最多 ``n`` 个字符拼接到 ``s1`` 的后面，返回指向 ``s1`` 的指针。
+
+**C-string输入输出**
+
+与C-string的输入输出相关的库函数都在cstdio库中提供，使用前必须引入 ``#include <cstdio>``。
+
+1. ``scanf()`` 和 ``printf()``。
+
+   此二者是最为常用的C-string输入输出函数，占位符为 ``%s``。在输入时，可以添加长度限制 ``%ns``，其中 ``n`` 是一个整数，表示最多读入 ``n`` 个字符，不包括最后的结尾标志 ``'\0'``。因此这个长度限制至少应该要比实际的字符数组长度小1。例如：
+
+   .. code-block:: c++
+
+      char s[80];
+      scanf("%79s", s);
+      printf("You entered: %s\n", s);
+
+   优点：功能强大灵活，可以和多个别的数据同时输入输出。例如：
+
+   .. code-block:: c++
+
+      char s[81];
+      unsigned short age;
+
+      scanf("%80s %hu", s, &age);
+      printf("NAME is %s, AGE = %hu\n", s, age);
+
+   缺点：``scanf()`` 只能输入以“单词”为单位的字符串，即字符串中不能出现空白符（空格、tab、换行）。例如上面那个例子中，如果要输入的名字是Bill Gates，那么就会出错，``s`` 只会读到Bill就结束了。
+
 
 （待续）
