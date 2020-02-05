@@ -57,9 +57,13 @@ int main()
 
 int expand(const char *s, int left, int right)
 {
+	// left >= 0：表示左边的端点还在字符串s范围内
+	// s[right]：利用C-string最后一个字符后面是结束标志'\0'的特点，只要s[right] != 0，就表示还在
+	//           字符串s的范围之内。
+	// s[left] == s[right]：扩展的两端相等，所以还可以进一步尝试扩展
 	while (left >= 0 && s[right] && s[left] == s[right]) {
-		--left;
-		++right;
+		--left;		// 进一步扩展左端点
+		++right;	// 进一步扩展右端点
 	}
-	return right - left - 1;
+	return right - left - 1;	// 能扩展到的最长回文子串长度
 }
