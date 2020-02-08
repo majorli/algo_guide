@@ -136,7 +136,122 @@ C++ string还有一个很实用的小功能：交换内容。使用成员函数 
 
 **3. 子串操作**
 
-成员函数
+*(1) 查找*
+
+C++ string具有多种灵活易用的子串或字符查找功能，它们都是以string的成员函数的方式来提供的，它们的返回值都是子串或字符在这个string中的位置（即第一个字符出现的位置）。如果查不到，则会返回一个叫做 ``string::npos`` 的常量。``string: :npos`` 是一个定义好的静态常量，用这个名字就可以直接使用。这些函数如下：
+
+``string::find()``：从前往后查找子串或字符出现的位置。
+
+``string::rfind()``：从后往前查找子串或字符出现的位置。
+
+``string::find_first_of()``：从前往后查找何处出现另一个字符串中包含的字符。例如：
+
+.. code-block:: c++
+
+   s1.find_first_of("abc");  // 查找s1中第一次出现"abc"中任一字符('a'或'b'或'c')的位置
+
+``string::find_last_of()``：从后往前查找何处出现另一个字符串中包含的字符。
+
+``string::find_first_not_of()``：从前往后查找何处出现另一个字符串中没有包含的字符。
+
+``string::find_last_not_of()``：从后往前查找何处出现另一个字符串中没有包含的字符。
+
+下面是一个C++ string子串、字符查找的示例程序：
+
+.. code-block:: c++
+
+   #include <iostream>
+   #include <string>
+
+   using namespace std;
+   
+   int main()
+   {
+           string s("I like programming");
+           int n;
+           if ((n = s.find('i')) != string::npos) // 查找字符'i'出现的位置
+                   cout << "'i' is found at " << n << endl;
+           if ((n = s.find("like", 3)) == string::npos) // 从位置3，即字符'i'开始查找"like"
+                   cout << "\"like\" is not found" << endl;
+           if ((n = s.find("program")) != string::npos) // 查找子串"program"
+                   cout << "\"program\" is found at " << n << endl;
+           if ((n = s.find_first_of("cp")) != string::npos) // 查找第一次出现'c'或'p'的位置
+                   cout << "'c' or 'p' is first found at " << n << endl;
+           if ((n = s.find_last_of('m')) != string::npos) // 查找最后一个'm'的位置
+                   cout << "'m' is last found at " << n << endl;
+
+           // 从位置1开始查找第一个'c'和'p'以外的字符
+           if ((n = s.find_first_not_of("cp", 1)) != string::npos)
+                   cout << "not 'c' and 'p' is first found at " << n << endl;
+   
+           return 0;
+   }
+
+.. note::
+
+   这几个查找函数的用法是类似的，它们至少接收一个参数，即要查找的子串或字符或以字符串形式表示的字符集。这是最基本的用法，如果是从前向后的正向查找就从第一个字符（位置0）开始，如果是反向查找则从最后一个字符开始找起。
+
+   它们也都可以接收第二个可选参数，用来指示一个开始查找的位置，表示查找要从这个位置开始，而不是默认的从头部（或从尾部）开始。
+
+   当然它们还有其他的用法，但记住上面两种最常用的一般来说就足够了，如果有兴趣可以去查找相关的书籍资料自行了解。
+
+C++ string除了在子串或字符查找功能上相较于C-string进行了增强以外，还提供了一系列C-string时代没有现成提供，需要自己编程实现的新功能（而这些功能在使用C-string时往往是比较麻烦，很容易引起错误的）。
+
+*(2) 求取*
+
+``string::substr()`` 可以用来求出一个子串，以一个新的C++ string的方式返回这个子串。
+
+它接收两个参数：子串首字符位置和长度，其中第二个参数子串长度为可选参数。调用时，如果省略了子串长度参数或首位置加长度超过了字符串本身的长度，则求出来的子串就是从首位置开始一直到字符串结束的部分。例如：
+
+.. code-block:: c++
+
+   string s1 = "this is C++";
+   string s2 = s1.substr(2, 5);    // s2 = "is is"
+   s2 = s1.substr(2);              // s2 = "is is C++"
+
+.. admonition:: 惯例
+
+   在C++ string的惯例里，总是用一个起始位置和一个长度来表示子串，例如子串(2,4)表示从位置2（第三个字符）开始，长度为4个字符的子串。
+
+*(3) 替换*
+
+``string::replace()`` 可以用来替换子串。请看示例：
+
+.. code-block:: c++
+
+   string s1("Henry Skywalker");
+   s1.replace(1, 2, "smart", 2, 2); // 用"smart"的子串(2,2)，即"ar"，替换s1的子串(1,2)，即"en"
+   cout << s1 << endl; // Harry Skywalker
+   s1.replace(7, 6, 2, 't'); // 用2个't'替换s1的子串(7,6)，即"kywalk"
+   cout << s1 << endl; // Harry Stter
+   int n = s1.find('S'); // 查找字符'S'的位置，n=6
+   s1.replace(n, 1, "Po"); // 将子串(n,1)，即"S"，替换为"Po"
+   cout << s1 << endl; // Harry Potter
+
+*(4) 删除*
+
+``string::erase()`` 用于从一个string中删除一个指定的子串，它也可以不指定子串长度。请看示例：
+
+.. code-block:: c++
+
+   string s1("Harry the Potter the Great");
+   s1.erase(6, 4); // 删除子串(6, 4)，此后s1变成 "Harry Potter the Great"
+   s1.erase(12); // 省略子串长度，表示删除位置12及其后面的所有字符，此后s1变成 "Harry Potter"
+
+*(5) 插入*
+
+``string::insert()``
+
+``string::push_back()``
+
+``string::append()``
+
+
+
+
+**4. 迭代器**
+
+
 
 
 输入输出
