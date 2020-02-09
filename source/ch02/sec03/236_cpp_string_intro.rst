@@ -221,12 +221,12 @@ C++ string除了在子串或字符查找功能上相较于C-string进行了增�
 
    string s1("Henry Skywalker");
    s1.replace(1, 2, "smart", 2, 2); // 用"smart"的子串(2,2)，即"ar"，替换s1的子串(1,2)，即"en"
-   cout << s1 << endl; // Harry Skywalker
+   cout << s1 << endl; // s1 = "Harry Skywalker"
    s1.replace(7, 6, 2, 't'); // 用2个't'替换s1的子串(7,6)，即"kywalk"
-   cout << s1 << endl; // Harry Stter
-   int n = s1.find('S'); // 查找字符'S'的位置，n=6
+   cout << s1 << endl; // s1 = "Harry Stter"
+   int n = s1.find('S'); // 查找字符'S'的位置，n = 6
    s1.replace(n, 1, "Po"); // 将子串(n,1)，即"S"，替换为"Po"
-   cout << s1 << endl; // Harry Potter
+   cout << s1 << endl; // s1 = "Harry Potter"
 
 *(4) 删除*
 
@@ -235,23 +235,94 @@ C++ string除了在子串或字符查找功能上相较于C-string进行了增�
 .. code-block:: c++
 
    string s1("Harry the Potter the Great");
-   s1.erase(6, 4); // 删除子串(6, 4)，此后s1变成 "Harry Potter the Great"
-   s1.erase(12); // 省略子串长度，表示删除位置12及其后面的所有字符，此后s1变成 "Harry Potter"
+   s1.erase(6, 4); // 删除子串(6, 4)，s1 = "Harry Potter the Great"
+   s1.erase(12); // 省略子串长度，表示删除位置12及其后面的所有字符，s1 = "Harry Potter"
 
 *(5) 插入*
 
-``string::insert()``
+``string::insert()`` 用于在一个string中指定位置插入一个子串或若干个字符：
 
-``string::push_back()``
+.. code-block:: c++
 
-``string::append()``
+   string s1("H Potter"), s2("==***==");
+   s1.insert(1, "arry"); // 在位置1处插入字符串"arry"，s1 = "Harry Potter"
+   s1.insert(s1.size(), s2, 2, 3); // 在s1的最后插入s2的子串(2,3), s1 = "Harry Potter***"
+   s1.insert(0, 3, '*'); //在位置0，即s1的开头插入3个字符'*'，s1 = "***Harry Potter***"
+
+.. warning::
+
+   使用 ``insert()`` 函数在string中插入子串或字符，指定的插入位置必须大于等于0，且不能超过原字符串的长度，否则会在运行时报错（out of range）并中止程序的运行。
 
 
+``string::append()`` 用于在一个string的末尾添加子串或若干个字符。
+
+这个成员函数除了不需要提供插入位置这个参数以外，其他用法和 ``string::insert()`` 完全一样。例如上面例子中的第3行就可以改写成：``s1.append(s2, 2, 3);``，这种写法和原先的写法在功能上是完全一样的，但是在运行速度上却要略微快一些，当然最重要的是写代码时也简单方便不少。
+
+.. tip::
+
+   当要在一个string的末尾添加另一个string时，一共有三种写法：
+
+   1. 使用 ``string::insert()``，位置参数为原字符串的长度；
+   2. 使用 ``string::append()``；
+   3. 使用C++ string的连接（加法）运算：例如 ``s1 += s2;``。
+
+   上面三种方法，最方便也最快速的是使用 ``string::append()``，凡遇此类场景，请务必使用它。
+
+
+``string::push_back()`` 用于在一个string的末尾添加单个字符。
+
+调用方法非常简单，只要提供一个char型参数即可。它的运行速度非常之快，在某些场景下会非常有用。
+
+比如当需要逐个字符的快速读取输入数据的时候。我们知道C++ string只能通过C++的IO流进行读写，而C++的IO流再配上C++ string，有时候速度会比较慢，这时可以使用所有输入方式种速度最快的cstdio库的 ``getchar()`` 函数来进行快速读写。例如下面这个小函数可以实现非常高速的按行读取C++ string。
+
+.. literalinclude:: ../../codes/236_getline.cpp
+   :language: c++
+
+另外，在某些需要按照一定规律逐个字符生成字符串的场景中，这个函数也非常有用。
 
 
 **4. 迭代器**
 
+每一种C++ STL库提供的模板类型都有一对称为\ :strong:`迭代器（iterator）`\ 的东西，分别为首迭代器和尾迭代器，C++ string也不例外。
 
+一般对于算法编程，迭代器用得并不多，可以说绝大多数情况下完全可以不使用迭代器。但是对于大型软件开发或极为复杂的算法程序编制，迭代器有时候就会变得很有用，而且能提高运行速度。那么什么是迭代器？可以说得很复杂，但也可以理解得很简单，目前我们简单地把它理解为一种“包装过的指针”就可以了。
+
+对于C++ string，每一个具体的string都有一头一尾这一对迭代器，分别用成员函数 ``string::begin()`` 和 ``string::end()`` 来获取，它们的数据类型很长，叫做 ``string::iterator``。其实所有的STL模板类型的迭代器都是类似格式的数据类型，例如int型向量 ``vector<int>`` 的迭代器类型名就叫做 ``vector<int>::iterator``。
+
+首迭代器始终指向string的头部，即位置0；尾迭代器始终指向string的尾部后面一个位置（类似于C-string中末尾的结束符 ``'\0'`` 的所在位置）。程序中可以定义自己的迭代器变量，使用首迭代器或尾迭代器来初始化它，之后就可以像指针一样使用它了。看一个简单的例子就会很清楚迭代器的用法了，下面这个示例程序逐个字符的依正向和反向两个方向输出一个字符串：
+
+.. code-block:: c++
+
+   #include <iostream>
+   #include <string>
+   
+   using namespace std;
+   
+   int main()
+   {
+           string s = "Hello";
+           string::iterator it;
+           for (it = s.begin(); it != s.end(); ++it) // 可以像指针一样做++运算和比较运算
+                   cout << *it; // 可以和指针一样用 * 运算来获取它指向的值
+           cout << endl;
+           // 上一个循环结束时，迭代器it等于s.end()，这是一个虚拟的位置，位于s最后一个字符之后
+           while (--it >= s.begin()) // 先--，然后判断是否小于首迭代器
+                   cout << *it;
+           cout << endl;
+   
+           return 0;
+   }
+
+运行后会输出下面的结果：
+
+.. code-block:: none
+
+   Hello
+   olleH
+
+.. tip::
+
+   指针的大部分用法，都可以依样画葫芦地照搬照抄用于迭代器。（但千万记住，迭代器不是指针，而是一种“包装过的指针”，至于怎么包装的，目前不需要深究。）
 
 
 输入输出
