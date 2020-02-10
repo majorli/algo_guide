@@ -328,6 +328,154 @@ C++ string除了在子串或字符查找功能上相较于C-string进行了增�
 输入输出
 ^^^^^^^^^^^^^^^^
 
+使用C++ string来表示字符串时，只能用C++的IO流来进行输入输出。
+
+.. hint::
+
+   C++的IO流同样也可以实现传统的C-string的输入输出，例如：
+
+   .. code-block:: c++
+
+      char s[101];
+      cin >> s;
+      cout << s << endl;
+   
+   这样的程序是完全正确的，但是无法保证输入的字符串会不会超长。所以一般还是建议C++ string配合C++的IO流使用，而C-string则配合C标准库cstdio使用。
+
+**输出**
+
+输出C++ string特别简单，只要使用 ``cout <<`` 运算即可。例如：
+
+.. code-block:: c++
+
+   string s("Harry Potter");
+   cout << s << " is great!" << endl;
+
+**输入**
+
+C++ string的输入和C-string的情况一样，分为按单词输入和按行输入两种。
+
+使用 ``cin >>`` 运算可以方便地实现按单词输入C++ string。例如：
+
+.. code-block:: c++
+
+   string s1, s2, s3;
+   cin >> s1; // 输入一个单词形式的字符串到s1中
+   cin >> s2 >> s3; // 先后输入两个单词形式的字符串到s2和s3中，中间以至少一个空白符(空格、tab、换行)分隔
+
+使用 ``getline()`` 函数按行输入字符串。C++的这个函数非常好用，它会正确地读取到一行的末尾（第一次遇到换行符），行尾的换行符 ``'\n'`` 会从输入流中被读走并抛弃，不会像cstdio库的 ``fgets()`` 函数那样把换行符保留在字符串里，毕竟大多数情况下我们都不需要这个换行符。
+
+``getline()`` 的使用方法也很简单，例如：
+
+.. code-block:: c++
+
+   string s;
+   getline(cin, s); // 从标准输入流cin中读取一行字符串放入s中
+
+.. warning::
+
+   千万要记住，我们这里说的是函数 ``getline()``，它用于按行读取C++ string。
+
+   容易混淆的是，输入流cin也有一个成员函数名字叫 ``getline()``，它是用于按行读取C-string的，它是cstdio库中 ``fgets()`` 函数的IO流版本，除了它会把行尾的换行符抛弃掉以外，它的用法和 ``fgets()`` 完全一样。
+
+   二者绝对不要搞混淆，我们在使用C++ string时，要用 ``getline()`` 函数，而不是 ``cin.getline()`` 成员函数。
+
+
+这里顺便介绍一下C++的文件IO流。我们都知道，cstdio库除了标准IO函数（例如 ``printf()/scanf()``）以外，还有一套用法和标准IO完全一致的文件IO（例如 ``fprintf()/fscanf()``）函数，用来从磁盘上的文本文件中读取数据和将输出数据写入到磁盘文本文件里去。C++的IO流当然也会有这么一套对应的流，称为\ :strong:`文件IO流`，或简称\ :strong:`文件流`。
+
+要使用C++文件流，要同时引入iostream和fstream两个库，然后和传统的方法类似，在程序中要分四步走：
+
+1、建立具体的文件流对象，或者你可以理解为 ``std::fstream`` 型的变量。（类似于C标准IO的定义文件句柄变量 ``FILE *fin, *fout``）
+2、为文件流对象打开一个具体的文件。（类似于C标准IO的为文件句柄打开具体文件 ``fin = fopen("file1", "w");``）
+3、像使用cin/cout一样使用已经打开的文件流对象的 ``<<`` 或 ``>>`` 运算进行输入输出。（类似于C标准IO的 ``fprintf()/fscanf()`` 等函数的使用）
+4、读写完毕后关闭文件流对象。（类似于C标准IO的关闭文件句柄 ``fclose(fin)``）
+
+例如从文件 ``a.in`` 中读取2个整数，计算其乘积并将结果写入文件 ``a.out`` 中的程序如下：
+
+.. code-block:: c++
+   
+   #include <iostream>
+   #include <fstream>
+   
+   using namespace std;
+   
+   int main()
+   {
+           fstream fin, fout;           // 建立文件流对象
+           fin.open("a.in", fstream::in);       // 打开文件用于输入
+           fout.open("a.out", fstream::out);    // 打开文件用于输出
+   
+           int a, b;
+           fin >> a >> b;               // 还是那个配方
+           fout << a * b << endl;       // 还是那个味道
+   
+           fin.close();                 // 关闭输入文件流
+           fout.close();                // 关闭输出文件流
+
+           return 0;
+   }
+
+
+下面再看一个复杂一点的例子。前面我们演示过用 ``getline()`` 函数从标准IO流按行读取一个字符串，那时候函数的第一个参数用的是 ``cin``。实际上它可以是任何一个输入流，包括输入文件流。下面这个例子，使用C++文件流和 ``getline()`` 函数逐行读取文本文件 ``test.in`` 并输出到文件 ``test.out`` 中：
+
+.. code-block:: c++
+
+   #include <iostream>
+   #include <fstream>
+   
+   using namespace std;
+   
+   int main()
+   {
+           fstream fin, fout;
+           fin.open("test.in", fstream::in);
+           fout.open("test.out", fstream::out);
+   
+           string s;
+           while (getline(fin, s)) // 一旦文件读取完毕或出错，getline()的返回可以被判断为false
+                   fout << s << endl; // 注意getline()会丢弃换行符，所以输出时要自己加上换行
+   
+           fin.close();
+           fout.close();
+   
+           return 0;
+   }
+
+
+自己编一个测试用的文本文件 ``test.in``，里面记得放一些空行。运行上面的程序测试一下是不是一模一样地复制成为了 ``test.out``。由此测试可以看出，``getline()`` 在按行读取时遇到空行也会毫不犹豫地准确读取进来。当然了，空行读进来之后得到的是一个空字符串 ``""``。
+
+
+最后再介绍一下快速读取单个字符的方法。cstdio库有一个号称速度最快的单个字符读取函数 ``getchar()``，与之对应，C++的IO流（包括标准输入流cin和输入文件流）也有一个这样的函数：成员函数 ``get()``。用法也和 ``getchar()`` 函数几乎一样：
+
+.. code-block:: c++
+
+   int ch;          // 用int来存放char，还记得为什么吗？
+   ch = cin.get();  // 从标准输入流读取一个字符放到ch中，如果读到流结束则范围-1（这就是用int的原因）
+
+还记得以前学过的cstdio版的鹦鹉学舌程序吗？现在来看看C++输入输出流的新版：
+
+.. code-block:: c++
+
+   #include <iostream>
+   
+   using namespace std;
+   
+   int main()
+   {
+           int ch;
+           while ((ch = cin.get()) != -1)  // cstdio版：while ((ch = getchar()) != EOF)
+                   cout << (char)ch;  // 注意要强转数据类型为char，否则输出的会是一个数字
+   
+           return 0;
+   }
+
+大家可以想一想怎么写一个文件流版本的鹦鹉学舌，试试看。
+
+.. warning::
+
+   事实上 ``cin.get()`` 函数还有好几种别的用法，甚至可以用来按行读取C-string形式的字符串。但是要记得，C-string归cstdio库管，无论是 ``cin.get()`` 还是前面提到过的 ``cin.getline()`` 都不如直接用cstdio库的 ``fgets()`` 更好。C++在其输入流对象中实现对应C-string的功能，只是为了其自身的功能完善性，事实上它们在使用时都或多或少的有一些问题，不太好用。
+
+   所以切记，我们只推荐用 ``int ch = cin.get()`` 这一种用法来快速读取单个字符，不要去深究和尝试它的其他用法。
 
 
 
