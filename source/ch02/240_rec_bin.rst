@@ -23,4 +23,5 @@
    :maxdepth: 2
 
    sec04/241_recursive
+   sec04/242_hanoi
 
