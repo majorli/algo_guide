@@ -24,4 +24,5 @@
 
    sec04/241_recursive
    sec04/242_hanoi
+   sec04/243_fibo
 
