@@ -26,4 +26,5 @@
    sec04/242_hanoi
    sec04/243_fibo
    sec04/244_lg1028
+   sec04/245_bin_search
 
