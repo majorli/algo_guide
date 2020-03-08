@@ -27,4 +27,5 @@
    sec04/243_fibo
    sec04/244_lg1028
    sec04/245_bin_search
+   sec04/246_cubic_root
 
