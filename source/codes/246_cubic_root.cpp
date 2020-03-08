@@ -1,7 +1,7 @@
 #include <cstdio>
 
-const double EPS = 1e-6;	// 用于判断一个double数是否为0的精度常数
-const double ACC = 1e-3;	// 求三次方根的解的精度要求
+const double EPS = 1e-6;	// 用于判断一个double数是否为0的零点误差常数
+const double ACC = 1e-3;	// 求三次方根的解的精度误差常数
 
 // 求解 a 的三次方根
 double cubic_root(double a);
@@ -9,7 +9,7 @@ double cubic_root(double a);
 // 计算多项式函数 f(x) = x^3 - a 的内联函数
 inline double eval(double x, double a) { return x * x * x - a; }
 
-// 利用精度EPS判断数 x 是否为 0 的内联函数
+// 判断一个数 x 是否可以视为 0 的内联函数
 inline bool is_zero(double x) { return x <= EPS && x >= -EPS; }
 
 int main()
@@ -32,7 +32,7 @@ double cubic_root(double a)
 	while (right - left > ACC) {
 		mid = (left + right) / 2;	// 求中间点
 		mid_value = eval(mid, a);	// 求中间点处的值
-		// 下面是用来调试的输出语句，输出二分迭代的过程步骤
+		// 下面被注释掉的两行是用来调试的输出语句，输出二分迭代的过程步骤
 		//printf("left = %9.4lf, right = %9.4lf, mid = %9.4lf, mid-value = %14.6lf\n",
 		//	left, right, mid, mid_value);
 		if (is_zero(mid_value)) return mid;	// 求解完成
