@@ -30,4 +30,5 @@
    sec04/245_bin_search
    sec04/246_cubic_root
    sec04/247_p1024
+   sec04/248_p2678
 
