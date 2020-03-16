@@ -157,7 +157,7 @@ C++的模板算法库algorithm中提供了一个非常方便实用的快速排�
    2. 当 :math:`B[j-1]\gt A[k]` 时，说明数组 :math:`A` 贡献给 :math:`C` 前半部分的数太少了，有过小的数混进后半部分去了，所以这时候我们应该增大 :math:`k` 的值；
    3. 其余情况，说明 :math:`A[k-1]\le B[j]` 且 :math:`B[j-1]\le A[k]`，这就是说 :math:`A[k-1]` 和 :math:`B[j-1]` 二者中的大者小于等于 :math:`A[k]` 和 :math:`B[j]` 二者的小者，即 :math:`C` 前半部分的数都不大于后半部分的数，Bingo！我们找到了中位数。
 
-2. :math:`k=0` 时，这时候数组 :math:`A` 中所有数都被分在了 :math:`C` 的后半部分，:math:`C` 的前半部分全部由 :math:`B` 的前 :math:`j` 个数构成。此时 :math:`j=half`，当 :math:`m=n` 时 :math:`j=m=n`，会出现整个数组 :math:`B` 都在 :math:`C` 前半部分的情况，但是这没有关系，如下所示：
+2. :math:`k=0` 时，这时候数组 :math:`A` 中所有数都分在了 :math:`C` 的后半部分，:math:`C` 的前半部分全部由 :math:`B` 的前 :math:`j` 个数构成。此时 :math:`j=half`，当 :math:`m=n` 时 :math:`j=m=n`，会出现整个数组 :math:`B` 都在 :math:`C` 前半部分的情况，但是这没有关系，如下所示：
 
    .. code-block:: none
 
@@ -219,8 +219,8 @@ C++的模板算法库algorithm中提供了一个非常方便实用的快速排�
 
 下面是完整的程序：
 
-
-
+.. literalinclude:: ../../codes/24A_lc04_bin.cpp
+   :language: c++
 
 
 最后留一个思考问题：为什么不需要在开始查找之前对“有一个数组为空”的情况进行特判？
