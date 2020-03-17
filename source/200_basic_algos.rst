@@ -33,4 +33,5 @@
    ch02/220_basic_online_algos
    ch02/230_basic_string_algos
    ch02/240_rec_bin
+   ch02/250_sort_algos
 
