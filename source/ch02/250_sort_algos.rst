@@ -54,3 +54,5 @@
    :maxdepth: 2
 
    sec05/251_two_simple_sorts
+   sec05/252_insertion_sort
+   
