@@ -55,4 +55,5 @@
 
    sec05/251_two_simple_sorts
    sec05/252_insertion_sort
+   sec05/253_merge_sort
    
