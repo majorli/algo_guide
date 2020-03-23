@@ -128,7 +128,7 @@
 
 .. literalinclude:: ../../codes/254_quick_sort.cpp
    :language: c++
-   :lines: 1-2, 5-6, 20-33
+   :lines: 7-8, 24-37
 
 
 快速排序的实现和分析
@@ -208,7 +208,7 @@
 
 .. literalinclude:: ../../codes/254_quick_sort.cpp
    :language: c++
-   :lines: 1-4, 9-10, 38-51
+   :lines: 2, 8-10, 38-51
 
 不过千万要记住，调用 ``quick_sort()`` 函数开始排序之前，先用 ``srand(time(NULL));`` 语句种一下随机数种子。
 
