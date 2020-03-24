@@ -57,4 +57,6 @@
    sec05/252_insertion_sort
    sec05/253_merge_sort
    sec05/254_quick_sort
+   sec05/255_non_cmp_sorts
+   
    
