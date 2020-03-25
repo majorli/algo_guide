@@ -7,7 +7,7 @@ void print(int d[], int n);
 void radix_sort(int d[], int n);
 
 // 获取整数 n 的 radix 位上的数，采用内联函数以提高速度
-int digit(int n, int radix) { return (n / radix) % 10; }
+inline int digit(int n, int radix) { return (n / radix) % 10; }
 
 int main()
 {
