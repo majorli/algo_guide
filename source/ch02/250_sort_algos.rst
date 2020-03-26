@@ -60,4 +60,4 @@
    sec05/255_non_cmp_sorts
    sec05/256_cpp_sort
    sec05/257_complex_sorts
-   
+   sec05/258_index
