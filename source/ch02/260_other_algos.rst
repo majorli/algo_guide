@@ -23,4 +23,4 @@
 .. toctree::
    :maxdepth: 2
 
-   sec06/261_permutation
+   sec06/261_perm_comb
