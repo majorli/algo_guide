@@ -13,7 +13,7 @@
 
    [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]
 
-有时候我们并不想把所有物体都拿出来进行排列，而是指定从中取出若干个进行排列。例如从1号到4号三个小球中取出3个进行排列，经过仔细的罗列，可以得到24种不同的排列：
+有时候我们并不想把所有物体都拿出来进行排列，而是指定从中取出若干个进行排列。例如从1号到4号四个小球中取出3个进行排列，经过仔细的罗列，可以得到24种不同的排列：
 
 .. code-block:: none
 
@@ -78,16 +78,180 @@
 
    :math:`n` 取 :math:`m` 的重复排列数记作 :math:`U_n^m`。请大家思考一下它的计算公式，以及应该用什么算法来编程实现计算。
 
+所以现在有 :math:`(1)` 和 :math:`(2)` 两个公式用于计算排列数，数学推导、证明等常会用到后者，前者多用于计算。计算机程序计算排列数也使用公式 :math:`(1)`，只需用一个循环进行 :math:`m-1` 次乘法即可完成计算，如果用公式 :math:`(2)` 就要计算两次阶乘再相除，会浪费许多工作量。
+
+.. admonition:: 练习：排列数计算
+
+   编写计算排列数的工具函数，并编写主程序用来测试。有以下三点要求：
+
+   1. 只用一次循环，不对 :math:`m=0,m=1` 等特殊值进行特判；
+   2. 排列数随着 :math:`m,n` 的增大会变得非常大，注意使用足够大的非负整数类型；
+   3. 通过测试，对C++语言最大的非负整数类型能够支持的最大排列参数 :math:`m` 和 :math:`n` 有一个大致的估计。
+
+.. hint::
+
+   程序在计算排列数时，如果 :math:`n` 不变，出现 :math:`P_n^{m+1}\lt P_n^m` 的情况，说明 :math:`P_n^{m+1}` 已经超过了取值范围。
+
+.. tip::
+
+   unsigned long long 这个数据类型名称写起来太长，可以在程序最开始的地方写上语句 ``typedef unsigned long long ull;``，以后就可以用 ``ull`` 来代替 ``unsigned long long`` 作为数据类型使用了。
+
+经测试，随着 :math:`n` 和 :math:`m` 的逐步增长，C++的 unsigned long long 在 :math:`P_{21}^{19}` 时第一次出现超限，可见排列数的增长速度有多快。
 
 
 组合和组合数的计算
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In mathematics, a combination is a selection of items from a collection, such that (unlike permutations) the order of selection does not matter. For example, given three fruits, say an apple, an orange and a pear, there are three combinations of two that can be drawn from this set: an apple and a pear; an apple and an orange; or a pear and an orange. More formally, a k-combination of a set S is a subset of k distinct elements of S. If the set has n elements, the number of k-combinations is equal to the binomial coefficient
+数学里，\ :strong:`组合`\ 是指一种选取操作，和排列不同，组合操作是从一个集合中任意取出指定数量的对象，每一种取法称为一种组合。组合里的对象并不存在相互之间的顺序关系，它们只是单纯地取出来放在一起。例如，从1号到3号三个小球中任取两个的组合一共有三种：{1,2}, {2,3} 和 {1,3}，现在 {1,2} 和 {2,1} 被视为同一种组合，1号球和2号球的相互顺序是无所谓的。
 
-{\displaystyle {\binom {n}{k}}={\frac {n(n-1)\dotsb (n-k+1)}{k(k-1)\dotsb 1}},}{\binom {n}{k}}={\frac {n(n-1)\dotsb (n-k+1)}{k(k-1)\dotsb 1}},
-which can be written using factorials as {\displaystyle \textstyle {\frac {n!}{k!(n-k)!}}}\textstyle {\frac {n!}{k!(n-k)!}} whenever {\displaystyle k\leq n}k\leq n, and which is zero when {\displaystyle k>n}k>n. The set of all k-combinations of a set S is often denoted by {\displaystyle \textstyle {\binom {S}{k}}}{\displaystyle \textstyle {\binom {S}{k}}}.
+从 :math:`n` 个相异的对象中取 :math:`m` 个总共可以取得的组合种数称为\ :strong:`组合数`，在中国和俄罗斯写为 :math:`C_n^m`，在欧美国家写为 :math:`n \choose m`，我们按照中国习惯用 :math:`C_n^m` 表示 :math:`n` 选 :math:`m` 的组合数，有时候为了书写方便也写作 :math:`C(n,m)`。同样的，如何生成所有组合留到后面介绍，这里先了解组合数怎么计算。
 
-Combinations refer to the combination of n things taken k at a time without repetition. To refer to combinations in which repetition is allowed, the terms k-selection,[1] k-multiset,[2] or k-combination with repetition are often used.[3] If, in the above example, it were possible to have two of any one kind of fruit there would be 3 more 2-selections: one with two apples, one with two oranges, and one with two pears.
+不难发现，组合和排列是非常相似的两种操作，二者唯一的区别是取排列的时候取出的对象相互之间是有位置顺序关系的，可以理解为它们被排成一列队伍，而取组合的时候取出的对象相互之间没有位置顺序关系，可以视为它们只是被凑成了一堆。那么我们可以做下面这样的两步操作：先完成 :math:`n` 选 :math:`m` 的取组合操作，得到所有 :math:`C_n^m` 种组合，其中每一种组合都包含 :math:`m` 个相异的对象。然后我们一一对这些组合中的相异对象做全排列，这样每一种组合都会产生 :math:`P_m^m` 个排列，总共能产生 :math:`C_n^mP_m^m` 个排列，而这正是 :math:`m` 取 :math:`n` 的排列数 :math:`P_n^m`，所以有 :math:`P_n^m=C_n^mP_m^m=m!\cdot C_n^m`。因此就能得出下面的组合数计算公式：
 
-Although the set of three fruits was small enough to write a complete list of combinations, with large sets this becomes impractical. For example, a poker hand can be described as a 5-combination (k = 5) of cards from a 52 card deck (n = 52). The 5 cards of the hand are all distinct, and the order of cards in the hand does not matter. There are 2,598,960 such combinations, and the chance of drawing any one hand at random is 1 / 2,598,960.
+.. math::
+
+   C_n^m=\frac{P_n^m}{m!}=\frac{n!}{(n-m)!\cdot m!},(0\le m\le n)\tag{3}
+
+这是数学里组合数的标准计算公式。通过这个公式，对几个特殊的 :math:`m` 可以得出一些比较好记而且便利的快捷公式：
+
+.. math::
+
+   C_n^0=C_n^n\equiv1; C_n^1=C_n^{n-1}=n; C_n^2=\frac{n(n-1)}{2}
+
+回顾本节前面罗列过的从1号到4号四个小球中取出3个进行排列的例子，当时我们经过自己的罗列，列出了总共24个排列。如果把这些排列按照小球编号分类之后，可以分为四类，分别对应4种组合：
+
+.. code-block:: none
+
+   [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]  对应 {1,2,3}
+   [1,2,4], [1,4,2], [2,1,4], [2,4,1], [4,1,2], [4,2,1]  对应 {1,2,4}
+   [1,3,4], [1,4,3], [3,1,4], [3,4,1], [4,1,3], [4,3,1]  对应 {1,3,4}
+   [2,3,4], [2,4,3], [3,2,4], [3,4,2], [4,2,3], [4,3,2]  对应 {2,3,4}
+
+通过计算公式，我们可以得到 :math:`C_4^3=\frac{4!}{1!\times3!}=\frac{4\times3\times2\times1}{1\times3\times2\times1}=4`，和上面的列举结果相符。
+
+为了计算方便，也经常会用排列数的公式 :math:`(1)` 来代入计算，从而得到公式 :math:`(3)` 的另一种简化形式：
+
+.. math::
+
+   C_n^m==\frac{P_n^m}{m!}=\frac{n\cdot(n-1)\cdot\cdots\cdot(n-m+1)}{m\cdot(m-1)\cdot\cdots\cdot1}\tag{4}
+
+值得注意的是，公式 :math:`(4)` 中的分子和分母连乘的次数是一样的，这很便于记忆和计算。组合数在数学和算法题中的运用比排列数更为广泛，也更为灵活和复杂。为了更好地理解掌握，我们还需要在学习几个组合数的基本性质。
+
+**对称性**
+
+反过来观察从 :math:`n` 个对象中任选 :math:`m` 个构成组合的操作，其实也就是从 :math:`n` 个对象中任选 :math:`n-m` 个不用来构成组合，把选剩下的 :math:`m` 个拿来构成组合。比如从苹果、香蕉和西瓜三样水果中选两个要吃的，不就是从它们中间选一个不要吃的嘛。所以 :math:`n` 选 :math:`m` 的取组合和 :math:`n` 选 :math:`n-m` 的取组合其实是没有差别的，相应的，二者的组合数也是没有差别的，这就是组合数的对称性：
+
+.. math::
+
+   C_n^m = C_n^{n-m}\tag{5}
+
+从组合数计算公式 :math:`(3)` 也可以轻松地发现这个规律，因为二者的计算公式是一模一样的。下面罗列了 :math:`n<=4` 的所有组合数，可以直观地看到其对称性：
+
+.. code-block:: none
+
+    n | m=0  m=1  m=2  m=3  m=4
+   ---+------------------------
+    0 |  1
+    1 |  1    1
+    2 |  1    2    1
+    3 |  1    3    3    1
+    4 |  1    4    6    4    1
+
+**递推性**
+
+用递推的思路分解从 :math:`n` 个对象中任选 :math:`m` 个构成组合的操作，可以分成两步。首先在 :math:`n` 个候选对象中任意取出其中一个，剩下另外的 :math:`n-1` 个。第二步要分成两种情况，一种是前一步取出的那个对象要被选入组合，那么接下来只要在另外的 :math:`n-1` 个对象中选 :math:`m-1` 个就可以了，一共有 :math:`C_{n-1}^{m-1}` 种选法；另一种是前一步取出的那个对象不要被选入组合，那么接下来需要在另外的 :math:`n-1` 个对象中选 :math:`m` 个，一共有 :math:`C_{n-1}^m` 种选法。以上两种就覆盖了所有选法，没有别的了，于是又有了下面的组合数递推公式：
+
+.. math::
+
+   C_n^m=C_{n-1}^{m-1}+C_{n-1}^m\tag{6}
+
+当然了，上面的公式完全可以由公式 :math:`(3)` 经数学演算推导得到，请大家自己尝试一下。
+
+**分组分堆问题**
+
+分组分堆问题在数学和算法领域都是常见问题，比如这样一个问题：有6颗不同口味的巧克力，要分成3份，每份2颗，共有多少种分法？显然我们要先从6颗巧克力中任选2颗，再从剩下的4颗中任选2颗，这样就完成了，一共有 :math:`C_6^2C_4^2C_2^2=15\times6\times1=90` 种分法。
+
+这叫分组问题，即把 :math:`n` 个相异的对象分成 :math:`k` 组，各组分别有 :math:`n_1,n_2,\dots,n_k` 个对象，满足 :math:`n_1+n_2+\cdots+n_k=n`，共有多少种分法？按照依次取组合的方法很容易得到共有 :math:`C_n^{n_1}C_n^{n_2}\cdots C_n^{n_k}` 种，这个数通常记作：
+
+.. math::
+
+   \begin{align}
+   C_n^{n_1,n_2,\dots,n_k}&=C_n^{n_1}C_{n-n_1}^{n_2}\cdots C_{n_k}^{n_k}\\
+   &=\frac{n!}{(n-n_1)!\cdot n_1!}\cdot\frac{(n-n_1)!}{(n-n_1-n_2)!\cdot n_2!}\cdot\cdots\cdot\frac{(n_k)!}{(n_k)!}\\
+   \implies C_n^{n_1,n_2,\dots,n_k}&=\frac{n!}{n_1!\cdot n_2!\cdot\cdots\cdot n_k!}
+   \end{align}
+
+进一步考虑，如果每一个分组中对象的数量相等，而且分好的各个组之间没有顺序差别呢？
+
+比如分别用A、B、C、D、E、F表示上面所说的6种口味的巧克力，分完之后是要依次送给甲、乙、丙三位小朋友吃的。假如有一个分组是 [{A,B}, {C,D}, {E,F}]，表示甲拿到的巧克力是A和B，乙拿到的巧克力是C和D，丙拿到的巧克力是E和F。下一次分组，假如得到的结果是 [{C,D}, {A,B}, {E,F}]，那么甲拿到的巧克力是C和D，乙拿到的巧克力是A和B，丙拿到的巧克力是E和F。这两种分组方式是视为不同的。
+
+但是现在我们分巧克力不再给小朋友吃了，而是分完之后装进三个相同的盒子里，那么问题还会一样吗？不一样了，现在 [{A,B}, {C,D}, {E,F}] 和分组 [{C,D}, {A,B}, {E,F}] 就应该视为是相同的分法了。或许现在我们应该把表示排列的方括号改成表示组合的花括号了，因为很明显这里的区别非常类似从排列到组合的区别。按照前面说过的规律，现在的巧克力分法应该为 :math:`\frac{90}{3!}=15` 种。
+
+这叫做分堆问题，即把 :math:`n` 个相异对象平均分为 :math:`k` 堆，每堆 :math:`n\over k` 个对象，堆和堆之间没有位置顺序关系，一共有多少种分法？我们可以先进行分组，而每一个堆一定对应着 :math:`P_k^k=k!` 个组，所以分堆数为：
+
+.. math::
+
+   \frac{C_n^{{n\over k},{n\over k},\dots,{n\over k}}}{k!}=\frac{n!}{{n\over k}!\cdot {n\over k}!\cdot\cdots\cdot {n\over k}!\cdot k!}
+
+实际的分堆问题非常普遍，比如最常见的24支足球队分组比赛，一共可以有多少种分法？
+
+**二项式定理**
+
+代数学中有一条大名鼎鼎、应用极广的牛顿二项式定理，用以计算二项式的 :math:`n` 次幂 :math:`(a+b)^n` 的展开式，:math:`a,b` 为任意的数或项，:math:`n` 为非负整数。关于二项式的幂，初中阶段就学过几种简单情况：
+
+.. math::
+
+   (a+b)^0=1,(a+b)^1=a+b,(a+b)^2=a^2+2ab+b^2
+
+如果自己愿意进一步演算，也不难得到 :math:`(a+b)^3=a^3+3a^2b+3ab^2+b^3`，再暴力演算下去怕就有点累了。那么对于任意的 :math:`n` 次幂，伟大的牛顿是怎么考虑的呢？
+
+按照幂的基本规则，除了0次幂以外，任何东西的 :math:`n` 次幂就是把这东西连续自乘 :math:`n` 次，所以 :math:`(a+b)^n` 就是有 :math:`n` 个 :math:`(a+b)` 连续的自乘起来：
+
+.. math::
+
+   (a+b)^n = \underbrace{(a+b)\cdot(a+b)\cdot\cdots\cdot(a+b)}_{n个}
+
+所以呢，完全展开之后，合并同类项之前，每一个加项都是在 :math:`n` 中任选若干个 :math:`a`，剩余的选 :math:`b` 然后乘起来得到的。比如说某一项在所有 :math:`n` 个 :math:`(a+b)` 中都选择了 :math:`a`，那么它就成为了那个 :math:`a^n` 项。
+
+一般的情况，如果某一项在 :math:`n` 个 :math:`(a+b)` 中选了 :math:`k` 个 :math:`a`，其中 :math:`0\le k\le n`，剩余的选了 :math:`b`，所以它就是 :math:`a^kb^{n-k}`。那么项 :math:`a^kb^{n-k}` 一共有几个呢？也就是问这样的选择一共可以有几种呢？鉴于乘法是满足交换律的，这样的选择相当于是做 :math:`n` 选 :math:`k` 的组合，一共有 :math:`C_n^k` 种。所以在合并同类项之后项 :math:`a^kb^{n-k}` 的系数一定是 :math:`C_n^k`。
+
+综上所述，代数学里最伟大的定理之一，二项式定理便呼之欲出了：
+
+.. math::
+
+   (a+b)^n=C_n^0a^0b^n+C_n^1a^1b^{n-1}+\cdots+C_n^ka^kb^{n-k}+\cdots+C_n^na^nb^0\tag{7}
+
+.. attention:: 
+
+   请看，优秀的数学定理总是能优雅地兼容特殊情况，比如 :math:`(a+b)^0=1`。同理，优秀的计算机程序总是能优雅地兼容特殊情况，比如计算排列数的程序对于 :math:`P_n^0=1` 的处理。特判这种东西，虽然有时候很必要，但终归是丑陋的，要设法减少特判的使用。
+
+另外，利用二项式定理还可以得到一个特别有用的推论：
+
+.. math::
+
+   C_n^0+C_n^1+\cdots+C_n^n=2^n\tag{8}
+
+推导过程极其简单，令 :math:`a=b=1` 就可以了，你想到了吗？
+
+
+最后来讲一讲怎么编写程序来计算组合数。这个问题看起来很简单，但是要达到两个目标，一是尽量减少乘除法的次数，而是要尽可能地用足C++的最大的非负整数类型取值范围。这两个目标要完美达成还是不容易的，主要需要注意以下几个技巧：
+
+1. 利用公式 :math:`(3)` 来进行计算肯定是不合理的，应该选用公式 :math:`(4)` 来减少乘除法次数；
+2. 利用公式 :math:`(4)`，分子和分母的乘法次数相同，此时开可以利用对称性公式 :math:`(5)`，对于 :math:`m\lt{n\over2}` 的情况，改为计算 :math:`C_n^{n-m}`，这样有可以减少不少乘除法次数；
+3. 先计算好分母行不行？对于小的组合数是没有问题，但是不够好，因为计算分母的时候有可能提前造成整型数溢出，使得明明在 unsigned long long 取值范围内的组合数由于分母计算时提前溢出了而导致结果错误；
+4. 如果把计算过程改成一乘一除一乘一除地循环行不行？这是解决提前溢出问题的好办法，而且由于公式 :math:`(4)` 中分子分母的连乘次数相同，所以可以用一个循环完成计算。但是这里有陷阱，计算顺序没有安排对的话，可能造成错误。
+
+   如果把计算过程做下面的调整：
+
+   .. math::
+
+      C_n^m=\frac{n\cdot(n-1)\cdot\cdots\cdot(n-m+1)}{m\cdot(m-1)\cdot\cdots\cdot1}=\left({n\over m}\right)\cdot\left({n-1\over m-1}\right)\cdot\cdots\cdot\left({n-m+1\over 1}\right)
+
+   那么不能保证每一次乘一个数再除一个数的时候能够整除。比如计算 :math:`C_5^2`，按照上面的方法，第一轮循环计算 :math:`5\over2` 就发生了不能整除的问题，计算结果势必错误。
+
+   这时候怎么办？提示一下，大家应该知道或者能理解这个规律，2个连续的正整数里一定有一个2的倍数、3个连续正整数里一定有一个3的倍数，......，依此规律，:math:`k` 个连续正整数里一定有一个 :math:`k` 的倍数。所以知道应该怎样调整计算顺序了吧？
+
+.. admonition:: 练习
+
+   按照上面所述的要求和讲解，编写一个完美的在 unsigned long long 范围内的组合数计算工具函数。自行编写主函数来进行正确性测试，并对 unsigned long long 这种数据类型最多能计算到多大的组合数进行试验。
+
