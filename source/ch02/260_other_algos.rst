@@ -24,3 +24,4 @@
    :maxdepth: 2
 
    sec06/261_perm_comb
+   sec06/262_perm_comb_tables
