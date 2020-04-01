@@ -25,3 +25,4 @@
 
    sec06/261_perm_comb
    sec06/262_perm_comb_tables
+   sec06/263_permuting_1
