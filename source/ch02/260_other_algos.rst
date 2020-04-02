@@ -27,3 +27,4 @@
    sec06/262_perm_comb_tables
    sec06/263_permuting_1
    sec06/264_permuting_2
+   sec06/265_choosing
