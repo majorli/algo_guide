@@ -129,17 +129,17 @@ C++算法库的全排列生成函数
    
    void func(char data[])
    {
-      for (int i = 0; i < N; ++i)
-         printf("%c%c", data[i], i == N - 1 ? '\n' : ' ');
+           for (int i = 0; i < N; ++i)
+                   printf("%c%c", data[i], i == N - 1 ? '\n' : ' ');
    }
    
    int main()
    {
-      char ch[N] = { 'D', 'B', 'A', 'C' };
+           char ch[N] = { 'D', 'B', 'A', 'C' };
    
-      sort(ch, ch + N);
-      do func(ch); while (next_permutation(ch, ch + N));
-      return 0;
+           sort(ch, ch + N);
+           do func(ch); while (next_permutation(ch, ch + N));
+           return 0;
    }
 
 .. admonition:: 练习
