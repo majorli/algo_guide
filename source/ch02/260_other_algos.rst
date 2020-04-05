@@ -28,4 +28,5 @@
    sec06/263_permuting_1
    sec06/264_permuting_2
    sec06/265_choosing
-   sec06/266_luogu_problems_1.rst
+   sec06/266_luogu_problems_1
+   sec06/267_luogu_problems_2
