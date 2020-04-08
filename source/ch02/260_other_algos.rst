@@ -31,3 +31,4 @@
    sec06/266_luogu_problems_1
    sec06/267_luogu_problems_2
    sec06/268_luogu_problems_3
+   sec06/269_luogu_problems_4
