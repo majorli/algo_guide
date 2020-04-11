@@ -22,7 +22,7 @@
 
 .. math::
 
-    a\gt b\implies \gcd(a,b)=\gcd\bigl(a \pmod b,b\bigr)
+    a\gt b\implies \gcd(a,b)=\gcd(a \bmod b,b)
 
 辗转相除法就是利用上面的两条性质，不断地用大数去除小数，把大数变成除得的余数，直到其中有一个数变为0，此时另一个数就是要求的最大公因数。举例说明如下。
 
