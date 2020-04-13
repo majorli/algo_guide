@@ -1,6 +1,6 @@
 #include <cstdio>
 
-int field[1001][1001] = { 0 };
+int field[1010][1010] = { 0 };
 
 int main()
 {
@@ -13,7 +13,7 @@ int main()
 		y2++;
 		for (int row = x1; row <= x2; row ++) {
 			field[row][y1]++;
-			if (y2 <= n) field[row][y2]--;
+			field[row][y2]--;
 		}
 	}
 	for (int row = 1; row <= n; row++)
