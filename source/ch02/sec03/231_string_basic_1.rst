@@ -26,7 +26,7 @@
 
 .. code-block:: c++
 
-   void func1(char* s);
+   void func1(char *s);
    void func2(char s[]);
 
 但是通常我们在传递字符串时会采用指针的形式而不是数组的形式，这是为了能够一眼看出这里要传递的是C-string而不是字符数组。
