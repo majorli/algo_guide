@@ -94,9 +94,8 @@ C++语言提供了两个专门的动态内存管理运算符（\ ``new, delete``
 
    #include <cstdlib>
 
-   int* p1 = NULL;
-   int* p2 = NULL;
-   p1 = (int*)malloc(sizeof(int));         // 使用C库函数分配一块一个int变量长的动态内存并让指针p1指向它
+   int *p1 = NULL, *p2 = NULL;
+   p1 = (int *)malloc(sizeof(int));         // 使用C库函数分配一块一个int变量长的动态内存并让指针p1指向它
    p2 = new int;                           // 使用C++的new运算符申请一个动态int变量并让指针p2指向它
    
    // ...
@@ -119,7 +118,7 @@ C++语言提供了两个专门的动态内存管理运算符（\ ``new, delete``
    
    #include <cstdlib>
 
-   int* a1 = (int*)malloc(20 * sizeof(int));       // C库函数的做法
+   int* a1 = (int *)malloc(20 * sizeof(int));       // C库函数的做法
    int* a2 = new int[20];                          // C++ new运算的做法
    
    // ...
@@ -135,11 +134,11 @@ C++语言提供了两个专门的动态内存管理运算符（\ ``new, delete``
    
    #include <cstdlib>
    
-   int** b1 = (int**)malloc(10 * sizeof(int*));
+   int **b1 = (int **)malloc(10 * sizeof(int*));
    for (int i = 0; i < 10; i++)
            b1[i] = (int*)malloc(20 * sizeof(int));
    
-   int** b2 = new int*[10];
+   int **b2 = new int *[10];
    for (int i = 0; i < 10; i++)
            b2[i] = new int[20];
    
