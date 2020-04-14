@@ -63,7 +63,7 @@
 .. code-block:: c++
 
    for (string::iterator it = str.end() - 1; it >= str.begin(); --it)
-           cout << * it;
+           cout << *it;
 
 C++ string除了速度比C-string略慢外，其他各方面都比C-string要优秀得多。例如它没有长度超限的危险，它可以自动根据内容来调整自己占用的空间，它的成员函数也比 ``cstring`` 库函数丰富和强大得多。如果不是特别简单或者对速度要求特别高的情况，我们都建议在编程时使用C++ string进行字符串处理。
 
