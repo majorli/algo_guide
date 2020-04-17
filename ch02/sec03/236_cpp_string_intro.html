@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.3.6. C++ string简介 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.3.7. 初识有限自动机：字符串转整数" href="237_atoi.html" />
+    <link rel="prev" title="3.3.5. 回文字符串" href="235_palindromic_string.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="237_atoi.html" title="3.3.7. 初识有限自动机：字符串转整数"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="235_palindromic_string.html" title="3.3.5. 回文字符串"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" accesskey="U"><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.3.6. C++ string简介</a><ul>
+<li><a class="reference internal" href="#id1">3.3.6.1. 常见用法</a></li>
+<li><a class="reference internal" href="#id2">3.3.6.2. 输入输出</a></li>
+<li><a class="reference internal" href="#id3">3.3.6.3. 字符串流</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="235_palindromic_string.html"
+                        title="上一章"><span class="section-number">3.3.5. </span>回文字符串</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="237_atoi.html"
+                        title="下一章"><span class="section-number">3.3.7. </span>初识有限自动机：字符串转整数</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec03/236_cpp_string_intro.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="c-string">
+<h1><span class="section-number">3.3.6. </span>C++ string简介<a class="headerlink" href="#c-string" title="永久链接至标题">¶</a></h1>
+<p>C++ string是C++标准模板库(STL)提供的一个特殊的容器类，是一种封装好的定义完好的字符串类型，而不再是C-string那样借用字符型数组来实现的“半成品”样子。相比C-string，C++ string的功能更加强大和完善，更加安全可靠，也更加易用，是一种真正的类型，这是它的优点。它的缺点是处理速度慢于C-string，灵活度也略微欠缺。在一般的算法程序中，C++ string是更加推荐使用的字符串表示方式。只有极少数对运行速度有苛刻要求、处理的字符串规模极大的题目，使用C++ string可能会导致TLE，这时候就必须改用C-string了。</p>
+<p>本节我们介绍C++ string的使用方法，在本节以后我们将开始大量采用C++ string来表示字符串。</p>
+<p>C++ string的成员函数有很多，同一个函数也常会有多个参数不同的版本（C++函数重载），不可能在这里一一说明。我们仅对算法程序中常见的用法进行分类说明，掌握这些常见用法就可以基本掌握C++ string，足以应付绝大多数算法编程问题。要想更深入地了解它，可阅读相关的书籍和资料，比如《C++ Primer Plus》。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">3.3.6.1. </span>常见用法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><strong>1. 定义、构造器和赋值</strong></p>
+<p>要使用C++ string，首先要在程序开头引入 <code class="docutils literal notranslate"><span class="pre">string</span></code> 库，并使用命名空间 <code class="docutils literal notranslate"><span class="pre">std</span></code>。然后在程序中可以用类型名 <code class="docutils literal notranslate"><span class="pre">string</span></code> 来定义具体的C++ string变量，或者直接简称为string。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>按照面向对象编程的术语来说，STL库提供的所有类型，包括 <code class="docutils literal notranslate"><span class="pre">string</span></code> 和其他各种容器，例如 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 等，都叫做<strong>类(class)</strong>，类定义了一些复杂的数据类型，它们有自己的数据（成员变量）和功能（成员函数），类的具体变量叫做<strong>对象(object)</strong>。这些都是面向对象编程的核心概念，在学习算法编程的时候，我们可以暂且把类就当做是一些数据类型，把对象就称为变量。</p>
+</div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="n">string</span> <span class="n">s</span><span class="p">;</span>    <span class="c1">// 定义了一个全局string，名为s，它的初始值是空字符串 &quot;&quot;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">string</span> <span class="n">s1</span><span class="p">;</span>   <span class="c1">// 定义了一个属于main函数的局部string变量s1，它也有初始值，即空字符串 &quot;&quot;</span>
+        <span class="c1">// ...</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>在定义string时，和C-string不同的是，我们不需要指定长度，因为string的长度是自动可变长度，这是string的一大优势。</p>
+<p>另外，我们以前学过，局部变量在定义时如果没有被设置初值，那它的值就是不确定的，C++不会自动初始化局部变量。但是这里局部变量 <code class="docutils literal notranslate"><span class="pre">s1</span></code> 没有被初始化，可实际上它还是被初始化为空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 了！这是为什么呢？我们前面提到过，C++ string是一个类，不是普通的数据类型。而类有一种特殊的叫做<strong>构造器</strong>的成员函数，在定义类的对象时无论如何会有一个构造器被执行，用来“构造”出一个实实在在的对象。所以 <code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">s1;</span></code> 这样一句看上去什么都没有指定的普通的局部变量定义，实际上也调用了C++ string类的默认构造器，它会把 <code class="docutils literal notranslate"><span class="pre">s1</span></code> 构造成一个空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>。</p>
+<p>请注意：C++语言允许我们对自定义的结构（struct）类型也定义构造器。</p>
+<p>BTW，构造器这种东西，大多数纯C++程序员更习惯叫它<strong>构造函数</strong>，而Java程序员更喜欢称其为构造器。</p>
+</div>
+<p>C++ string远不止构造一个空字符串这么一种简单的默认构造器，它还有很多种其他构造器，通过不同的参数表来区分。在定义string时可以在变量名后面像函数调用一样用一对括号传入一些特定的参数来调用与之对应的某一个构造器，这样就能根据需要灵活地构造新string。最常用的几种构造方式如下面的示例所示：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s2</span><span class="p">(</span><span class="s">&quot;ABC&quot;</span><span class="p">);</span>  <span class="c1">// 用一个字符串来构造，s2 = &quot;ABC&quot;</span>
+<span class="n">string</span> <span class="nf">s3</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="sc">&#39;A&#39;</span><span class="p">);</span>   <span class="c1">// 用指定个数的同一字符来构造，s3 = &quot;AAAA&quot;，即4个&#39;A&#39;，注意参数类型是char，用单引号</span>
+<span class="n">string</span> <span class="nf">s4</span><span class="p">(</span><span class="s">&quot;ABCDE&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>    <span class="c1">// 用一个字符串的子串来构造，s4 = &quot;BCD&quot;，即&quot;ABCDE&quot;从位置1开始，长度为3的子串</span>
+</pre></div>
+</div>
+<p>上面注释中所说的字符串，可以是字符串字面量，也可以是C-string，也可以是另一个C++ string，所以构造方式是很多样很灵活的。比如下面这段程序，请想一想 <code class="docutils literal notranslate"><span class="pre">s1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">s6</span></code> 分别会被构造成什么？然后自己运行一遍试试。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">char</span> <span class="n">s</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;Hello World&quot;</span><span class="p">;</span>
+        <span class="n">string</span> <span class="n">s1</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+        <span class="n">string</span> <span class="n">s2</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+        <span class="n">string</span> <span class="n">s3</span><span class="p">(</span><span class="s">&quot;Hello World&quot;</span><span class="p">);</span>
+        <span class="n">string</span> <span class="n">s4</span><span class="p">(</span><span class="s">&quot;Hello World&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+        <span class="n">string</span> <span class="n">s5</span><span class="p">(</span><span class="n">s3</span><span class="p">);</span>
+        <span class="n">string</span> <span class="n">s6</span><span class="p">(</span><span class="n">s5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s3</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s4</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s5</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s6</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>C++ string就像其他常见的内置数据类型变量一样，可以直接用等号进行赋值。这相较于C-string又是一大进步。对string进行赋值时，等号右边可以是一个字符串字面量，可以是另一个string，可以是一个C-string，甚至可以是一个字符。例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&quot;ABC&quot;</span><span class="p">;</span>   <span class="c1">// 使用C-string字面量进行赋值，直接赋初始值</span>
+<span class="n">string</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">,</span> <span class="n">s4</span><span class="p">;</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="sc">&#39;x&#39;</span><span class="p">;</span>            <span class="c1">// s2被赋值为一个单字符的字符串，&quot;x&quot;，但是切记唯有这种赋值方式不能用于赋初始值！</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>             <span class="c1">// 使用另一个C++ string进行赋值</span>
+<span class="kt">char</span> <span class="n">s</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;Hello World&quot;</span><span class="p">;</span>
+<span class="n">s4</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span>              <span class="c1">// 使用C-string变量进行赋值</span>
+</pre></div>
+</div>
+<p><strong>2. 长度、比较、拼接和交换</strong></p>
+<p>使用成员函数 <code class="docutils literal notranslate"><span class="pre">string::size()</span></code> 可以获取一个string的长度：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;Hello World!&quot;</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>    <span class="c1">// 输出s的长度，12</span>
+</pre></div>
+</div>
+<p>C++ string支持直接用六个关系运算符 <code class="docutils literal notranslate"><span class="pre">==,</span> <span class="pre">!=,</span> <span class="pre">&lt;,</span> <span class="pre">&gt;,</span> <span class="pre">&lt;=,</span> <span class="pre">&gt;=</span></code> 进行字典序比较，这就非常的自然和谐了，相较于C-string又是一大进步。它们的用法和用于数值大小比较时完全一样，只是比较的规则是字符串的字典序，这里就不再举例说明了。</p>
+<p>下面看一下C++ string的字符串拼接功能，即把多个字符串首尾相接起来形成一个新的字符串。例如连接 <code class="docutils literal notranslate"><span class="pre">&quot;Hel&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;lo&quot;</span></code> 就可以生成一个新字符串 <code class="docutils literal notranslate"><span class="pre">Hello&quot;</span></code>。C++ string采用加法运算符 <code class="docutils literal notranslate"><span class="pre">+</span></code> 来实现拼接，非常自然，毫无违和感：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&quot;interest&quot;</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="s">&quot;ing&quot;</span><span class="p">,</span> <span class="n">s3</span> <span class="o">=</span> <span class="s">&quot;ed&quot;</span><span class="p">;</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;He is &quot;</span> <span class="o">+</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">s3</span> <span class="o">+</span> <span class="s">&quot; in C++ because C++ is &quot;</span> <span class="o">+</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>请试一试上面这段代码会输出什么。</p>
+<p>甚至我们还可以像这样，现在的你们一看就懂：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&quot;interest&quot;</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>
+<span class="n">s1</span> <span class="o">+=</span> <span class="s">&quot;ing&quot;</span><span class="p">;</span>         <span class="c1">// s1变成 &quot;interesting&quot;</span>
+<span class="n">s2</span> <span class="o">+=</span> <span class="s">&quot;ed&quot;</span><span class="p">;</span>          <span class="c1">// s2变成 &quot;interested&quot;</span>
+</pre></div>
+</div>
+<p>字符串拼接在复杂的文本处理类题目中经常会用到，传统的C-string要实现复杂拼接是很费力气的，<code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库提供的 <code class="docutils literal notranslate"><span class="pre">strcat()</span></code> 函数并不是太好用，而且有数组越限风险。所以这也是C++ string的一个非常有用的改进。</p>
+<p>C++ string还有一个很实用的小功能：交换内容。使用成员函数 <code class="docutils literal notranslate"><span class="pre">string::swap()</span></code> 可以实现两个string内容的互换：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&quot;Math&quot;</span><span class="p">),</span> <span class="n">s2</span><span class="p">(</span><span class="s">&quot;Chines&quot;</span><span class="p">);</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">s2</span><span class="p">);</span>         <span class="c1">// s1变成&quot;Chines&quot;， s2变成&quot;Math&quot;</span>
+</pre></div>
+</div>
+<p><strong>3. 子串操作</strong></p>
+<p><em>(1) 查找</em></p>
+<p>C++ string具有多种灵活易用的子串或字符查找功能，它们都是以string的成员函数的方式来提供的，它们的返回值都是子串或字符在这个string中的位置（即第一个字符出现的位置）。如果查不到，则会返回一个叫做 <code class="docutils literal notranslate"><span class="pre">string::npos</span></code> 的常量。<code class="docutils literal notranslate"><span class="pre">string:</span> <span class="pre">:npos</span></code> 是一个定义好的静态常量，用这个名字就可以直接使用。这些函数如下：</p>
+<p><code class="docutils literal notranslate"><span class="pre">string::find()</span></code>：从前往后查找子串或字符出现的位置。</p>
+<p><code class="docutils literal notranslate"><span class="pre">string::rfind()</span></code>：从后往前查找子串或字符出现的位置。</p>
+<p><code class="docutils literal notranslate"><span class="pre">string::find_first_of()</span></code>：从前往后查找何处出现另一个字符串中包含的字符。例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">s1</span><span class="p">.</span><span class="n">find_first_of</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>  <span class="c1">// 查找s1中第一次出现&quot;abc&quot;中任一字符(&#39;a&#39;或&#39;b&#39;或&#39;c&#39;)的位置</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">string::find_last_of()</span></code>：从后往前查找何处出现另一个字符串中包含的字符。</p>
+<p><code class="docutils literal notranslate"><span class="pre">string::find_first_not_of()</span></code>：从前往后查找何处出现另一个字符串中没有包含的字符。</p>
+<p><code class="docutils literal notranslate"><span class="pre">string::find_last_not_of()</span></code>：从后往前查找何处出现另一个字符串中没有包含的字符。</p>
+<p>下面是一个C++ string子串、字符查找的示例程序：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">string</span> <span class="n">s</span><span class="p">(</span><span class="s">&quot;I like programming&quot;</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;i&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="c1">// 查找字符&#39;i&#39;出现的位置</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&#39;i&#39; is found at &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;like&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">==</span> <span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="c1">// 从位置3，即字符&#39;i&#39;开始查找&quot;like&quot;</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">like</span><span class="se">\&quot;</span><span class="s"> is not found&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;program&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="c1">// 查找子串&quot;program&quot;</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">program</span><span class="se">\&quot;</span><span class="s"> is found at &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find_first_of</span><span class="p">(</span><span class="s">&quot;cp&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="c1">// 查找第一次出现&#39;c&#39;或&#39;p&#39;的位置</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&#39;c&#39; or &#39;p&#39; is first found at &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;m&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="c1">// 查找最后一个&#39;m&#39;的位置</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&#39;m&#39; is last found at &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+        <span class="c1">// 从位置1开始查找第一个&#39;c&#39;和&#39;p&#39;以外的字符</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find_first_not_of</span><span class="p">(</span><span class="s">&quot;cp&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">!=</span> <span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;not &#39;c&#39; and &#39;p&#39; is first found at &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这几个查找函数的用法是类似的，它们至少接收一个参数，即要查找的子串或字符或以字符串形式表示的字符集。这是最基本的用法，如果是从前向后的正向查找就从首字符开始，如果是反向查找则从尾字符开始找起。</p>
+<p>它们也都可以接收第二个可选参数，用来指示一个开始查找的位置，表示查找要从这个位置开始，而不是从默认的头或尾开始。</p>
+<p>当然它们还有其他的用法，但记住上面两种最常用的一般来说就足够了，如果有兴趣可以去查找相关的书籍资料自行了解。</p>
+</div>
+<p>C++ string除了在子串或字符查找功能上相较于C-string进行了增强以外，还提供了一系列C-string时代没有现成提供的新功能，而自己编程实现这些功能往往是比较麻烦，容易引起错误的。</p>
+<p><em>(2) 求取</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">string::substr()</span></code> 可以用来求出一个子串，以一个新的C++ string的方式返回这个子串。</p>
+<p>它接收两个参数：子串首字符位置和长度，其中第二个参数子串长度为可选参数。调用时，如果省略了子串长度参数或首位置加长度超过了字符串长度，则求出来的子串就是从首位置开始一直到字符串结尾的部分。例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&quot;this is C++&quot;</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>    <span class="c1">// s2 = &quot;is is&quot;</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>              <span class="c1">// s2 = &quot;is is C++&quot;</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>在C++ string的惯例里，总是用一个起始位置和一个长度来表示子串，例如子串(2,4)表示从位置2（第三个字符）开始，长度为4个字符的子串。这和其他容器中用左闭右开区间表示一段范围的惯例是不同的。</p>
+</div>
+<p><em>(3) 替换</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">string::replace()</span></code> 可以用来替换子串。请看示例：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&quot;Henry Skywalker&quot;</span><span class="p">);</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;smart&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// 用&quot;smart&quot;的子串(2,2)，即&quot;ar&quot;，替换s1的子串(1,2)，即&quot;en&quot;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// s1 = &quot;Harry Skywalker&quot;</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="sc">&#39;t&#39;</span><span class="p">);</span> <span class="c1">// 用2个&#39;t&#39;替换s1的子串(7,6)，即&quot;kywalk&quot;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// s1 = &quot;Harry Stter&quot;</span>
+<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;S&#39;</span><span class="p">);</span> <span class="c1">// 查找字符&#39;S&#39;的位置，n = 6</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Po&quot;</span><span class="p">);</span> <span class="c1">// 将子串(n,1)，即&quot;S&quot;，替换为&quot;Po&quot;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// s1 = &quot;Harry Potter&quot;</span>
+</pre></div>
+</div>
+<p><em>(4) 删除</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">string::erase()</span></code> 用于从一个string中删除一个指定的子串，它也可以不指定子串长度。请看示例：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&quot;Harry the Potter the Great&quot;</span><span class="p">);</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span> <span class="c1">// 删除子串(6, 4)，s1 = &quot;Harry Potter the Great&quot;</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span> <span class="c1">// 省略子串长度，表示删除位置12及其后面的所有字符，s1 = &quot;Harry Potter&quot;</span>
+</pre></div>
+</div>
+<p><em>(5) 插入</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">string::insert()</span></code> 用于在一个string的指定位置处插入一个子串或若干个字符：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&quot;H Potter&quot;</span><span class="p">),</span> <span class="n">s2</span><span class="p">(</span><span class="s">&quot;==***==&quot;</span><span class="p">);</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;arry&quot;</span><span class="p">);</span> <span class="c1">// 在位置1处插入字符串&quot;arry&quot;，s1 = &quot;Harry Potter&quot;</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">s2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span> <span class="c1">// 在s1的最后插入s2的子串(2,3), s1 = &quot;Harry Potter***&quot;</span>
+<span class="n">s1</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="sc">&#39;*&#39;</span><span class="p">);</span> <span class="c1">//在位置0，即s1的开头插入3个字符&#39;*&#39;，s1 = &quot;***Harry Potter***&quot;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">insert()</span></code> 函数在string中插入子串或字符，指定的插入位置必须大于等于0，且不能超过原字符串的长度，否则会在运行时报错（out of range）并中止程序的运行。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">string::append()</span></code> 用于在一个string的末尾添加子串或若干个字符。</p>
+<p>这个成员函数除了不需要提供插入位置这个参数以外，其他用法和 <code class="docutils literal notranslate"><span class="pre">string::insert()</span></code> 完全一样。例如上面例子中的第3行就可以改写成：<code class="docutils literal notranslate"><span class="pre">s1.append(s2,</span> <span class="pre">2,</span> <span class="pre">3);</span></code>，这种写法和原先的写法在功能上是完全一样的，但是在运行速度上却要略微快一些，当然最重要的是写代码时也简单方便不少。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>当要在一个string的末尾添加另一个string时，一共有三种写法：</p>
+<ol class="arabic simple">
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">string::insert()</span></code>，位置参数为原字符串的长度。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">string::append()</span></code>。</p></li>
+<li><p>使用C++ string的连接（加法）运算：例如 <code class="docutils literal notranslate"><span class="pre">s1</span> <span class="pre">+=</span> <span class="pre">s2</span></code>。</p></li>
+</ol>
+<p>上面三种方法，最方便也最快速的是使用 <code class="docutils literal notranslate"><span class="pre">string::append()</span></code>，凡遇此类场景，请务必使用它。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">string::push_back()</span></code> 用于在一个string的末尾添加单个字符。</p>
+<p>调用方法非常简单，只要提供一个 <code class="docutils literal notranslate"><span class="pre">char</span></code> 型参数即可。它的运行速度非常之快，在某些场景下会非常有用。</p>
+<p>比如当需要快速读取文本型数据的时候。我们知道C++ string只能通过C++的IO流进行读写，IO流配上C++ string的速度是比较慢的。这时可以配合速度最快的 <code class="docutils literal notranslate"><span class="pre">getchar()</span></code> 函数进行快速读取。例如下面这个小函数可以实现非常高速的按行读取C++ string。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="n">string</span> <span class="o">&amp;</span><span class="n">getline</span><span class="p">(</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+	<span class="n">getline</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">string</span> <span class="o">&amp;</span><span class="n">getline</span><span class="p">(</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">((</span><span class="n">c</span> <span class="o">=</span> <span class="n">getchar</span><span class="p">())</span> <span class="o">!=</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span>
+		<span class="n">s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>另外，当需要按照一定规律逐个字符生成字符串时这个函数也非常有用。</p>
+<p><strong>4. 迭代器</strong></p>
+<p>每一种C++ STL库提供的模板类型都有一对称为<strong>迭代器（iterator）</strong>的东西，分别为首迭代器和尾迭代器，C++ string也不例外。</p>
+<p>一般对于算法编程，迭代器用得并不多，可以说绝大多数情况下完全可以不使用迭代器。但是对于大型软件开发或极为复杂的算法程序编制，迭代器有时候就会变得很有用，而且能提高运行速度。那么什么是迭代器？可以说得很复杂，但也可以理解得很简单，目前我们简单地把它理解为一种“包装过的指针”就可以了。</p>
+<p>对于C++ string，每一个具体的string都有一头一尾这一对迭代器，分别用成员函数 <code class="docutils literal notranslate"><span class="pre">string::begin()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">string::end()</span></code> 来获取，它们的数据类型很长，叫做 <code class="docutils literal notranslate"><span class="pre">string::iterator</span></code>。其实所有的STL模板类型的迭代器都是类似格式的数据类型，例如int型向量 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 的迭代器类型名就叫做 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;::iterator</span></code>。</p>
+<p>首迭代器始终指向string的头部，即位置0；尾迭代器始终指向string的尾部后面一个位置（类似于C-string中末尾的结束符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code> 所在的位置）。程序中可以定义自己的迭代器变量，使用首迭代器或尾迭代器来初始化它，之后就可以像指针一样使用它了。看一个简单的例子就会很清楚迭代器的用法了，下面这个示例程序逐个字符的依正向和反向两个方向输出一个字符串：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;Hello&quot;</span><span class="p">;</span>
+        <span class="n">string</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">it</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="c1">// 可以像指针一样做++运算和比较运算</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span> <span class="c1">// 可以和指针一样用 * 运算来获取它指向的值</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="c1">// 上一个循环结束时，迭代器it等于s.end()，这是一个虚拟的位置，位于s最后一个字符之后</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">it</span> <span class="o">&gt;=</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">())</span> <span class="c1">// 先--，然后判断是否小于首迭代器</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>运行后会输出下面的结果：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Hello
+olleH
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>指针的大部分用法，都可以依样画葫芦地照搬照抄用于迭代器。（但千万记住，迭代器不是指针，而是一种“包装过的指针”，至于怎么包装的，目前不需要深究。）</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">3.3.6.2. </span>输入输出<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>使用C++ string来表示字符串时，只能用C++的IO流来进行输入输出。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>C++的IO流同样也可以实现传统的C-string的输入输出，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">101</span><span class="p">];</span>
+<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>这样的程序是完全正确的，但是无法保证输入的字符串会不会超长。所以一般还是建议C++ string使用IO流，而C-string则使用C标准IO。</p>
+</div>
+<p><strong>输出</strong></p>
+<p>输出C++ string特别简单，只要使用 <code class="docutils literal notranslate"><span class="pre">cout</span> <span class="pre">&lt;&lt;</span></code> 运算即可。例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s</span><span class="p">(</span><span class="s">&quot;Harry Potter&quot;</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; is great!&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><strong>输入</strong></p>
+<p>C++ string的输入和C-string的情况一样，分为按单词输入和按行输入两种。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">cin</span> <span class="pre">&gt;&gt;</span></code> 运算可以方便地实现按单词输入C++ string。例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">;</span>
+<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s1</span><span class="p">;</span> <span class="c1">// 输入一个单词形式的字符串到s1中</span>
+<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s2</span> <span class="o">&gt;&gt;</span> <span class="n">s3</span><span class="p">;</span> <span class="c1">// 先后输入两个单词形式的字符串到s2和s3中，中间以至少一个空白符(空格、tab、换行)分隔</span>
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">getline()</span></code> 函数按行输入字符串。C++的这个函数非常好用，它会正确地读取到一行的末尾（第一次遇到换行符），行尾的换行符 <code class="docutils literal notranslate"><span class="pre">'\n'</span></code> 会从输入流中被读走并抛弃，不会像 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 函数那样把换行符保留在字符串里，毕竟大多数情况下我们都不需要这个换行符。</p>
+<p><code class="docutils literal notranslate"><span class="pre">getline()</span></code> 的使用方法也很简单，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+<span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span> <span class="c1">// 从标准输入流cin中读取一行字符串放入s中</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>千万要记住，我们这里说的是函数 <code class="docutils literal notranslate"><span class="pre">getline()</span></code>，它用于按行读取C++ string。</p>
+<p>容易混淆的是，输入流 <code class="docutils literal notranslate"><span class="pre">cin</span></code> 也有一个成员函数名字叫 <code class="docutils literal notranslate"><span class="pre">getline()</span></code>，它是用于按行读取C-string的，是 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库 <code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 函数的IO流版本，除了它会把行尾的换行符抛弃掉以外，它的用法和 <code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 完全一样。</p>
+<p>二者绝对不要搞混淆，我们在使用C++ string时，要用 <code class="docutils literal notranslate"><span class="pre">getline()</span></code> 函数，而不是输入流的成员函数 <code class="docutils literal notranslate"><span class="pre">cin.getline()</span></code>。</p>
+</div>
+<p>这里顺便介绍一下C++的文件IO流。我们都知道，<code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库除了标准IO函数，例如 <code class="docutils literal notranslate"><span class="pre">printf()/scanf()</span></code> 等以外，还有一套用法和标准IO完全一致的文件IO函数，例如 <code class="docutils literal notranslate"><span class="pre">fprintf()/fscanf()</span></code>，用来从磁盘上的文本文件中读取数据和将输出数据写入到磁盘文本文件里去。C++的IO流当然也会有这么一套对应的流，称为<strong>文件IO流</strong>，或简称<strong>文件流</strong>。</p>
+<p>要使用C++文件流，要同时引入 <code class="docutils literal notranslate"><span class="pre">iostream</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fstream</span></code> 两个库，然后和传统的方法类似，在程序中要分四步走：</p>
+<p>1、建立具体的文件流对象，或者你可以理解为 <code class="docutils literal notranslate"><span class="pre">std::fstream</span></code> 型的变量。</p>
+<blockquote>
+<div><p>类似于C标准IO的定义文件句柄变量：<code class="docutils literal notranslate"><span class="pre">FILE</span> <span class="pre">*fin,</span> <span class="pre">*fout</span></code>。</p>
+</div></blockquote>
+<p>2、为文件流对象打开一个具体的文件。</p>
+<blockquote>
+<div><p>类似于C标准IO的为文件句柄打开具体文件：<code class="docutils literal notranslate"><span class="pre">fin</span> <span class="pre">=</span> <span class="pre">fopen(&quot;file1&quot;,</span> <span class="pre">&quot;w&quot;);</span></code>。</p>
+</div></blockquote>
+<p>3、像使用 <code class="docutils literal notranslate"><span class="pre">cin/cout</span></code> 一样使用已经打开的文件流对象，用 <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> 运算进行输入输出。</p>
+<blockquote>
+<div><p>类似于C标准IO的 <code class="docutils literal notranslate"><span class="pre">fprintf()/fscanf()</span></code> 等函数的使用。</p>
+</div></blockquote>
+<p>4、读写完毕后关闭文件流对象。</p>
+<blockquote>
+<div><p>类似于C标准IO的关闭文件句柄：<code class="docutils literal notranslate"><span class="pre">fclose(fin)</span></code>。</p>
+</div></blockquote>
+<p>例如从文件 <code class="docutils literal notranslate"><span class="pre">a.in</span></code> 中读取2个整数，计算其乘积并将结果写入文件 <code class="docutils literal notranslate"><span class="pre">a.out</span></code> 中的程序如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">fstream</span> <span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">;</span>           <span class="c1">// 建立文件流对象</span>
+        <span class="n">fin</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;a.in&quot;</span><span class="p">,</span> <span class="n">fstream</span><span class="o">::</span><span class="n">in</span><span class="p">);</span>       <span class="c1">// 打开文件用于输入</span>
+        <span class="n">fout</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;a.out&quot;</span><span class="p">,</span> <span class="n">fstream</span><span class="o">::</span><span class="n">out</span><span class="p">);</span>    <span class="c1">// 打开文件用于输出</span>
+
+        <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+        <span class="n">fin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>               <span class="c1">// 还是那个配方</span>
+        <span class="n">fout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>       <span class="c1">// 还是那个味道</span>
+
+        <span class="n">fin</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>                 <span class="c1">// 关闭输入文件流</span>
+        <span class="n">fout</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>                <span class="c1">// 关闭输出文件流</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>下面再看一个复杂一点的例子。前面我们演示过用 <code class="docutils literal notranslate"><span class="pre">getline()</span></code> 函数从标准IO流按行读取一个字符串，那时候函数的第一个参数用的是 <code class="docutils literal notranslate"><span class="pre">cin</span></code>。实际上它可以是任何一个输入流，包括输入文件流。下面这个例子，使用C++文件流和 <code class="docutils literal notranslate"><span class="pre">getline()</span></code> 函数逐行读取文本文件 <code class="docutils literal notranslate"><span class="pre">test.in</span></code> 并输出到文件 <code class="docutils literal notranslate"><span class="pre">test.out</span></code> 中：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">fstream</span> <span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">;</span>
+        <span class="n">fin</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;test.in&quot;</span><span class="p">,</span> <span class="n">fstream</span><span class="o">::</span><span class="n">in</span><span class="p">);</span>
+        <span class="n">fout</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;test.out&quot;</span><span class="p">,</span> <span class="n">fstream</span><span class="o">::</span><span class="n">out</span><span class="p">);</span>
+
+        <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="c1">// 一旦文件读取完毕或出错，getline()的返回可以被判断为false</span>
+                <span class="n">fout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// 注意getline()会丢弃换行符，所以输出时要自己加上换行</span>
+
+        <span class="n">fin</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+        <span class="n">fout</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>自己编一个测试用的文本文件 <code class="docutils literal notranslate"><span class="pre">test.in</span></code>，里面要放一些空行。运行上面的程序看看是不是一模一样地复制成为了 <code class="docutils literal notranslate"><span class="pre">test.out</span></code>。由此测试可以看出，<code class="docutils literal notranslate"><span class="pre">getline()</span></code> 在按行读取时遇到空行也会毫不犹豫地准确读取进来。读一个空行会得到一个空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>。</p>
+<p>最后再介绍一下快速读取单个字符的方法。<code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库有一个号称速度最快的单个字符读取函数 <code class="docutils literal notranslate"><span class="pre">getchar()</span></code>，与之对应，C++的IO流也有一个这样的函数：成员函数 <code class="docutils literal notranslate"><span class="pre">get()</span></code>。用法也和 <code class="docutils literal notranslate"><span class="pre">getchar()</span></code> 函数几乎一样：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">ch</span><span class="p">;</span>          <span class="c1">// 用int来存放char，还记得为什么吗？</span>
+<span class="n">ch</span> <span class="o">=</span> <span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>  <span class="c1">// 从标准输入流读取一个字符放到ch中，如果读到流结束则范围-1（这就是用int的原因）</span>
+</pre></div>
+</div>
+<p>还记得以前学过的 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 版的鹦鹉学舌程序吗？现在来看看C++输入输出流的新版：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">ch</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">ch</span> <span class="o">=</span> <span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">())</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1">// cstdio版：while ((ch = getchar()) != EOF)</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">ch</span><span class="p">;</span>  <span class="c1">// 注意要强转数据类型为char，否则输出的会是一个数字</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>大家可以想一想怎么写一个文件流版本的鹦鹉学舌，试试看。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>事实上 <code class="docutils literal notranslate"><span class="pre">cin.get()</span></code> 函数还有好几种别的用法，甚至可以用来按行读取C-string形式的字符串。但是要记得，C-string归 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库管，无论是 <code class="docutils literal notranslate"><span class="pre">cin.get()</span></code> 还是前面提到过的 <code class="docutils literal notranslate"><span class="pre">cin.getline()</span></code> 都不如直接用 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 更好。C++在其输入流对象中实现对应C-string的功能，只是为了其自身的功能完善性，事实上它们在使用时都或多或少的有一些问题，不太好用。</p>
+<p>所以切记，我们只推荐用 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">ch</span> <span class="pre">=</span> <span class="pre">cin.get()</span></code> 这一种快速读取单个字符的用法，不要去深究和尝试它的其他用法。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.3.6.3. </span>字符串流<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>如果对C语言标准IO了解得比较深入的话就会知道，有这样一对把字符串当做输入输出设备的函数 <code class="docutils literal notranslate"><span class="pre">sscanf()/sprintf()</span></code>。它们的基本用法和普通的 <code class="docutils literal notranslate"><span class="pre">scanf()/printf()</span></code> 是一模一样的，但调用时还需提供一个C-string参数。<code class="docutils literal notranslate"><span class="pre">sscanf()</span></code> 函数就从这个字符串中去提取数据，而不是从键盘或者磁盘文件；<code class="docutils literal notranslate"><span class="pre">sprintf()</span></code> 则会把输出的信息写入到这个字符串里，而不是显示在屏幕上或者写到磁盘文件里去。</p>
+<p>C++也提供了这样的功能，称为<strong>字符串流</strong>。当然了，这个C++的字符串流要使用C++ string，不能用C-string。字符串流在算法编程中的实用价值不高，而且速度相当慢。有时候即便用字符串流会比较方便，有经验的人也会避而不用，宁可另寻他法。但是也有一些情况用上它确实会非常方便。我们先通过一个简单的示例来看看字符串流的基本用法，然后再看一种比较典型的用例。</p>
+<p>要使用字符串流，需要引入 <code class="docutils literal notranslate"><span class="pre">sstream</span></code> 库。在 <code class="docutils literal notranslate"><span class="pre">sstream</span></code> 库中定义有表示字符串输入流的类型 <code class="docutils literal notranslate"><span class="pre">istringstream</span></code> 和表示字符串输出流的类型 <code class="docutils literal notranslate"><span class="pre">ostringstream</span></code>。用法不难，且一般只需要掌握最基本的用法即可，可以通过下面这个示例程序来学习。</p>
+<p>假设在一个字符串中保存了若干个学生的姓名、学号和平均分GPA。字符串开头为学生人数，后面每位学生三个数据段，依次为姓名、学号和GPA分数。现在我们从这个字符串中提取所有这些信息，然后对用一种比较整齐的表格形式输出。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">string</span> <span class="n">src</span> <span class="o">=</span> <span class="s">&quot;3 Alice 1 5 Bob 2 4.7 Carol 3 3.5&quot;</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+	<span class="kt">short</span> <span class="n">no</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">gpa</span><span class="p">;</span>
+
+	<span class="n">istringstream</span> <span class="n">srcin</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>		<span class="c1">// 建立字符串输入流srcin并连接到src上</span>
+	<span class="n">ostringstream</span> <span class="n">dstout</span><span class="p">;</span>			<span class="c1">// 建立字符串输出流dstout</span>
+	<span class="n">dstout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;No.</span><span class="se">\t</span><span class="s">Name</span><span class="se">\t</span><span class="s">GPA&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// 向dstout输出</span>
+	<span class="n">srcin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>				<span class="c1">// 从src读入学生数n</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">srcin</span> <span class="o">&gt;&gt;</span> <span class="n">name</span> <span class="o">&gt;&gt;</span> <span class="n">no</span> <span class="o">&gt;&gt;</span> <span class="n">gpa</span><span class="p">;</span>	<span class="c1">// 读入一个学生的姓名学号和分数</span>
+		<span class="n">dstout</span> <span class="o">&lt;&lt;</span> <span class="n">no</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\t&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\t&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">gpa</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// 输出到dstout</span>
+	<span class="p">}</span>
+	<span class="n">string</span> <span class="n">dst</span> <span class="o">=</span> <span class="n">dstout</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>		<span class="c1">// 从字符串输出流dstout获取所有已经输出的内容</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dst</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>运行的结果如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>No.     Name    GPA
+1       Alice   5
+2       Bob     4.7
+3       Carol   3.5
+</pre></div>
+</div>
+<p>在实际应用中，尤其是在一些实用工具的编写中，常会需要把数值在“数”和“文本”两种方式之间相互转换。在C语言标准库 <code class="docutils literal notranslate"><span class="pre">cstdlib</span></code> 中有一些用于将C-string转换为数值类型的库函数，例如 <code class="docutils literal notranslate"><span class="pre">atoi()</span></code> 函数，可以把一个内容为整数的C-string（例如 <code class="docutils literal notranslate"><span class="pre">&quot;123&quot;</span></code>）转换为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数值，<code class="docutils literal notranslate"><span class="pre">atof()</span></code> 函数则把内容为小数的C-string（例如 <code class="docutils literal notranslate"><span class="pre">&quot;3.14&quot;</span></code>）转换为 <code class="docutils literal notranslate"><span class="pre">double</span></code> 型浮点数。数值类型转为C-string则可以通过 <code class="docutils literal notranslate"><span class="pre">sprintf()</span></code> 函数来实现。</p>
+<p>在C++11（2011年标准）以前，并没有提供把C++ string转换为数值类型的函数。不幸的是NOI和大多数算法竞赛所用的C++版本都是C++98（1998年标准）。那要怎么进行“数”和“文本”的互换呢？方法有很多，但是在数据量不大的情况下，我们可以利用字符串流来方便的实现。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&quot;123&quot;</span><span class="p">),</span> <span class="n">s2</span><span class="p">(</span><span class="s">&quot;3.14&quot;</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">pi</span><span class="p">;</span>
+<span class="n">istringstream</span> <span class="n">strin</span><span class="p">;</span> <span class="c1">// 建立一个新的字符串输入流，并没有连接到任何string上</span>
+<span class="n">strin</span><span class="p">.</span><span class="n">str</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>       <span class="c1">// 连接到string s1上去</span>
+<span class="n">strin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span><span class="p">;</span>          <span class="c1">// 从s1读取一个整数，a = 123</span>
+<span class="n">strin</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>       <span class="c1">// 若要重复使用字符串输入流，在连接新的字符串之前必须清空流的所有状态</span>
+<span class="n">strin</span><span class="p">.</span><span class="n">str</span><span class="p">(</span><span class="n">s2</span><span class="p">);</span>       <span class="c1">// 改为连接到string s2上</span>
+<span class="n">strin</span> <span class="o">&gt;&gt;</span> <span class="n">pi</span><span class="p">;</span>         <span class="c1">// 从s2读取一个双精度浮点数，pi = 3.14</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; + &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">pi</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; = &quot;</span><span class="p">;</span>
+<span class="n">ostringstream</span> <span class="n">strout</span><span class="p">;</span><span class="c1">// 创建一个字符串输出流</span>
+<span class="n">strout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">+</span> <span class="n">pi</span><span class="p">;</span>    <span class="c1">// 输出 123 + 3.14 的和</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">strout</span><span class="p">.</span><span class="n">str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>        <span class="c1">// strout.str()返回strout中的内容，类型为string</span>
+<span class="c1">// 完整的输出结果为 123 + 3.14 = 126.14</span>
+</pre></div>
+</div>
+<p>上面这个代码片段，就利用了字符串输入流实现了把C++ string <code class="docutils literal notranslate"><span class="pre">s1</span></code> 的内容转换为整数 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a</span></code>，<code class="docutils literal notranslate"><span class="pre">s2</span></code> 的内容转换为 <code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">pi</span></code>，而表达式 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">pi</span></code> 的值，<code class="docutils literal notranslate"><span class="pre">double</span></code> 型的126.14则利用字符串输出流转换为了一个C++ string，即 <code class="docutils literal notranslate"><span class="pre">strout.str()</span></code> 的返回值。</p>
+<p>另外，字符串流还可以用来方便地实现一些原本比较麻烦的操作，比如字符串的分割与合并等。但是这些操作在算法编程中遇到的确实不多，而且C++字符串流的速度也确实太慢了一点。所以我们就不细说了，也不需要大家掌握更多，有兴趣的可以自己上网查询相关资料。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>这一节的内容比较多，不通过多次编程实践也很难一下子记住那么多string的用法。所以关键还是要动手练习。</p>
+<p>请把前两节介绍的KMP算法和中心扩展算法，正确地编写一遍C++ string版本。这个练习一定要做！</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="237_atoi.html" title="3.3.7. 初识有限自动机：字符串转整数"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="235_palindromic_string.html" title="3.3.5. 回文字符串"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" ><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

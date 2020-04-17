@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.2. 生成随机数 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2.3. 内存块操作" href="130_mem_block.html" />
+    <link rel="prev" title="2.1. 测定程序运行时间" href="110_running_time.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="130_mem_block.html" title="2.3. 内存块操作"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="110_running_time.html" title="2.1. 测定程序运行时间"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" accesskey="U"><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="110_running_time.html"
+                        title="上一章"><span class="section-number">2.1. </span>测定程序运行时间</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="130_mem_block.html"
+                        title="下一章"><span class="section-number">2.3. </span>内存块操作</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch01/120_random_nums.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">2.2. </span>生成随机数<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>编写算法程序常常会需要自己生成一些测试数据。如果数据量小可以自己手动编一些，但是往往会需要大数据量的测试数据，这时候手动编数据就很困难了。我们需要用计算机来自动生成一批随机数，使用 <code class="docutils literal notranslate"><span class="pre">cstdlib</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">rand()</span></code> 函数可以生成均匀分布的随机数。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">rand</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>调用这个函数不需要提供任何参数，每次调用返回一个从0到 <code class="docutils literal notranslate"><span class="pre">int</span></code> 类型最大值（一般是2<sup>31</sup>-1=2,147,483,647）之间的随机数。将得到的随机数除以任一大于1的正整数 <span class="math notranslate nohighlight">\(a\)</span> 取余数，余数的取值范围为 <span class="math notranslate nohighlight">\([0,a)\)</span>，所以调用 <code class="docutils literal notranslate"><span class="pre">rand()</span> <span class="pre">%</span> <span class="pre">a</span></code> 即可得到在此范围内均匀分布的随机数。</p>
+<p>更一般地，如果要生成 <span class="math notranslate nohighlight">\([a,b)\)</span> 区间内的随机数，可以通过调用 <code class="docutils literal notranslate"><span class="pre">rand()</span> <span class="pre">%</span> <span class="pre">(b</span> <span class="pre">-</span> <span class="pre">a)</span> <span class="pre">+</span> <span class="pre">a</span></code> 来实现。例如要生成从1到99之间均匀分布的随机数，那么就调用 <code class="docutils literal notranslate"><span class="pre">rand()</span> <span class="pre">%</span> <span class="pre">99</span> <span class="pre">+</span> <span class="pre">1</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">rand()</span> <span class="pre">%</span> <span class="pre">100</span> <span class="pre">+</span> <span class="pre">1</span></code>，后者生成的是从1到100的随机数；若要生成-100到100之间的随机数，则应调用 <code class="docutils literal notranslate"><span class="pre">rand()</span> <span class="pre">%</span> <span class="pre">201</span> <span class="pre">-</span> <span class="pre">100</span></code>。这个规则可以简单记作“除长加头”。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>请注意在计算机软件的世界里，表示范围的惯例就是“含头不含尾”，用数学语言来说就是“左闭右开”区间，千万要牢记并熟悉这一惯例。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">rand()</span></code> 函数生成的其实是<strong>伪随机数</strong>，并不是真正的随机数。这些“随机”数实际上是用一套精巧但是确定的数学公式计算出来的，看上去随机，实际上有规律。程序每一次运行，第一次调用 <code class="docutils literal notranslate"><span class="pre">rand()</span></code> 时，会用一个正整数来启动随机数生成过程。这个正整数叫做伪随机数生成过程的<strong>种子</strong>。用同一个种子启动伪随机过程，会生成完全相同的伪随机数序列。不巧的是，<code class="docutils literal notranslate"><span class="pre">rand()</span></code> 函数每次都用整数1来作为启动的种子，从来不变，永远是1！我们可以多次运行下面这个小程序来观察这一现象。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdlib&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%3d%c&quot;</span><span class="p">,</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">,</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">19</span> <span class="o">?</span> <span class="sc">&#39;\n&#39;</span> <span class="o">:</span> <span class="sc">&#39;,&#39;</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>我可以保证，不管运行多少次，你都会得到同样的一百个数，如果你也使用NOI Linux的g++ 4.8.4的话，十有八九是这样的：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> 1,  4,  6, 70, 87, 66, 57, 92, 60, 11, 81, 79, 85, 72, 50, 62, 43, 16, 36, 56
+13, 70, 25, 99, 17,  8, 91, 97,  8, 64, 50, 61, 20, 56, 84,  7, 74, 41, 51, 87
+ 4, 33, 66, 41, 57, 16,  3,  0, 84, 39,  9, 50, 61, 34,  1, 78, 94, 92, 28,  2
+56, 78, 16, 28, 35,  0, 88,  9, 41, 39, 96, 97, 24, 62, 38, 82, 30, 41, 34, 15
+32, 43, 17, 45, 29, 18, 23, 24, 10, 51, 78, 18, 30, 94, 46, 17, 94, 34, 26, 87
+</pre></div>
+</div>
+<p>这可怎么办？这样不就没法生成真正可用的随机数了吗？当然不会。<code class="docutils literal notranslate"><span class="pre">cstdlib</span></code> 库提供了一个用来设置随机种子的函数 <code class="docutils literal notranslate"><span class="pre">srand()</span></code>。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">srand</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>这个函数没有返回值，调用它可以给伪随机过程人为设置一个启动种子。所以我们只要在程序开始时调用一下 <code class="docutils literal notranslate"><span class="pre">srand()</span></code> 函数，种下一颗“每次程序运行都不相同而且很难被复制”的种子，就可以用 <code class="docutils literal notranslate"><span class="pre">rand()</span></code> 来生成仿真程度相当好的随机数了。可是到哪里去找这样一个“每次程序运行都不相同而且很难被复制”的无符号整数呢？方法很多，最方便最常用的是使用 <code class="docutils literal notranslate"><span class="pre">ctime</span></code> 库提供的 <code class="docutils literal notranslate"><span class="pre">time()</span></code> 函数。调用 <code class="docutils literal notranslate"><span class="pre">time(NULL)</span></code> 可获取程序运行到当前语句时的实际时间，是从1970年1月1日凌晨0点0分0秒开始到当前为止的秒数，其返回类型 <code class="docutils literal notranslate"><span class="pre">t_time</span></code> 实际上就是 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code>，它恰好能满足“每次运行都不相同而且很难被复制”的要求。</p>
+<p>现在我们来试着运行一下用 <code class="docutils literal notranslate"><span class="pre">time()</span></code> 函数优化过的这个小程序。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdlib&gt;</span><span class="cp"></span>
+<span class="hll"><span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp"></span>
+</span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="hll">	<span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+</span>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%3d%c&quot;</span><span class="p">,</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">,</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">19</span> <span class="o">?</span> <span class="sc">&#39;\n&#39;</span> <span class="o">:</span> <span class="sc">&#39;,&#39;</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>多运行几次，你会发现现在每次都会得到100个完全看不出规律的不同的随机数。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>在每一个要用到随机数的程序的开头，运行一下 <code class="docutils literal notranslate"><span class="pre">srand(time(NULL))</span></code>。</p>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>如果要生成浮点数类型的随机数，或者比 <code class="docutils literal notranslate"><span class="pre">int</span></code> 更大的整型，比如 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 类型的随机数时应该怎么办呢？这个问题请自行思考解决。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>无论看上去多么没有规律，<code class="docutils literal notranslate"><span class="pre">rand()</span></code> 函数使用的伪随机数生成算法都是不安全的，只能用于一般的随机数模拟，不能用于真正的加解密应用。如果今后你要编写实用的加密解密算法，绝对不能使用它来生成密钥！</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="130_mem_block.html" title="2.3. 内存块操作"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="110_running_time.html" title="2.1. 测定程序运行时间"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" ><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.4.3. Fibonacci数列 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.4.4. 递归与递推例题：数的计算（洛谷P1028）" href="244_lg1028.html" />
+    <link rel="prev" title="3.4.2. 经典递归问题：Hanoi塔游戏" href="242_hanoi.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="244_lg1028.html" title="3.4.4. 递归与递推例题：数的计算（洛谷P1028）"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="242_hanoi.html" title="3.4.2. 经典递归问题：Hanoi塔游戏"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../240_rec_bin.html" accesskey="U"><span class="section-number">3.4. </span>递归与二分</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.4.3. Fibonacci数列</a><ul>
+<li><a class="reference internal" href="#id1">3.4.3.1. 递归计算Fibonacci数</a></li>
+<li><a class="reference internal" href="#id2">3.4.3.2. 递推计算Fibonacci数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="242_hanoi.html"
+                        title="上一章"><span class="section-number">3.4.2. </span>经典递归问题：Hanoi塔游戏</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="244_lg1028.html"
+                        title="下一章"><span class="section-number">3.4.4. </span>递归与递推例题：数的计算（洛谷P1028）</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec04/243_fibo.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fibonacci">
+<h1><span class="section-number">3.4.3. </span>Fibonacci数列<a class="headerlink" href="#fibonacci" title="永久链接至标题">¶</a></h1>
+<p>Fibonacci数列，中文一般翻译成“斐波那契数列”，是数学和自然科学中最为重要的一个整数数列。它说自己第二重要，就没有别的数列敢说自己第一重要。</p>
+<p>Fibonacci数列得名于中世纪意大利的学者Fibonacci，这里还有一个有趣的故事，和兔子生小兔子有关。据说Fibonacci先生是在帮一位养兔子的朋友计算兔子的数量时发现的这个数列。有一天，Fibonacci先生的一位朋友来信说，他买了一对神奇的兔子，这种兔子永远不死而且会不断地以固定的速度生小兔子。更神奇的是，小兔子总是一公一母成双成对地出生。朋友觉得这下要发大财了，但是自己读书少，不太会算术，所以他请Fibonacci先生帮他算一算几个月之后他将拥有多少对这样的兔子。</p>
+<img alt="../../_images/243_fibo_1.png" src="../../_images/243_fibo_1.png" />
+<p>经过严谨的分析计算，Fibonacci先生发现兔子的数量按这样的规律增长：</p>
+<p>最初的第1个月有1对小兔子。</p>
+<p>过完1个月，第2个月还是1对，因为小兔子需要1个月时间成长为大兔子。</p>
+<p>再过1个月，到了第3个月，大兔子生出1对小兔子，加上它们自己，总共变成2对，1对大兔子和1对小兔子。</p>
+<p>第3个月之后，大兔子又生出一对小兔子，而原来的小兔子成长为了大兔子，现在第4个月有了2对大兔子和1对小兔子，一共3对。</p>
+<p>到了第5个月，原来的2对大兔子又各生出1对小兔子，原来的小兔子长成了1对大兔子，这样一共有了5对兔子……</p>
+<p>就这样一直生生不息地下去，每个月兔子的数量等于前面两个月的数量之和。写成整数数列就是 <span class="math notranslate nohighlight">\(1,1,2,3,5,8,13,21,34,\cdots\)</span>。</p>
+<p>这就是Fibonacci数列，用现代数学的符号可以表示成一个递推公式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+F(n)=F(n-1)+F(n-2),&amp;(n\gt2)\\
+F(1)=F(2)=1
+\end{cases}\end{split}\]</div>
+<p>这个递推公式有两个初值 <span class="math notranslate nohighlight">\(F(1)=F(2)=1\)</span>。这个数列中的第 <span class="math notranslate nohighlight">\(n\)</span> 项 <span class="math notranslate nohighlight">\(F(n)\)</span> 就称为第 <span class="math notranslate nohighlight">\(n\)</span> 个Fibonacci数。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>有时候也会在前面加上一个 <span class="math notranslate nohighlight">\(F(0)=0\)</span>，这往往是一些特殊问题为了数学上的便利而人为添加的，并不影响Fibonacci数列本身的性质。</p>
+</div>
+<p>Fibonacci先生恐怕自己都不会想到他发现的这个数列在数学、几何、艺术、音乐、自然、科学等各方面都有非常重要的意义和应用，大自然中有大量的规律和现象都遵循着它所规定的规律，不仅仅神奇兔子的数量和它有关，黄金比例、螺旋线、向日葵的花纹、组合数学、Pascal三角形……甚至一个人走楼梯有多少种走法，都和Fibonacci数列息息相关。</p>
+<p>关于Fibonacci数列本身的知识和应用，这里不打算细讲，事实上也讲不完，有兴趣的可以自己上网或找相关的书籍查阅。这里我们重点要学习和比较计算Fibonacci数的两种算法，递归的算法和递推的算法。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">3.4.3.1. </span>递归计算Fibonacci数<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>现在给出正整数 <span class="math notranslate nohighlight">\(n\)</span>，要求出Fibonacci数 <span class="math notranslate nohighlight">\(F(n)\)</span>。按照数列递推公式的形式，很容易想到一个简单的递归算法，用C++语言可以写出下面这样一个函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">fibo</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">fibo</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个函数的形式看上去非常简洁优美，计算结果也是无可挑剔，但这是一个典型的滥用递归的坏例子。大家可以编写一个简单的测试程序，加上测量耗时的功能试一试它的运算速度有多“快”。虽然每台电脑的性能不同，但是我们可以查看随着 <span class="math notranslate nohighlight">\(n\)</span> 的增大，运算时间增加的趋势，在我的电脑上测试结果是：当 <span class="math notranslate nohighlight">\(n &lt;= 20\)</span> 时运算速度都在1ms以内，计算 <span class="math notranslate nohighlight">\(F(30)\)</span> 使用了5ms，计算 <span class="math notranslate nohighlight">\(F(40)\)</span> 就激增为约400ms，计算 <span class="math notranslate nohighlight">\(F(50)\)</span> 居然花了约45s，再大的数字就不敢再尝试了。简直是慢到了随心所欲的程度！</p>
+<p>为了分析这个算法的时间复杂度，我们先来测算一下这个递归算法的工作量。以加法运算为基本运算，这个算法在计算 <span class="math notranslate nohighlight">\(F(1),F(2)\)</span> 时是直接返回其值的，工作量为0；在计算其他Fibonacci数的时候，它递归调用两次，然后再进行一次加法。用 <span class="math notranslate nohighlight">\(T(n)\)</span> 表示计算Fibonacci数 <span class="math notranslate nohighlight">\(F(n)\)</span> 的工作量，那么这个算法的工作量为：</p>
+<div class="math notranslate nohighlight">
+\[T(n)=T(n-1)+T(n-2)+1,T(1)=T(2)=0\]</div>
+<p>下面用迭代法来求解：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+T(n)&amp;=T(n-1)+T(n-2)+1\\
+    &amp;=[T(n-2)+T(n-3)+1]+[T(n-3)+T(n-4)+1]+1=T(n-2)+2T(n-3)+T(n-4)+1+2\\
+    &amp;=T(n-3)+3T(n-4)+3T(n-5)+T(n-6)+1+2+4\\
+    &amp;=T(n-4)+4T(n-5)+6T(n-6)+4T(n-7)+T(n-8)+1+2+4+8\\
+    &amp;=\cdots
+\end{align}\end{split}\]</div>
+<p>到这里虽然还没有迭代完成，但是已经可以从 <span class="math notranslate nohighlight">\(1+2+4+8+\cdots\)</span> 这个余项形式很明显地看出来，当把所有的函数项全部规约为 <span class="math notranslate nohighlight">\(T(1)\)</span> 或者 <span class="math notranslate nohighlight">\(T(2)\)</span> 的时候，工作量的数值一定是一个2的指数的形式。这后面的计算比较复杂，这里就不详细说明了，只要记住，用这样的递归法来计算Fibonacci数，时间复杂度为 <span class="math notranslate nohighlight">\(O(2^n)\)</span>，是一种无法容忍的慢速算法。</p>
+<p>那么到底是什么原因造成了算法会如此之慢呢？原因是“重复计算”，它在运行过程中有大量的重复计算。比如调用 <code class="docutils literal notranslate"><span class="pre">fibo(5)</span></code> 会引起调用 <code class="docutils literal notranslate"><span class="pre">fibo(4)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fibo(3)</span></code>；二者会分别发生调用 <code class="docutils literal notranslate"><span class="pre">fibo(3)</span></code>、<code class="docutils literal notranslate"><span class="pre">fibo(2)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fibo(2)</span></code>、<code class="docutils literal notranslate"><span class="pre">fibo(1)</span></code>；而其中的 <code class="docutils literal notranslate"><span class="pre">fibo(3)</span></code> 又会再次调用 <code class="docutils literal notranslate"><span class="pre">fibo(2)</span></code>、<code class="docutils literal notranslate"><span class="pre">fibo(1)</span></code>。整个过程中 <code class="docutils literal notranslate"><span class="pre">fibo(3)</span></code> 被调用2次，<code class="docutils literal notranslate"><span class="pre">fibo(2)</span></code> 被调用3次，<code class="docutils literal notranslate"><span class="pre">fibo(1)</span></code> 被调用2次，可见已经发生了多次重复计算。</p>
+<p>也可以通过画递归调用树（注意不是计算工作量的递归树哦）来更加直观的看看重复调用的情况，比如我们要计算 <span class="math notranslate nohighlight">\(F(8)\)</span>，为此我们调用函数 <code class="docutils literal notranslate"><span class="pre">fibo(8)</span></code>：</p>
+<img alt="../../_images/243_fibo.png" src="../../_images/243_fibo.png" />
+<p>图中用不同的颜色标出了每一种调用，可以看出整个过程中出现了大量的重复调用。<code class="docutils literal notranslate"><span class="pre">fibo(6)</span></code> 被调用2次，<code class="docutils literal notranslate"><span class="pre">fibo(5)</span></code> 被调用3次，<code class="docutils literal notranslate"><span class="pre">fibo(4)</span></code> 5次，<code class="docutils literal notranslate"><span class="pre">fibo(3)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fibo(1)</span></code> 各8次，最多的 <code class="docutils literal notranslate"><span class="pre">fibo(2)</span></code> 被重复调用了13次。C++程序调用函数会造成一些时间和空间上的开销，比如保存状态、复制参数、跳转、复制返回值、再次跳转、恢复状态等，虽然一次调用这点开销微不足道，但是如果出现指数级别的大量重复调用，那么这些开销积累下来就不容小视了。</p>
+<p>更重要的是，这些大量的重复劳动带来的一个更大的时间浪费是多做了许多次加法运算（我们在衡量时间复杂度时就是用加法运算来作为基本工作量的）。比如上面的图中，树的每一次分叉都意味着此处有一次加法，总共有20次。而实际上笔算 <span class="math notranslate nohighlight">\(F(8)\)</span>，从 <span class="math notranslate nohighlight">\(F(3)\)</span> 开始向后推算，只需要计算6次加法即可。</p>
+<p>随着 <span class="math notranslate nohighlight">\(n\)</span> 的增大，递归计算Fibonacci数的程序中重复调用的次数以 <span class="math notranslate nohighlight">\(2^n\)</span> 指数级增长，随之带来多余的加法次数同样以 <span class="math notranslate nohighlight">\(2^n\)</span> 指数级别的增长，这就是这个算法运算速度慢到无法忍受的原因。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Fibonacci数的递归算法是滥用递归导致翻车的反面典型。</p>
+<p>具有下面这两个特征的递归算法往往很容易演变成类似的指数时间算法：</p>
+<ol class="arabic">
+<li><p>有两次或更多次递归调用；</p></li>
+<li><p>递归调用时，子问题的规模缩减是“按数量减少”，例如 <span class="math notranslate nohighlight">\(T(n-1)\)</span> 或者 <span class="math notranslate nohighlight">\(T(n-9)\)</span>，而不是“按比例缩小“，例如 <span class="math notranslate nohighlight">\(T({n\over2})\)</span> 或者 <span class="math notranslate nohighlight">\(T({5n\over6})\)</span> 这样的。</p>
+<p>按数量减少，哪怕每次减少的量很大，也是慢的！按比例缩小，哪怕每次缩小的比例很小，也是快的！</p>
+</li>
+</ol>
+<p>一定要警惕这种模式，出现这种模式往往意味着这个算法不够好。</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>其实上一节所讲的Hanoi塔算法也是一个具有这样的模式的递归算法，而它的时间复杂度也恰恰好是 <span class="math notranslate nohighlight">\(O(2^n)\)</span>，但是没办法，这就是Hanoi塔问题的最优解了。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">3.4.3.2. </span>递推计算Fibonacci数<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>一般在计算Fibonacci数的时候都会用递推的方法，也就是从初值开始，逐步向后推算，直到要计算的那个数为止。这种方法非常方便也很快速，没有重复计算。在程序里我们需要定义两个变量，分别表示前两个数。初始的时候都赋值为1，表示 <span class="math notranslate nohighlight">\(F(1)\)</span> 和 <span class="math notranslate nohighlight">\(F(2)\)</span>。随后我们不断循环地去计算它们的和，直到我们需要计算的 <span class="math notranslate nohighlight">\(F(n)\)</span> 就可以了。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">fibo</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">n</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>       <span class="c1">// 计算fibo(n)，需要递推n-2次</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种方法就非常的快速，时间复杂度是 <span class="math notranslate nohighlight">\(O(n)\)</span> 的线性时间，在unsigned long long数据范围以内的所有Fibonacci数的计算都能在1ms以内完成。</p>
+<p>前面讲过的阶乘运算，大多数时候也是使用普通的单循环从1开始逐个自然数乘起来的方法，不会去使用递归法。这种单循环计算阶乘的方法也是递推法。归纳起来讲，递归法和递推法是用来求解递推公式的两种方法。给定一个递推公式，要求解其第 <span class="math notranslate nohighlight">\(n\)</span> 个值，递归法的思路是从第 <span class="math notranslate nohighlight">\(n\)</span> 个值开始一层层地向前归约，直到遇到初值，然后再层层地往回解套；递推法的思路刚好相反，从初值开始，根据公式一层层地向后推进，直到遇到第 <span class="math notranslate nohighlight">\(n\)</span> 个值，计算就此结束。</p>
+<p>理论上说，任何递归算法都有等价的递推算法。但是算法往往有自己的天性，有些算法天生适合用递归，比如Hanoi塔，很难把它们改成递推；有些算法则天生适合用递推，用递归反而不好，比如Fibonacci数。</p>
+<p>递归法的优势在于思路清晰、代码简洁、直观易懂，但是往往有性能上的劣势。如果和递推相比，递归不能减少计算步骤，那么往往无法提高性能，甚至适得其反。对于阶乘、Fibonacci数这样的简单递推运算来说，递归法并不能减少计算量，所以在实际应用时一般不使用递归法。说得通俗一点，递归法是高阶技能，主要用来解更复杂的难题，用于阶乘、Fibonacci这样的简单问题就是杀鸡用牛刀、大炮轰蚊子了，用得不好反而弄巧成拙。至于什么样的问题适合用递归，什么样的问题适合用递推，以后的学习中我们会遇到很多实际案例，见多了自然就会有感觉。</p>
+<p>最后说一下<strong>打表法</strong>。打表是算法竞赛中常用的一种小技巧，如果能预见到程序中要经常使用某一类数，比如一万以内的质数，比如200以内的Fibonacci数，那么我们可以用一种比较高效的算法事先计算好所有可能用到的数，存在一个数组里。当程序中要使用其中某个数的时候，直接从数组中取用即可。</p>
+<p>假设我们现在要做这样一个题，计算 <span class="math notranslate nohighlight">\(F(1)\)</span> 到 <span class="math notranslate nohighlight">\(F(90)\)</span> 这90个Fibonacci数两两之间的差距，即 <span class="math notranslate nohighlight">\(\vert F(i)-F(j) \vert\)</span>。</p>
+<p>90个数两两配对，不考虑顺序，这是90选2的组合数，总共有 <span class="math notranslate nohighlight">\(90\times89/2=4005\)</span> 对。假如我们在程序里每次用到Fibonacci数时都调用上面这个函数进行计算，那么总共需要调用8010次，但实际上只是用于计算1到90这90个Fibonacci数。是不是太浪费了？</p>
+<p>我们可以改用打表法，在开始循环之前，先把要用到的90个Fibonacci数计算好，保存在数组里。这个打表计算只要顺序计算一遍就够了，过程很类似做前缀和的过程，速度非常快：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">fibo</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span> <span class="c1">// 前2个Fibonacci初值</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">90</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="c1">// 打表fibo[3]到fibo[90]</span>
+                <span class="n">fibo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fibo</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fibo</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">];</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">90</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">90</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+                        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;fibo(%u) - fibo(%u) = %llu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">fibo</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">fibo</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种方法就叫打表，也是一种实用的小技巧。</p>
+<p>经过实测，上面这个问题不打表的方法总共运行时间为2ms，打表的方法1ms。看上去好像差距很小，但再小也是一倍的差距。要知道，我们的数据范围很小，只是前90个Fibonacci数，总共4005次减法。在这么小的数据规模下就已经有了可测量的1倍差异，其实二者的速度差距是很大的。假设题目把数据范围扩大到前1000个Fibonacci数会怎样？首先计算规模扩大到499500次减法，是原来的124倍。第二，这里有一个很隐蔽但是很重要的知识点，unsigned long long数据类型，能够支持的最大的Fibonacci数仅仅是 <span class="math notranslate nohighlight">\(F(93)\)</span>，从第94个开始就必须自己编写高精度整数算法来提供支持了。而自己编写的高精度整数加减法，运算速度何止是unsigned long long这样的内置整数类型的数十倍之慢。</p>
+<p>所以，在很多算法题中，合适地使用打表会带来性能上的很大提升，也会给编程带来很多便捷。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>但是有些人很“聪明”，他们会“活用”打表法。当他们想不出性能足够好的算法的时候，会先写一个性能差但是结果正确的算法，比如蛮力法。然后用这个慢算法运行出所有可能的答案来，把答案导入到自己的程序里，做成一个大数组。最后他们的程序就是：根据输入的数据去查答案表，直接输出答案。如果大家有仔细观察过一些网上OJ的提交记录，常会发现有一些AC的记录，运行时长是不可思议的0ms，打开它们的AC代码一看往往会是此类“答案打表法”。这种投机取巧的方法万万不可取，千万不能学。现在大多数OJ网站也会特判这样的提交为错误，并且对提交者进行一定的惩罚。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="244_lg1028.html" title="3.4.4. 递归与递推例题：数的计算（洛谷P1028）"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="242_hanoi.html" title="3.4.2. 经典递归问题：Hanoi塔游戏"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../240_rec_bin.html" ><span class="section-number">3.4. </span>递归与二分</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

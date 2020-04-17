@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.6.5. 组合生成算法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.6.6. 复杂排序技巧：排座椅（洛谷P1056）" href="266_luogu_problems_1.html" />
+    <link rel="prev" title="3.6.4. 排列的生成算法(II)" href="264_permuting_2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="266_luogu_problems_1.html" title="3.6.6. 复杂排序技巧：排座椅（洛谷P1056）"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="264_permuting_2.html" title="3.6.4. 排列的生成算法(II)"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../260_other_algos.html" accesskey="U"><span class="section-number">3.6. </span>基础组合算法与模拟算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.6.5. 组合生成算法</a><ul>
+<li><a class="reference internal" href="#id2">3.6.5.1. 循环索引组合</a></li>
+<li><a class="reference internal" href="#id3">3.6.5.2. 迭代索引组合</a></li>
+<li><a class="reference internal" href="#id4">3.6.5.3. 排列组合生成的时间复杂度</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="264_permuting_2.html"
+                        title="上一章"><span class="section-number">3.6.4. </span>排列的生成算法(II)</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="266_luogu_problems_1.html"
+                        title="下一章"><span class="section-number">3.6.6. </span>复杂排序技巧：排座椅（洛谷P1056）</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec06/265_choosing.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.6.5. </span>组合生成算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>组合的生成算法和排列生成算法类似，但是更加简单。组合生成算法同样可以分为<strong>索引组合生成</strong>和<strong>原地组合生成</strong>两类，也可以按照运行模式的不同分为<strong>循环模式</strong>和<strong>迭代模式</strong>两类。</p>
+<p>由于组合不关心元素之间顺序的特殊性质，实际问题中选取数一般总是少于元素总数，也很少出现需要在一个序列上原地去构建组合的情况。另外，当元素本身是取值不连续或者类型不同的时候，比如要对这样的一个元素集合 <span class="math notranslate nohighlight">\(\{3.14, \pi, 2^{\pi}, {22\over7}, \log\pi \}\)</span> 进行五选三的组合，这种情况下要做原地组合生成也没有什么太好的算法。所以一般我们不建议使用原地生成组合的方法，而是生成索引组合，利用索引表去完成组合的选取。例如对于任何五选三的组合，我们只要能生成出下面这样十张索引表，就可以利用它们来对应到相应位置上的元素，从而完成所有的十种选择了：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[0, 1, 2]
+[0, 1, 3]
+[0, 1, 4]
+[0, 2, 3]
+[0, 2, 4]
+[0, 3, 4]
+[1, 2, 3]
+[1, 2, 4]
+[1, 3, 4]
+[2, 3, 4]
+</pre></div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">3.6.5.1. </span>循环索引组合<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>循环模式生成索引的组合，和循环生成排列的原理是一样的，就是利用嵌套循环来进行选取。比如最简单的 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(1\)</span> 的情况，只要一个单循环就可以遍历出从 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(n-1\)</span> 的所有索引了：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">index</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 选出并消费第 index 号元素 }</span>
+</pre></div>
+</div>
+<p>生成 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(2\)</span> 的组合比生成 <span class="math notranslate nohighlight">\(n\)</span> 取 <span class="math notranslate nohighlight">\(2\)</span> 的排列简单不少。因为组合不关心元素之间的顺序关系，例如 {1,2} 和 {2,1} 二者是同一个组合，所以当外层循环已经选定了第一个元素的索引 <span class="math notranslate nohighlight">\(i\)</span>，内层循环在选取第二个元素索引 <span class="math notranslate nohighlight">\(j\)</span> 的时候不需要考虑 <span class="math notranslate nohighlight">\(i\)</span> 之前的那些索引了，内层循环总是从它的外层循环当前选定的索引之后开始就可以。因此也就不需要设计什么是否已经占用的标志了，代码就会变得简单许多：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// 得到索引表 [i, j]，调用消费者函数</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(3\)</span> 的组合无非就是内部再嵌套一层循环，如下所示：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="c1">// 得到索引表 [i, j, k]，调用消费者函数</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>要选的元素数量 <span class="math notranslate nohighlight">\(m\le3\)</span> 时，就这样直接嵌套循环即可。<span class="math notranslate nohighlight">\(m\gt 3\)</span> 时简单的嵌套循环就会变成典型的箭头形代码，此时就需要参考循环生成排列所用的方法，递归构造多层嵌套循环。</p>
+<p>生成组合的嵌套循环在改写成递归模式的时候更加简单，没有额外的标志需要维护。递归函数还是需要有一个参数来表示当前的嵌套层数，最外层为 <span class="math notranslate nohighlight">\(0\)</span>，最内层为 <span class="math notranslate nohighlight">\(m-1\)</span>，最外层开始的时候要动态分配生成好空索引表，结束时要释放掉索引表的空间。层数达到 <span class="math notranslate nohighlight">\(m\)</span> 的时候就调用消费者函数并结束递归。但是现在每一层循环的起点变得不同，最外层循环总是从0开始，所有内层循环则从它的上层循环所选定的索引位置的后一个索引开始。请看下面的示例程序：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">func</span><span class="p">(</span><span class="kt">char</span> <span class="n">data</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">index</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%c%c&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">i</span> <span class="o">==</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">?</span> <span class="sc">&#39;\n&#39;</span> <span class="o">:</span> <span class="sc">&#39; &#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">choose</span><span class="p">(</span><span class="kt">char</span> <span class="n">data</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">char</span> <span class="n">ch</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="sc">&#39;A&#39;</span><span class="p">,</span> <span class="sc">&#39;B&#39;</span><span class="p">,</span> <span class="sc">&#39;C&#39;</span><span class="p">,</span> <span class="sc">&#39;D&#39;</span><span class="p">,</span> <span class="sc">&#39;E&#39;</span><span class="p">,</span> <span class="sc">&#39;F&#39;</span><span class="p">,</span> <span class="sc">&#39;G&#39;</span><span class="p">,</span> <span class="sc">&#39;H&#39;</span><span class="p">,</span> <span class="sc">&#39;I&#39;</span><span class="p">,</span> <span class="sc">&#39;J&#39;</span> <span class="p">};</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">;</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+
+        <span class="n">choose</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">choose</span><span class="p">(</span><span class="kt">char</span> <span class="n">data</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">level</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">static</span> <span class="kt">int</span> <span class="o">*</span><span class="n">index</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">index</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">m</span><span class="p">]();</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">level</span> <span class="o">==</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">m</span><span class="p">);</span>
+                <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="n">level</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">index</span><span class="p">[</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">index</span><span class="p">[</span><span class="n">level</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+                <span class="n">choose</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">delete</span> <span class="p">[]</span> <span class="n">index</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>将上面的示例程序中的消费者函数改为输出索引表，并且尝试修改其代码，使得可以不用 <code class="docutils literal notranslate"><span class="pre">start</span></code> 这个辅助变量。完成之后多用几种 <span class="math notranslate nohighlight">\(n,m\)</span> 值运行一下，看看生成的索引组合有什么规律。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.6.5.2. </span>迭代索引组合<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>索引的组合经过仔细观察也是有规律可循的。我们先规定索引表里的每一项索引值都是升序排列的，就如循环嵌套生成的索引表一样，即 <code class="docutils literal notranslate"><span class="pre">index[0]</span> <span class="pre">&lt;</span> <span class="pre">index[1]</span> <span class="pre">&lt;</span> <span class="pre">...</span> <span class="pre">&lt;</span> <span class="pre">index[m-1]</span></code>。然后以五选三的十种索引表为例，按照上面的练习中看到的索引表生成顺序，观察索引表中三个位置上索引值的变化规律。为了观察方便，下面用小括号来表示 <code class="docutils literal notranslate"><span class="pre">index[0]</span></code> 所选中的位置，方括号表示 <code class="docutils literal notranslate"><span class="pre">index[1]</span></code> 所选中的位置，花括号表示 <code class="docutils literal notranslate"><span class="pre">index[2]</span></code> 所选中的位置：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[0, 1, 2]  ==&gt;  (0) [1] {2}  3   4
+[0, 1, 3]  ==&gt;  (0) [1]  2  {3}  4
+[0, 1, 4]  ==&gt;  (0) [1]  2   3  {4}
+[0, 2, 3]  ==&gt;  (0)  1  [2] {3}  4
+[0, 2, 4]  ==&gt;  (0)  1  [2]  3  {4}
+[0, 3, 4]  ==&gt;  (0)  1   2  [3] {4}
+[1, 2, 3]  ==&gt;   0  (1) [2] {3}  4
+[1, 2, 4]  ==&gt;   0  (1) [2]  3  {4}
+[1, 3, 4]  ==&gt;   0  (1)  2  [3] {4}
+[2, 3, 4]  ==&gt;   0   1  (2) [3] {4}
+</pre></div>
+</div>
+<p>不难看出，从第一个索引组合 {0,1,2} 到最后一个 {2,3,4} 逐个变化的过程有一个明显的“行动模式”。每一次改变都是最后一个索引 <code class="docutils literal notranslate"><span class="pre">index[2]</span></code> 尝试向后移动一个位置，如果它已经在最后的位置而不能再后移了。那么就尝试让它的前一个索引 <code class="docutils literal notranslate"><span class="pre">index[1]</span></code> 后移一个位置，<code class="docutils literal notranslate"><span class="pre">index[1]</span></code> 如果成功的后移了一个位置的话，那么 <code class="docutils literal notranslate"><span class="pre">index[2]</span></code> 就回到 <code class="docutils literal notranslate"><span class="pre">index[1]</span></code> 后面那个位置。如果 <code class="docutils literal notranslate"><span class="pre">index[1]</span></code> 也已经在它所能到达的最后一个位置了，那么就尝试后移 <code class="docutils literal notranslate"><span class="pre">index[0]</span></code>，然后 <code class="docutils literal notranslate"><span class="pre">index[1]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">index[2]</span></code> 整体回到紧挨着 <code class="docutils literal notranslate"><span class="pre">index[0]</span></code> 的后面。如果连 <code class="docutils literal notranslate"><span class="pre">index[0]</span></code> 也已经抵达它所能抵达的最后位置了，那么就没有哪个索引值可以后移了，迭代就结束了。</p>
+<p>形象地说，这个过程就好像几个人在离开一堵墙一定距离的位置上排成一列纵队，离墙壁最近的是队尾，最远的是队头。接下来按照这样的规则整个队伍慢慢向墙壁靠近：</p>
+<img alt="../../_images/265_comb_iter.png" class="align-center" src="../../_images/265_comb_iter.png" />
+<p><span class="math notranslate nohighlight">\((1)\)</span> 队尾的人先开始一步一步向墙壁走去。<span class="math notranslate nohighlight">\((2)\)</span> 当他走到墙边，倒数第二个人开始向墙边走。<span class="math notranslate nohighlight">\((3)\)</span> 倒数第二个人只走一步就停下来了，同时把队尾那个人叫回来仍然排在自己身后，接下来还是由队尾的人一步一步向墙边走去。<span class="math notranslate nohighlight">\((4),(5),(6)\)</span> 就这样，队尾每抵达墙边一次，倒数第二个人就向墙边走一步并把队尾叫回自己身后，然后继续上述过程。<span class="math notranslate nohighlight">\((7)\)</span> 直到后面两个人都抵达了墙边，谁也不能再向后走动的时候，队首那个人开始向墙边走。<span class="math notranslate nohighlight">\((8)\)</span> 当然他也是每次只走一步，走完一步就停下来并把后面那两个在墙边动弹不得的人叫回自己身后，然后继续从队尾那个人开始，按照前面所描述的规则向墙壁逐步移动…… <span class="math notranslate nohighlight">\((9)\)</span> 直到三个人都抵达墙边的时候，整个过程就结束了。</p>
+<p>上面这个移动规则很容易扩展到任意 <span class="math notranslate nohighlight">\(m\)</span> 个人的情况，无非是不断重复这个过程：从后向前找第一个还能走动的人，让他向后走一步，然后把他身后的所有已经走到头的人叫回他的身后去，直到所有人都走到了自己的尽头位置。也很容易从中归纳出索引组合迭代的算法规则，大概分成下面三步：</p>
+<ol class="arabic">
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">index[m-1]</span></code> 开始向前找第一个还没有达到最大值的索引，假设其为 <code class="docutils literal notranslate"><span class="pre">index[i]</span></code>。</p>
+<p>很容易总结出每一个索引的最大值，最后一个索引 <code class="docutils literal notranslate"><span class="pre">index[m-1]</span></code> 的最大值为最后位置 <code class="docutils literal notranslate"><span class="pre">n-1</span></code>，倒数第二个索引 <code class="docutils literal notranslate"><span class="pre">index[m-2]</span></code> 的最大值就是倒数第二大的位置 <code class="docutils literal notranslate"><span class="pre">n-2</span></code>，依此类推，第一个索引 <code class="docutils literal notranslate"><span class="pre">index[0]</span></code> 的最大值就是 <code class="docutils literal notranslate"><span class="pre">n-m</span></code>。实际上我们并不需要为任一具体索引 <code class="docutils literal notranslate"><span class="pre">index[i]</span></code> 计算它的最大值，只要随着从后向前查找的过程从 <code class="docutils literal notranslate"><span class="pre">n-1</span></code> 开始逐渐递减就可以了。</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">++index[i]</span></code>，这一步就不需要多解释了吧。</p></li>
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">index[i+1]</span></code> 开始一直到最后一个索引 <code class="docutils literal notranslate"><span class="pre">index[m-1]</span></code>，逐个把它们的值变成比各自的前一个索引值大1，也就是把后面的所有索引值都重新排回 <code class="docutils literal notranslate"><span class="pre">index[i]</span></code> 位置的后面。</p></li>
+</ol>
+<p>现在就很容易根据这个算法编写出和迭代排列函数功能类似的索引组合迭代函数了，下面这个程序功能与前面的示例程序相同，使用迭代的方法实现：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="nf">next_combination</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">char</span> <span class="n">ch</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="sc">&#39;A&#39;</span><span class="p">,</span> <span class="sc">&#39;B&#39;</span><span class="p">,</span> <span class="sc">&#39;C&#39;</span><span class="p">,</span> <span class="sc">&#39;D&#39;</span><span class="p">,</span> <span class="sc">&#39;E&#39;</span><span class="p">,</span> <span class="sc">&#39;F&#39;</span><span class="p">,</span> <span class="sc">&#39;G&#39;</span><span class="p">,</span> <span class="sc">&#39;H&#39;</span><span class="p">,</span> <span class="sc">&#39;I&#39;</span><span class="p">,</span> <span class="sc">&#39;J&#39;</span> <span class="p">};</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">;</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+
+        <span class="kt">int</span> <span class="o">*</span><span class="n">index</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">m</span><span class="p">]();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+
+        <span class="k">do</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%c%c&quot;</span><span class="p">,</span> <span class="n">ch</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">i</span> <span class="o">==</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">?</span> <span class="sc">&#39;\n&#39;</span> <span class="o">:</span> <span class="sc">&#39; &#39;</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">next_combination</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">));</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">next_combination</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_val</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_val</span><span class="p">)</span> <span class="p">{</span>
+                <span class="o">--</span><span class="n">i</span><span class="p">;</span>
+                <span class="o">--</span><span class="n">max_val</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="o">++</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+                <span class="n">index</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>仿照上例中的 <code class="docutils literal notranslate"><span class="pre">next_combination()</span></code> 函数，编写逆序迭代索引组合的函数 <code class="docutils literal notranslate"><span class="pre">prev_combination()</span></code> 并进行测试。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">3.6.5.3. </span>排列组合生成的时间复杂度<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>排列数和组合数的量级都是非常大的，而且会随着 <span class="math notranslate nohighlight">\(m\)</span> 的取值而变化。</p>
+<p>对于排列数 <span class="math notranslate nohighlight">\(P_n^m\)</span>，若考虑 <span class="math notranslate nohighlight">\(m\)</span> 是一个定值，<span class="math notranslate nohighlight">\(n\)</span> 为数据规模。当 <span class="math notranslate nohighlight">\(m=1\)</span> 时，排列数 <span class="math notranslate nohighlight">\(P_n^1\)</span> 为线性 <span class="math notranslate nohighlight">\(O(n)\)</span>；当 <span class="math notranslate nohighlight">\(m=2\)</span> 时为 <span class="math notranslate nohighlight">\(O(n^2)\)</span>，此后随着 <span class="math notranslate nohighlight">\(m\)</span> 的不断增大，量级会迅速攀升，但只要 <span class="math notranslate nohighlight">\(m\)</span> 还是一个定值，那么总是 <span class="math notranslate nohighlight">\(m\)</span> 阶的多项式级别 <span class="math notranslate nohighlight">\(O(n^m)\)</span>。但若 <span class="math notranslate nohighlight">\(m\)</span> 随着 <span class="math notranslate nohighlight">\(n\)</span> 同时增大，那么排列数的增长量级会直接超过指数级，<span class="math notranslate nohighlight">\(m\)</span> 越接近 <span class="math notranslate nohighlight">\(n\)</span> 就越趋向于阶乘级，而最恐怖的全排列 <span class="math notranslate nohighlight">\(P_n^n\)</span> 就是 <span class="math notranslate nohighlight">\(O(n!)\)</span> 阶乘级的。C++最大的内置整型数仅能容纳到 <span class="math notranslate nohighlight">\(P_{20}^{20}\)</span>。</p>
+<p>组合数的量级要比排列数小很多，但仍很大。若考虑 <span class="math notranslate nohighlight">\(m\)</span> 为定值，<span class="math notranslate nohighlight">\(n\)</span> 为数据规模，考虑对称性，令 <span class="math notranslate nohighlight">\(k=\min\{m,n-m\}\)</span>，<span class="math notranslate nohighlight">\(C_n^m\)</span> 的量级为 <span class="math notranslate nohighlight">\(O(n^k)\)</span>，是 <span class="math notranslate nohighlight">\(k\)</span> 阶多项式级别。但是如果 <span class="math notranslate nohighlight">\(m\)</span> 随着 <span class="math notranslate nohighlight">\(n\)</span> 的增大而增大，事情就会迅速失控，甚至比排列数的情况更糟糕，会接近于幂指数级别。极限状态为 <span class="math notranslate nohighlight">\(m\)</span> 始终等于 <span class="math notranslate nohighlight">\(\lfloor{n\over2}\rfloor\)</span>，那就确确实实的成为了 <span class="math notranslate nohighlight">\(O(n^{\lfloor{n\over2}\rfloor})\)</span>，恐怖的幂指数级别。C++最大的内置整型数仅能容纳到 <span class="math notranslate nohighlight">\(C_{62}^{31}\)</span>。</p>
+<p>所以在选择排列组合生成算法时必须要注意数据规模，稍大一点的数据规模马上会让循环生成模式成为mission impossible，这种时候最好改成迭代模式，并且要事先妥善确定好迭代方案，包括迭代起点和迭代方向。这些选择是至关重要的。</p>
+<p>为了对排列组合生成的实际运行速度有一个直观的感性认识，请认真完成下面的练习。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>使用循环生成的方式，<span class="math notranslate nohighlight">\(n\)</span> 值从小到大地尝试生成全排列，测试生成时间，记录下生成时间超过1ms、10ms、100ms、500ms、1s这几个时间点时的 <span class="math notranslate nohighlight">\(n\)</span> 值，试一试还能耐着性子等到生成完毕的最大 <span class="math notranslate nohighlight">\(n\)</span> 值。</p>
+<p>用同样的方式完成循环生成索引组合的时间测试，不同点是 <span class="math notranslate nohighlight">\(n\)</span> 的取值范围可以更大一些，<span class="math notranslate nohighlight">\(m\)</span> 总是取中间值。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在上述实验过程中，如果生成时间比较长，千万不要死等下去，果断用Ctrl-C结束程序，否则可能等到海枯石烂。</p>
+</div>
+<p>练习做完之后，请牢牢地记住实验结果，在今后实际编程遇到排列组合生成问题时确保心中有数。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="266_luogu_problems_1.html" title="3.6.6. 复杂排序技巧：排座椅（洛谷P1056）"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="264_permuting_2.html" title="3.6.4. 排列的生成算法(II)"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../260_other_algos.html" ><span class="section-number">3.6. </span>基础组合算法与模拟算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

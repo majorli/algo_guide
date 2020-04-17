@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1.3. 高精度整数算法(II) 加法与乘法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="4.1.4. 高精度整数算法(III) 减法与比较" href="314_big_int_3.html" />
+    <link rel="prev" title="4.1.2. 高精度整数算法(I) 数据的表示" href="312_big_int_1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="314_big_int_3.html" title="4.1.4. 高精度整数算法(III) 减法与比较"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="312_big_int_1.html" title="4.1.2. 高精度整数算法(I) 数据的表示"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" accesskey="U"><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.1.3. 高精度整数算法(II) 加法与乘法</a><ul>
+<li><a class="reference internal" href="#bigint">4.1.3.1. BigInt加法运算</a></li>
+<li><a class="reference internal" href="#id1">4.1.3.2. BigInt乘法运算</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="312_big_int_1.html"
+                        title="上一章"><span class="section-number">4.1.2. </span>高精度整数算法(I) 数据的表示</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="314_big_int_3.html"
+                        title="下一章"><span class="section-number">4.1.4. </span>高精度整数算法(III) 减法与比较</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec01/313_big_int_2.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ii">
+<h1><span class="section-number">4.1.3. </span>高精度整数算法(II) 加法与乘法<a class="headerlink" href="#ii" title="永久链接至标题">¶</a></h1>
+<p>我们已经有了高精度整数所需要的最基本框架，即实现了它的数据存储结构、赋值和输入输出功能。接下来我们就要逐步实现 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 类型的常用运算了，首先来看最常用也是相对较简单的加法和乘法运算。</p>
+<p>实现加法和乘法运算的基本思路是模拟竖式运算的手算过程。在我们的实现版本里，采用的是模拟万进制，每一个节可以看作是万进制整数的一个位。仿照小学阶段学过的竖式加法和乘法运算规则，从最低位对齐后进行运算。</p>
+<div class="section" id="bigint">
+<h2><span class="section-number">4.1.3.1. </span>BigInt加法运算<a class="headerlink" href="#bigint" title="永久链接至标题">¶</a></h2>
+<p>十进制下正整数加法的竖式运算规则是最简单的，两个加数最低位对齐，然后开始由低位向高位逐位做加法。每个位上由两个加数该位上的数字以及从低位进位来的数字三者相加，相加之和取其个位数作为该位的结果，如果超过10，则向更高一位进1。最终得到的和的长度可能和两个加数中较大的那个相同，或者多一位。</p>
+<p><code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的万进制正整数加法和上面所描述的十进制情况并没有本质的区别，只是“位”变成了“节”，每个节上相加之和保留低四位，也就是除一万（基）的余数，进位则是最高位，也就是除一万的商，同样进位数最大只可能为一。</p>
+<p>要模拟上面这样一个过程并不难。我们在设计 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的数据结构时使用了“小端序”存放各节，所以低位对齐是一件自然已经做好的事情，只要将两个加数各自从头到尾的各节相加，取结果，生成进位就可以了。两个加数的节数不同时，较短的那个加数高位上缺失的节视为0。</p>
+<p>例如计算 <code class="docutils literal notranslate"><span class="pre">99998765432101234567</span> <span class="pre">+</span> <span class="pre">9999123456789012</span></code> 的过程如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      9999|8765|4321|0123|4567
++)         9999|1234|5678|9012
+------------------------------
+    1|0000|8764|5555|5802|3579
+</pre></div>
+</div>
+<p>下面我们来具体实现加法运算。我们将重载所有的四种加法运算：<code class="docutils literal notranslate"><span class="pre">+,</span> <span class="pre">+=,</span> <span class="pre">前置++,</span> <span class="pre">后置++</span></code>，但实际解决问题时往往只需其中一种就够了。</p>
+<p>既然我们要同时实现 <code class="docutils literal notranslate"><span class="pre">+</span></code> 和 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 两种运算，那么按照代码复用的原则，我们可以只对其中一个编写真正的运算程序，而另一个则利用它来完成自己的功能。</p>
+<p><code class="docutils literal notranslate"><span class="pre">+</span></code> 和 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 两个运算符重载的成员函数原型为：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="n">BigInt</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+        <span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>二者的共同点是都只接受一个常量引用参数 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">BigInt</span> <span class="pre">&amp;a</span></code>，它就是要和自己相加的那个加数。采用常引用确保了这个参数不光可以是 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量，而且可以是任何能被 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 兼容的内置整型变量、常量和字面量。这是因为C++对于常引用形参会在类型不匹配时自动尝试去做类型转换，而我们的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 恰好有一个能接受这种类型的构造器，所以C++能够把这些值默默地转为一个 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量再传给形参。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>聪明如你，读到这里可能会认为既然这样，那么重载过加法运算符之后我们的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 是不是不光能和内置整型数做加法，而且还能和字符串做加法呢？毕竟我们还有一个接受 <code class="docutils literal notranslate"><span class="pre">string</span></code> 型参数的构造器。很遗憾，答案是否定的。前一节我们已经看到过了 <code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">&quot;888&quot;;</span></code> 这样的操作会被C++拒绝，理由是不支持这样的类型转换。这里也一样，<code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">+</span> <span class="pre">&quot;888&quot;</span></code> 这样的操作也会被C++以相同的理由拒绝。这是因为字符串本身也是一种派生数据类型，而那种默默完成的隐式类型转换只支持内置数据类型。</p>
+</div>
+<p>再看二者的不同点。第一个不同点是 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算符重载的成员函数在函数原型后面有一个 <code class="docutils literal notranslate"><span class="pre">const</span></code> 的修饰。被这样修饰过的成员函数叫做<strong>常成员函数</strong>。这是成员函数才有的特性，普通的函数是没有这种操作的。常成员函数不允许修改成员变量的值，在常成员函数内部，C++会自动把所有成员变量改成常量。而我们知道，单纯的加法运算 <code class="docutils literal notranslate"><span class="pre">b1</span> <span class="pre">+</span> <span class="pre">b2</span></code> 就是不允许修改加数本身的值的。</p>
+<p>第二个不同点是 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 运算返回一个引用，而 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算则是返回一个值。这是因为单纯的加法运算不在任何一个加数上进行运算，它一定是生成一个临时的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量来存放运算结果。而临时变量是不可以用引用来返回的，必须返回它的值。<code class="docutils literal notranslate"><span class="pre">+=</span></code> 运算就不同了，它简单地把参数 <code class="docutils literal notranslate"><span class="pre">a</span></code> 加到自己身上，然后以引用方式返回 <code class="docutils literal notranslate"><span class="pre">*this</span></code> 就可以了。所以 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 运算会比 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算高效一些，因为它的参数和返回值都是引用形式，不会产生数据复制。</p>
+<p>那么如果用 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 来实现具体的加法运算，然后用它来完成 <code class="docutils literal notranslate"><span class="pre">+</span></code> 的功能，这样会不会比反过来做更加高效呢？其实两种方式是一样的。我们来对比一下就知道了：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">+</span></code> 调用 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 时，首先要把自己的值复制一个备份出来，然后用这个备份去调用 <code class="docutils literal notranslate"><span class="pre">+=</span></code>，完成之后再以复制值的方式返回结果，总共做了两次数据复制。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+=</span></code> 调用 <code class="docutils literal notranslate"><span class="pre">+</span></code> 时，普通加法运算结束后以复制值的方式返回结果，然后这个结果要复制给 <code class="docutils literal notranslate"><span class="pre">*this</span></code>，一样是总共两次数据复制。</p></li>
+</ol>
+<p>所以对于加法运算，这种谁复用谁的选择是没有太大意义的，个人喜好而已。真正的加法运算过程都是一样的。我们这里选择用 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 来做真正的加法运算，然后 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算利用 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 运算来完成。下面是这两个成员函数的具体代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>		<span class="c1">// 把长度调整到不短于a，方法是在高位补0</span>
+		<span class="n">_s</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>	<span class="c1">// 使用vector容器的resize成员函数一次性补足</span>
+	<span class="kt">int</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>			<span class="c1">// carry：进位数，初始为0</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>		<span class="c1">// 循环到所有节全部计算完为止</span>
+		<span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>	<span class="c1">// a有可能比自己更短</span>
+		<span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">carry</span><span class="p">;</span>			<span class="c1">// 加上从前面来的进位</span>
+		<span class="n">carry</span> <span class="o">=</span> <span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">_BASE</span><span class="p">;</span>		<span class="c1">// 本节产生的进位</span>
+		<span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%=</span> <span class="n">_BASE</span><span class="p">;</span>			<span class="c1">// 本节的和</span>
+		<span class="n">i</span><span class="o">++</span><span class="p">;</span>				<span class="c1">// 进入下一节</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span> <span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">carry</span><span class="p">);</span>	<span class="c1">// 最后有可能还有一次进位，要进成更高的一节</span>
+
+	<span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">BigInt</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>		<span class="c1">// 生成一个临时的BigInt变量等于加数a</span>
+	<span class="k">return</span> <span class="n">temp</span> <span class="o">+=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>		<span class="c1">// 直接返回temp加上自身之后的值</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>核心的加法程序是在 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 的函数中实现的，<code class="docutils literal notranslate"><span class="pre">+</span></code> 函数只是把传入的加数复制一份，然后调用 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 把自己的值加到这个复制出来的加数上去，再返回得到的和。这样就确保了两个加数自己不会被改变。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 函数中，有一个很隐蔽的细节问题，容易引发非常隐蔽的bug。我们的程序是把传入的加数直接加到自身上去，当遇到 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+=</span> <span class="pre">a</span></code> 这样的把自己加到自己上去这种操作时，传入的那个加数其实就是自己的引用。所以我们在做每一节上的部分加时，必须先加两个节的数值，然后再加从前面过来的进位。否则如果先把进位加上去，那么其实加数 <code class="docutils literal notranslate"><span class="pre">a</span></code> 上这个节也是被加了进位的，这样进位数就会被加两遍。</p>
+</div>
+<p>请务必把这两个函数代码理解透，然后自己尝试一下另一种方式，即把核心的加法过程在 <code class="docutils literal notranslate"><span class="pre">+</span></code> 函数中实现，然后 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 函数利用 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算实现。如果想真正掌握高精度算法，这个练习是必须要做的。</p>
+<p>接下来我们看看怎么实现 <code class="docutils literal notranslate"><span class="pre">++</span></code> 运算。原理上已经非常简单了，<code class="docutils literal notranslate"><span class="pre">++</span></code> 运算也就是调用 <code class="docutils literal notranslate"><span class="pre">+=</span> <span class="pre">1</span></code> 然后返回结果罢了。但是 <code class="docutils literal notranslate"><span class="pre">++</span></code> 运算有前置和后置两种，二者的运算符是一样的，为了能够区分前置和后置，二者有不同的重载函数原型，这两个原型比较特殊：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">++</span><span class="p">();</span>           <span class="c1">// 前置++</span>
+        <span class="n">BigInt</span> <span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>         <span class="c1">// 后置++</span>
+        <span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>具体实现的代码倒很简单，因为同样可以利用已经实现的 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 运算：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">BigInt</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+	<span class="o">*</span><span class="k">this</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">temp</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>从它们的代码可以明显看出，前置运算非常高效，它直接在自身做 <code class="docutils literal notranslate"><span class="pre">+=</span> <span class="pre">1</span></code> 运算，并且返回自身的引用。我们的 <code class="docutils literal notranslate"><span class="pre">+=</span></code> 代码也是没有数据复制的非常高效的，所以前置 <code class="docutils literal notranslate"><span class="pre">++</span></code> 整个过程没有产生一次数据复制，直接返回自身的引用。</p>
+<p>而后置运算就不同了，因为它要返回的是自己的原值，所以它必须先把自己的原值复制一份才能去做 <code class="docutils literal notranslate"><span class="pre">+=</span> <span class="pre">1</span></code> 运算，最后还必须以值的方式返回自己复制下来的原值，所以后置 <code class="docutils literal notranslate"><span class="pre">++</span></code> 整个过程发生了两次数据复制。</p>
+<p>这就是为什么常有人说前置比后置更快的原因。事实上如果是内置数据类型，比如最常见的 <code class="docutils literal notranslate"><span class="pre">int</span></code>，两次数据复制造成的时间增量是完全可以忽略不计的。但是对于 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 这样的可能会数据量很大的自定义数据类型，两次复制确实会引起一些性能差异的。所以在实际编程时遇到这种场景，尽量用前置运算确实是一个比较好的习惯。</p>
+<p>另外，由于前置运算返回的是引用，所以它的返回值是可以被修改的。例如你可以写这样的连续自增运算：<code class="docutils literal notranslate"><span class="pre">++(++(++i))</span></code>。但后置运算返回的是值，所以不能这样连续使用。不过要知道，这样的语句在实际编程中是不提倡的，代码风格要以朴素易懂为先。</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2><span class="section-number">4.1.3.2. </span>BigInt乘法运算<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>模拟竖式整数乘法时，同样先低位对齐，然后从乘数的最低节开始逐节与另一个乘数整体相乘，每次得到的部分积右移相应的节数后加到前一次得到的部分结果上去。</p>
+<p>由于我们选择了模拟万进制，所以模拟乘法时会有一个非常好用的便利。节与节相乘不需要引入 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 型的中间变量，节与节的乘积不会造成 <code class="docutils literal notranslate"><span class="pre">int</span></code> 溢出。结果对万取模就是该节的积，除万后剩余部分就是进位。例如，两个节都是最大值的情形，计算 <span class="math notranslate nohighlight">\(9999\times9999=99980001\)</span>，所以两节相乘的结果记 <span class="math notranslate nohighlight">\(1\)</span> 进 <span class="math notranslate nohighlight">\(9998\)</span>。这是节乘法会产生的最大进位数。在乘法运算中，每一次最基本的部分运算是两个节的数值相乘，再加上来自前一次的进位数。根据这个运算规律，我们可以发现一次基本的部分运算会产生的向下一个运算的进位不会超过 <span class="math notranslate nohighlight">\(9998\)</span>。这就很好地保证了整个高精度乘法过程的数据类型有效性，我们可以放心地基于 <code class="docutils literal notranslate"><span class="pre">int</span></code> 类型来模拟竖式乘法。</p>
+<p>C++中与乘法有关的运算有两个，普通乘法 <code class="docutils literal notranslate"><span class="pre">*</span></code> 和自乘 <code class="docutils literal notranslate"><span class="pre">*=</span></code>，只要实现了其中一个，另一个就可以利用它来实现。重载着两个运算符的成员函数原型如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="n">BigInt</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">*=</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+        <span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>那么是不是和加法的情形一样，实现其中哪一个对效率并无影响呢？其实乘法是不一样的。原因是乘法不像加法一样可以两个加数从低位到高位循环一遍就可以完成的。参考竖式乘法的手算过程，如果下面的那个乘数有 <span class="math notranslate nohighlight">\(n\)</span> 位，那么需要做 <span class="math notranslate nohighlight">\(n\)</span> 次部分乘法，然后把所有这些部分乘法的结果按规则移位后加起来得到最终的积。所以乘法不能在其中一个乘数上直接完成运算，必须引入一个中间变量来累加每一次部分乘法的结果。</p>
+<p>如果我们实现 <code class="docutils literal notranslate"><span class="pre">*=</span></code> 运算，因为不能直接改写自身，所以要先把自身的值复制一份出来：<code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">f1</span> <span class="pre">=</span> <span class="pre">*this;</span></code>，用 <code class="docutils literal notranslate"><span class="pre">f1</span></code> 来进行计算，中间结果直接写进 <code class="docutils literal notranslate"><span class="pre">*this</span></code> 中去。但是考虑到有可能出现自己和自己的自乘：<code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">*=</span> <span class="pre">b</span></code>，所以其实还需要再复制一份传入的乘数值：<code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">f2</span> <span class="pre">=</span> <span class="pre">a;</span></code>。这样即使 <code class="docutils literal notranslate"><span class="pre">a</span></code> 就是 <code class="docutils literal notranslate"><span class="pre">*this</span></code> 也没有关系了，我们用 <code class="docutils literal notranslate"><span class="pre">f1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">f2</span></code> 来进行计算，最终结果就在 <code class="docutils literal notranslate"><span class="pre">*this</span></code> 中，返回自己的引用就可以了。所以实现 <code class="docutils literal notranslate"><span class="pre">*=</span></code> 需要两次数据复制。而 <code class="docutils literal notranslate"><span class="pre">*</span></code> 运算可以这样实现：先把自身复制一份，然后用这个复制品去完成 <code class="docutils literal notranslate"><span class="pre">*=</span></code> 运算，最后把得到的结果以值的方式返回，这里也有两次数据复制。所以这种方式一共产生了四次数据复制。</p>
+<p>如果我们实现 <code class="docutils literal notranslate"><span class="pre">*</span></code> 运算，整个计算过程不需要进行数据复制，生成一个临时变量来接收运算结果即可，但是最后要以值的形式返回，所以还是有一次数据复制。<code class="docutils literal notranslate"><span class="pre">*=</span></code> 运算中则直接用自身去做自乘，然后赋值回自身，返回引用：<code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">*this</span> <span class="pre">=</span> <span class="pre">*this</span> <span class="pre">*</span> <span class="pre">a;</span></code>。这里只有一次赋值，即一次数据复制。这种方式一共产生两次数据复制，比前一种方式少一倍！</p>
+<p>所以我们当然选择实现 <code class="docutils literal notranslate"><span class="pre">*</span></code> 运算啦：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">BigInt</span> <span class="n">p</span><span class="p">;</span>				<span class="c1">// 积</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zero</span><span class="p">()</span> <span class="o">||</span> <span class="n">a</span><span class="p">.</span><span class="n">zero</span><span class="p">())</span> <span class="k">return</span> <span class="n">p</span><span class="p">;</span>	<span class="c1">// 特判</span>
+	<span class="kt">int</span> <span class="n">size1</span> <span class="o">=</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">size2</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="kt">int</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">carry</span><span class="p">;</span>
+	<span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size1</span> <span class="o">+</span> <span class="n">size2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>		<span class="c1">// 将积的节数设置为最大可能，初始值全部为0</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">d2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">d2</span> <span class="o">&lt;</span> <span class="n">size2</span><span class="p">;</span> <span class="o">++</span><span class="n">d2</span><span class="p">)</span> <span class="p">{</span>	<span class="c1">// 乘数从最低到最高各节循环</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>	<span class="c1">// 乘数遇到等于0的节，直接跳到下一节</span>
+		<span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>			<span class="c1">// 开始一轮部分乘，进位数清零</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">d1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">d1</span> <span class="o">&lt;</span> <span class="n">size1</span><span class="p">;</span> <span class="o">++</span><span class="n">d1</span><span class="p">)</span> <span class="p">{</span>	<span class="c1">// 自己从最低到最高各节循环</span>
+			<span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="o">+</span><span class="n">d1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="p">]</span> <span class="o">*</span> <span class="n">_s</span><span class="p">[</span><span class="n">d1</span><span class="p">]);</span><span class="c1">// 乘数的节号同时是本次部分积的左移量</span>
+			<span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="o">+</span><span class="n">d1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">carry</span><span class="p">;</span>		<span class="c1">// 加上从前面来的进位</span>
+			<span class="n">carry</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="o">+</span><span class="n">d1</span><span class="p">]</span> <span class="o">/</span> <span class="n">_BASE</span><span class="p">;</span>	<span class="c1">// 新的进位数</span>
+			<span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="o">+</span><span class="n">d1</span><span class="p">]</span> <span class="o">%=</span> <span class="n">_BASE</span><span class="p">;</span>		<span class="c1">// 从该节中去除进位部分</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span> <span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">d2</span><span class="o">+</span><span class="n">d1</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>	<span class="c1">// 最后有可能还有一次向更高位的进位</span>
+	<span class="p">}</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">p</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">*=</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span> <span class="o">*</span> <span class="n">a</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>上述这个乘法运算的代码是非常直接地对竖式乘法的模拟，并没有什么特殊之处。和手算唯一的不同是，我们不会把所有部分积全部乘完然后再一起相加，而是乘一次就加一次，这样效率和内存消耗都会好很多。</p>
+<p>请务必读懂理解上面的算法，尤其是要搞清楚，部分积相加时的左移是怎样实现的。最后请尝试一下改写成实现 <code class="docutils literal notranslate"><span class="pre">*=</span></code> 的方式，这是必要的练习。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="314_big_int_3.html" title="4.1.4. 高精度整数算法(III) 减法与比较"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="312_big_int_1.html" title="4.1.2. 高精度整数算法(I) 数据的表示"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" ><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.6. 基础组合算法与模拟算法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3.6.1. 排列与组合：数学的概念" href="sec06/261_perm_comb.html" />
+    <link rel="prev" title="3.5.8. 简单建索引算法" href="sec05/258_index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="sec06/261_perm_comb.html" title="3.6.1. 排列与组合：数学的概念"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec05/258_index.html" title="3.5.8. 简单建索引算法"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" accesskey="U"><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec05/258_index.html"
+                        title="上一章"><span class="section-number">3.5.8. </span>简单建索引算法</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="sec06/261_perm_comb.html"
+                        title="下一章"><span class="section-number">3.6.1. </span>排列与组合：数学的概念</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch02/260_other_algos.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.6. </span>基础组合算法与模拟算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>在计算机算法问题中有许多涉及排列组合的问题，有许多复杂问题要用到排列组合算法。解决排列和组合问题的算法统称为组合算法，是一类非常重要的基础算法。</p>
+<p>还有一个算法问题的大类被称为模拟算法，就是用计算机软件来模拟现实世界的现象、问题和工作。广义来说，甚至可以认为一切计算机软件都是在对现实进行模拟，一切算法问题都是模拟问题。确实，在实际应用中计算机模拟类项目的范围及其广泛，比如虚拟现实技术、计算机仿真技术、人工智能和机器人技术、大家都喜欢的电子游戏，这些都大量依赖计算机仿真和模拟算法的应用。因此在算法竞赛中，模拟算法占据了最大的比例。模拟类问题往往没有特定的算法，甚至没有特定的方法和解题模式。解决模拟类问题依靠的是对大量基础算法的理解和掌握，依靠经验活学活用。</p>
+<p>在这一部分，我们将学习几种常用的基础组合算法，首先我们要简单学习排列组合的数学知识，学习排列数、组合数的计算，学习Pascal三角形这个组合数学中的重要知识。然后学习怎样用算法生成排列和组合，学习几种简单实用的排列生成算法和组合生成算法。</p>
+<p>随后我们将用几个实际题目来了解模拟算法问题的解决过程，包括下面几个问题：</p>
+<ul class="simple">
+<li><p>排座椅（洛谷P1056）</p></li>
+<li><p>玩具谜题（洛谷P1563）</p></li>
+<li><p>字符串的展开（洛谷P1098）</p></li>
+<li><p>生活大爆炸版石头剪刀布（洛谷P1328）</p></li>
+<li><p>迎春舞会之数字舞蹈（洛谷P1538）</p></li>
+<li><p>花生采摘（洛谷P1086）</p></li>
+<li><p>时间复杂度（洛谷P3952）</p></li>
+<li><p>棋类游戏模拟：tic-tac-toe游戏(I)</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec06/261_perm_comb.html">3.6.1. 排列与组合：数学的概念</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec06/261_perm_comb.html#id2">3.6.1.1. 排列和排列数的计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/261_perm_comb.html#id3">3.6.1.2. 组合和组合数的计算</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/262_perm_comb_tables.html">3.6.2. 排列组合打表与杨辉三角形</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec06/262_perm_comb_tables.html#id2">3.6.2.1. 排列数打表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/262_perm_comb_tables.html#id3">3.6.2.2. 组合数打表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/262_perm_comb_tables.html#pascal">3.6.2.3. 杨辉三角形（Pascal三角形）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/263_permuting_1.html">3.6.3. 排列的生成算法(I)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec06/263_permuting_1.html#id1">3.6.3.1. 循环索引排列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/263_permuting_1.html#id2">3.6.3.2. 递归原地排列</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/264_permuting_2.html">3.6.4. 排列的生成算法(II)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec06/264_permuting_2.html#id1">3.6.4.1. 字典序全排列迭代算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/264_permuting_2.html#c">3.6.4.2. C++算法库的全排列生成函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/264_permuting_2.html#knuth">3.6.4.3. Knuth洗牌算法——随机排列生成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/265_choosing.html">3.6.5. 组合生成算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec06/265_choosing.html#id2">3.6.5.1. 循环索引组合</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/265_choosing.html#id3">3.6.5.2. 迭代索引组合</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec06/265_choosing.html#id4">3.6.5.3. 排列组合生成的时间复杂度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/266_luogu_problems_1.html">3.6.6. 复杂排序技巧：排座椅（洛谷P1056）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/267_luogu_problems_2.html">3.6.7. 数组环形访问：玩具谜题（洛谷P1563）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/268_luogu_problems_3.html">3.6.8. 字符串处理：字符串的展开（洛谷P1098）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/269_luogu_problems_4.html">3.6.9. 查表的技巧：生活大爆炸版石头剪刀布（洛谷P1328）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec06/269_luogu_problems_4.html#p1538">3.6.10. 查表的技巧：迎春舞会之数字舞蹈（洛谷P1538）</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="sec06/261_perm_comb.html" title="3.6.1. 排列与组合：数学的概念"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec05/258_index.html" title="3.5.8. 简单建索引算法"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

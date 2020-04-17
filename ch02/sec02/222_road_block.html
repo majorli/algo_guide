@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.2.3. 最大区间和问题（洛谷P1115）" href="223_kadanes_algo.html" />
+    <link rel="prev" title="3.2.1. 单调区间在线统计" href="221_mono_intervals.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="223_kadanes_algo.html" title="3.2.3. 最大区间和问题（洛谷P1115）"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="221_mono_intervals.html" title="3.2.1. 单调区间在线统计"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../220_basic_online_algos.html" accesskey="U"><span class="section-number">3.2. </span>简单在线统计</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题</a><ul>
+<li><a class="reference internal" href="#noip2013-s1-1-p1969">3.2.2.1. 积木大赛（NOIP2013-S组1.1，洛谷P1969）</a></li>
+<li><a class="reference internal" href="#noip2018-s1-1-p5019">3.2.2.2. 铺设道路（NOIP2018-S组1.1，洛谷P5019）</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="221_mono_intervals.html"
+                        title="上一章"><span class="section-number">3.2.1. </span>单调区间在线统计</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="223_kadanes_algo.html"
+                        title="下一章"><span class="section-number">3.2.3. </span>最大区间和问题（洛谷P1115）</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec02/222_road_block.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="noip">
+<h1><span class="section-number">3.2.2. </span>单调区间问题的应用：两个NOIP提高组复赛题<a class="headerlink" href="#noip" title="永久链接至标题">¶</a></h1>
+<p>单调区间类问题在2013年和2018年两次出现在NOIP提高组的复赛中。虽然是提高组复赛，但两次都是Day1的第1题，难度并不大。按这两题的难度来看，甚至不如普及组的后几题，属于普及组阶段就应该熟练掌握的题型。</p>
+<div class="section" id="noip2013-s1-1-p1969">
+<span id="index-0"></span><h2><span class="section-number">3.2.2.1. </span>积木大赛（NOIP2013-S组1.1，洛谷P1969）<a class="headerlink" href="#noip2013-s1-1-p1969" title="永久链接至标题">¶</a></h2>
+<p><strong>题目描述</strong></p>
+<p>春春幼儿园举办了一年一度的“积木大赛”。今年比赛的内容是搭建一座宽度为 <span class="math notranslate nohighlight">\(n\)</span> 的大厦，大厦可以看成由 <span class="math notranslate nohighlight">\(n\)</span> 块宽度为 <span class="math notranslate nohighlight">\(1\)</span> 的积木组成，第 <span class="math notranslate nohighlight">\(i\)</span> 块积木的最终高度需要是 <span class="math notranslate nohighlight">\(h_i\)</span>。</p>
+<p>在搭建开始之前，没有任何积木（可以看成 <span class="math notranslate nohighlight">\(n\)</span> 块高度为 <span class="math notranslate nohighlight">\(0\)</span> 的积木）。接下来每次操作，小朋友们可以选择一段连续区间 <span class="math notranslate nohighlight">\([L,R]\)</span>，然后将第 <span class="math notranslate nohighlight">\(L\)</span> 块到第 <span class="math notranslate nohighlight">\(R\)</span> 块之间（含第 <span class="math notranslate nohighlight">\(L\)</span> 块和第 <span class="math notranslate nohighlight">\(R\)</span> 块）所有积木的高度分别增加 <span class="math notranslate nohighlight">\(1\)</span>。</p>
+<p>小 <span class="math notranslate nohighlight">\(M\)</span> 是个聪明的小朋友，她很快想出了建造大厦的最佳策略，使得建造所需的操作次数最少。但她不是一个勤于动手的孩子，所以想请你帮忙实现这个策略，并求出最少的操作次数。</p>
+<p><strong>输入格式</strong></p>
+<p>包含两行，第一行包含一个整数 <span class="math notranslate nohighlight">\(n\)</span>，表示大厦的宽度。</p>
+<p>第二行包含 <span class="math notranslate nohighlight">\(n\)</span> 个整数，第i个整数为 <span class="math notranslate nohighlight">\(h_i\)</span>。</p>
+<p><strong>输出格式</strong></p>
+<p>建造所需的最少操作数。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>5
+2 3 4 1 2
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>5
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>【样例解释】</p>
+<p>其中一种可行的最佳方案，依次选择</p>
+<p><span class="math notranslate nohighlight">\([1,5]\)</span> <span class="math notranslate nohighlight">\([1,3]\)</span> <span class="math notranslate nohighlight">\([2,3]\)</span> <span class="math notranslate nohighlight">\([3,3]\)</span> <span class="math notranslate nohighlight">\([5,5]\)</span></p>
+<p>【数据范围】</p>
+<p>对于 <span class="math notranslate nohighlight">\(30\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 10\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(70\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 1000\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(100\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 100000,0 \le h_i \le 10000\)</span>。</p>
+<p><strong>题意分析和朴素的思路</strong></p>
+<p>这是一个典型的区间统计题，可以这样反过来思考：读入的一组高度数据表示已经搭好的大厦，现在从大厦底部开始一段一段、一层一层地抽掉积木块，直到所有积木全部抽走，总共抽掉的段数就是要求的答案。</p>
+<p>根据这个朴素的思路，可以用模拟的方法来解决问题。首先输入所有数据，放在一个数组中，然后不断循环地去做这样一件事情：在数组中找出并记录下其中所有不含0的区间，这样的区间数量就是这一轮要做的操作数量。给所有这些区间里的数字都减1后进入下一轮循环，直到数组中所有的数都变成0为止。</p>
+<p>但是这样的朴素算法时间效率是比较差的。假设大厦的最高点高度为 <span class="math notranslate nohighlight">\(m\)</span>，每一轮循环要扫描一遍所有 <span class="math notranslate nohighlight">\(n\)</span> 个数字，一共要循环 <span class="math notranslate nohighlight">\(m\)</span> 轮，算法的时间复杂度为 <span class="math notranslate nohighlight">\(O(mn)\)</span>。我们需要一个更加高效的算法。</p>
+<p>通过仔细分析题意我们可以发现，要求的那个最小操作次数其实是数列中所有单调递增区间的高度增幅之和。</p>
+<p>任意一个正整数数列，必定是由一系列首尾相接的单调递增区间、单调递减区间和常数区间组成的。常数区间实际上并不会对逐层向上搭积木的操作次数产生任何影响，所以如果在数列中遇到常数区间，我们可以直接忽略它们，仅把它们视为一个单一的数。这样数列就可以看成是由一系列单调区间首尾相接而成，而其中单调递增区间和单调递减区间必然是相互间隔着的。整个数列可以看成是一个“增减增减增减……”这样的区间序列。由于题意是从高度0开始搭建积木，我们给第一个数之前增加一个虚拟的数0，这样就保证了第一个区间一定是单调递增区间。例如输入样例 [2,3,4,1,2]，它就由单调递增区间 [0,2,3,4]、单调递减区间 [4,1]、单调递增区间 [1,2] 这样三个单调区间相连接构成的。</p>
+<img alt="../../_images/222_road_block.001.png" src="../../_images/222_road_block.001.png" />
+<p>设输入的大厦高度数据为一个正整数数列 <span class="math notranslate nohighlight">\(H=\{h_n\}\)</span> ，首项为 <span class="math notranslate nohighlight">\(h_0=0\)</span>。当处于其中的单调递增区间时，每一对相邻两数都会带来一次高度增长，增出来的高度差 <span class="math notranslate nohighlight">\(\Delta h_i=h_i-h_{i-1}\)</span> 是需要用 <span class="math notranslate nohighlight">\(\Delta h_i\)</span> 次操作来搭建出来的。所以对于每一个单调递增区间 <span class="math notranslate nohighlight">\([l,r]\)</span> 都需要 <span class="math notranslate nohighlight">\(h_r-h_l=\Delta h_r+\Delta h_{r-1}+\cdots+\Delta h_{i+1}\)</span> 次操作来完成搭建，这个次数就是这个区间的振幅。而当一个单调递增区间搭建完成后，紧跟在它后面的那个单调递减区间的作用是和下一个单调递增区间之间建立一个隔断区，并不需要对其进行任何积木搭建操作。所以遇到单调递减区间，我们可以和对待常数区间一样直接略过，直到下一个单调递增区间开始。</p>
+<p>这样就得出了前面的结论，本题的算法就是要用最快的速度求出输入数列中所有单调递增区间的增幅之和。对前一节所述的求最大单调递增区间振幅的算法稍加改变就可以实现，而且是在线算法。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+
+	<span class="kt">int</span> <span class="n">last_ht</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ht</span><span class="p">,</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">n</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ht</span><span class="p">);</span>
+<span class="hll">		<span class="k">if</span> <span class="p">(</span><span class="n">ht</span> <span class="o">&gt;</span> <span class="n">last_ht</span><span class="p">)</span>
+</span>			<span class="n">ans</span> <span class="o">+=</span> <span class="n">ht</span> <span class="o">-</span> <span class="n">last_ht</span><span class="p">;</span>
+		<span class="n">last_ht</span> <span class="o">=</span> <span class="n">ht</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ans</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>事实上，鉴于数列中常数区间的无关紧要性，我们的要求可以进一步放松为求所有普通递增区间的增幅之和。因此上面代码中第11行完全可以改成 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(ht</span> <span class="pre">&gt;=</span> <span class="pre">last_ht)</span></code>，不会有任何问题。</p>
+<p>在洛谷网站提交测试的结果：</p>
+<img alt="../../_images/222_p1969.png" src="../../_images/222_p1969.png" />
+<p>可以看出，这个算法效率非常之高，而且思路和代码都非常简洁。只要想到了，就这么简单，没有用到任何复杂的算法技巧，而且很容易考到。比如到了2018年，它换了一条马甲又在提高组复赛第一天第一题出现了。</p>
+</div>
+<div class="section" id="noip2018-s1-1-p5019">
+<span id="index-1"></span><h2><span class="section-number">3.2.2.2. </span>铺设道路（NOIP2018-S组1.1，洛谷P5019）<a class="headerlink" href="#noip2018-s1-1-p5019" title="永久链接至标题">¶</a></h2>
+<p><strong>题目描述</strong></p>
+<p>春春是一名道路工程师，负责铺设一条长度为 <span class="math notranslate nohighlight">\(n\)</span> 的道路。</p>
+<p>铺设道路的主要工作是填平下陷的地表。整段道路可以看作是 <span class="math notranslate nohighlight">\(n\)</span> 块首尾相连的区域，一开始，第 <span class="math notranslate nohighlight">\(i\)</span> 块区域下陷的深度为 <span class="math notranslate nohighlight">\(d_i\)</span>。</p>
+<p>春春每天可以选择一段连续区间 <span class="math notranslate nohighlight">\([L,R]\)</span>，填充这段区间中的每块区域，让其下陷深度减少 <span class="math notranslate nohighlight">\(1\)</span>。在选择区间时，需要保证，区间内的每块区域在填充前下陷深度均不为 <span class="math notranslate nohighlight">\(0\)</span>。</p>
+<p>春春希望你能帮他设计一种方案，可以在最短的时间内将整段道路的下陷深度都变为 <span class="math notranslate nohighlight">\(0\)</span>。</p>
+<p><strong>输入格式</strong></p>
+<p>输入文件包含两行，第一行包含一个整数 <span class="math notranslate nohighlight">\(n\)</span>，表示道路的长度。 第二行包含 <span class="math notranslate nohighlight">\(n\)</span> 个整数，相邻两数间用一个空格隔开，第 <span class="math notranslate nohighlight">\(i\)</span> 个整数为 <span class="math notranslate nohighlight">\(d_i\)</span>。</p>
+<p><strong>输出格式</strong></p>
+<p>输出文件仅包含一个整数，即最少需要多少天才能完成任务。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>6
+4 3 2 5 3 5
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>9
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>【样例解释】</p>
+<p>一种可行的最佳方案是，依次选择：<span class="math notranslate nohighlight">\([1,6]\)</span>、<span class="math notranslate nohighlight">\([1,6]\)</span>、<span class="math notranslate nohighlight">\([1,2]\)</span>、<span class="math notranslate nohighlight">\([1,1]\)</span>、<span class="math notranslate nohighlight">\([4,6]\)</span>、<span class="math notranslate nohighlight">\([4,4]\)</span>、<span class="math notranslate nohighlight">\([4,4]\)</span>、<span class="math notranslate nohighlight">\([6,6]\)</span>、<span class="math notranslate nohighlight">\([6,6]\)</span>。</p>
+<p>【数据规模与约定】</p>
+<p>对于 <span class="math notranslate nohighlight">\(30\%\)</span> 的数据，<span class="math notranslate nohighlight">\(1 \le n \le 10\)</span>；
+对于 <span class="math notranslate nohighlight">\(70\%\)</span> 的数据，<span class="math notranslate nohighlight">\(1 \le n \le 1000\)</span>；
+对于 <span class="math notranslate nohighlight">\(100\%\)</span> 的数据，<span class="math notranslate nohighlight">\(1 \le n \le 100000,0 \le d_i \le 10000\)</span>。</p>
+<p><strong>题意说明</strong></p>
+<p>这个题和前面2013年的搭积木的题有任何区别吗？表面上看上去有点不一样，本质上是完全一样的，没有任何区别！它只是把高度换成了深度，把从地面开始向上一层一层地搭积木改成了从地面向下，一层一层地填坑而已。</p>
+<p>用题目给出的样例数据画出示意图来看一下：</p>
+<img alt="../../_images/222_road_block.002.png" src="../../_images/222_road_block.002.png" />
+<p>看上去和积木大赛题的样例数据图是有点不同，但是如果我们把图上下颠倒过来看：</p>
+<img alt="../../_images/222_road_block.003.png" src="../../_images/222_road_block.003.png" />
+<p>好吧，出题老师所做的所有修改只是把搭积木改成了修道路，把高度改成了深度，从2013年到2018年，最大的变化是春春从一家幼儿园变成了一名道路工程师。其他没有任何变化，连数据规模都没有改。把前面积木大赛的代码原封不动地复制过来，提交过，顺利地AC了所有测试点。（所以参加竞赛之前做历年真题是非常非常有用的）</p>
+<img alt="../../_images/222_p5019.png" src="../../_images/222_p5019.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="223_kadanes_algo.html" title="3.2.3. 最大区间和问题（洛谷P1115）"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="221_mono_intervals.html" title="3.2.1. 单调区间在线统计"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../220_basic_online_algos.html" ><span class="section-number">3.2. </span>简单在线统计</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

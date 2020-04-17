@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.4.4. 递归与递推例题：数的计算（洛谷P1028） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.4.5. 二分法基础及二分查找" href="245_bin_search.html" />
+    <link rel="prev" title="3.4.3. Fibonacci数列" href="243_fibo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="245_bin_search.html" title="3.4.5. 二分法基础及二分查找"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="243_fibo.html" title="3.4.3. Fibonacci数列"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../240_rec_bin.html" accesskey="U"><span class="section-number">3.4. </span>递归与二分</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="243_fibo.html"
+                        title="上一章"><span class="section-number">3.4.3. </span>Fibonacci数列</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="245_bin_search.html"
+                        title="下一章"><span class="section-number">3.4.5. </span>二分法基础及二分查找</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec04/244_lg1028.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="p1028">
+<span id="index-0"></span><h1><span class="section-number">3.4.4. </span>递归与递推例题：数的计算（洛谷P1028）<a class="headerlink" href="#p1028" title="永久链接至标题">¶</a></h1>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>洛谷网站上的原题在描述问题时不够精确，容易引起误导，这里进行了适当修改，修改的部分为斜体字。</p>
+</div>
+<p><strong>题目描述</strong></p>
+<p>我们要求找出具有下列性质数的个数(包含输入的自然数 <span class="math notranslate nohighlight">\(n\)</span> )：</p>
+<p>先输入一个自然数 <span class="math notranslate nohighlight">\(n,(n \le 1000)\)</span>，然后对此自然数按照如下方法进行处理：</p>
+<ol class="arabic simple">
+<li><p>不作任何处理；</p></li>
+<li><p>在它的左边加上一个自然数,但该自然数不能超过原数的一半；</p></li>
+<li><p>加上数后，<em>以刚加上去的数为原数部分，对新生成的数</em>继续按此规则进行处理，直到不能再加自然数为止。</p></li>
+</ol>
+<p><strong>输入格式</strong></p>
+<p>1个自然数 <span class="math notranslate nohighlight">\(n,(n \le 1000)\)</span></p>
+<p><strong>输出格式</strong></p>
+<p>1个整数，表示具有该性质数的个数。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>6
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>6
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>满足条件的数为</p>
+<p>6，16，26，126，36，136</p>
+<p><strong>解题分析</strong></p>
+<p>从题目的描述来看，数的生成具有递归的特征，体现在第3条规则：“继续按此规则进行处理”体现了递归性，“直到不能再加自然数为止”体现了递归终止条件。</p>
+<p>用函数 <span class="math notranslate nohighlight">\(C(n)\)</span> 来表示要求的解，即从 <span class="math notranslate nohighlight">\(n\)</span> 开始按题目所述规则能够生成出来的数的个数。显然有 <span class="math notranslate nohighlight">\(C(0)=C(1)=1\)</span>，这就是终止条件。那么 <span class="math notranslate nohighlight">\(C(n)\)</span> 的递推方程是怎样的呢？我们先用几个小一点的数试一试，可以用树的形式来画出新数生成的过程，比如下面这几个数：</p>
+<img alt="../../_images/244_lg1028.001.png" src="../../_images/244_lg1028.001.png" />
+<p>在上面这个图中，蓝色的小圆圈代表还能继续扩展的数，它们将以圆圈内数字的左边黄色部分为原数进行下一步扩展。灰色的小圆圈代表已经不能进行下一步扩展的数，因为它们数字的左边黄色部分已经是1了，对应了终止条件。从图中2到8这几个数的扩展生成新数过程来看，越是大的数，它对应的扩展数不断递归向下延伸的层数越深，同一层上的节点数也越多。每一个蓝色圆圈节点代表一次扩展，所有的扩展都遵循相同的规则，所以这是一个具有完美的递归结构的问题，适用于递归法。</p>
+<p>经过简单的分析，我们可以对任意数 <span class="math notranslate nohighlight">\(n\)</span>，归纳出一个扩展生成新数的规则：</p>
+<ol class="arabic simple">
+<li><p>数 <span class="math notranslate nohighlight">\(n\)</span> 的第一次扩展可以在其左边添加 <span class="math notranslate nohighlight">\(1,2,\cdots,\lfloor{n\over2}\rfloor\)</span> 这些自然数（其中数学符号 <span class="math notranslate nohighlight">\(\lfloor{x}\rfloor\)</span> 表示对实数 <span class="math notranslate nohighlight">\(x\)</span> 进行向下取整，C++语言的整数除法所做的恰是向下取整）；</p></li>
+<li><p>每一次扩展后得到的新数，以该次扩展新添在左边的部分为原数，用相同的规律进行下一次扩展。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(n=0,1\)</span>，那么直接得出结果 <span class="math notranslate nohighlight">\(C(n)=1\)</span>；否则每发生一次扩展，结果 <span class="math notranslate nohighlight">\(C(n)\)</span> 加1。</p></li>
+</ol>
+<p>归纳成递推公式如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+C(n)=1+C(1)+\cdots+C(\lfloor{n\over2}\rfloor),&amp;n\gt1\\
+C(0)=C(1)=1
+\end{cases}\end{split}\]</div>
+<p>公式中的第一个加数 <span class="math notranslate nohighlight">\(1\)</span> 代表数 <span class="math notranslate nohighlight">\(n\)</span> 自己，后面从 <span class="math notranslate nohighlight">\(C(1)\)</span> 累加到 <span class="math notranslate nohighlight">\(C(\lfloor{n\over2}\rfloor)\)</span> 代表它的第一层扩展。更后层的扩展当然就交给递归调用去幕后完成了。此公式对应上图中最后一棵生成树。</p>
+<p>现在我们就可以编写一个正确的计算结果 <span class="math notranslate nohighlight">\(C(n)\)</span> 的程序了，利用函数递归调用把递推公式“直译”为C++代码即可，这个程序相当简单：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">count</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 这个就是递推公式的数学函数C(n)对应的C++函数</span>
+<span class="kt">int</span> <span class="nf">count</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// 递归终止条件</span>
+        <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">c</span> <span class="o">+=</span> <span class="n">count</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>编写这样的程序虽然简单，但有一点必须小心，那就是结果的数据类型是否足够大。这里我们用了int型，是经过测试的。根据题目所给出的范围，<span class="math notranslate nohighlight">\(n\le1000\)</span>，我们先用最为保险的unsigned long long来作为 <code class="docutils literal notranslate"><span class="pre">count()</span></code> 函数的返回类型，然后测试了一下至少可以用哪一种数据类型。测试过程如下：</p>
+<p>首先测试四个输入，500、998、999和1000，如果数据没有溢出，那么输入998和999得到的结果应该一样的，并且加上输入500得到的结果应该等于输入1000得到的结果。</p>
+<p>如果这一步测试就发现数值溢出了（结果各种乱七八糟毫无规律），那么说明连unsigned long long都hold不住，那就只能自己编写高精度算法了。本题还好，很完美地通过了这一步测试，如果不想进一步优化了也行。如果想进一步优化那么就根据数据大小去选择一种最合适的数据类型。</p>
+<p>按照第一步测试得到的结果，<span class="math notranslate nohighlight">\(C(1000)=1981471878\)</span>，恰好在int数据类型能表示的范围之内，所以能用int当然就用int了，int的运算速度最快。</p>
+<p>遇到这一类题目，都必须注意结果和所有中间数据的取值范围，能估算当然最好，不能估算的一定要设法验证。</p>
+</div>
+<p>但是在运行中，发现这个程序当输入数据比较大的时候，会很慢！经过实测，<span class="math notranslate nohighlight">\(n\gt700\)</span> 十有八九就要超过1秒。在洛谷网站提交，有TLE发生。看来算法性能不足，必须优化。</p>
+<p>开始优化之前，我们先来看看为什么会造成算法速度过慢。还是回到扩展数的图形中去寻找原因比较直观，先来看看前面已经做过的几个图。当我们仔细观察数字8的扩展过程时，一个“老朋友”的面孔又悄然出现了，这个老朋友就是“重复计算”。看下面这张图：</p>
+<img alt="../../_images/244_lg1028.003.png" src="../../_images/244_lg1028.003.png" />
+<p>从图中可见，在第一层扩展时已经计算过一次 <span class="math notranslate nohighlight">\(C(2)\)</span>，但是到了第二层扩展，又计算了一次 <span class="math notranslate nohighlight">\(C(2)\)</span>。当 <span class="math notranslate nohighlight">\(n=8\)</span> 时，算法出现了第一次重复计算。可以想象，按照这种递归模式，越是大的 <span class="math notranslate nohighlight">\(n\)</span>，越会出现大量的重复计算，这和Fibonacci数列的递归算法是一样的问题。比如我们看一下数字12的扩展过程：</p>
+<img alt="../../_images/244_lg1028.004.png" src="../../_images/244_lg1028.004.png" />
+<p>这次重复计算已经累计达到6次，<span class="math notranslate nohighlight">\(C(2)\)</span> 被计算了4次，<span class="math notranslate nohighlight">\(C(3)\)</span> 计算了2次。</p>
+<p>随着 <span class="math notranslate nohighlight">\(n\)</span> 的不断变大，这样的重复计算会越来越多。和Fibonacci数列递归算法一样，到后面会出现规模很大的重复计算的子树，而每一个重复计算的子树中又会递归地包含其他规模较小的重复子树。按照树形结构的递归生长规律，就会造成指数时间。</p>
+<p>知道了问题所在，就要对算法进行优化。递归算法的优化，一般只有一条路可走：改成递推。也就是从初值开始，逐步推导直到要求的解。</p>
+<p>这个递归改递推的过程我们在前面已经看过两个简单的例子：递推阶乘，只需知道前一个数的阶乘，就能推出下一个；Fibonacci数知道前两个就能推下一个。但这次这个问题就比较复杂，从 <span class="math notranslate nohighlight">\(C(n)=1+C(1)+\cdots+C(\lfloor{n\over2}\rfloor)\)</span> 这个公式的形式可以看出，要推出某个 <span class="math notranslate nohighlight">\(C(n)\)</span>，需要用到前面的 <span class="math notranslate nohighlight">\(\lfloor{n\over2}\rfloor\)</span> 个结果，进行 <span class="math notranslate nohighlight">\(\lfloor{n\over2}\rfloor\)</span> 次加法。那么如果直接按照这个公式来递推，当然也是可以的，但是每项后推一个数都需要进行 <span class="math notranslate nohighlight">\(\lfloor{n\over2}\rfloor\)</span> 次加法的话，时间复杂度会是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>（等差数列求和，类似于双重嵌套循环的情况，请自己琢磨），仍然比较大。如果是竞赛中遇到这种情况，或许数据范围还会更大，那么二阶时间的算法能不能保证AC确实是一个问题。我们应该尽量再优化一下。</p>
+<p>有没有什么进一步优化的办法呢？还是得从递推规律本身入手，最直观的，还是来看图。</p>
+<p>首先我们观察已经画过图的几个数，我们可以发现一些规律，比如6、7、8这三个数的扩展树。</p>
+<img alt="../../_images/244_lg1028.002.png" src="../../_images/244_lg1028.002.png" />
+<p>我们可以发现，扩展6和扩展7的过程是一模一样的，原因在于 <span class="math notranslate nohighlight">\(\lfloor{6\over2}\rfloor=\lfloor{7\over2}\rfloor=3\)</span>。由此自然可以有这样的归纳：对于任何一个偶数 <span class="math notranslate nohighlight">\(2k,(k=1,2,\cdots)\)</span>，都满足 <span class="math notranslate nohighlight">\(\lfloor{2k\over2}\rfloor=\lfloor{2k+1\over2}\rfloor=k\)</span>，因此任何一个奇数 <span class="math notranslate nohighlight">\(2k+1\)</span> 的扩展一定和它前面那个偶数 <span class="math notranslate nohighlight">\(2k\)</span> 的扩展一模一样。这就是我们发现的第一条递推规则：</p>
+<div class="math notranslate nohighlight">
+\[C(2k+1)=C(2k),(k=1,2,\dots)\tag{A}\]</div>
+<p>利用这条规律，我们就可以从 <span class="math notranslate nohighlight">\(C(2)\)</span> 直接得到 <span class="math notranslate nohighlight">\(C(3)\)</span>，从 <span class="math notranslate nohighlight">\(C(4)\)</span> 直接得到 <span class="math notranslate nohighlight">\(C(5)\)</span>……</p>
+<p>现在整个递推链条的一半已经搭建完成了，为了能够环环相扣，我们还需要把另一半链条也补充完整。即怎样从 <span class="math notranslate nohighlight">\(C(1)\)</span> 推出 <span class="math notranslate nohighlight">\(C(2)\)</span>，从 <span class="math notranslate nohighlight">\(C(3)\)</span> 推出 <span class="math notranslate nohighlight">\(C(4)\)</span>……从 <span class="math notranslate nohighlight">\(C(2k-1)\)</span> 推出 <span class="math notranslate nohighlight">\(C(2k)\)</span>，也就是从奇数推出紧挨着它后面的那个偶数。这一半链条的答案也在上面这个图中的绿色方框中。</p>
+<p>经过观察可以发现，8的扩展树中，它只是比7的扩展树多了最右边扩展了4的一支，其余部分是一样的。这是因为 <span class="math notranslate nohighlight">\(\lfloor{8\over2}\rfloor=4=\lfloor{7\over2}\rfloor+1\)</span>，对8进行扩展，在第一层仅仅是多了最后一个数4。依此类推，容易发现任何一个偶数 <span class="math notranslate nohighlight">\(2k\)</span> 的第一层扩展都是它前面一个奇数 <span class="math notranslate nohighlight">\(2k-1\)</span> 的扩展再外加一次 <span class="math notranslate nohighlight">\(k\)</span> 的扩展。这就是第二条递推规则：</p>
+<div class="math notranslate nohighlight">
+\[C(2k)=C(2k-1)+C(k),(k=1,2,\dots)\tag{B}\]</div>
+<p>这样，我们的整个递推链就完整了，接下来就可以用递推法来改造原来的递归法程序了。</p>
+<p>这个程序在递推过程中，遇到由奇数推导后一个偶数，会用到前面部分中点位置的数，所以不能像阶乘或者Fibonacci数的递推一样，仅保存递推位置前面一到两个数。幸而数据规模不是太大，最多也就是1000个数，所以我们干脆开设一个长度大于1001的数组，把每一个数都保存起来即可。程序如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">count</span><span class="p">[</span><span class="mi">1002</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span>	<span class="c1">// C(0) = C(1) = 1</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="c1">// 从C(2)开始向后递推，每次推算2个数，直到超过n</span>
+	<span class="c1">// 由于最大可能n=1000，每次循环判断时i为偶数，所以最后一次循环</span>
+	<span class="c1">//   时i最大可能为1000，向后再推导一个，最多会算到第1001个数，</span>
+	<span class="c1">//   因此数组count至少开到1002的长度就够了</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// 从2开始，每次推2个数，所以第一次推算i一定为偶数</span>
+		<span class="c1">// 使用递推规则(B)：C(2k) = C(2k-1) + C(k) 推算C(i)</span>
+		<span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span> <span class="o">/</span> <span class="mi">2</span><span class="p">];</span>
+		<span class="c1">// 使用递推规则(A)：C(2k+1) = C(2k) 直接得到C(i+1)</span>
+		<span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">[</span><span class="n">n</span><span class="p">]);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个程序运行的速度就非常快。</p>
+<img alt="../../_images/244_p1028_ac.png" src="../../_images/244_p1028_ac.png" />
+<p>最后我们来分析一下算法的工作量和时间复杂度。仍然以加法运算为基本运算，设工作量为 <span class="math notranslate nohighlight">\(T(n)\)</span>。</p>
+<p>当 <span class="math notranslate nohighlight">\(n=2k\)</span> 为偶数时，算法从 <span class="math notranslate nohighlight">\(2\)</span> 开始递推到 <span class="math notranslate nohighlight">\(2k\)</span>，总共进行 <span class="math notranslate nohighlight">\(k\)</span> 轮循环，每轮循环中仅进行1次加法运算，故总工作量 <span class="math notranslate nohighlight">\(T(2k)=k\)</span>。</p>
+<p>当 <span class="math notranslate nohighlight">\(n=2k+1\)</span> 时，算法同样是从 <span class="math notranslate nohighlight">\(2\)</span> 开始递推到 <span class="math notranslate nohighlight">\(2k\)</span>，共 <span class="math notranslate nohighlight">\(k\)</span> 轮循环，每轮循环1次加法，总工作量 <span class="math notranslate nohighlight">\(T(2k+1)=k\)</span>。</p>
+<p>因此，无论 <span class="math notranslate nohighlight">\(n\)</span> 是奇数还是偶数，算法的总工作量都是 <span class="math notranslate nohighlight">\(T(n)=\lfloor{n\over2}\rfloor\)</span>，时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>，非常优秀。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="245_bin_search.html" title="3.4.5. 二分法基础及二分查找"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="243_fibo.html" title="3.4.3. Fibonacci数列"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../240_rec_bin.html" ><span class="section-number">3.4. </span>递归与二分</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

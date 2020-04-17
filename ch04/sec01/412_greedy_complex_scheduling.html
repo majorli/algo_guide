@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>5.1.2. 贪心法(II) 复杂任务调度 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5.1.3. 贪心法(III) 整数的分分合合" href="413_greedy_integer.html" />
+    <link rel="prev" title="5.1.1. 贪心法(I) 背包问题" href="411_greedy_bag_problems.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="413_greedy_integer.html" title="5.1.3. 贪心法(III) 整数的分分合合"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="411_greedy_bag_problems.html" title="5.1.1. 贪心法(I) 背包问题"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../400_basic_algo_design.html" ><span class="section-number">5. </span>算法设计方法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../410_greedy.html" accesskey="U"><span class="section-number">5.1. </span>贪心法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5.1.2. 贪心法(II) 复杂任务调度</a><ul>
+<li><a class="reference internal" href="#p1803">5.1.2.1. 区间调度问题（洛谷P1803）</a></li>
+<li><a class="reference internal" href="#id1">5.1.2.2. 双机调度问题</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="411_greedy_bag_problems.html"
+                        title="上一章"><span class="section-number">5.1.1. </span>贪心法(I) 背包问题</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="413_greedy_integer.html"
+                        title="下一章"><span class="section-number">5.1.3. </span>贪心法(III) 整数的分分合合</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch04/sec01/412_greedy_complex_scheduling.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ii">
+<h1><span class="section-number">5.1.2. </span>贪心法(II) 复杂任务调度<a class="headerlink" href="#ii" title="永久链接至标题">¶</a></h1>
+<p>作为介绍贪心法的第一个最简单的例子，我们讲过了单机任务调度问题。这里我们将进一步看两个更加复杂一点的任务调度问题，<strong>区间调度问题</strong>和<strong>双机调度问题</strong>。我们可以看到，区间调度也适用贪心法求解，但是双机调度（乃至多机调度）则无法用贪心法求得最优解。</p>
+<div class="section" id="p1803">
+<h2><span class="section-number">5.1.2.1. </span>区间调度问题（洛谷P1803）<a class="headerlink" href="#p1803" title="永久链接至标题">¶</a></h2>
+<p><strong>区间调度问题</strong>，有时候也会以<strong>活动安排问题</strong>、<strong>教室安排问题</strong>等形式出现，其实它们都是同一个问题。</p>
+<p>区间调度问题也是在一台机器上调度 <span class="math notranslate nohighlight">\(n\)</span> 个任务，机器同样不能同时运行多个任务。和通常的单机调度不同，区间调度问题的输入数据是一系列的时间区间 <span class="math notranslate nohighlight">\([s_i,f_i),(i=1,2,\dots,n)\)</span>，<span class="math notranslate nohighlight">\(s_i\)</span> 表示每个任务的开始时间，<span class="math notranslate nohighlight">\(f_i\)</span> 表示结束时间，故而这个问题被称为区间调度问题。时间区间左闭右开意味着机器可以在运行完前一个任务之后立即启动下一个任务，中间无需停顿。这些区间相互之间是会有所重叠的。</p>
+<p>显然，只要有两个任务的时间区间有重叠，这两个任务就只能选择调度其中一个，放弃另一个。所以区间调度的调度结果是选择出来的一部分任务，它们之间没有任何时间上的重叠。调度的目标是尽可能多的完成任务，最优解是一个包含任务数量最多的调度序列。</p>
+<p>例如我们有11个任务以供调度，任务的开始时间、结束时间已知。为了能更直观地观察这些任务之间的关系，我们还可以画成甘特图，如下：</p>
+<img alt="../../_images/412_scheduling.png" src="../../_images/412_scheduling.png" />
+<p>仔细想一想，如果我们想要让更多的任务得到运行，那么我们就必须要让每一个任务运行完成后剩余的时间足够多。这就意味着每次调度的时候，我们都需要尽量先调度那些结束时间早的任务。这就是区间调度问题的贪心策略，具体实现的过程只有两步：</p>
+<ol class="arabic simple">
+<li><p>对所有待调度的任务按各自的结束时间进行排序。</p></li>
+<li><p>循环调度任务：第一个应该被调度的任务一定是排完序后的第一个任务，以后每一次调度，假设上一次被调度的任务序号为 <span class="math notranslate nohighlight">\(i\)</span>，那么下一个就是它后面的第一个开始时间晚于或等于 <span class="math notranslate nohighlight">\(f_i\)</span> 的任务，如此循环下去直到找不到下一个可调度任务为止，调度就完毕了。</p></li>
+</ol>
+<p>按照这个策略，请手动排一排上面示例中的11项任务并完成调度，看看结果是不是图中标红的4项，也就是调度 <span class="math notranslate nohighlight">\(\{2,6,9,11\}\)</span>，再尝试一下还能不能找出更完成更多任务数的调度来？</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果结束时间可以用整数表示，如示例中那样，那么可以使用两个数组 <code class="docutils literal notranslate"><span class="pre">s[n]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">f[n]</span></code> 分别存放开始时间和结束时间，然后对它们进行整体的外排序来完成这样的区间调度算法编程。但是这样做其实并不简单，也不见得很经济。如果结束时间的取值范围很大，那么外排序可能会消耗大量的空间，比如开计数桶数组。使用外排序还会导致程序中出现大量形如 <code class="docutils literal notranslate"><span class="pre">f[ord[i]]</span></code> 这样的数组下标套数组元素的表达式，很容易导致编程时的笔误和混乱。外排序没有库函数可以调用，需要自己编写排序函数，容易引入更多的错误点。更重要的是，万一结束时间不是用整数来表示的，外排序就很难实现。</p>
+<p>所以我们还是建议采用和上一节“部分背包问题”中所用的方法。把任务编号、开始时间、结束时间三项结合起来构造一个结构体，对这个结构体编写一个基于结束时间的比较大小函数，然后直接调用库函数 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 来完成内排序。</p>
+<p>要知道，algorithm库的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数运行效率是极高的，高于标准快速排序。实际编程时强烈推荐调用它来完成排序，而不是自己手写。</p>
+</div>
+<p id="index-0">下面我们来看一个区间调度的例题：凌乱的yyy（洛谷P1803）</p>
+<p><strong>题目背景</strong></p>
+<p>快noip了，yyy很紧张！</p>
+<p><strong>题目描述</strong></p>
+<p>现在各大oj上有n个比赛，每个比赛的开始、结束的时间点是知道的。</p>
+<p>yyy认为，参加越多的比赛，noip就能考的越好（假的）</p>
+<p>所以，他想知道他最多能参加几个比赛。</p>
+<p>由于yyy是蒟蒻，如果要参加一个比赛必须善始善终，而且不能同时参加2个及以上的比赛。</p>
+<p><strong>输入格式</strong></p>
+<p>第一行是一个整数 <span class="math notranslate nohighlight">\(n\)</span>，接下来 <span class="math notranslate nohighlight">\(n\)</span> 行每行是2个整数 <span class="math notranslate nohighlight">\(a_i,b_i,(a_i \lt b_i)\)</span>，表示比赛开始、结束的时间。</p>
+<p><strong>输出格式</strong></p>
+<p>一个整数最多参加的比赛数目。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>3
+0 2
+2 4
+1 3
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>对于 <span class="math notranslate nohighlight">\(20\%\)</span> 的数据，<span class="math notranslate nohighlight">\(n\le10\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(50\%\)</span> 的数据，<span class="math notranslate nohighlight">\(n\le1000\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(70\%\)</span> 的数据，<span class="math notranslate nohighlight">\(n\le100000\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(100\%\)</span> 的数据，<span class="math notranslate nohighlight">\(n\le1000000,0\le a_i \lt b_i \le 1000000\)</span>。</p>
+<p><strong>题解分析</strong></p>
+<p>这就是一个典型的区间调度问题，和前面的算法解析完全没有任何区别，需要注意的只是编程上的一些技巧。使用C++带来的新技能可以大幅降低这个程序编写的难度并让代码变得非常简洁直观。</p>
+<ol class="arabic simple">
+<li><p>每一场比赛由开始时间 <span class="math notranslate nohighlight">\(a_i\)</span> 和结束时间 <span class="math notranslate nohighlight">\(b_i\)</span> 两个数表示，所以定义一个结构来保存数据是显而易见的选择。算法需要对所有这些比赛按照结束时间进行排序，可以用C++ algorithm库提供的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数来快速完成排序，但是需要变量能进行小于比较。因此我们用C++的运算符重载技能给这个结构重载小于运算，通过比较结束时间来进行大小比较。</p></li>
+<li><p>用普通的数组来存放数据的话，我们需要开一个能容纳最大可能数据量的数组，在这一题将是1000000个元素的长度，这就需要将数组定义为全局变量，而且显然浪费空间。可以用C++的vector容器来代替数组，vector可以用变量来初始化它的长度，非常方便，而且可以定义为局部变量。</p></li>
+</ol>
+<p>下面是具体的代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">Contest</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
+
+        <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Contest</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">.</span><span class="n">end</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>                       <span class="c1">// 比赛的数量</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="n">Contest</span><span class="o">&gt;</span> <span class="n">cons</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>        <span class="c1">// 所有的比赛</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">cons</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">start</span> <span class="o">&gt;&gt;</span> <span class="n">cons</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">end</span><span class="p">;</span>
+        <span class="n">sort</span><span class="p">(</span><span class="n">cons</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">cons</span><span class="p">.</span><span class="n">end</span><span class="p">());</span> <span class="c1">// 排序，使用vector的头尾两个迭代器指定排序范围</span>
+        <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">next</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// ans：最多能参加的比赛数量；end：上一场比赛的结束时间</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">next</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+                <span class="o">++</span><span class="n">ans</span><span class="p">;</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">cons</span><span class="p">[</span><span class="n">next</span><span class="p">].</span><span class="n">end</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">next</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">cons</span><span class="p">[</span><span class="n">next</span><span class="p">].</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">)</span> <span class="o">++</span><span class="n">next</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>下面是得到的AC结果截图：</p>
+<img alt="../../_images/412_p1803_1.png" src="../../_images/412_p1803_1.png" />
+<p>我在这个题上做了一个有趣的实验，把所有的输入输出从C++流IO改成传统的C标准IO（scanf/printf），其他完全不变。再次提交代码，得到的AC结果如下：</p>
+<img alt="../../_images/412_p1803_2.png" src="../../_images/412_p1803_2.png" />
+<p>最后两个数据量为百万级的测试点，用C标准IO比用C++流IO快了近一半！足可见当输入数据的量非常大的时候，用传统的cstdio库函数比用C++新的流式IO快很多。</p>
+</div>
+<div class="section" id="id1">
+<h2><span class="section-number">5.1.2.2. </span>双机调度问题<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>我们前面已经讲过单机调度问题，知道了单机调度问题可以用贪心法求得最优解。但是如果有两台机器可以同时运行，或者一台机器可以同时运行两个任务，那么问题就变成了更为复杂的<strong>双机调度问题</strong>。如果机器数量更多，或者一台机器可同时运行任务的通道数更多，那么就进一步升级为<strong>多机调度问题</strong>。双机调度只是多机调度的一个特例，机器数量从2到更多的增加只是量变，但从单机到双机的变化却属于质的改变。我们很快就可以看到，一旦机器数量从一增加到二，问题就变得无法用贪心法求最优解了。</p>
+<p>双机调度问题的一般性描述是：给出 <span class="math notranslate nohighlight">\(n\)</span> 项任务 <span class="math notranslate nohighlight">\(\{1,2,\dots,n\}\)</span>，其中任务 <span class="math notranslate nohighlight">\(i\)</span> 的运行时长为整数 <span class="math notranslate nohighlight">\(t_i,(i=1,2,\dots,n)\)</span>。将所有任务分成两部分 <span class="math notranslate nohighlight">\(\{i_1,i_2,\dots,i_p\}\)</span> 和 <span class="math notranslate nohighlight">\(\{j_1,j_2,\dots,j_q\}\)</span>，其中 <span class="math notranslate nohighlight">\(p+q=n\)</span>，各自调度到两台相同的机器同时开始按调度的顺序运行。从0时刻开始计时，以较晚结束运行的机器的停机时间为最终的完成时间。求一个最优的调度，使得最终完成时间最短。</p>
+<p>例如，任务数量为 <span class="math notranslate nohighlight">\(n=6\)</span>，各自的运行时长为 <span class="math notranslate nohighlight">\(t_1=3,t_2=10,t_3=6,t_4=2,t_5=1,t_6=7\)</span>。</p>
+<p>对于这样一个比较简单的任务集，我们可以人为地进行调度尝试，并不太难就可以发现一个最优解：两台机器上调度的任务分别为 <span class="math notranslate nohighlight">\(\{3,5,6\}\)</span> 和 <span class="math notranslate nohighlight">\(\{1,2,4\}\)</span>。前一台机器的总运行时长为 <span class="math notranslate nohighlight">\(T_1=6+1+7=14\)</span>，后一台为 <span class="math notranslate nohighlight">\(T_2=3+10+2=15\)</span>，最终的完成时间为二者中较大的那个，即 <span class="math notranslate nohighlight">\(15\)</span>。这个解已经是最优解了，因为所有任务的运行总时长可以算得，为 <span class="math notranslate nohighlight">\(T=29\)</span>，对它进行最均匀的二分，就是 <span class="math notranslate nohighlight">\(29=14+15\)</span>，其他任何分法都不会比它更好了。</p>
+<p>另外，通过对这套示例数据进行观察，还可以发现另外一个最优解 <span class="math notranslate nohighlight">\(\{1,2,5\}\)</span> 和 <span class="math notranslate nohighlight">\(\{3,4,6\}\)</span>，它也能把总时间 <span class="math notranslate nohighlight">\(T=29\)</span> 分割成最为均衡的 <span class="math notranslate nohighlight">\(T_1=14\)</span> 和 <span class="math notranslate nohighlight">\(T_2=15\)</span> 两个部分。可见双机调度问题的最优解并不是唯一确定的。</p>
+<p>总结上面的过程，不难归纳出一个获取双机调度最优解的方法，一共分三步：</p>
+<ol class="arabic simple">
+<li><p>计算出所有任务的总耗时 <span class="math notranslate nohighlight">\(T = t_1+t_2+\cdots+t_n\)</span>，并计算出两台机器上的最佳运行时间分配，即均匀地二分总时间：<span class="math notranslate nohighlight">\(T_1=\lfloor T \rfloor\)</span>，<span class="math notranslate nohighlight">\(T_2=T-T_1\)</span>。这样，如果总时间 <span class="math notranslate nohighlight">\(T\)</span> 是偶数，那么有 <span class="math notranslate nohighlight">\(T_1=T_2=T/2\)</span>；如果是奇数，那么 <span class="math notranslate nohighlight">\(T_2=T_1+1\)</span>。</p></li>
+<li><p>完成第一台机器上以 <span class="math notranslate nohighlight">\(T_1\)</span> 为目标的任务调度。即挑选合适的一部分任务，使它们的运行时间之和最大限度地接近但不超过 <span class="math notranslate nohighlight">\(T_1\)</span>，当然最好是恰好等于 <span class="math notranslate nohighlight">\(T_1\)</span>。</p></li>
+<li><p>把剩余的任务调度给第二台机器。</p></li>
+</ol>
+<p>按照上面的三步法，我们就可以确保获得一个双机调度问题的最优解了。</p>
+<p>可是事情并没有想象的那样简单，问题出在第2步，怎样才能做到让调度给第一台机器的任务满足“运行时间之和最大限度地接近但不超过，最好是恰等于 <span class="math notranslate nohighlight">\(T_1\)</span>”。这样一个目标任务可以通过贪心法获得吗？想想似乎找不出这样的贪心策略。事实上也确实没有，因为仔细看一看这个要求，其实它是要完成一个“0-1背包问题”！你看出来了吗？这里背包的最大承重量为 <span class="math notranslate nohighlight">\(T_1\)</span>，所有任务就是要放入背包的物品，只不过每一项物品的重量和价值相等，都是 <span class="math notranslate nohighlight">\(t_i\)</span>。</p>
+<p>所以，双机调度问题是一个穿着任务调度马甲的0-1背包问题。我们已经知道，它是一个NP难题，它没有贪心解法。这个问题只能留待日后等我们学会了背包问题的动态规划解法之后才能解决了。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">补充</p>
+<p>事实上，用贪心算法还是可以求出双机调度，乃至多机调度的近似解的。这个近似解的优秀程度和任务运行时长的分布均匀程度有关。如果所有任务的运行时长 <span class="math notranslate nohighlight">\(t_i\)</span> 在一定的范围内均匀分布，而且任务数量很多的时候，那么这个近似解可能会相当接近甚至就是最优解。方法很简单，S形轮流分配任务，具体如下：</p>
+<ol class="arabic simple">
+<li><p>假设要在 <span class="math notranslate nohighlight">\(m\)</span> 台机器上调度总共 <span class="math notranslate nohighlight">\(n\)</span> 项任务，<span class="math notranslate nohighlight">\(n\gt\gt m\)</span>。</p></li>
+<li><p>首先将所有任务按运行时长由小到大排序。</p></li>
+<li><p>按照短任务的优先的贪心策略，按机器号 <span class="math notranslate nohighlight">\(1,2,\dots,m\)</span> 的顺序先调度完第 <span class="math notranslate nohighlight">\(1\)</span> 轮 <span class="math notranslate nohighlight">\(m\)</span> 项任务，每台机器一项。</p></li>
+<li><p>然后把机器顺序颠倒过来，按 <span class="math notranslate nohighlight">\(m,m-1,\dots,1\)</span> 的顺序调度第 <span class="math notranslate nohighlight">\(2\)</span> 轮 <span class="math notranslate nohighlight">\(m\)</span> 项任务，每台机器一项。</p></li>
+<li><p>重复上述过程，每一轮任务调度完后颠倒调度时机器的顺序，直到所有任务分配完毕。</p></li>
+</ol>
+<p>例如我们的示例中，按此方法调度的结果为 <span class="math notranslate nohighlight">\(\{5,3,6\}\)</span> 和 <span class="math notranslate nohighlight">\(\{4,1,2\}\)</span>，恰好是一个最优解。</p>
+<p>实践证明，这种简单的近似算法往往非常有效。虽然它并不能保证获得最优解，但它给出的解经常很接近甚至就是最优解。算法编程虽然不能用这种方法，但这种考虑问题的思路值得学习掌握。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="413_greedy_integer.html" title="5.1.3. 贪心法(III) 整数的分分合合"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="411_greedy_bag_problems.html" title="5.1.1. 贪心法(I) 背包问题"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../400_basic_algo_design.html" ><span class="section-number">5. </span>算法设计方法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../410_greedy.html" ><span class="section-number">5.1. </span>贪心法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

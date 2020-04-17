@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.6.2. 排列组合打表与杨辉三角形 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.6.3. 排列的生成算法(I)" href="263_permuting_1.html" />
+    <link rel="prev" title="3.6.1. 排列与组合：数学的概念" href="261_perm_comb.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="263_permuting_1.html" title="3.6.3. 排列的生成算法(I)"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="261_perm_comb.html" title="3.6.1. 排列与组合：数学的概念"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../260_other_algos.html" accesskey="U"><span class="section-number">3.6. </span>基础组合算法与模拟算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.6.2. 排列组合打表与杨辉三角形</a><ul>
+<li><a class="reference internal" href="#id2">3.6.2.1. 排列数打表</a></li>
+<li><a class="reference internal" href="#id3">3.6.2.2. 组合数打表</a></li>
+<li><a class="reference internal" href="#pascal">3.6.2.3. 杨辉三角形（Pascal三角形）</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="261_perm_comb.html"
+                        title="上一章"><span class="section-number">3.6.1. </span>排列与组合：数学的概念</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="263_permuting_1.html"
+                        title="下一章"><span class="section-number">3.6.3. </span>排列的生成算法(I)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec06/262_perm_comb_tables.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.6.2. </span>排列组合打表与杨辉三角形<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>在算法问题中，有时候会需要反复用到一定范围内的多个排列数或组合数，如果在每一次需要用到的时候去进行计算就会出现重复劳动。不仅是可能会先后重复计算相同的排列组合数，就算两次计算的是不同的排列组合数，也会出现重复的乘除法计算。比如先前计算过一次 <span class="math notranslate nohighlight">\(P_{10}^5=10\times9\times8\times7\times6\)</span>，后面又计算了一次 <span class="math notranslate nohighlight">\(P_9^3=9\times8\times7\)</span>，这两次乘法运算就是重复的。</p>
+<p>遇到这种问题，最好的办法是先计算好所需范围内所有的排列数或组合数，存放在一张表格中，需要使用的时候直接从表中读取。当然了，打表的过程要最优化，即用最少的运算次数来进行打表，这就需要一些数学上的技巧。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">3.6.2.1. </span>排列数打表<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>经过上一节的练习，我们已经知道使用 unsigned long long 类型可以容纳所有 <span class="math notranslate nohighlight">\(n\le20\)</span> 的排列数，对于更大的 <span class="math notranslate nohighlight">\(n\)</span>，也可以容纳一部分 <span class="math notranslate nohighlight">\(m\)</span> 比较小的排列数。这里我们设法用最快的速度打出一张 <span class="math notranslate nohighlight">\(n\le20\)</span> 的排列数表来，存放在一张二维数组中，行号表示 <span class="math notranslate nohighlight">\(n\)</span>， 列号表示 <span class="math notranslate nohighlight">\(m\)</span>。由于 <span class="math notranslate nohighlight">\(0\le m\le n\)</span>，所以这张表只占据二维数组主对角线下方的三角形区域，如下所示：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+P_0^0&amp;-&amp;-&amp;-&amp;\cdots&amp;-\\
+P_1^0&amp;P_1^1&amp;-&amp;-&amp;\cdots&amp;-\\
+P_2^0&amp;P_2^1&amp;P_2^2&amp;-&amp;\cdots&amp;-\\
+P_3^0&amp;P_3^1&amp;P_3^2&amp;P_3^3&amp;\cdots&amp;-\\
+\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;-\\
+P_{20}^0&amp;P_{20}^1&amp;P_{20}^2&amp;P_{20}^3&amp;\cdots&amp;P_{20}^{20}\\
+\end{matrix}\end{split}\]</div>
+<p>问题是怎样来计算这张表可以让运算次数最少，直接用上一节的方法来逐个计算肯定是最差的方法，存在大量重复计算。类似这样的打表一定是使用动态规划的递推方法，即按照一定的顺序进行计算。首先填写不需要计算的初值，这里显然就是表格第一列的所有 <span class="math notranslate nohighlight">\(P_n^0\)</span>，它们恒等于1，不需要计算。然后我们需要找到一个特定的递推公式，可以由已经计算过的值通过简单计算得到还没有计算过的值。这样我们只要按照递推公式约定的顺序逐个去推导出所有值就可以了。</p>
+<p>例如这张排列数表，我们可以按行进行填写，每行的第一个值直接填写为1，后面可以按照这样的递推公式来推导：<span class="math notranslate nohighlight">\(P_n^{k+1}=P_n^k\cdot(n-k)\)</span>。这是根据排列数公式推导来的，通过在连乘运算加上一个括号：</p>
+<div class="math notranslate nohighlight">
+\[P_n^{k+1}=n\cdot(n-1)\cdot\cdots\cdot(n-k)=\bigl(n\cdot(n-1)\cdot\cdots\cdot(n-k+1)\bigr)\cdot(n-k)=P_n^k\cdot(n-k)\]</div>
+<p>这个递推公式在 <span class="math notranslate nohighlight">\(k=0\)</span> 的时候也成立，所以完全适用于对 <span class="math notranslate nohighlight">\(P_n^1\)</span> 到 <span class="math notranslate nohighlight">\(P_n^n\)</span> 的计算，可以填满一行中所有的排列数。</p>
+<p>用这个方法打表，第一列的所有值都不需要计算，后面的值每一个都只需要计算一次乘法，这已经是非常快的一种打排列表的方法了。如果非要吹毛求疵，那么就是每次乘法的一个乘数需要用减法计算出来。所以还有没有连这次减法都省掉的打表法呢？当然是有的。</p>
+<p>我们可以改变给排列数公式加括号的位置：</p>
+<div class="math notranslate nohighlight">
+\[P_n^k=n\cdot(n-1)\cdot\cdots\cdot(n-k+1)=n\cdot\bigl((n-1)\cdot\cdots\cdot(n-k+1)\bigr)=n\cdot P_{n-1}^{k-1}\]</div>
+<p>根据这个递推公式，除了第一列以外，表中每一个位置上排列数可以由其左上方的那个排列数乘上自己所在的行号（即 <span class="math notranslate nohighlight">\(n\)</span>）得到，这样就避免了减法运算。这个排列数打表过程可以用伪代码表示如下：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">20以内排列数打表算法</p>
+<p><span class="math notranslate nohighlight">\(\text{PermsTable}(P)\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{FOR  }n\leftarrow 0 \text{  TO  }20\text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(P[n][0]\leftarrow1\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{FOR  }m\leftarrow 1 \text{  TO  }n\text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(P[n][m]\leftarrow n\cdot P[n-1][m-1]\)</span></p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>完成 <span class="math notranslate nohighlight">\(0\le n\le 20\)</span> 范围内的排列数打表程序，并自行设法进行准确性测试。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.6.2.2. </span>组合数打表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>如果对一定范围内的组合数进行打表，表的形式和排列数表是一样的。使用二维数组来存放组合数表，以行号为 <span class="math notranslate nohighlight">\(n\)</span>、列号为 <span class="math notranslate nohighlight">\(m\)</span>，所有组合数 <span class="math notranslate nohighlight">\(C_n^m\)</span> 都存在于主对角线的下方三角形区域内。假如我们要打表的范围为 <span class="math notranslate nohighlight">\(0\le n\le62\)</span>，我们现在已经知道在这个范围内的所有组合数都是 unsigned long long 所能容纳的，则如下表：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+C_0^0&amp;-&amp;-&amp;-&amp;\cdots&amp;-\\
+C_1^0&amp;C_1^1&amp;-&amp;-&amp;\cdots&amp;-\\
+C_2^0&amp;C_2^1&amp;C_2^2&amp;-&amp;\cdots&amp;-\\
+C_3^0&amp;C_3^1&amp;C_3^2&amp;C_3^3&amp;\cdots&amp;-\\
+\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;-\\
+C_{62}^0&amp;C_{62}^1&amp;C_{62}^2&amp;C_{62}^3&amp;\cdots&amp;C_{62}^{62}\\
+\end{matrix}\end{split}\]</div>
+<p>在开始打表之前，让我们先看一下前几行的实际数值，比如前6行，即 <span class="math notranslate nohighlight">\(0\le n \le 5\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+1&amp; &amp; &amp; &amp; &amp; \\
+1&amp;1&amp; &amp; &amp; &amp; \\
+1&amp;2&amp;1&amp; &amp; &amp; \\
+1&amp;3&amp;3&amp;1&amp; &amp; \\
+1&amp;4&amp;6&amp;4&amp;1&amp; \\
+1&amp;5&amp;10&amp;10&amp;5&amp;1\\
+\end{matrix}\end{split}\]</div>
+<p>我们发现，如果把主对角线上方三角形区域内的数字都设为0，那么除了第一列的 <span class="math notranslate nohighlight">\(C_n^0\)</span> 恒等于1以外，其他每一个组合数都等于它左上方和正上方那两个组合数相加之和。这就是组合数打表的正确方式，只需要用到一次加法。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果在第一列左边再虚构一个全部为0的列，在第一行上方再虚构一个全部为0的行，那么所有的组合数都可以用它左上方和正上方两个数相加得到。数学里，这种在实际没有值的地方根据需要凭空视作有0值的做法很普遍，但是对于编程来说并没有什么太大意义。这么做只能浪费存储空间而已，而且会破坏原本二维数组行号就是 <span class="math notranslate nohighlight">\(n\)</span>、列号就是 <span class="math notranslate nohighlight">\(m\)</span> 的很完美的设定，所以我们不这么做。</p>
+</div>
+<p>事实上这个递推方式直接来自于上一节讲过的组合数递推性质 <span class="math notranslate nohighlight">\(C_n^m=C_{n-1}^{m-1}+C_{n-1}^m\)</span>。虽然我们已经了解到用这个递推公式计算单个组合数是指数级别的时间复杂度，但是它却能够用于一整个范围内的组合数打表，是不是很神奇？其实道理很简单，问题还是出在重复计算上。</p>
+<p>就从上面所列的6行组合数表来看，假设我们要计算 <span class="math notranslate nohighlight">\(C_5^2=10\)</span>，第一轮递归会去计算 <span class="math notranslate nohighlight">\(C_4^1\)</span> 和 <span class="math notranslate nohighlight">\(C_4^2\)</span>。接下来为了计算 <span class="math notranslate nohighlight">\(C_4^1\)</span>，会去递归计算 <span class="math notranslate nohighlight">\(C_3^0\)</span> 和 <span class="math notranslate nohighlight">\(C_3^1\)</span>，为了计算 <span class="math notranslate nohighlight">\(C_4^2\)</span>，会去递归计算 <span class="math notranslate nohighlight">\(C_3^1\)</span> 和 <span class="math notranslate nohighlight">\(C_3^2\)</span>，现在 <span class="math notranslate nohighlight">\(C_3^1\)</span> 已经出现了重复。再接下来重复会不断叠加，比如2次计算 <span class="math notranslate nohighlight">\(C_3^1\)</span> 都会递归计算 <span class="math notranslate nohighlight">\(C_2^0\)</span> 和 <span class="math notranslate nohighlight">\(C_2^1\)</span>，为了计算 <span class="math notranslate nohighlight">\(C_3^2\)</span> 又会递归计算 <span class="math notranslate nohighlight">\(C_2^1\)</span> 和 <span class="math notranslate nohighlight">\(C_2^2\)</span>，所以 <span class="math notranslate nohighlight">\(C_2^1\)</span> 会被计算3次。</p>
+<p>仅仅计算一个小小的 <span class="math notranslate nohighlight">\(C_5^2\)</span> 就已经出现了那么多次重复计算，可见如果计算更大的组合数，重复计算不断叠加会造成多大的浪费。这就是用递推性质计算单个组合数为什么会演变成指数时间的原因。但是用来打表就不同了，因为我们的计算方向反过来了，从递归变成了递推，所以不会出现重复计算。使用递推公式是最快的组合数打表方式。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>用递归来实现递推，一旦递推公式中涉及两次递归的，往往就会造成重复计算，而后果就是不同程度的指数时间复杂度。所以有“能不递归就不递归，能用递推就不递归”的说法。</p>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>完成 <span class="math notranslate nohighlight">\(0\le n\le 62\)</span> 范围内的组合数打表程序，并自行设法进行准确性测试。</p>
+</div>
+</div>
+<div class="section" id="pascal">
+<h2><span class="section-number">3.6.2.3. </span>杨辉三角形（Pascal三角形）<a class="headerlink" href="#pascal" title="永久链接至标题">¶</a></h2>
+<p>可别小看了上面的组合数表，这张组合数表其实就是组合数学里面鼎鼎大名的Pascal三角形，由于中国南宋数学家杨辉在《详解九章算术》一书中也提出过这个三角形，所以在中国一般叫做杨辉三角形。可惜的是虽然杨辉比Pascal的研究要早了近400年，但是中国古代并没有把这些纯数学的研究深入和继续下去，西方世界也一直到很晚才了解到中国古代的数学成果，所以在国际上还是通行把这个组合数表叫做Pascal三角形。</p>
+<p>数学上习惯把杨辉三角形排列成等腰三角形，像下面这样：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+  &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;\\
+  &amp;    &amp;    &amp;    &amp;    &amp;    &amp;  1 &amp;    &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;\\
+  &amp;    &amp;    &amp;    &amp;    &amp;  1 &amp;    &amp;  2 &amp;    &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;\\
+  &amp;    &amp;    &amp;    &amp;  1 &amp;    &amp;  3 &amp;    &amp;  3 &amp;    &amp;  1 &amp;    &amp;    &amp;    &amp;\\
+  &amp;    &amp;    &amp;  1 &amp;    &amp;  4 &amp;    &amp;  6 &amp;    &amp;  4 &amp;    &amp;  1 &amp;    &amp;    &amp;\\
+  &amp;    &amp;  1 &amp;    &amp;  5 &amp;    &amp; 10 &amp;    &amp; 10 &amp;    &amp;  5 &amp;    &amp;  1 &amp;    &amp;\\
+  &amp; 1  &amp;    &amp;  6 &amp;    &amp; 15 &amp;    &amp; 20 &amp;    &amp; 15 &amp;    &amp;  6 &amp;    &amp;  1 &amp;\\
+1 &amp;    &amp;  7 &amp;    &amp; 21 &amp;    &amp; 35 &amp;    &amp; 35 &amp;    &amp; 21 &amp;    &amp;  7 &amp;    &amp; 1
+\end{matrix}\end{split}\]</div>
+<p>我们这里为了符合杨辉三角在数组中真实存放的样子，接下来还是使用二维数组主对角线及其下半部分三角形区域的书写方式，行号从顶向下从0开始计数，第一行为0行。</p>
+<p>杨辉三角形有非常多神奇的性质，有一些是直接由组合数的性质而来的，比如在前面已经讲解过的每一个数等于它左上方和正上方两个数相加之和，比如每一行的数都有左右对称性等，就是直接来自于组合数的递推公式。另外还有下面一些性质也是源自于组合数的一些性质：</p>
+<p><strong>1、行之和为2的幂次方</strong></p>
+<blockquote>
+<div><p>杨辉三角形的第 <span class="math notranslate nohighlight">\(n\)</span> 行所有数之和等于 <span class="math notranslate nohighlight">\(2^n\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+[0] &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp; [1=2^0]\\
+[1] &amp;  1 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp; [1+1=2=2^1]\\
+[2] &amp;  1 &amp;  2 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp; [1+2+1=4=2^2]\\
+[3] &amp;  1 &amp;  3 &amp;  3 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp; [1+3+3+1=8=2^3]\\
+[4] &amp;  1 &amp;  4 &amp;  6 &amp;  4 &amp;  1 &amp;    &amp;    &amp;    &amp; [1+4+6+4+1=16=2^4]\\
+[5] &amp;  1 &amp;  5 &amp; 10 &amp; 10 &amp;  5 &amp;  1 &amp;    &amp;    &amp; [1+5+10+10+5+1=32=2^5]\\
+[6] &amp;  1 &amp;  6 &amp; 15 &amp; 20 &amp; 15 &amp;  6 &amp;  1 &amp;    &amp; [1+6+15+20+15+6+1=64=2^6]\\
+[7] &amp;  1 &amp;  7 &amp; 21 &amp; 35 &amp; 35 &amp; 21 &amp;  7 &amp;  1 &amp; [1+7+21+35+35+21+7+1=128=2^7]
+\end{matrix}\end{split}\]</div>
+<p>这个性质直接来源于组合数的性质 <span class="math notranslate nohighlight">\(C_n^0+C_n^1+\cdots+C_n^n=2^n\)</span>。</p>
+</div></blockquote>
+<p><strong>2、行中的数是二项式展开的系数</strong></p>
+<blockquote>
+<div><p>杨辉三角形第 <span class="math notranslate nohighlight">\(n\)</span> 行的每一个数依次是二项式 <span class="math notranslate nohighlight">\((a+b)^n\)</span> 展开后的各项系数：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+[0] &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp; (a+b)^0=1\\
+[1] &amp;  1 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp; (a+b)^1=a+b\\
+[2] &amp;  1 &amp;  2 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp; (a+b)^2=a^2+2ab+b^2\\
+[3] &amp;  1 &amp;  3 &amp;  3 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp; (a+b)^3=a^3+3a^2b+3ab^2+b^3\\
+[4] &amp;  1 &amp;  4 &amp;  6 &amp;  4 &amp;  1 &amp;    &amp;    &amp;    &amp; (a+b)^4=a^4+4a^3b+6a^2b^2+4ab^3+b^4\\
+[5] &amp;  1 &amp;  5 &amp; 10 &amp; 10 &amp;  5 &amp;  1 &amp;    &amp;    &amp; \vdots\\
+[6] &amp;  1 &amp;  6 &amp; 15 &amp; 20 &amp; 15 &amp;  6 &amp;  1 &amp;    &amp; \vdots\\
+[7] &amp;  1 &amp;  7 &amp; 21 &amp; 35 &amp; 35 &amp; 21 &amp;  7 &amp;  1 &amp; \vdots
+\end{matrix}\end{split}\]</div>
+<p>这个性质直接来源于牛顿二项式定理：<span class="math notranslate nohighlight">\((a+b)^n=C_n^0a^0b^n+C_n^1a^1b^{n-1}+\cdots+C_n^ka^kb^{n-k}+\cdots+C_n^na^nb^0\)</span>。注意组合数的对称性和加法乘法交换律在这里刚好相互映证，所以展开时无需在意从左到右还是从右到左的顺序。</p>
+</div></blockquote>
+<p>杨辉三角这个数阵图除了上述这些直接来源于组合数数学性质的特征以外，还有许许多多的隐藏属性，使得它在组合数学领域成为独一无二的重要存在。</p>
+<p><strong>3、纯奇数行性质</strong></p>
+<blockquote>
+<div><p>杨辉三角形的第 0, 1, 3, 7, … 这些行号为 <span class="math notranslate nohighlight">\(2^n-1\)</span> 的行全部由奇数构成：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+[0] &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp; [0=2^0-1]\\
+[1] &amp;  1 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp; [1=2^1-1]\\
+[2] &amp;  1 &amp;  2 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp; \\
+[3] &amp;  1 &amp;  3 &amp;  3 &amp;  1 &amp;    &amp;    &amp;    &amp;    &amp; [3=2^2-1]\\
+[4] &amp;  1 &amp;  4 &amp;  6 &amp;  4 &amp;  1 &amp;    &amp;    &amp;    &amp; \\
+[5] &amp;  1 &amp;  5 &amp; 10 &amp; 10 &amp;  5 &amp;  1 &amp;    &amp;    &amp; \\
+[6] &amp;  1 &amp;  6 &amp; 15 &amp; 20 &amp; 15 &amp;  6 &amp;  1 &amp;    &amp; \\
+[7] &amp;  1 &amp;  7 &amp; 21 &amp; 35 &amp; 35 &amp; 21 &amp;  7 &amp;  1 &amp; [7=2^3-1]
+\end{matrix}\end{split}\]</div>
+</div></blockquote>
+<p><strong>4、副对角线之和为Fibonacci数列</strong></p>
+<blockquote>
+<div><p>将杨辉三角形每一条副对角线（左下到右上）上的数相加得到的和构成Fibonacci数列！</p>
+<a class="reference internal image-reference" href="../../_images/262_pascal_fibo.png"><img alt="../../_images/262_pascal_fibo.png" class="align-center" src="../../_images/262_pascal_fibo.png" style="width: 300px;" /></a>
+<p>当然了，这个性质只能延续到从最后一行第一列开始的那条副对角线为止，再后面的副对角线由于数据不完整，所以相加之和不再是Fibonacci数列后面的数了。</p>
+</div></blockquote>
+<p><strong>5、冰球棍模式</strong></p>
+<blockquote>
+<div><p>从任意一行的第一个数字 <span class="math notranslate nohighlight">\(C[i][0]\)</span> 开始，沿着右下方向走，直到任一个数 <span class="math notranslate nohighlight">\(C[i+k][k]\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+ 1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    \\
+[1]&amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    \\
+ 1 &amp; [2]&amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    \\
+ 1 &amp;  3 &amp; [3]&amp;  1 &amp;    &amp;    &amp;    &amp;    \\
+(1)&amp;  4 &amp;  6 &amp; [4]&amp;  1 &amp;    &amp;    &amp;    \\
+ 1 &amp; (5)&amp; 10 &amp;[10]&amp;  5 &amp;  1 &amp;    &amp;    \\
+ 1 &amp;  6 &amp;(15)&amp; 20 &amp; 15 &amp;  6 &amp;  1 &amp;    \\
+ 1 &amp;  7 &amp;(21)&amp; 35 &amp; 35 &amp; 21 &amp;  7 &amp;  1
+\end{matrix}\end{split}\]</div>
+<p>上图中，用方括号括起来的路径显示了 <span class="math notranslate nohighlight">\(1+2+3+4=10\)</span>，用小括号括起来的路径则为 <span class="math notranslate nohighlight">\(1+5+15=21\)</span>。这样的路径形状像一根冰球棍，所以就有了这个模式。</p>
+<p>冰球棍也可以是立着的。从任意行的最后一个数字开始，沿着竖直向下的方向走，随意走到任一行，所有途径的数字相加，等于最后一个数字的右下方那个数，如下图所示：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{matrix}
+1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    \\
+1 &amp; [1]&amp;    &amp;    &amp;    &amp;    &amp;    &amp;    \\
+1 &amp; [2]&amp;  1 &amp;    &amp;    &amp;    &amp;    &amp;    \\
+1 &amp; [3]&amp;  3 &amp;( 1)&amp;    &amp;    &amp;    &amp;    \\
+1 &amp; [4]&amp;  6 &amp;( 4)&amp;  1 &amp;    &amp;    &amp;    \\
+1 &amp; [5]&amp; 10 &amp;(10)&amp;  5 &amp;  1 &amp;    &amp;    \\
+1 &amp;  6 &amp;[15]&amp;(20)&amp; 15 &amp;  6 &amp;  1 &amp;    \\
+1 &amp;  7 &amp; 21 &amp; 35 &amp;(35)&amp; 21 &amp;  7 &amp;  1
+\end{matrix}\end{split}\]</div>
+<p>当杨辉三角形按照数学习惯书写成等腰三角形时，这两种冰球棍又是什么形状模式呢？大家可以去自己找找看。</p>
+</div></blockquote>
+<p>杨辉三角形还有许多有趣的性质和数阵图形模式，有些模式比如花瓣模式只有在书写成等腰三角形时才能看得出来，而有些模式在写成三角矩阵形式时比较容易看清，比如Fibonacci数列的副对角线模式。同时，它在算法编程中也常有应用，所以学会怎样打表组合数构造杨辉三角形是一件重要的事情。对杨辉三角形感兴趣的可以去查阅相关资料，相信一定会对今后的算法编程和数学学习都有所助益。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="263_permuting_1.html" title="3.6.3. 排列的生成算法(I)"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="261_perm_comb.html" title="3.6.1. 排列与组合：数学的概念"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../260_other_algos.html" ><span class="section-number">3.6. </span>基础组合算法与模拟算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.1. 测定程序运行时间 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2.2. 生成随机数" href="120_random_nums.html" />
+    <link rel="prev" title="2. C++语言常用技巧" href="../100_cpp_tricks.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="120_random_nums.html" title="2.2. 生成随机数"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="../100_cpp_tricks.html" title="2. C++语言常用技巧"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" accesskey="U"><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="../100_cpp_tricks.html"
+                        title="上一章"><span class="section-number">2. </span>C++语言常用技巧</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="120_random_nums.html"
+                        title="下一章"><span class="section-number">2.2. </span>生成随机数</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch01/110_running_time.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">2.1. </span>测定程序运行时间<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>算法编程极其重视速度，学习和测试算法经常需要精确测定程序的运行时间。使用 <code class="docutils literal notranslate"><span class="pre">ctime</span></code> 标准库中的时钟函数 <code class="docutils literal notranslate"><span class="pre">clock()</span></code> 可以方便地完成这一任务。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">clock_t</span> <span class="nf">clock</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">clock_t</span></code> 是 <code class="docutils literal notranslate"><span class="pre">ctime</span></code> 库中定义的一个用来表示计算机时钟数的数据类型，实际上是一个 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">int</span></code>。</p>
+<p>每次调用 <code class="docutils literal notranslate"><span class="pre">clock()</span></code> 函数，它就返回从程序开始运行到现在所经过的计算机时钟数，所以只要在某段程序的前后分别调用这个函数，得到的前后两个时钟数之差就是运行这段程序所耗费的时钟数。而计算机时钟是一个非常精准的微秒甚至纳秒级的计时器。为了将计算机时钟数转换为日常使用的时间单位，需要用到 <code class="docutils literal notranslate"><span class="pre">ctime</span></code> 库中的一个预定义常量 <code class="docutils literal notranslate"><span class="pre">CLOCKS_PER_SEC</span></code>，它等于这台计算机上每秒钟的时钟数。</p>
+<p>将时钟数除以 <code class="docutils literal notranslate"><span class="pre">CLOCKS_PER_SEC</span></code> 就能得到以秒为单位的运行时间。当然秒这个单位对于算法程序来说太大了，一般至少要以毫秒为单位。将时钟数除以 <code class="docutils literal notranslate"><span class="pre">CLOCKS_PER_SEC</span> <span class="pre">/</span> <span class="pre">1000</span></code> 就能得到毫秒级的运行时间。</p>
+<p>下面的示例程序使用一个单循环计算从1到100,000这十万个正整数的平方，结果存入一个数组。为了测试运行速度，我们加入了测定运行时间的功能。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="hll">	<span class="kt">clock_t</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
+</span><span class="hll">	<span class="n">start</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+</span>	<span class="kt">int</span> <span class="n">pow2</span><span class="p">[</span><span class="mi">100000</span><span class="p">];</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">100000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">pow2</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span><span class="p">;</span>
+<span class="hll">	<span class="n">end</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+</span>	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">100000 times of i^i computed using a for loop.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Start at %ld clocks, end at %ld clocks.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Time elapsed = %ld clocks.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;CLOCKS_PER_SEC = %ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">CLOCKS_PER_SEC</span><span class="p">);</span>
+<span class="hll">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;In ms, time elapsed = %ld ms.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+</span><span class="hll">			<span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">CLOCKS_PER_SEC</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">));</span>
+</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>运行这个小程序得到结果可能是这样的（具体数值因不同的运行环境而异）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>100000 times of i^i computed using a for loop.
+Start at 1944 clocks, end at 3960 clocks.
+Time elapsed = 2016 clocks.
+CLOCKS_PER_SEC = 1000000
+In ms, time elapsed = 2 ms.
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="120_random_nums.html" title="2.2. 生成随机数"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="../100_cpp_tricks.html" title="2. C++语言常用技巧"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" ><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

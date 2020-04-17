@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.3.2. 字符串处理基础知识(II) &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.3.3. 字符串处理基础知识(III)" href="233_string_basic_3.html" />
+    <link rel="prev" title="3.3.1. 字符串处理基础知识(I)" href="231_string_basic_1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="233_string_basic_3.html" title="3.3.3. 字符串处理基础知识(III)"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="231_string_basic_1.html" title="3.3.1. 字符串处理基础知识(I)"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" accesskey="U"><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.3.2. 字符串处理基础知识(II)</a><ul>
+<li><a class="reference internal" href="#leetcode-3">3.3.2.1. 最长无重复字符子串（LeetCode#3）</a></li>
+<li><a class="reference internal" href="#z-leetcode-6">3.3.2.2. Z字形变换（LeetCode#6）</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="231_string_basic_1.html"
+                        title="上一章"><span class="section-number">3.3.1. </span>字符串处理基础知识(I)</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="233_string_basic_3.html"
+                        title="下一章"><span class="section-number">3.3.3. </span>字符串处理基础知识(III)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec03/232_string_basic_2.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ii">
+<h1><span class="section-number">3.3.2. </span>字符串处理基础知识(II)<a class="headerlink" href="#ii" title="永久链接至标题">¶</a></h1>
+<p><strong>子串</strong></p>
+<p><strong>子串</strong>（substring），又叫<strong>子字符串</strong>，是字符串处理技术中特别重要的一个基本概念。子串是指一个字符串中的任意一个连续片段，子串单独拿出来也是一个字符串。例如 <code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code> 是 <code class="docutils literal notranslate"><span class="pre">&quot;abcdef&quot;</span></code> 的子串，它是由后者的前三个连续字符构成的字符串。又如 <code class="docutils literal notranslate"><span class="pre">&quot;world&quot;</span></code> 是字符串 <code class="docutils literal notranslate"><span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code> 的子串。对于子串在原串中的位置范围，一律采用含头不含尾的原则用左闭右开区间表示，我们约定用 <code class="docutils literal notranslate"><span class="pre">s[i:j]</span></code> 这样的符号表示字符串s中 <code class="docutils literal notranslate"><span class="pre">[i,j)</span></code> 区间上的子串。</p>
+<p>特殊地，一个字符串中的任何一个单独的字符都构成这个字符串的子串。例如 <code class="docutils literal notranslate"><span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;</span></code> 都是字符串 <code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code> 的子串。</p>
+<p>更特殊的，空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 是任何一个字符串的子串，字符串本身也是它自己的一个子串。所以空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 也有而且只有一个子串，就是空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 本身。</p>
+<p>请注意，子串和上一节的子序列问题中所说的子序列是不同的。子串必须是连续的一个片段，而子序列可以不连续，只要保持字符的顺序不变即可。</p>
+<p>长度为 <span class="math notranslate nohighlight">\(n\)</span> 的字符串，它的子串一共有 <span class="math notranslate nohighlight">\(\frac{n(n+1)}{2}+1\)</span> 个，是 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 的量级。它的子序列个数是 <span class="math notranslate nohighlight">\(2^n\)</span> 个，比子串个数的量级要高得多。</p>
+<p>子串的最基本操作有两个：提取和搜索。</p>
+<p><strong>子串提取</strong>，也叫<strong>字符串切片</strong>，是指从一个字符串中切出指定范围的片段，获得一个子串的操作。</p>
+<p><strong>子串搜索</strong>，也叫<strong>子串匹配</strong>，是指在一个字符串中搜索是否存在与另一个字符串相同的子串的操作。</p>
+<p><strong>C-string的子串处理</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库中提供了一些库函数用于C-string的子串操作，功能虽不是特别强，但能满足大多数基本需要。</p>
+<p>由于C-string本是个数组，子串提取相当方便。<code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库提供了两个库函数 <code class="docutils literal notranslate"><span class="pre">strcpy()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strncpy()</span></code> 用于复制C-string内容。前者用于完整地复制一个C-string的内容到另一个C-string中去；后者则可以额外指定复制的最大字符数，如果源字符串有那么多个字符就复制那么多个字符，如果没有就复制到源字符串末尾为止。这两个函数的用法如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">s1</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;hello world&quot;</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">s2</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">s3</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">s4</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+
+<span class="n">strcpy</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>         <span class="c1">// 完整地复制s1到s2中去，s2成为 &quot;hello world&quot;</span>
+<span class="n">strcpy</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span> <span class="n">s1</span><span class="o">+</span><span class="mi">6</span><span class="p">);</span>       <span class="c1">// 复制从s1[6]开始到s1末尾的所有内容复制给s3，即 &quot;world&quot;</span>
+<span class="n">strncpy</span><span class="p">(</span><span class="n">s4</span><span class="p">,</span> <span class="n">s1</span><span class="o">+</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>   <span class="c1">// 从s1[7]开始复制2个字符给s4，即 &quot;or&quot;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<ol class="arabic simple">
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">strcpy()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strncpy()</span></code> 时一定要注意，需要编程人员自己来确保目标位置的字符数组空间足够，函数不会检查会否超限。</p></li>
+<li><p>函数参数的顺序是目标字符串在前，源字符串在后，这一点很容易搞错。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strncpy()</span></code> 函数在复制完指定数量的字符后并不会自动在目标末尾添加空字符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code>，这也是编程人员的责任。</p></li>
+</ol>
+</div>
+<p>实际上，自己写一个根据起始位置和长度提取子串的工具函数也很简单，请大家务必尝试一下。</p>
+<p><code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库当然也提供了用于子串搜索的库函数，<code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strcasestr()</span></code>，后者和前者唯一的区别是搜索时忽略大小写，所以我们仅对 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 的用法进行简单的介绍。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>事实上，子串搜索是一个非常重要的算法类型，包括许多经典的搜索和匹配算法，比如经典的KMP算法、比较复杂的通配符匹配、非常强大但也非常复杂的正则表达式等。以后我们会专题学习这些算法。但在实际编程时如果仅是需要用到子串搜索的功能，那么使用库函数是更好的选择。</p>
+</div>
+<p>如果去看 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 函数的说明，可以发现它接受两个参数，前一个叫 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*haystack</span></code>，意思是“干草堆”，后一个叫 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*needle</span></code>，意思是“针”，函数的原型如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="o">*</span><span class="nf">strstr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">haystack</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">needle</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>看来英语里并没有“大海捞针”这个成语，但一定有“干草堆里找针”这种说法，而早期C语言标准库的设计者们显然认为子串搜索就是一件类似“干草堆里找针”的麻烦事情。想必大家一定猜到哪个参数是源字符串，哪个参数是要去找的那个子串了吧？对的，这个函数的功能就是从干草堆字符串 <code class="docutils literal notranslate"><span class="pre">haystack</span></code> 中去搜索第一个和针字符串 <code class="docutils literal notranslate"><span class="pre">needle</span></code> 内容一致的子串，返回的是子串的起始位置指针。如果找不到这根针，那么返回的是空指针 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。特殊地，如果针是空字符串，那么返回的就是干草堆的指针。</p>
+<p>例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">s1</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;hello world&quot;</span><span class="p">,</span> <span class="n">s2</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;or&quot;</span><span class="p">;</span>
+
+<span class="kt">char</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="n">strstr</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>           <span class="c1">// 将返回指向s1中第一次出现 &quot;or&quot; 的首位置，即 s1+7</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">strstr</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="s">&quot;World&quot;</span><span class="p">);</span>      <span class="c1">// 将返回空指针NULL，表示搜索不到 &quot;World&quot;</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">p3</span> <span class="o">=</span> <span class="n">strcasestr</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="s">&quot;World&quot;</span><span class="p">);</span>  <span class="c1">// 忽略大小写后，将返回s1+6</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>请大家思考一下，假如在干草堆中不止有一根针，如何利用 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 函数把所有这些针的位置都依次找出来？</p>
+<p>例如，从 <code class="docutils literal notranslate"><span class="pre">&quot;this</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">Mississippi&quot;</span></code> 中搜索 <code class="docutils literal notranslate"><span class="pre">&quot;is&quot;</span></code>，一共会有4个，请编写一个程序把它们从前往后一个个地都找出来，并依次输出每一个子串 <code class="docutils literal notranslate"><span class="pre">&quot;is&quot;</span></code> 的起始位置。</p>
+</div>
+<p>相比之下，C++ string的子串处理功能就强大多了，使用起来也更加方便。但是现在先不做介绍，留待以后遇到时再说。接下来先学习两个字符串处理的基础题：最长无重复字符子串和Z字形变换。这两个题目来自著名的力扣（LeetCode）网站，它们在处理技巧上比上一节的两题略有提升。</p>
+<div class="section" id="leetcode-3">
+<span id="index-0"></span><h2><span class="section-number">3.3.2.1. </span>最长无重复字符子串（LeetCode#3）<a class="headerlink" href="#leetcode-3" title="永久链接至标题">¶</a></h2>
+<p>问题：输入一个长度不超过80的字符串s，找出其中最长的不含重复字符的子串的长度。</p>
+<p>例如：</p>
+<p>输入 <code class="docutils literal notranslate"><span class="pre">&quot;abcabcbb&quot;</span></code>，应输出3，因为其中最长的无重复字符子串为 <code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">bca</span></code> 或 <code class="docutils literal notranslate"><span class="pre">cab</span></code>，长度均为3，没有比这更长的了。</p>
+<p>输入 <code class="docutils literal notranslate"><span class="pre">&quot;aaaaaaaa&quot;</span></code>，应输出1。</p>
+<p>输入 <code class="docutils literal notranslate"><span class="pre">&quot;pwwkew&quot;</span></code>，则应输出3，对应的子串为 <code class="docutils literal notranslate"><span class="pre">&quot;wke&quot;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">&quot;kew&quot;</span></code>。</p>
+<p>假如暴力枚举输入字符串中的所有子串，并逐个检查子串中是否有重复字符，那么这个算法的时间复杂度会很高。我们前面说过，一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的字符串，其子串数量为 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 级。判断一个字符串中是否有重复字符，需要从头到尾遍历每一个字符，所以这种暴力枚举法的时间复杂度为 <span class="math notranslate nohighlight">\(O(n^3)\)</span> 级别，显然太慢了。</p>
+<p>事实上，我们可以通过记录每一个字符在字符串中上一次出现的位置，实现一遍扫描解决问题，时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<p>设s的长度为n，用一个整数数组 <code class="docutils literal notranslate"><span class="pre">p[c]</span></code> 来存放每一个ASCII字符 <code class="docutils literal notranslate"><span class="pre">c</span></code> 在s中上一次出现的位置。</p>
+<p>用两个位置索引 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">j</span></code> 分别表示无重复字符子串头尾两端的位置，初始值全部为0。然后我们让 <code class="docutils literal notranslate"><span class="pre">j</span></code> 从头到尾地扫描s中的每一个字符 <code class="docutils literal notranslate"><span class="pre">s[j]</span></code>。每扫描一个字符就做如下操作：</p>
+<p>1、如果 <code class="docutils literal notranslate"><span class="pre">p[s[j]]</span> <span class="pre">&gt;=</span> <span class="pre">i</span></code>，也就是说字符 <code class="docutils literal notranslate"><span class="pre">s[j]</span></code> 上一次在s中出现的位置不在子串头位置 <code class="docutils literal notranslate"><span class="pre">i</span></code> 之前，说明在子串 <code class="docutils literal notranslate"><span class="pre">s[i:j]</span></code> 内已经有和 <code class="docutils literal notranslate"><span class="pre">s[j]</span></code> 重复的字符出现过了，位置就在 <code class="docutils literal notranslate"><span class="pre">p[s[j]]</span></code> 。例如下面这种情况：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s: abcdefghcbd
+   ^       ^
+   i=0     j=8
+
+此时&#39;c&#39;字符上一次出现的位置为：p[&#39;c&#39;] = 2，而 i = 0
+</pre></div>
+</div>
+<p>这种情况下，今后的无重复字符子串的头部就应该从该字符上一次出现的位置之后开始了，所以我们把 <code class="docutils literal notranslate"><span class="pre">i</span></code> 调整为 <code class="docutils literal notranslate"><span class="pre">p[s[j]]</span> <span class="pre">+</span> <span class="pre">1</span></code>，然后把 <code class="docutils literal notranslate"><span class="pre">p[s[j]]</span></code> 改为 <code class="docutils literal notranslate"><span class="pre">j</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s: abcdefghcbd
+      ^    ^
+      i=3  j=8
+
+调整后，i 变为 p[&#39;c&#39;] + 1 = 3，而表示&#39;c&#39;字符上一次出现位置的 p[&#39;c&#39;] 则改为了 j = 8
+</pre></div>
+</div>
+<p>这样，子串 <code class="docutils literal notranslate"><span class="pre">s[i:j]</span></code> 就能始终保持无重复字符，并且随着 <code class="docutils literal notranslate"><span class="pre">j</span></code> 的逐渐后移一直跟踪着s中的所有无重复字符子串。</p>
+<p>2、如果 <code class="docutils literal notranslate"><span class="pre">p[s[j]]</span> <span class="pre">&lt;</span> <span class="pre">i</span></code>，说明字符 <code class="docutils literal notranslate"><span class="pre">s[j]</span></code> 没有在s中出现过或者仅在子串 <code class="docutils literal notranslate"><span class="pre">s[i:j]</span></code> 之前出现过，总之不在当前考虑的范围之内。例如上面这个例子中，当 <code class="docutils literal notranslate"><span class="pre">j</span></code> 继续向后移动一个字符时：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s: abcdefghcbd
+      ^     ^
+      i=3   j=9
+
+字符&#39;b&#39;曾经出现过，位置为 p[&#39;b&#39;] = 1，但是当前 i = 3 &gt; 1
+这说明上次那个&#39;b&#39;现在已经不用考虑了，相当于从来没有出现过
+</pre></div>
+</div>
+<p>所以这种情况下只要简单地更新一下 <code class="docutils literal notranslate"><span class="pre">s[j]</span></code> 的出现位置，让 <code class="docutils literal notranslate"><span class="pre">p[s[j]]</span> <span class="pre">=</span> <span class="pre">j</span></code> 即可。</p>
+<p>3、上述步骤处理完之后，<code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">j</span></code> 就指向了一个新的无重复字符子串，长度为 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">-</span> <span class="pre">i</span> <span class="pre">+</span> <span class="pre">1</span></code>，而我们的算法就是要统计出每一个这种长度中的最大值，这应该是一个很熟悉的操作了吧。</p>
+<p>下面就是实现上述算法过程的程序代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">81</span><span class="p">];</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%80s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+
+	<span class="kt">int</span> <span class="n">pos</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">pos</span><span class="p">));</span>
+	<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">i</span><span class="p">)</span> <span class="n">i</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="n">pos</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+		<span class="n">len</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max</span><span class="p">)</span> <span class="n">max</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">max</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>由于ASCII字符编码的最大值为127，所以位置数组 <code class="docutils literal notranslate"><span class="pre">pos</span></code> 的长度为128。</p>
+<p>使用了块操作一次性给 <code class="docutils literal notranslate"><span class="pre">pos</span></code> 数组的所有元素设置初始值-1，如果忘了块操作和 <code class="docutils literal notranslate"><span class="pre">memset()</span></code> 函数的用法，请复习这里：<a class="reference internal" href="../../ch01/130_mem_block.html#ref-130-memset"><span class="std std-ref">批量赋值</span></a>。</p>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>这个题目还有另一种 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间的算法，它不记录每一个字符上一次出现的位置，而是记录它出现的次数。当某个字符第一次出现重复的时候，根据一定的规则去调整 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">j</span></code> 的值。这个算法在思路上和我们用的算法是一致的，都是滑动窗口的思路，只是在实现方式上略有改变。请大家动脑筋想一想，自己设计出这种算法并编程验证。</p>
+</div>
+</div>
+<div class="section" id="z-leetcode-6">
+<span id="index-1"></span><h2><span class="section-number">3.3.2.2. </span>Z字形变换（LeetCode#6）<a class="headerlink" href="#z-leetcode-6" title="永久链接至标题">¶</a></h2>
+<p>问题：将一个字符串根据指定的行数，以从上往下、从左到右的顺序进行Z字形排列。比如输入字符串 <code class="docutils literal notranslate"><span class="pre">&quot;CPLUSPLUSISGREAT&quot;</span></code> ，行数为3时，排列如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>C   S   S   R
+P U P U I G E T
+L   L   S   A
+</pre></div>
+</div>
+<p>按照这样的方式排列后，再按照从左往右逐行读取的方式产生出一个新的字符串 <code class="docutils literal notranslate"><span class="pre">&quot;CSSRPUPUIGETLLSA&quot;</span></code>，将这个经过了Z字形变换得到的新字符串输出。</p>
+<p>如果将上述字符串做4行的Z形排列，则为：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>C     L     R
+P   P U   G E
+L S   S S   A
+U     I     T
+</pre></div>
+</div>
+<p>于是应该输出的变形后的字符串为 <code class="docutils literal notranslate"><span class="pre">&quot;CLRPPUGELSSSAUIT&quot;</span></code>。</p>
+<p>指定的行数大于0。特殊地，如果指定行数为1或大于字符串长度，那么变形后的字符串和原串是相同的。</p>
+<p><strong>解题思路</strong></p>
+<p>这个问题咋看上去比较混乱，其实并不难。因为字符串，无论是C-string还是C++ string，其实都是一个字符型数据的顺序列表，都可以通过指定位置来访问其中的每一个字符。而这个题目要做的无非是按照一套特定的规则去遍历访问一个字符串中的所有字符而已。所以我们只要分析出Z字形变换之后的新字符串中每一个字符与它在原字符串里位置的对应关系，就可以实现这个变换了。</p>
+<p>仍以字符串 <code class="docutils literal notranslate"><span class="pre">&quot;CPLUSPLUSISGREAT&quot;</span></code> 为例，它的长度为16个字符，位置编号从0到15。现在排成3行的Z字形，可以列出每个位置上的字符在原串中的位置编号如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0     4     8     12
+1  3  5  7  9  11 13 15
+2     6     10    14
+</pre></div>
+</div>
+<p>如果排成4行的Z字形：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0        6       12
+1     5  7    11 13
+2  4     8 10    14
+3        9       15
+</pre></div>
+</div>
+<p>设行数为R，按照Z字形排列的规则，第0行和第R-1行这两行是没有斜排字符的。</p>
+<p>如果我们把竖排字符的列叫做“主列”，那么我们可以发现，每一行上各个主列上字符的位置编号构成了一个等差数列，首项就是行号。因为一共有R行，而且相邻两个主列之间一共有R-2个斜排字符，所以公差都是2R-2。这样我们就可以很方便地按照规则输出所有的主列字符了。</p>
+<p>但是，在第1到第R-2行中，相邻主列之间还有斜排字符，因此在每次输出一个主列元素之后，先要输出它后面的那个斜排字符（假如有的话）。观察排列后的位置编号很容易发现，每一行上的斜排字符位置编号同样形成一个公差为2R-2的等差数列，而且它的首项加行号一定等于2R-2。这是因为每一行的第2个主列字符位置为行号加2R-2，从它回退到第一个斜排字符，恰好经历一上一下长度为两倍行号的一段折线，因此就有第一个斜排字符的位置等于行号加2R-2再减2个行号，即2R-2-行号。</p>
+<p>这样我们就可以很方便地用一个从0到R-1的循环来完成整个变换了。在每一轮循环中输出该行的字符，首先计算出该行主列字符和斜排字符的位置首项，然后在不超出原字符串长度的范围内逐项进行输出即可。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p><code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库中有多个函数可以进行单字符输入输出，一般都建议使用 <code class="docutils literal notranslate"><span class="pre">getchar()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">putchar()</span></code> 这一对函数，它们是所有输入输出函数中运行速度最快的。使用方法也非常简单，如果要输入一个字符到变量 <code class="docutils literal notranslate"><span class="pre">c</span></code> 中去，就用 <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">getchar();</span></code> 语句；如果是要输出一个字符 <code class="docutils literal notranslate"><span class="pre">c</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">putchar(c)</span></code> 即可，当然也可以直接输出字符字面量，例如：<code class="docutils literal notranslate"><span class="pre">putchar('\n')</span></code>。</p>
+<p>另外，单纯地输出一个字符串为一行时也建议使用函数 <code class="docutils literal notranslate"><span class="pre">puts()</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">puts(&quot;Hello</span> <span class="pre">World!&quot;);</span></code>。比用 <code class="docutils literal notranslate"><span class="pre">printf()</span></code> 要简单很多，而且它会自动加上换行，不需要人为在字符串后面加 <code class="docutils literal notranslate"><span class="pre">'\n'</span></code>。</p>
+</div>
+<p>下面是代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">81</span><span class="p">];</span>		<span class="c1">// 原字符串</span>
+	<span class="kt">int</span> <span class="n">rows</span><span class="p">;</span>		<span class="c1">// 指定到Z字形行数</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rows</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>	<span class="c1">// 原字符串长度</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">rows</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>	<span class="c1">// 特判：行数为1时，变形后与原串相同，直接输出即可</span>
+		<span class="n">puts</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="n">rows</span> <span class="o">+</span> <span class="n">rows</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span>	<span class="c1">// 公差</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">j</span><span class="p">;</span>	<span class="c1">// j：主列字符位置首项，k：斜排字符位置首项</span>
+		<span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>	<span class="c1">// 因为输出是按先主列后斜排的顺序输出，所以只需控制主列字符位置</span>
+			<span class="n">putchar</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>	<span class="c1">// 输出主列字符</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">)</span> <span class="n">putchar</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>	<span class="c1">// 输出斜排字符</span>
+			<span class="n">j</span> <span class="o">+=</span> <span class="n">d</span><span class="p">;</span>		<span class="c1">// 进入下一个主列</span>
+			<span class="n">k</span> <span class="o">+=</span> <span class="n">d</span><span class="p">;</span>		<span class="c1">// 进入下一个斜排字符</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">putchar</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>这个算法需要特别注意的地方是对输入的行数一定要有特判，否则当行数为1时算法会出现严重的问题：死循环！请想一想这是为什么？</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="233_string_basic_3.html" title="3.3.3. 字符串处理基础知识(III)"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="231_string_basic_1.html" title="3.3.1. 字符串处理基础知识(I)"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" ><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

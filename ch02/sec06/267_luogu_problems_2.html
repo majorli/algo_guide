@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.6.7. 数组环形访问：玩具谜题（洛谷P1563） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.6.8. 字符串处理：字符串的展开（洛谷P1098）" href="268_luogu_problems_3.html" />
+    <link rel="prev" title="3.6.6. 复杂排序技巧：排座椅（洛谷P1056）" href="266_luogu_problems_1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="268_luogu_problems_3.html" title="3.6.8. 字符串处理：字符串的展开（洛谷P1098）"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="266_luogu_problems_1.html" title="3.6.6. 复杂排序技巧：排座椅（洛谷P1056）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../260_other_algos.html" accesskey="U"><span class="section-number">3.6. </span>基础组合算法与模拟算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="266_luogu_problems_1.html"
+                        title="上一章"><span class="section-number">3.6.6. </span>复杂排序技巧：排座椅（洛谷P1056）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="268_luogu_problems_3.html"
+                        title="下一章"><span class="section-number">3.6.8. </span>字符串处理：字符串的展开（洛谷P1098）</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec06/267_luogu_problems_2.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="p1563">
+<span id="index-0"></span><h1><span class="section-number">3.6.7. </span>数组环形访问：玩具谜题（洛谷P1563）<a class="headerlink" href="#p1563" title="永久链接至标题">¶</a></h1>
+<p><strong>题目描述</strong></p>
+<p>小南有一套可爱的玩具小人，它们各有不同的职业。</p>
+<p>有一天，这些玩具小人把小南的眼镜藏了起来。小南发现玩具小人们围成了一个圈，它们有的面朝圈内，有的面朝圈外。如下图：</p>
+<img alt="../../_images/267_p1563_1.png" src="../../_images/267_p1563_1.png" />
+<p>这时 <span class="math notranslate nohighlight">\(singer\)</span> 告诉小南一个谜題：“眼镜藏在我左数第 <span class="math notranslate nohighlight">\(3\)</span> 个玩具小人的右数第 <span class="math notranslate nohighlight">\(1\)</span> 个玩具小人的左数第 <span class="math notranslate nohighlight">\(2\)</span> 个玩具小人那里。”</p>
+<p>小南发现，这个谜题中玩具小人的朝向非常关键，因为朝内和朝外的玩具小人的左右方向是相反的：面朝圈内的玩具小人，它的左边是顺时针方向，右边是逆时针方向；而面向圈外的玩具小人，它的左边是逆时针方向，右边是顺时针方向。</p>
+<p>小南一边艰难地辨认着玩具小人，一边数着：</p>
+<p><span class="math notranslate nohighlight">\(singer\)</span> 朝内，左数第 <span class="math notranslate nohighlight">\(3\)</span> 个是 <span class="math notranslate nohighlight">\(archer\)</span>。</p>
+<p><span class="math notranslate nohighlight">\(archer\)</span> 朝外，右数第 <span class="math notranslate nohighlight">\(1\)</span> 个是 <span class="math notranslate nohighlight">\(thinker\)</span>。</p>
+<p><span class="math notranslate nohighlight">\(thinker\)</span> 朝外，左数第 <span class="math notranslate nohighlight">\(2\)</span> 个是 <span class="math notranslate nohighlight">\(writer\)</span>。</p>
+<p>所以眼镜藏在 <span class="math notranslate nohighlight">\(writer\)</span> 这里！</p>
+<p>虽然成功找回了眼镜，但小南并没有放心。如果下次有更多的玩具小人藏他的眼镜，或是谜題的长度更长，他可能就无法找到眼镜了。所以小南希望你写程序帮他解决类似的谜題。这样的谜題具体可以描述为：</p>
+<p>有 <span class="math notranslate nohighlight">\(n\)</span> 个玩具小人围成一圈，已知它们的职业和朝向。现在第 <span class="math notranslate nohighlight">\(1\)</span> 个玩具小人告诉小南一个包含 <span class="math notranslate nohighlight">\(m\)</span> 条指令的谜題，其中第 <span class="math notranslate nohighlight">\(z\)</span> 条指令形如“左数/右数第 <span class="math notranslate nohighlight">\(s\)</span> 个玩具小人”。你需要输出依次数完这些指令后，到达的玩具小人的职业。</p>
+<p><strong>输入格式</strong></p>
+<p>输入的第一行包含两个正整数 <span class="math notranslate nohighlight">\(n,m\)</span>，表示玩具小人的个数和指令的条数。</p>
+<p>接下来 <span class="math notranslate nohighlight">\(n\)</span> 行，每行包含一个整数和一个字符串，以逆时针为顺序给出每个玩具小人的朝向和职业。其中 <span class="math notranslate nohighlight">\(0\)</span> 表示朝向圈内，<span class="math notranslate nohighlight">\(1\)</span> 表示朝向圈外。 保证不会出现其他的数。字符串长度不超过 <span class="math notranslate nohighlight">\(10\)</span> 且仅由小写字母构成，字符串不为空，并且字符串两两不同。整数和字符串之间用一个空格隔开。</p>
+<p>接下来 <span class="math notranslate nohighlight">\(m\)</span> 行，其中第 <span class="math notranslate nohighlight">\(i\)</span> 行包含两个整数 <span class="math notranslate nohighlight">\(a_i,s_i\)</span>，表示第 <span class="math notranslate nohighlight">\(i\)</span> 条指令。若 <span class="math notranslate nohighlight">\(a_i=0\)</span>，表示向左数 <span class="math notranslate nohighlight">\(s_i\)</span> 个人；若 <span class="math notranslate nohighlight">\(a_i=1\)</span>，表示向右数 <span class="math notranslate nohighlight">\(s_i\)</span> 个人。 保证 <span class="math notranslate nohighlight">\(a_i\)</span> 不会出现其他的数，<span class="math notranslate nohighlight">\(1 \le s_i \lt n\)</span>。</p>
+<p><strong>输出格式</strong></p>
+<p>输出一个字符串，表示从第一个读入的小人开始，依次数完 <span class="math notranslate nohighlight">\(m\)</span> 条指令后到达的小人的职业。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入 #1：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>7 3
+0 singer
+0 reader
+0 mengbier
+1 thinker
+1 archer
+0 writer
+1 mogician
+0 3
+1 1
+0 2
+</pre></div>
+</div>
+<p>输出 #1：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>writer
+</pre></div>
+</div>
+<p>输入 #2：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>10 10
+1 C
+0 r
+0 P
+1 d
+1 e
+1 m
+1 t
+1 y
+1 u
+0 V
+1 7
+1 1
+1 4
+0 5
+0 3
+0 1
+1 6
+1 2
+0 8
+0 4
+</pre></div>
+</div>
+<p>输出 #2：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>【样例1说明】</p>
+<p>这组数据就是【题目描述】中提到的例子。</p>
+<p>【子任务】</p>
+<p>子任务会给出部分测试数据的特点。如果你在解决题目中遇到了困难，可以尝试只解决一部分测试数据。</p>
+<p>每个测试点的数据规模及特点如下表：</p>
+<img alt="../../_images/267_p1563_2.png" src="../../_images/267_p1563_2.png" />
+<p>其中一些简写的列意义如下:</p>
+<p>全朝内：若为“√”，表示该测试点保证所有的玩具小人都朝向圈内。</p>
+<p>全左数：若为“√”，表示该测试点保证所有的指令都向左数，即对任意的</p>
+<p><span class="math notranslate nohighlight">\(1 \le z \le m, a_i=0\)</span></p>
+<p><span class="math notranslate nohighlight">\(s=1\)</span>：若为“√”，表示该测试点保证所有的指令都只数 <span class="math notranslate nohighlight">\(1\)</span> 个，即对任意的</p>
+<p><span class="math notranslate nohighlight">\(1 \le z \le m, s_i=1\)</span></p>
+<p>职业长度为 <span class="math notranslate nohighlight">\(1\)</span>：若为“√”，表示该测试点保证所有玩具小人的职业一定是一个长度为 <span class="math notranslate nohighlight">\(1\)</span> 的字符串。</p>
+<p><strong>题解</strong></p>
+<p>本题主要考察的是一个环形访问数组元素的技巧。</p>
+<p>数组本身是一个线性的存储结构，一般情况下我们总是把它想象成一连串的元素，像糖葫芦一样连成一串，是长条状的。长度为 <span class="math notranslate nohighlight">\(n\)</span> 的数组 <span class="math notranslate nohighlight">\(A\)</span>，第一个元素 <span class="math notranslate nohighlight">\(A[0]\)</span> 位于这个长条状存储结构的左端，最后一个元素 <span class="math notranslate nohighlight">\(A[n-1]\)</span> 则位于最右端，中间按顺序存放着所有元素。当我们需要访问其中某一个元素 <span class="math notranslate nohighlight">\(A[i]\)</span> 时，C++语言的语法要求 <span class="math notranslate nohighlight">\(0\le i\le n-1\)</span>，下标 <span class="math notranslate nohighlight">\(i\)</span> 不能越界，越界就会出现段错误。例如一个长度为 8 的数组，通常情况下的形象是这样的：</p>
+<img alt="../../_images/267_array_1.png" src="../../_images/267_array_1.png" />
+<p>但是这并不妨碍我们有时候可以把数组想象成一个圆环，像一串佛珠一样，元素就像是佛珠上一颗颗的念珠排列在圆环上，最后一个元素 <span class="math notranslate nohighlight">\(A[n-1]\)</span> 的位置位于第一个元素 <span class="math notranslate nohighlight">\(A[0]\)</span> 的前面。在这个虚构的环上，称数组元素下标增大的方向为<strong>正方向</strong>，下标减小的方向为<strong>反方向</strong>。下标从 <span class="math notranslate nohighlight">\(0\)</span> 开始沿着正方向不断增加，达到 <span class="math notranslate nohighlight">\(n-1\)</span> 之后再前进就回到 <span class="math notranslate nohighlight">\(0\)</span>；反之，若下标沿着反方向不断减小直到 <span class="math notranslate nohighlight">\(0\)</span> 之后再后退就会抵达 <span class="math notranslate nohighlight">\(n-1\)</span>。</p>
+<p>需要注意的是，正方向并没有一定的规定，可以是逆时针也可以是顺时针。如果按照数学的惯例，一般以逆时针为正方向，但是数据结构中涉及到环形队列等环状结构时比较多地习惯将顺时针视作正方向。事实上，数组的环形结构本来就是想象出来的虚拟的结构，我们只要知道以元素下标增大的方向为正方向即可，顺时针还是逆时针只不过关系到画图怎么画而已，并没有实质性的区别。比如我们可以把数组 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a[8]</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7}</span></code> 画成如下的环状结构图：</p>
+<img alt="../../_images/267_array_2.png" src="../../_images/267_array_2.png" />
+<p>要在这样一个想象出来的虚拟环形结构上访问数组元素，需要使用一套虚拟的下标值规则。现在不再是一个有头有尾的长条状，而是一个没头没尾的环了，我们可以绕着圈子一圈一圈地走下去，没有尽头。对于长度为 <span class="math notranslate nohighlight">\(n\)</span> 的数组，每沿着正方向走一圈，下标值就会增加 <span class="math notranslate nohighlight">\(n\)</span>，沿着反方向就会减少 <span class="math notranslate nohighlight">\(n\)</span>。比如长度为 <span class="math notranslate nohighlight">\(8\)</span> 的数组，其环形结构下标值的示意图如下，图中我们把真正的数组下标值标在元素位置内，把绕圈的下标值标在对应的元素位置旁边：</p>
+<img alt="../../_images/267_array_3.png" src="../../_images/267_array_3.png" />
+<p>所以在环状结构下数组的每一个位置会对应有无穷多个下标值 <span class="math notranslate nohighlight">\(i^\prime=i\pm nk,(k=0,1,2,\dots)\)</span>，<span class="math notranslate nohighlight">\(i\)</span> 为数组中的实际下标值。由此也很容易得出还原真正下标值的数学公式 <span class="math notranslate nohighlight">\(i=i^\prime(\mod n)\)</span>。</p>
+<p>为什么要强调这是数学公式呢？因为C++取余运算 <code class="docutils literal notranslate"><span class="pre">%</span></code> 的运算规则和数学里的余数规则不太一样，如果被除数是负数，C++取余时会简单地取成对应的正数取余结果的负值。比如 <code class="docutils literal notranslate"><span class="pre">-9</span> <span class="pre">%</span> <span class="pre">8</span></code> 的计算结果是 -1 而不是数学意义上的余数 7。所以在根据环状结构下的虚拟下标值计算真正的数组下标时，需要判断正负，如果得到的结果为负数还需要再加上一个数组长度 <span class="math notranslate nohighlight">\(n\)</span> 才是真正的数组下标。比如数组长度为 8 时，虚拟的环状下标 -9 表示从数组的 0 号元素开始又反方向走了 9 个位置，最终的位置应该是实际数组中的 7 号元素，所以计算 <code class="docutils literal notranslate"><span class="pre">-9</span> <span class="pre">%</span> <span class="pre">8</span></code> 得到 -1 之后再加上 8 才是数组中的真正下标值。</p>
+<p>有了上面这个技巧铺垫之后，本题就变得非常简单了。先读入 <span class="math notranslate nohighlight">\(n\)</span> 个玩具的名称及其朝向，保存在两个数组 <code class="docutils literal notranslate"><span class="pre">names[]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">faces[]</span></code> 之中，把这些数组看成是环形的结构。然后按照读入的指令，根据指令的方向和步数逐条指令地完成绕着圆圈行走就可以了。</p>
+<p>面向圈内（朝向为0）的玩具，向左边（指令为0）走时为反方向，向右边（指令为1）走时为正方向。</p>
+<p>面向圈外（朝向为1）的玩具，向左边（指令为0）走时为正方向，向右边（指令为1）走时为反方向。</p>
+<p>综上所述，当玩具小人的朝向值和某条指令的方向值相等时，沿反方向走；二者不想等时，沿正方向走。从当前玩具小人的实际下标值出发，反方向走多少步就是减去多少，正方向走多少步就是加上多少，得到的虚拟下标值指向着这条指令的目的地，也就是下一条指令的出发点。由虚拟的环形下标值计算出实际的数组下标值之后就可以继续下一条指令即可，所有指令处理完就得到了解。第一条指令的起点，根据题意，就是数组中的 0 号玩具小人。</p>
+<p>现在，这个题目就已经很容易解决了。题目里有涉及到玩具小人姓名的数组，也就是字符串数组，如果用传统的C-string，那么需要定义二维字符数组，比较麻烦，类似这样的情况使用C++ string类更加简单。下面是一份AC代码，供参考：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="o">*</span><span class="n">faces</span><span class="p">;</span>
+	<span class="n">string</span> <span class="o">*</span><span class="n">names</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">;</span>
+
+	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="n">m</span><span class="p">;</span>
+	<span class="n">faces</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+	<span class="n">names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+	<span class="kt">int</span> <span class="n">dir</span><span class="p">,</span> <span class="n">step</span><span class="p">;</span>	<span class="c1">// 指令：dir = 方向，step = 步数</span>
+	<span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">dir</span> <span class="o">&gt;&gt;</span> <span class="n">step</span><span class="p">;</span>
+		<span class="n">id</span> <span class="o">+=</span> <span class="n">faces</span><span class="p">[</span><span class="n">id</span><span class="p">]</span> <span class="o">==</span> <span class="n">dir</span> <span class="o">?</span> <span class="o">-</span><span class="nl">step</span> <span class="p">:</span> <span class="n">step</span><span class="p">;</span>
+		<span class="n">id</span> <span class="o">%=</span> <span class="n">n</span><span class="p">;</span>		<span class="c1">// 根据虚拟环状结构下标计算出真正的数组下标</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">id</span> <span class="o">+=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">names</span><span class="p">[</span><span class="n">id</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+	<span class="k">delete</span> <span class="p">[]</span> <span class="n">faces</span><span class="p">;</span>
+	<span class="k">delete</span> <span class="p">[]</span> <span class="n">names</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../../_images/267_p1563_ac.png" src="../../_images/267_p1563_ac.png" />
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>本题的基本框架是按照指令或正方向或反方向地沿着虚拟的环状结构行走，最后停在哪里，根据虚拟的环状结构下标值计算出其对应的真实数组下标。上面的示例程序中，每走一条指令就计算一次真实数组下标。为什么要这样做？使用虚拟环状结构的下标值走完全部指令后再一次性计算出解的真实数组下标不行吗？</p>
+<p>自己动笔模拟一下试试，应该是可以的，那为什么上面的程序要每走一条指令就计算一次真实下标呢？可以在洛谷网站上试试，全部走完再计算真实坐标行不行？如果不行，想一想问题出在什么地方？为什么数学上行得通的，到了实际编程的时候行不通？</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="268_luogu_problems_3.html" title="3.6.8. 字符串处理：字符串的展开（洛谷P1098）"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="266_luogu_problems_1.html" title="3.6.6. 复杂排序技巧：排座椅（洛谷P1056）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../260_other_algos.html" ><span class="section-number">3.6. </span>基础组合算法与模拟算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

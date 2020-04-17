@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.5.7. 复杂规则的排序技巧 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.5.8. 简单建索引算法" href="258_index.html" />
+    <link rel="prev" title="3.5.6. C++算法库排序函数" href="256_cpp_sort.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="258_index.html" title="3.5.8. 简单建索引算法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="256_cpp_sort.html" title="3.5.6. C++算法库排序函数"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../250_sort_algos.html" accesskey="U"><span class="section-number">3.5. </span>基础排序算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.5.7. 复杂规则的排序技巧</a><ul>
+<li><a class="reference internal" href="#id2">3.5.7.1. 多种排序规则</a></li>
+<li><a class="reference internal" href="#id3">3.5.7.2. 多关键字排序</a></li>
+<li><a class="reference internal" href="#id4">3.5.7.3. 其他元素比较技巧</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="256_cpp_sort.html"
+                        title="上一章"><span class="section-number">3.5.6. </span>C++算法库排序函数</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="258_index.html"
+                        title="下一章"><span class="section-number">3.5.8. </span>简单建索引算法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec05/257_complex_sorts.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.5.7. </span>复杂规则的排序技巧<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>在实际应用和复杂的算法问题中，排序往往是作为一种基本操作出现的，排序的元素经常是复杂的结构类型，而且排序的规则往往会比较复杂。本节将针对一些复杂排序规则介绍几种常用的排序技巧。在本节中将继续使用上一节虚构的学生成绩结构类型 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 来进行示例。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">3.5.7.1. </span>多种排序规则<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>有时候我们不得不对一种数据类型的元素进行多种不同规则的排序。比如对上节的 <code class="docutils literal notranslate"><span class="pre">Student</span> <span class="pre">stu[100]</span></code> 数组，我们现在不仅要按照学号进行排序，还要按照姓名的字典序、按照语文数学两门课的总成绩由高到低进行排序，总共需要进行三种类型的排序。那么像上一节学习的给 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 结构重载一个 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算符就不够用了。</p>
+<p>另外，对于int、char这样的基本数据类型，虽然它们天生支持比较运算，但是万一我们非要用一种特殊的方式来进行排序呢？比如我们要对整数排逆序，那么我们当然希望排序函数能够用大于比较来进行排序，这时候又该怎么办？</p>
+<p>这时候就要用到算法库排序类函数的第二种用法，提供一个特定的比较函数。这第二种用法就是在上一节所介绍的第一种用法基础上，在参数表最后再新增一个参数，那是一个用于元素比较的函数。这里有一个新的知识点，在C++语言中，函数也是可以作为别的函数的参数的。对于有这样的参数要求的函数，我们在调用的时候可以把另一个函数的函数名作为参数传递给它，然后在它的函数体代码中就可以调用我们传给它的那个函数了。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这种模式是面向对象程序设计的一种设计模式，通常叫做“代理模式”或者“委托模式”。意思是我不知道某件事情具体该怎么做，我只知道我必须要做这件事情，那么就请给我一个能做这件事情的函数，我委托它作为我的代理来完成这件事情。</p>
+</div>
+<p>算法库函数也并非只有排序类函数有提供元素比较函数的版本，许多其他类别的库函数，只要运行时需要进行元素比较的，都会同时提供使用 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算符和使用特定比较函数两个版本的，比如分区、二分查找。所有这些函数的第二种用法都是在第一种普通用法的基础上，在参数表末尾增加一个比较函数的参数。而需要提供的这个特定的比较函数都有一个统一的函数格式要求，即：接收两个要进行比较的元素作为参数，前一个为比较的左操作数，后一个为右操作数，返回类型为一个可以转换为逻辑型的类型，一般就用逻辑型作为返回类型，返回值为true表示左操作数小于右操作数，为false表示左操作数大于等于右操作数。如果元素不是基本数据类型那么通常我们要传引用以提高函数调用效率，由于比较过程一般都不允许破坏元素的值，所以非基本数据类型的参数一定要用 <code class="docutils literal notranslate"><span class="pre">const</span></code> 引用方式。</p>
+<p>因此，我们可以定义下面这样的一个函数来作为比较函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="nf">comp</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">);</span>  <span class="c1">// 比较数据类型为 T 的两个变量 a 和 b 的大小，相当于运算 a &lt; b</span>
+
+<span class="kt">bool</span> <span class="nf">desc</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="c1">// 这个比较函数可以用来对 int 型数据进行逆序排序</span>
+<span class="p">{</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">;</span>   <span class="c1">// 假装自己是一个小于比较，实际干的是大于比较，明修栈道暗度陈仓</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">desc</span><span class="p">);</span> <span class="c1">// 利用上面这个比较函数 desc 对 int 型数组 a 进行逆序排序</span>
+</pre></div>
+</div>
+<p>所以现在我们就知道应该怎样实现学生成绩单的三种不同排序规则了。我们在上一节已经为 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 结构重载了 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算符，直接用第一种方式调用排序函数就可以实现按学号排序。现在要为后两种排序规则定义各自特定的比较函数，然后用第二种方式调用排序函数来实现排序（当然了，不重载小于运算，所有的排序规则都用第二种方式来实现也是可以的）。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// Student 结构定义等重复的代码不再显示</span>
+
+<span class="kt">bool</span> <span class="nf">comp_by_name</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="c1">// 按学生姓名字典序进行比较</span>
+<span class="p">{</span>
+        <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">name</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">name</span><span class="p">;</span> <span class="c1">// C++ string 类型本身已经重载了小于运算符实现字典序比较</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">comp_by_total</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="c1">// 按学生语文数学总分进行比较</span>
+<span class="p">{</span>
+        <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">total</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">total</span><span class="p">();</span> <span class="c1">// 分数要从高到低逆序排序，所以实际要进行大于比较</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这里有三点要进行说明。第一，比较函数不是结构的成员函数，所以声明也好定义也好都要和普通的函数一样，不能写在结构的定义内部；第二，正因为不是成员函数，所以比较函数没有什么“自己”的概念，左右两个运算数都要作为参数传递给它，左前右后；第三，还是因为不是成员函数，所以不能在函数名后面加 <code class="docutils literal notranslate"><span class="pre">const</span></code> 后缀，成员函数的 <code class="docutils literal notranslate"><span class="pre">const</span></code> 后缀其实是用来修饰那个隐藏的“自己”的。</p>
+<p>好，现在我们已经定义好了两个元素比较的特定规则，接下来就可以用第二种方式来进行特定规则的排序了，如下所示：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">comp_by_name</span><span class="p">);</span> <span class="c1">// 对所有100个学生按姓名字典序排序</span>
+
+<span class="c1">// 在所有100个学生中部分排序出总分前10名的学生并放置在数组最前10个位置</span>
+<span class="n">partial_sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">comp_by_total</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>前面说过，不仅是五个排序类函数，凡是所有提供了此类用法的算法库函数，用法都是一样的，所以我们就举例说明到此，其他函数就不再举例了。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.5.7.2. </span>多关键字排序<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>更加复杂的规则是多关键字排序，这种情况就比较多，技巧也比较多。</p>
+<p>先从简单的看起，例如我们现在要对学生成绩单进行这样的排序，首先按语文成绩由高到低排序，语文成绩相同的按照数学成绩由高到低排，数学成绩也一样的按学号从小到大排。这时比较简单的多关键字情况，语文关键字称作主关键字，数学成绩称作第二关键字，学号当然就叫第三关键字了。总是一般的情况下关键字可以有任意多个，只要他们相互不交叉复合就是简单的情况。这种简单情况的处理方法有许多种，下面一一介绍。</p>
+<p><strong>依次排序法</strong></p>
+<p>第一种方法可以叫做“依次排序法”。也就是进行多次单关键字排序，顺序是从最后一个关键字开始，倒着向前直到最后一轮进行按主关键字的排序，之后整个多关键字排序就完成了。</p>
+<p>进行依次排序法，要对每一种关键字提供单独的比较函数，并且要使用稳定排序，代码如下所示：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// 按语文成绩比较，逆序</span>
+<span class="kt">bool</span> <span class="nf">comp_by_chn</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">chn</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">chn</span><span class="p">;</span> <span class="p">}</span>
+<span class="c1">// 按数学成绩比较，逆序</span>
+<span class="kt">bool</span> <span class="nf">comp_by_chn</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">chn</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">chn</span><span class="p">;</span> <span class="p">}</span>
+<span class="c1">// 按学号比较已经通过重载小于运算符实现</span>
+<span class="c1">// 下面进行依次排序</span>
+<span class="n">stable_sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">);</span>                <span class="c1">// 先按第三关键字学号进行排序</span>
+<span class="n">stable_sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">comp_by_math</span><span class="p">);</span>  <span class="c1">// 然后按第二关键字数学成绩排序</span>
+<span class="n">stable_sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">comp_by_chn</span><span class="p">);</span>   <span class="c1">// 最后按主关键字语文成绩排序</span>
+</pre></div>
+</div>
+<p>这样就完成了所需要的多关键字比较。想得明白为什么吗？我们看一个简单的例子，假设有四个学生Alice、Bob、Carol、David，学号分别是1、2、3、4号，数学成绩分别是90、100、100、90，语文成绩分别是100、100、100、90。第一轮按照学号排序后，成为下面这样的顺序：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>stu_no    name    chn    math
+  1       Alice   100    90
+  2       Bob     100    100
+  3       Carol   100    100
+  4       David    90    90
+  5       Eric     90    100
+</pre></div>
+</div>
+<p>第二轮按数学成绩排逆序后：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>stu_no    name    chn    math
+  2       Bob     100    100
+  3       Carol   100    100
+  5       Eric     90    100
+  1       Alice   100    90
+  4       David    90    90
+</pre></div>
+</div>
+<p>由于采用稳定排序，所以第二轮排序不会破坏数学成绩相同的学生之间已有的相对顺序，即第一轮排序生成的学号顺序不会发生变化，数学成绩相同的学生仍然能保持学号小的在前。</p>
+<p>接下来最后一轮按主关键字语文成绩排序，结果如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>stu_no    name    chn    math
+  2       Bob     100    100
+  3       Carol   100    100
+  1       Alice   100    90
+  5       Eric     90    100
+  4       David    90    90
+</pre></div>
+</div>
+<p>可以看出，由于采用稳定排序，第三轮按语文成绩排序时，数学成绩100的Alice不会被放到本身就在她前面的Carol前面去，这就继续保持了已经排好的数学成绩逆序和学号顺序。至此整个排序过程正确结束。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>有没有一点似曾相识的感觉？对了，上一节讲的基数排序，其实就是把整数各个数位上的数看成多个关键字，最高位为主关键字，个位为最后一个关键字的多关键字排序！</p>
+</div>
+<p><strong>比较运算合并</strong></p>
+<p>上面这种多次排序法虽然管用，但是代码显得很笨拙，而且要多轮调用速度较慢的不稳定排序。哪怕实际问题可能并不需要排序的稳定性，也必须使用稳定排序。可见多次排序法并不是非常好，下面我们介绍的方法可以叫做“比较运算合并”法。</p>
+<p>既然是多个关键字按照一定规则依次比较，我们何不直接提供一个满足整个排序规则的比较函数呢？或者如果问题没有其他排序规则，我们何不干脆把这种比较规则直接集成到小于运算符的重载函数里去呢？这就是比较运算合并的方法。</p>
+<p>例如这里我们可以直接写这样一个比较函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="nf">new_comp</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">s1</span><span class="p">.</span><span class="n">chn</span> <span class="o">!=</span> <span class="n">s2</span><span class="p">.</span><span class="n">chn</span><span class="p">)</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">chn</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">chn</span><span class="p">;</span>     <span class="c1">// 先看主关键字语文成绩</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">s1</span><span class="p">.</span><span class="n">math</span> <span class="o">!=</span> <span class="n">s2</span><span class="p">.</span><span class="n">math</span><span class="p">)</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">math</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">math</span><span class="p">;</span> <span class="c1">// 语文一样的再看第二关键字数学成绩</span>
+        <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">stu_no</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">stu_no</span><span class="p">;</span>           <span class="c1">// 主关键字和第二关键字都一样的，直接比较学号</span>
+<span class="p">}</span>
+
+<span class="n">sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">new_comp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>这样，用一次不稳定排序就能搞定了，除非三个关键字都出现一样的情况，否则虽然用不稳定排序，结果还是和依次排序法一样的。而且事实上大多数问题的排序都并不需要稳定，所以这个方法显然比依次排序法更胜一筹。</p>
+<p>要注意的是，采用依次排序法，要从最后的关键字先开始排，依次向前直到最后再排主关键字。采用比较运算合并的方法，则顺序颠倒过来，先比较主关键字，然后依次比较第二、第三、直到最后一个关键字。</p>
+<p>另外，还有一种多关键字排序的场景是依次排序法难以胜任的，那就是多个关键字之间有交叉关联的复合关系。例如我们现在要这样对成绩单排序：先按语文数学两门课的总分进行由高到低排序，如果有学生总分相同，那么语文分数较高的排在前面，如果语文分数也一样则说明数学分数也一样，这时候按照学号排，学号小的在前。</p>
+<p>这时候，主关键字“总分”是由第二关键字和第三关键字相加复合而成的。出现这种情况，有时候可以用依次排序法，有时候不可以，往往很难一下子进行判断，在考场上遇到这样的情况可不是一件好事情。但是用比较运算合并的方法就一定可以轻松搞定的。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>请编写一个自定义的比较函数，实现 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 对象之间的上述比较规则，并用上面的五个学生的数据进行排序测试。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">3.5.7.3. </span>其他元素比较技巧<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>除了上面提到的几个复杂排序规则下的元素比较技巧外，还有一些常见的特殊场景，有一些特殊的元素比较技巧。</p>
+<p><strong>第一种，有时候虽然是多关键字比较，但是这些关键字可以合并。</strong></p>
+<p>在算法编程题里经常会遇到对一个整数对进行排序的情况，例如对一些平面格点坐标 <span class="math notranslate nohighlight">\((x, y)\)</span> 进行排序，其中 <span class="math notranslate nohighlight">\(0\le x,y \lt 10^4\)</span>，要求先按横坐标 <span class="math notranslate nohighlight">\(x\)</span> 从小到大排序，横坐标相等的时候按总坐标 <span class="math notranslate nohighlight">\(y\)</span> 的值进行排序。对于这样的整数对，通常的做法是定义一个结构来保存两个坐标值，然后排序的时候就要用到多关键字排序。这样代码写起来就比较麻烦，也影响排序速度。</p>
+<p>其实遇到的绝大多数这种整数对排序的场景，两个整数的取值范围都有不会出现负数、最大值不是太大、两个数的排序方向相同的特点，这种时候我们可以换一种方法来处理。我们把两个整数拼接成一个较大的整数，把结构变量多关键排序变成简单的整数排序。例如我们刚才所说的平面格点坐标排序，我们可以用把横纵两个坐标值按照主关键字在前副关键字在后的方式拼接起来，因为它们都小于10000，所以我们可以这样拼：<code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">10000</span> <span class="pre">*</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>，满足 <span class="math notranslate nohighlight">\(0\le z\lt 10^8\)</span>，可以用int型表示。根据 <code class="docutils literal notranslate"><span class="pre">z</span></code> 的值可以还原出 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">z</span> <span class="pre">/</span> <span class="pre">10000,</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">z</span> <span class="pre">%</span> <span class="pre">10000</span></code>。在读入数据的时候，我们就直接拼接并保存 <code class="docutils literal notranslate"><span class="pre">z</span></code> 的值到一个int型数组里，要使用坐标值的时候再还原出来就可以。可以编写三个简单的内联函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kr">inline</span> <span class="kt">int</span> <span class="nf">get_z</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">get_x</span><span class="p">(</span><span class="kt">int</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">z</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">;</span> <span class="p">}</span>
+<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">get_y</span><span class="p">(</span><span class="kt">int</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">z</span> <span class="o">%</span> <span class="mi">10000</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>这样就可以让程序变得易读易写，简洁清晰。排序也就变成了最为普通的整数排序。如果坐标值的最大值变大使得拼接出来的整数超过int范围，那么就拼接成long long，如果更大使得long long也不够用那就不适合用这个方法了，为了这个写高精度是不划算的，还是回到定义结构吧。</p>
+<p>这种方法在数据取值范围许可的情况下当然也适用于更多个整数关键字的情形。事实上对于多个字符串关键字也是可行的，拼接字符串的时候做到每一个关键字占用固定的一块区域，不够长的右对齐左边填满空格，但是实际上遇到字符串多关键字我们不会用这种方法，因为字符串拼接拆分填充的工作开销太大，不划算。</p>
+<p><strong>第二种，有一些场景会用到分数比较大小，或者比例比较大小。</strong></p>
+<p>这时候怎么办？通分比分子？计算成double型进行小数比较？这些办法都不好，通分比大小很麻烦，要找最小公倍数还要做乘法，计算成小数会带来double型浮点数精度误差。这时候其实很简单，利用一点数学规律就好，当两个分数都是正数或0的时候：</p>
+<div class="math notranslate nohighlight">
+\[{a \over b}\lt{c \over d}\iff a\cdot d \lt b \cdot c\]</div>
+<p>所以我们的比较函数或者小于运算重载函数里只要按照上面这个公式来比较交叉相乘的积就可以了。</p>
+<p><strong>最后再介绍一种，数值的逆序排序。</strong></p>
+<p>这里的数值可以是整数也可以是浮点小数，只要是基本数据类型的就可以。我们前面说过，可以提供一个特殊的比较函数来实现逆序排序。但是某些场景下我们也可以这么干，读进来的数直接保存成它们的相反数。这样就直接用普通的方法调用排序函数，就相当于实现了逆序排序。当我们要使用这些数据的时候，用它们的相反数就好了。</p>
+<p>其实特殊场景下的特殊比较技巧还有很多，这些都是一些编程的小技巧，一些特殊情况下的方便法门。随着大家编程练习量的增加，编程经验逐渐积累，只要大家肯多动脑子，一定能积累出许多新的小技巧来。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="258_index.html" title="3.5.8. 简单建索引算法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="256_cpp_sort.html" title="3.5.6. C++算法库排序函数"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../250_sort_algos.html" ><span class="section-number">3.5. </span>基础排序算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

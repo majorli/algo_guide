@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.4.8. 二分法例题：跳石头（洛谷P2678） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.4.9. 二分法例题：切绳子（洛谷P1577）" href="249_p1577.html" />
+    <link rel="prev" title="3.4.7. 一元三次方程求解（洛谷P1024）" href="247_p1024.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="249_p1577.html" title="3.4.9. 二分法例题：切绳子（洛谷P1577）"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="247_p1024.html" title="3.4.7. 一元三次方程求解（洛谷P1024）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../240_rec_bin.html" accesskey="U"><span class="section-number">3.4. </span>递归与二分</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="247_p1024.html"
+                        title="上一章"><span class="section-number">3.4.7. </span>一元三次方程求解（洛谷P1024）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="249_p1577.html"
+                        title="下一章"><span class="section-number">3.4.9. </span>二分法例题：切绳子（洛谷P1577）</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec04/248_p2678.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="p2678">
+<span id="index-0"></span><h1><span class="section-number">3.4.8. </span>二分法例题：跳石头（洛谷P2678）<a class="headerlink" href="#p2678" title="永久链接至标题">¶</a></h1>
+<p><strong>题目背景</strong></p>
+<p>一年一度的“跳石头”比赛又要开始了!</p>
+<p><strong>题目描述</strong></p>
+<p>这项比赛将在一条笔直的河道中进行，河道中分布着一些巨大岩石。组委会已经选择好了两块岩石作为比赛起点和终点。在起点和终点之间，有 <span class="math notranslate nohighlight">\(N\)</span> 块岩石（不含起点和终点的岩石）。在比赛过程中，选手们将从起点出发，每一步跳向相邻的岩石，直至到达终点。</p>
+<p>为了提高比赛难度，组委会计划移走一些岩石，使得选手们在比赛过程中的最短跳跃距离尽可能长。由于预算限制，组委会至多从起点和终点之间移走 <span class="math notranslate nohighlight">\(M\)</span> 块岩石（不能移走起点和终点的岩石）。</p>
+<p>输入格式
+第一行包含三个整数 <span class="math notranslate nohighlight">\(L,N,M\)</span>，分别表示起点到终点的距离，起点和终点之间的岩石数，以及组委会至多移走的岩石数。保证 <span class="math notranslate nohighlight">\(L \geq 1\)</span> 且 <span class="math notranslate nohighlight">\(N \geq M \geq 0\)</span>。</p>
+<p>接下来 <span class="math notranslate nohighlight">\(N\)</span> 行，每行一个整数，第 <span class="math notranslate nohighlight">\(i\)</span> 行的整数 <span class="math notranslate nohighlight">\(D_i( 0 &lt; D_i &lt; L)\)</span>， 表示第 <span class="math notranslate nohighlight">\(i\)</span> 块岩石与起点的距离。这些岩石按与起点距离从小到大的顺序给出，且不会有两个岩石出现在同一个位置。</p>
+<p><strong>输出格式</strong></p>
+<p>一个整数，即最短跳跃距离的最大值。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>25 5 2
+2
+11
+14
+17
+21
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>4
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>输入输出样例 1 说明：将与起点距离为 <span class="math notranslate nohighlight">\(2\)</span> 和 <span class="math notranslate nohighlight">\(14\)</span> 的两个岩石移走后,最短的跳跃距离为 <span class="math notranslate nohighlight">\(4\)</span> (从与起点距离 <span class="math notranslate nohighlight">\(17\)</span> 的岩石跳到距离 <span class="math notranslate nohighlight">\(21\)</span> 的岩石,或者从距离 <span class="math notranslate nohighlight">\(21\)</span> 的岩石跳到终点)。</p>
+<p>另：对于 <span class="math notranslate nohighlight">\(20\%\)</span> 的数据, <span class="math notranslate nohighlight">\(0 \le M \le N \le 10\)</span>。</p>
+<p>对于 <span class="math notranslate nohighlight">\(50\%\)</span> 的数据, <span class="math notranslate nohighlight">\(0 \le M \le N \le 100\)</span>。</p>
+<p>对于 <span class="math notranslate nohighlight">\(100\%\)</span> 的数据, <span class="math notranslate nohighlight">\(0 \le M \le N \le 50,000;1 \le L \le 1,000,000,000\)</span>。</p>
+<p><strong>题目分析</strong></p>
+<p>本题是一个经典的二分法问题，难度相当于NOI提高组比较靠前的题目。从题目本身来看，初学者往往看不出其二分查找的特征，一开始很容易想到用模拟法蛮力求解。</p>
+<p>蛮力法的思路很简单，穷举从 <span class="math notranslate nohighlight">\(N\)</span> 块石块中移走至多 <span class="math notranslate nohighlight">\(M\)</span> 块的所有移法，每试一种就计算出剩余石块两两之间的最小距离，最后在这些最小距离中取出最大值就是答案。从 <span class="math notranslate nohighlight">\(N\)</span> 块石块中任选至多 <span class="math notranslate nohighlight">\(M\)</span> 块共有 <span class="math notranslate nohighlight">\(C_N^0+C_N^1+\cdots+C_N^M\)</span> 种选法，统计每一种移法的石块间两两间距需要 <span class="math notranslate nohighlight">\(O(N-M)\)</span> 次比较，最后还需要在所有 <span class="math notranslate nohighlight">\(C_N^M\)</span> 个最短间距种找出最大值。整个蛮力算法的时间复杂度为 <span class="math notranslate nohighlight">\(O(2^N)\)</span>，恐怖的指数级。按照本题最后给出的测试点数据量，这样的算法绝对是要TLE的。</p>
+<p>那么怎么用二分法来快速找到解呢？或者说怎样把解题思路聚焦到二分法上去？我们前面说过，二分法并不都是简单地在一系列已知候选解中查找，查找的方法也不都是简单的两数比较大小，这些条件都是千变万化的，有时候是很隐晦的。我们需要回归到可以应用二分法的三个条件上去。我们可以通过下面这样的一系列问答来搞明白思路：</p>
+<blockquote>
+<div><p>问：解是什么东西？（关键）</p>
+<p>答：单纯地看，这个问题的解是一个距离值，是一个整数。</p>
+<p>问：这个问题一定有解吗？</p>
+<p>答：有。</p>
+<p>问：解是唯一的吗？答：是。</p>
+<p>问：有没有可以确定的解空间？（关键）</p>
+<p>答：有，解空间里的最小候选解为 <span class="math notranslate nohighlight">\(0\)</span>（本来就没有石块的情况，很多人看题不仔细，没有想到还有这种可能性，不巧的是，测试点里确实有一套 <span class="math notranslate nohighlight">\(N = M = 0\)</span> 的数据），最大值是 <span class="math notranslate nohighlight">\(L\)</span>，即整个河面宽度，区间 <span class="math notranslate nohighlight">\([0,L]\)</span> 上的所有整数就是所有候选解。</p>
+<p>问：解空间里的候选解有确定的序关系吗？</p>
+<p>答：有，因为距离值是整数，整数天然具有良序关系。</p>
+<p>问：给出一个候选解，即一个在区间 <span class="math notranslate nohighlight">\([0,L]\)</span> 上的整数，表示石块之间的最短距离，可以判断它和真正的解之间的关系吗？（关键）</p>
+<p>答：不能判断它是不是真正的解，但是可以判断真正的解比它大还是小。</p>
+<p>问：如果判断一个候选解比真正的解大还是小？（关键）</p>
+<p>答：可以尝试模拟移走一些石块，确保移走的石块数量尽可能少，且使得剩余的石块两两间距都大于或等于这个候选解，也即实现了剩余石块之间的最小距离为候选解。记录下移走的石块数量 <span class="math notranslate nohighlight">\(M^\prime\)</span>，将其与题目要求的最多移走的石块数量 <span class="math notranslate nohighlight">\(M\)</span> 进行比较。如果 <span class="math notranslate nohighlight">\(M^\prime\gt M\)</span>，说明“至多移走 <span class="math notranslate nohighlight">\(M\)</span> 块石块“这个条件不够用，仅移走 <span class="math notranslate nohighlight">\(M\)</span> 块石块不足以让剩余石块间的最小距离达到此候选解，换句话说，这个候选解太大了，真正的解比它小。反过来如果 <span class="math notranslate nohighlight">\(M^\prime\le M\)</span>，说明条件够用了，移走最多 <span class="math notranslate nohighlight">\(M\)</span> 块石块就足以让剩余石块间的最小距离达到此候选解。但要注意，<em>这不说明此候选解就是解</em>，换一种别的搬移方法说不定能让剩余石块间的最小距离更大呢？所以遇到这种情况，我们要再去试试比之更大的候选解。</p>
+</div></blockquote>
+<p>通过上面的分析，我们可以明确两件事情：第一，这个问题可以用二分查找法解决。第二，这是一个边界查找，而不是确定值查找。为什么是边界查找？是左边界还是右边界？</p>
+<p>解空间已知是从 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(L\)</span> 的整数，根据上面最后一个问答所述的模拟移走石块的判断过程，每一个候选解 <span class="math notranslate nohighlight">\(s\)</span> 都有一个对应的石块数量 <span class="math notranslate nohighlight">\(q[s]\)</span> 作为判断依据，表示要达到这个候选解的目标<strong>至少</strong>要移走多少块石块。“至少”两个字非常关键，它确保了对于任意两个候选解 <span class="math notranslate nohighlight">\(s_i\lt s_j\)</span>，一定有 <span class="math notranslate nohighlight">\(q[s_i]\le q[s_j]\)</span>。就是说，通过移走更少数量的石块，不可能让石块间的最小间距变大。想要让剩余石块间的最短距离变大，那么只可能要搬走更多的石块。</p>
+<p>所以，虽然没有实际的数组存在，但是我们事实上是在形如下面这样的一个数组里查找边界：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  s:    0   1   2   3   4   5   6   7   8   9   ...   L
+      +---+---+---+---+---+---+---+---+---+---+-----+---+
+q[s]: | 0 | 0 | 1 | 2 | 3 | 3 | 4 | 4 | 4 | 6 | ... | N |
+      +---+---+---+---+---+---+---+---+---+---+-----+---+
+</pre></div>
+</div>
+<p>数组的下标就是候选解 <span class="math notranslate nohighlight">\(s=0,1,\dots,L\)</span>。数组的元素就是对应的判断依据 <span class="math notranslate nohighlight">\(q[s]\)</span>。而我们要查找的是数组中最后一个等于 <span class="math notranslate nohighlight">\(M\)</span> 的元素。在上面这个虚拟的数组里，假如 <span class="math notranslate nohighlight">\(M=4\)</span>，就是说要找“至多移走4块石块，剩余石块间的最短间距的最大值”，很显然应该是其中最后一个元素4的下标，答案是8。</p>
+<p>由此看出，这次要查找的是右边界的前面一个位置。我们已经知道，无论是查找左边界还是右边界，查找结束后都是由左端点left指示的边界位置，而且查找结束后，右边界一定是在左边界前面一个位置。因此我们完全可以直接使用二分查找右边界的算法，只是改为以右端点right为所要的结果即可。</p>
+<p>现在，整个程序的算法框架已经搭建完毕，只剩下一些细节部分再完善一下就可以了。比如存放输入数据的数组，我们要把0号元素预留为0表示起点河岸，在最后要有一个第 <span class="math notranslate nohighlight">\(N+1\)</span> 号元素保存河面宽度 <span class="math notranslate nohighlight">\(L\)</span>，表示终点河对岸。</p>
+<p>比较麻烦的是对每一个候选解的移石块模拟，怎样保证我们模拟的过程是移走了近量少的石块呢？这个方法有点类似以后要详细讲的贪心法。我们只需要从第一块石头开始（第0块是起点河岸），逐块逐块的向后扫描，对每一块石头判断它和它前面那块石头的间距是不是小于候选解，如果小于就把这块石头假装移走，并记录一下，最后看看一共记录了几块，这就一定是最少的移走量了。这个过程里有两个比较容易造成困扰的问题：</p>
+<ol class="arabic simple">
+<li><p>怎样进行“假装”移走一块石头？我们在逐块扫描石块的时候，除了要有个变量表示当前石块的编号（从1开始到 <span class="math notranslate nohighlight">\(N+1\)</span>）以外，同时还要有一个变量表示前一块石块的编号（从0开始），根据这两个变量标识的石块来计算间距。如果当前石块不被移走，那么进入下一轮循环的时候，把当前石块变成下一轮的“前一石块”；如果当前石块被“假装”移走，则只要在进入下一轮循环时不改变前一石块即可。</p></li>
+<li><p>为什么扫描要一直到河对岸的第 <span class="math notranslate nohighlight">\(N+1\)</span> 块石块才能结束？不是说两个河岸上的石块是不能被移走的吗？这是因为我们在前面对每一块石块做的都是向前距离的检查，即当前石块和前一石块之间的距离，这就遗漏了最后那块石块和终点河岸之间的距离。如果最后一块石块和终点之间的距离小于候选解，那它也得被移走。所以最后一轮对第 <span class="math notranslate nohighlight">\(N+1\)</span> 块终点河岸石块的检查，实际上是检查河中最后那块石块到终点河岸的距离，如果要“假装”移走，实际上是移走河中间最后一块石块。</p></li>
+</ol>
+<p>现在，你能编写出这个问题的正确程序了吗？请自己试一试。如果觉得还不行，可以参考下面的代码，但千万不要无脑抄袭哦。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="c1">// 搬走中间的石块，使得跳跃的最短距离为d</span>
+<span class="c1">// pos[]: 石块位置的数组</span>
+<span class="c1">// n: 可以搬走的中间石块的数量</span>
+<span class="c1">// d: 要达到的最短跳跃距离</span>
+<span class="kt">int</span> <span class="nf">move</span><span class="p">(</span><span class="kt">int</span> <span class="n">pos</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">pos</span><span class="p">[</span><span class="mi">50020</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span> <span class="c1">// pos[0]表示起点位置</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">l</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+	<span class="n">pos</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">;</span>	<span class="c1">// pos[n+1]表示河对岸的石头距离，就是河的宽度</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="c1">// 开始二分搜索边界，搜索的范围是从0到河的宽度l</span>
+	<span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">l</span><span class="p">,</span> <span class="n">mid</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>   <span class="c1">// 尝试使最小宽度变成mid</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">mid</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">m</span><span class="p">)</span> <span class="c1">// 只需要移走小于等于m块的石块就够了</span>
+			<span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>     <span class="c1">// 继续测试更大的最小宽度</span>
+		<span class="k">else</span>			    <span class="c1">// 需要移走比m更多块的石块</span>
+			<span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>    <span class="c1">// 尝试小一点的最小宽度</span>
+	<span class="p">}</span>
+	<span class="c1">// 右边界搜索，边界是left，但是本题要的结果是右边界之前的一个值</span>
+	<span class="c1">// left指向右边界，right指向要查找的结果的最后一个位置</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">move</span><span class="p">(</span><span class="kt">int</span> <span class="n">pos</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>		<span class="c1">// 要搬走的石块数量</span>
+	<span class="c1">// 循环控制变量：s: 当前石块编号，prev: 前一块石块的编号</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">prev</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos</span><span class="p">[</span><span class="n">prev</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">d</span><span class="p">)</span>
+			<span class="o">++</span><span class="n">cnt</span><span class="p">;</span>	<span class="c1">// 搬走当前石块，此时下一轮的前一石块不变</span>
+		<span class="k">else</span>
+			<span class="n">prev</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span>	<span class="c1">// 当前石块变成下一轮的前一石块</span>
+	<span class="k">return</span> <span class="n">cnt</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个程序在洛谷提交后的AC截图如下：</p>
+<img alt="../../_images/248_p2678.png" src="../../_images/248_p2678.png" />
+<p>对于初学者，这个问题不简单。实际上要全无漏洞地编写一个二分查找并不简单，查找边界更加麻烦，有许多细节需要考虑清楚。但是题目的难度还不仅仅是编程，本题的算法思路是相当隐晦的，初学者若不是刷过类似题目，恐怕很难想到使用二分法，想到了也很可能会因为厘不清思路而产生怀疑动摇。本节的核心并不在于生搬硬套一个右边界二分查找，而是前面的那一段问答式的思路分析过程。其实无论哪一门学科、无论要解什么题、还是今后做什么研究亦或工作，掌握良好的整理思绪的方法都是极重要的，而学习算法正是一种很好的思维训练。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="249_p1577.html" title="3.4.9. 二分法例题：切绳子（洛谷P1577）"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="247_p1024.html" title="3.4.7. 一元三次方程求解（洛谷P1024）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../240_rec_bin.html" ><span class="section-number">3.4. </span>递归与二分</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

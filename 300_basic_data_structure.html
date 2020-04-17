@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4. 基础数据结构 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="4.1. 线性表" href="ch03/310_linear_list.html" />
+    <link rel="prev" title="3.6.9. 查表的技巧：生活大爆炸版石头剪刀布（洛谷P1328）" href="ch02/sec06/269_luogu_problems_4.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="ch03/310_linear_list.html" title="4.1. 线性表"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="ch02/sec06/269_luogu_problems_4.html" title="3.6.9. 查表的技巧：生活大爆炸版石头剪刀布（洛谷P1328）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="ch02/sec06/269_luogu_problems_4.html"
+                        title="上一章"><span class="section-number">3.6.9. </span>查表的技巧：生活大爆炸版石头剪刀布（洛谷P1328）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="ch03/310_linear_list.html"
+                        title="下一章"><span class="section-number">4.1. </span>线性表</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/300_basic_data_structure.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4. </span>基础数据结构<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>本章要学习的是基础数据结构。所谓<strong>数据结构</strong>就是指计算机存储、组织数据的方式。简而言之，数据结构是相互之间存在一种或多种特定关系的数据元素的集合，即带“结构”的数据元素的集合，“结构”就是指数据元素之间存在的关系。</p>
+<p>一般在初学阶段，往往会把数据结构和算法合并为一门课程，因为它们二者的结合度相当紧密，相辅相成，谁也离不开谁。但实际上数据结构和算法设计还是分属两个不同的研究领域的。数据结构的研究内容是数据的逻辑结构和物理结构以及它们之间的相互关系，并对这种结构定义相适应的运算，设计出相应的算法，它的核心技术是分解与抽象，往往同高效的检索算法和索引技术有关。优秀的数据结构是构造复杂软件系统的基础，精心设计的数据结构可以带来更高的运行或者存储效率。</p>
+<p>本章我们将学习一些最基础的经典数据结构，包括以下内容：</p>
+<ol class="arabic simple">
+<li><p>线性表</p></li>
+<li><p>哈希表</p>
+<ul class="simple">
+<li><p>顺序哈希表</p></li>
+<li><p>链式哈希表</p></li>
+<li><p>集合</p></li>
+</ul>
+</li>
+<li><p>树和森林</p>
+<ul class="simple">
+<li><p>基本概念</p></li>
+<li><p>二叉树：链式结构和顺序结构</p></li>
+<li><p>二叉树的简单应用：排序二叉树</p></li>
+<li><p>二叉树的简单应用：线段树</p></li>
+<li><p>二叉树的简单应用：堆</p></li>
+<li><p>一般的树和森林</p></li>
+<li><p>键值对</p></li>
+</ul>
+</li>
+<li><p>图</p>
+<ul class="simple">
+<li><p>基本概念</p></li>
+<li><p>图的存储方式</p></li>
+<li><p>Prim算法</p></li>
+<li><p>Dijistra算法</p></li>
+<li><p>最大生成树</p></li>
+<li><p>图的连通性</p></li>
+</ul>
+</li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ch03/310_linear_list.html">4.1. 线性表</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch03/sec01/311_sequence_list.html">4.1.1. 顺序表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch03/sec01/312_big_int_1.html">4.1.2. 高精度整数算法(I) 数据的表示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch03/sec01/313_big_int_2.html">4.1.3. 高精度整数算法(II) 加法与乘法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch03/sec01/314_big_int_3.html">4.1.4. 高精度整数算法(III) 减法与比较</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch03/sec01/315_big_int_4.html">4.1.5. 高精度整数算法(IV) 除法及取余</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch03/sec01/316_big_int_5.html">4.1.6. 高精算法例题：国王游戏（洛谷P1080）</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="ch03/310_linear_list.html" title="4.1. 线性表"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="ch02/sec06/269_luogu_problems_4.html" title="3.6.9. 查表的技巧：生活大爆炸版石头剪刀布（洛谷P1328）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

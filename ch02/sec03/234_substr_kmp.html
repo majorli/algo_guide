@@ -1,0 +1,438 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.3.4. 子串搜索及KMP算法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.3.5. 回文字符串" href="235_palindromic_string.html" />
+    <link rel="prev" title="3.3.3. 字符串处理基础知识(III)" href="233_string_basic_3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="235_palindromic_string.html" title="3.3.5. 回文字符串"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="233_string_basic_3.html" title="3.3.3. 字符串处理基础知识(III)"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" accesskey="U"><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.3.4. 子串搜索及KMP算法</a><ul>
+<li><a class="reference internal" href="#id1">3.3.4.1. 朴素的蛮力搜索算法</a></li>
+<li><a class="reference internal" href="#index-0">3.3.4.2. KMP算法</a></li>
+<li><a class="reference internal" href="#id3">3.3.4.3. 小结</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="233_string_basic_3.html"
+                        title="上一章"><span class="section-number">3.3.3. </span>字符串处理基础知识(III)</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="235_palindromic_string.html"
+                        title="下一章"><span class="section-number">3.3.5. </span>回文字符串</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec03/234_substr_kmp.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="kmp">
+<h1><span class="section-number">3.3.4. </span>子串搜索及KMP算法<a class="headerlink" href="#kmp" title="永久链接至标题">¶</a></h1>
+<p><strong>子串搜索</strong>，也叫<strong>子串匹配</strong>，是字符串处理领域非常重要和常用的一种操作。一般的子串搜索操作是指，给定两个字符串S和P，检查P是不是S的一个子串，如果是则返回P第一次在S中出现的位置，即首字符 <code class="docutils literal notranslate"><span class="pre">P[0]</span></code> 在S中的对应元素位置；如果不是一般就返回-1。</p>
+<p>例如：字符串 <code class="docutils literal notranslate"><span class="pre">abc</span></code> 就是 <code class="docutils literal notranslate"><span class="pre">1234abcd</span></code> 的一个子串，它第一次出现的位置是4，但它不是字符串 <code class="docutils literal notranslate"><span class="pre">1234ABCD</span></code> 的子串，因为ASCII字符是区分大小写的。</p>
+<p>通常我们把字符串S称为<strong>文本串</strong>，把P称为<strong>模式串</strong>。最基本的子串搜索，模式串就是要搜索的子串，所做的是一字不差的精确匹配。高级的子串搜索，模式串中可能含有通配符，比如用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 表示0个或任意多个任意字符，用 <code class="docutils literal notranslate"><span class="pre">?</span></code> 表示0个或1个任意字符。最灵活也最难实现的是<strong>正则表达式</strong>匹配，此时模式串是一个正则表达式，它有自己的词法规则，可以非常灵活地表示各种各样的字符串样式，例如正则式 <code class="docutils literal notranslate"><span class="pre">^-?[1-9]\d*$</span></code> 表示任意的整数样式的字符串，而 <code class="docutils literal notranslate"><span class="pre">^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$</span></code> 能匹配小数样式的表达式。后两种高级的搜索也是我们常会把子串搜索称作子串匹配的原因，因为它们的功能已经超越了简单的搜索。</p>
+<p>这一节我们讨论最基本的子串搜索算法，在文本串中一字不差地精确搜索模式串。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">3.3.4.1. </span>朴素的蛮力搜索算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>蛮力算法就是从文本串的头一个字符开始，作为起始位置与模式串进行比对，如果发现一致的子串，就返回起始位置，如果不一致就将起始位置移到文本串的下一个字符继续比对，直到找到子串或者找不到。</p>
+<p>蛮力搜索的第一个起始位置是文本串的首字符 <code class="docutils literal notranslate"><span class="pre">S[0]</span></code>。假设文本串长度为n，模式串长度为M，那么蛮力搜索的最后一个起始位置就应该是n-M，因为从这个位置到文本串的末尾还剩刚好(n-1)-(n-M)+1=M个字符，再往后移剩余字符数量就不如模式串多了，不可能再存在和模式串相同的子串。</p>
+<p>利用 <code class="docutils literal notranslate"><span class="pre">strncmp()</span></code> 函数可以很简单地编写出这样一个函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">substr_search_bf</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">81</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">11</span><span class="p">];</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%80s %10s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">substr_search_bf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">));</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">substr_search_bf</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">pos</span><span class="p">,</span> <span class="n">n_s</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">n_p</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pos</span> <span class="o">&lt;=</span> <span class="n">n_s</span> <span class="o">-</span> <span class="n">n_p</span><span class="p">;</span> <span class="o">++</span><span class="n">pos</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">strncmp</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="n">pos</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n_p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">n_s</span> <span class="o">-</span> <span class="n">n_p</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">pos</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个蛮力算法非常简单易懂，但是它的时间复杂度是 <span class="math notranslate nohighlight">\(O(nM)\)</span>，属于比较高的二阶的时间复杂度。</p>
+<p>精确子串搜索有一个非常经典的算法，由算法界的三位大神D.E.Knuth、J.H.Morris和V.R.Pratt同时发明的。这个算法是每一本算法教科书都必讲、每一个学习算法的人都必学的超经典算法，就以三位发明者的姓氏首字母命名为KMP算法。它是迄今为止精确子串搜索最经典的算法之一，也是算法史上最伟大的发明之一，它的时间复杂度是 <span class="math notranslate nohighlight">\(O(n+M)\)</span>。下面我们要来讲解一下这个KMP算法。</p>
+</div>
+<div class="section" id="index-0">
+<span id="id2"></span><h2><span class="section-number">3.3.4.2. </span>KMP算法<a class="headerlink" href="#index-0" title="永久链接至标题">¶</a></h2>
+<p>KMP算法是对蛮力算法的改进，所以要理解KMP算法必须先了解蛮力算法不好的地方在哪里。</p>
+<p>假设文本串S为 <code class="docutils literal notranslate"><span class="pre">ABCAABCB</span></code>，模式串P为 <code class="docutils literal notranslate"><span class="pre">ABCB</span></code>。下面我们先看看蛮力搜索的过程：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第1步：比对位置 pos = 0
+S: ABCAABCB
+P: ABCB
+第1步比对结果：失败，pos后移一位。
+
+第2步：比对位置 pos = 1
+S: ABCAABCB
+P:  ABCB
+第2步比对结果：失败，pos后移一位。
+
+第3步：比对位置 pos = 2
+S: ABCAABCB
+P:   ABCB
+第3步比对结果：失败，pos后移一位。
+
+第4步：比对位置 pos = 3
+S: ABCAABCB
+P:    ABCB
+第4步比对结果：失败，pos后移一位。
+
+第5步：比对位置 pos = 4
+S: ABCAABCB
+P:     ABCB
+第5步比对结果：成功，返回子串首位置4。
+</pre></div>
+</div>
+<p>从这个过程可以看出，其实第1步比对失败后，比对位置 <code class="docutils literal notranslate"><span class="pre">pos</span></code> 并不需要傻傻地一个一个往后挪，至少可以直接跳到第4步那个位置 <code class="docutils literal notranslate"><span class="pre">pos</span> <span class="pre">=</span> <span class="pre">3</span></code>，因为第1次发生比对不符合的字符就是 <code class="docutils literal notranslate"><span class="pre">S[3]</span> <span class="pre">=</span> <span class="pre">'A'</span></code>。</p>
+<p>KMP算法的改进思路就是：<em>当一次比对失败时，利用已经匹配的那部分信息，将模式串尽可能多地移动到一个合适的位置，使得下一次比对可以从上一次匹配失败的那个位置开始继续进行</em>。</p>
+<p>例如在上面这个例子里，第1步比对中匹配正确的字符有 <code class="docutils literal notranslate"><span class="pre">S[0],S[1],S[2]</span></code>，直到 <code class="docutils literal notranslate"><span class="pre">S[3]</span></code> 发生错误。使用蛮力法，第2步又回过头去从 <code class="docutils literal notranslate"><span class="pre">S[1]</span></code> 开始比对，这就是蛮力算法时间复杂度为 <span class="math notranslate nohighlight">\(O(nM)\)</span> 的原因。如果我们能让模式串在第1步比对失败后移动到一个合适的位置，使得第2步可以从 <code class="docutils literal notranslate"><span class="pre">S[3]</span></code> 直接继续，那么整个比对过程最多进行 <span class="math notranslate nohighlight">\(n\)</span> 次比对，因为在文本串的 <span class="math notranslate nohighlight">\(n\)</span> 个字符上我们“不走回头路”。这就是KMP算法的基本思路。</p>
+<p>有了思路，我们还要解决一个具体问题：所谓“合适的位置”到底在哪里？是不是简单地把模式串移动到上一次匹配失败的字符位置开始就可以了？当然不是，例如看下面这个例子：</p>
+<p>文本串S：<code class="docutils literal notranslate"><span class="pre">ABCABCABE</span></code>，模式串P：<code class="docutils literal notranslate"><span class="pre">ABCABE</span></code>，用索引 <code class="docutils literal notranslate"><span class="pre">i,j</span></code> 分别表示在文本串和模式串上的比对位置。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第1次比对，从 i = j = 0 开始
+   i: 0  1  2  3  4 [5] 6  7  8
+   S: A  B  C  A  B  C  A  B  E
+   P: A  B  C  A  B  E
+   j: 0  1  2  3  4 [5]
+比对结果：在 i = 5 处匹配失败。
+</pre></div>
+</div>
+<p>这时候，如果简单地把模式串移动到和 <code class="docutils literal notranslate"><span class="pre">S[5]</span></code> 对齐的位置，会发现文本串中剩余字符数量不够了，就会得出搜索失败的结论。然而这是错误的！</p>
+<p>仔细观察模式串，可以发现上一次匹配成功的前5个字符 <code class="docutils literal notranslate"><span class="pre">ABCAB</span></code> 有相同的前缀和后缀 <code class="docutils literal notranslate"><span class="pre">AB</span></code>。所以我们应该把开头的那一段前缀 <code class="docutils literal notranslate"><span class="pre">AB</span></code> 移动到后面这一段后缀 <code class="docutils literal notranslate"><span class="pre">AB</span></code> 所在的位置，然后就可以从上一次匹配失败的位置 <code class="docutils literal notranslate"><span class="pre">S[5]</span></code> 开始继续比对了：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第2次比对，P移动到和 S[3] 对齐的位置，
+仍从上一次不匹配字符的位置 i = 5 处开始比对，对应的模式串位置为 j = 2
+   i: 0  1  2  3  4 [5] 6  7  8
+   S: A  B  C  A  B  C  A  B  E
+   P:          A  B  C  A  B  E
+   j:          0  1 [2] 3  4  5
+比对结果：匹配成功，返回子串首位置3。
+</pre></div>
+</div>
+<p>现在我们可以找到一点头绪了。当某一次比对在某个字符处发生了不匹配，那么模式串要移动到的“合适位置”与已经匹配成功的那一部分里面有没有相同的前后缀有关。</p>
+<p>设上一次比对时，第一对不匹配字符为 <code class="docutils literal notranslate"><span class="pre">S[i]</span></code> 不等于 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code>，即位于文本串位置 <code class="docutils literal notranslate"><span class="pre">i</span></code>、模式串位置 <code class="docutils literal notranslate"><span class="pre">j</span></code>。如果在已经匹配成功的部分模式串里面最长的相同前后缀长度为 <code class="docutils literal notranslate"><span class="pre">next</span></code>，那么就应该把模式串首字符移动到对准文本串字符 <code class="docutils literal notranslate"><span class="pre">S[i-next]</span></code> 的位置，因为从这个位置到发生不匹配的字符 <code class="docutils literal notranslate"><span class="pre">S[i]</span></code> 之前恰有 <code class="docutils literal notranslate"><span class="pre">next</span></code> 个字符。模式串这样移过来之后刚好长度为 <code class="docutils literal notranslate"><span class="pre">next</span></code> 的前缀部分位于这一段区域里，最长的相同前后缀恰好充分利用起来。下一步就从字符 <code class="docutils literal notranslate"><span class="pre">S[i]</span></code> 开始继续比对，与之比对的模式串字符为 <code class="docutils literal notranslate"><span class="pre">P[next]</span></code>，这可以通过赋值 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">=</span> <span class="pre">next</span></code> 来完成。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>这里我们要明白一件事情，所谓将模式串移动到文本串位置 <code class="docutils literal notranslate"><span class="pre">i-next</span></code>，实际上就相当于将文本串位置 <code class="docutils literal notranslate"><span class="pre">i</span></code> 对准模式串位置 <code class="docutils literal notranslate"><span class="pre">next</span></code>。二者其实是完全一样的，只是视角不同，前者是看作模式串向后移动，后者是看作文本串向前移动。通过赋值 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">=</span> <span class="pre">next</span></code> 就完成了所谓的“移动模式串到合适的位置”。</p>
+<p>这个赋值的意义可以通俗地表示为：这一次文本串位置 <code class="docutils literal notranslate"><span class="pre">i</span></code> 上的字符和模式串位置 <code class="docutils literal notranslate"><span class="pre">j</span></code> 上的字符匹配失败了，<strong>下一次</strong>请将其和模式串位置 <code class="docutils literal notranslate"><span class="pre">next</span></code> 上的字符进行匹配。这就是为什么KMP算法把“最长相同前后缀长度”的数组有点奇怪地取名为next数组的原因。</p>
+</div>
+<p>如果在上一次比对已经匹配成功的部分里没有相同前后缀，即相同前后缀的最大长度为0，那么下一次比对时整个已经匹配成功的部分都是无效的，模式串的开头将移动到当前比对失败位置。例如在 <code class="docutils literal notranslate"><span class="pre">&quot;ABCDEFG&quot;</span></code> 中搜索 <code class="docutils literal notranslate"><span class="pre">&quot;ABCA&quot;</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第1次比对，从 i = j = 0 开始，到 i = 3 时匹配失败
+   i: 0  1  2 [3] 4  5  6
+   S: A  B  C  D  E  F  G
+   P: A  B  C  A
+   j: 0  1  2 [3]
+已经匹配的部分 &quot;ABC&quot; 中没有相同的前后缀，l = 0，所以 j = l = 0，相当于将模式串直接移动到 i 的位置
+
+第2次比对，i = 3， j = 0
+   i: 0  1  2 [3] 4  5  6
+   S: A  B  C  D  E  F  G
+   P:          A  B  C  A
+   j:         [0] 1  2  3
+第一个字符就匹配失败，已经匹配部分为空，整个模式串应该向后移动一个字符继续比对，但超长了，搜索失败
+</pre></div>
+</div>
+<p>如果上一次比对时匹配部分长度为0，即第一个字符就不匹配，那么下一次比对时就只能后移一个字符，<code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">i</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">j</span> <span class="pre">=</span> <span class="pre">0</span></code>，然后继续开始比对。</p>
+<p>下面我们来理一理思路，把算法的框架搭出来。设模式串中每一个字符 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code> 之前的部分，即子串 <code class="docutils literal notranslate"><span class="pre">P[0:j]</span></code> 中最长的相同前后缀长度为 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code>。对于模式串的第2个字符 <code class="docutils literal notranslate"><span class="pre">P[1]</span></code>，它前面只有一个首字符，不存在前后缀，所以 <code class="docutils literal notranslate"><span class="pre">next[1]</span> <span class="pre">=</span> <span class="pre">0</span></code> 是固定的。对于模式串的首字符 <code class="docutils literal notranslate"><span class="pre">P[0]</span></code>，我们规定 <code class="docutils literal notranslate"><span class="pre">next[0]</span> <span class="pre">=</span> <span class="pre">-1</span></code>，这是为了方便在算法中实现“如果第一个字符就不匹配”情况发生时的处理。下面是算法的伪代码：</p>
+<div class="admonition-kmp admonition">
+<p class="admonition-title">KMP算法</p>
+<p><span class="math notranslate nohighlight">\(\text{KMP_Search}(S,P):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(i\leftarrow0,j\leftarrow0\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{WHILE  }j\lt \text{Len}(P) \text{  AND  } \text{Len}(S)-i \ge \text{Len}(P)-j \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{IF  }j=-1\text{  OR  }S[i]=P[j] \text{   THEN}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(i\leftarrow i+1,j\leftarrow j+1\)</span></p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{ELSE}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(j\leftarrow next[j]\)</span></p>
+</div></blockquote>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{IF  }j=\text{Len}(P)\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{THEN RETURN  }i-j\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{ELSE RETURN  }-1\)</span></p>
+</div></blockquote>
+</div></blockquote>
+</div>
+<p>大多数教科书和网上关于KMP算法的讲解都把循环条件设置为比较简单的 <span class="math notranslate nohighlight">\(j\lt \text{Len}(P) \text{  AND  } i \lt \text{Len}(S)\)</span>。这当然是对的，而且比较好懂。但是如果当模式串事实上已经移出了文本串的范围时，或者模式串比文本串还要长时，循环仍然会继续比对下去，这其实是有点浪费的。我们算法里的循环条件虽然复杂一点，但是当模式串超出文本串尾部的时候，循环不会执行下去，此时一定满足 <span class="math notranslate nohighlight">\(j\neq\text{Len}(P)\)</span>，所以会返回-1表示搜索失败。</p>
+<p>算法中最难理解的部分是循环内部的那条判断语句，这条语句一共判断了三种情况，一一分析如下：</p>
+<p>1、<span class="math notranslate nohighlight">\(j=-1\)</span> 的情况</p>
+<p>什么时候 <span class="math notranslate nohighlight">\(j\)</span> 才会等于-1呢？正常情况下，字符位置 <span class="math notranslate nohighlight">\(j\)</span> 不会变成负数，唯一出现负数的地方就是 <span class="math notranslate nohighlight">\(next[0]\)</span> 的值总是-1。所以发生这种情况唯一的可能就是上一次比对时模式串首字符就不匹配，此时 <span class="math notranslate nohighlight">\(j=0\)</span> 而且 <span class="math notranslate nohighlight">\(S[i]\neq P[j]\)</span>，因此在上一轮循环中判断语句进入了 <span class="math notranslate nohighlight">\(\text{ELSE}\)</span> 分支，执行了赋值语句 <span class="math notranslate nohighlight">\(j\leftarrow next[j]\)</span> 使得它变成了-1。</p>
+<p>那么在这种情况下，这一轮应该怎么处理呢？当然是模式串向后移动一个位置（或者视作文本串向前移动一个位置），然后仍然从模式串的首字符 <span class="math notranslate nohighlight">\(P[0]\)</span> 开始继续比对，比对的文本串字符为 <span class="math notranslate nohighlight">\(S[i+1]\)</span>。条件分支里的语句 <span class="math notranslate nohighlight">\(i\leftarrow i+1, j\leftarrow j+1\)</span> 恰好能完成这项工作。</p>
+<p>2、<span class="math notranslate nohighlight">\(S[i]=P[j]\)</span> 的情况</p>
+<p>这种情况很好理解，就是本次比对的两个字符相同，比对成功。那么下一步当然应该是继续比对下一对字符了，也就是条件分支里的语句所做的工作。</p>
+<p>3、<span class="math notranslate nohighlight">\(\text{ELSE}\)</span> 分支表示的其余情况</p>
+<p>剩下的其余情况无非就是本轮比对失败的情况了，这时就进入 <span class="math notranslate nohighlight">\(\text{ELSE}\)</span> 分支，把模式串位置改成下一个“合适的位置”就可以进入下一轮循环了。</p>
+<p><strong>next数组</strong></p>
+<p>好了，现在看起来万事俱备只欠东风了。东风就是这个next数组，要怎样才能得到这个next数组呢？如果蛮力去计算的话整个算法就都没意义了，因为时间复杂度会达到 <span class="math notranslate nohighlight">\(O(m^2)\)</span>。我们有更好的方法，时间复杂度 <span class="math notranslate nohighlight">\(O(m)\)</span>。</p>
+<p>再重复一遍（因为这很重要），next数组和模式串长度相等，第 <code class="docutils literal notranslate"><span class="pre">j</span></code> 个元素 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 表示前 <code class="docutils literal notranslate"><span class="pre">j</span></code> 个字符构成的子串 <code class="docutils literal notranslate"><span class="pre">P[0:j]</span></code> 的最长相同前后缀长度。我们已经知道，对于任何一个模式串，<code class="docutils literal notranslate"><span class="pre">next[0]</span></code> 都等于-1，<code class="docutils literal notranslate"><span class="pre">next[1]</span></code> 都等于0。一看到这种“有初值”的数值序列，大家一定要第一时间考虑“递推”这种重要的数学方法，快速计算next数组就是要用递推的方法。</p>
+<p>递推，就是要解决这样的问题：如果已经知道从 <code class="docutils literal notranslate"><span class="pre">next[0]</span></code> 到 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 的所有值，怎么求出下一个 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code> 的值？</p>
+<p>假设 <code class="docutils literal notranslate"><span class="pre">next[j]</span> <span class="pre">==</span> <span class="pre">k</span></code>，说明在模式串的子串 <code class="docutils literal notranslate"><span class="pre">P[0:j]</span></code> 中，长度为 <code class="docutils literal notranslate"><span class="pre">k</span></code> 的前缀和后缀相同，而且这是最长的情况。此时子串 <code class="docutils literal notranslate"><span class="pre">P[0:j]</span></code> 中前缀 <code class="docutils literal notranslate"><span class="pre">P[0:k]</span></code> 和后缀 <code class="docutils literal notranslate"><span class="pre">P[j-k:j]</span></code> 相同。现在考虑下一个子串 <code class="docutils literal notranslate"><span class="pre">P[0:j+1]</span></code>，它只是在原来那个子串的尾部添加了一个字符 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code>，可想而知它对应的 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code> 值最多比 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 大1。故有 <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">next[j+1]</span> <span class="pre">&lt;=</span> <span class="pre">next[j]</span> <span class="pre">+</span> <span class="pre">1</span></code>。下面我们就来讨论这些情况的产生条件以及怎样快速而正确地求 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code>。</p>
+<p>可以分三种情况来讨论：</p>
+<p>情况1：<code class="docutils literal notranslate"><span class="pre">P[k]</span> <span class="pre">==</span> <span class="pre">P[j]</span></code>，这时候 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span> <span class="pre">=</span> <span class="pre">next[j]</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">k</span> <span class="pre">+</span> <span class="pre">1</span></code>，这是一种皆大欢喜的情况。为什么会这样？请看下面的图解：</p>
+<img alt="../../_images/234_kmp.001.png" src="../../_images/234_kmp.001.png" />
+<p><code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">next[j]</span></code> 是子串 <code class="docutils literal notranslate"><span class="pre">P[0:j]</span></code> 的最大相同前后缀长度，有 <code class="docutils literal notranslate"><span class="pre">P[0:k]</span> <span class="pre">==</span> <span class="pre">P[j-k:j]</span></code>，即图中的两段红色区域。现在 <code class="docutils literal notranslate"><span class="pre">P[k]</span> <span class="pre">==</span> <span class="pre">P[j]</span></code>，即图中的两个蓝色小块，它们也相同。所以在子串 <code class="docutils literal notranslate"><span class="pre">P[0:j+1]</span></code> 中，前后两块红加蓝区域一定也相同，<code class="docutils literal notranslate"><span class="pre">P[0:k+1]</span> <span class="pre">==</span> <span class="pre">P[j-k:j+1]</span></code>，而且是最长的。因此这种情况下就有 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span> <span class="pre">=</span> <span class="pre">next[j]</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">k</span> <span class="pre">+</span> <span class="pre">1</span></code>。可以看出这个结论在 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code> 时仍然是正确的。</p>
+<p>情况2：<code class="docutils literal notranslate"><span class="pre">P[k]</span> <span class="pre">!=</span> <span class="pre">P[j]</span></code> 且 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code>，这时候 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span> <span class="pre">=</span> <span class="pre">0</span></code>，请看下面的图解：</p>
+<img alt="../../_images/234_kmp.002_1.png" src="../../_images/234_kmp.002_1.png" />
+<p>现在有 <code class="docutils literal notranslate"><span class="pre">P[0]</span> <span class="pre">!=</span> <span class="pre">P[j]</span></code>，即图中的蓝色和黄色两个小块，显然这样的情况下 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code> 不可能为1。那么它有可能大于1吗？不妨先假设可以，存在 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>，也就是说在子串 <code class="docutils literal notranslate"><span class="pre">P[0:j+1]</span></code> 中会有一段长度大于1的相同前后缀。鉴于 <code class="docutils literal notranslate"><span class="pre">P[0]</span></code> 既不同于 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code> 又不同于 <code class="docutils literal notranslate"><span class="pre">P[j-1]</span></code>，所以只能是下图所示这种情况，图中前后两块蓝加黄区域就是相同前后缀：</p>
+<img alt="../../_images/234_kmp.002_2.png" src="../../_images/234_kmp.002_2.png" />
+<p>但如果真是这样的话，既然蓝加黄的长度要大于1，那不是说明在前一个子串 <code class="docutils literal notranslate"><span class="pre">P[0:j]</span></code> 内有长度大于0的相同前后缀了吗？显然这和前提条件 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code> 矛盾了，存在 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span> <span class="pre">&gt;</span> <span class="pre">1</span></code> 这个假设不成立！所以这种情况下 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code> 只能等于0。</p>
+<p>情况3：<code class="docutils literal notranslate"><span class="pre">P[k]</span> <span class="pre">!=</span> <span class="pre">P[j]</span></code> 且 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>，这时候需要让 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">next[k]</span></code> 然后用这个新的 <code class="docutils literal notranslate"><span class="pre">k</span></code> 值去递归地去计算 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code>。这是比较难理解的部分，请仔细看下面的图解：</p>
+<img alt="../../_images/234_kmp.003_1.png" src="../../_images/234_kmp.003_1.png" />
+<p>这种情况下显然 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code> 有可能为0，那么它有可能大于0吗？有！</p>
+<p>因为有 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>，所以我们可以考虑子串 <code class="docutils literal notranslate"><span class="pre">P[0:k]</span></code> 中的相同前后缀情况。设 <code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">==</span> <span class="pre">next[k]</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>，即在子串 <code class="docutils literal notranslate"><span class="pre">P[0:k]</span></code> 中有长度为 <code class="docutils literal notranslate"><span class="pre">L</span></code> 的最大相同前后缀，那么问题就要归约为 <code class="docutils literal notranslate"><span class="pre">P[L]</span></code> 是不是等于 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code> 了。如下图所示：</p>
+<img alt="../../_images/234_kmp.003_2.png" src="../../_images/234_kmp.003_2.png" />
+<p>可以想见，只要遇到情况3，就可以这样把问题归约为 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">P[next[k]]</span></code> 之间的子问题，以相同的方法继续判断。这样不断归约下去，子问题的规模会越来越小，总有一次会遇到情况1或者情况2，从而结束这个递归的归约过程。所以遇到这种情况时我们只需要让 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">next[k]</span></code> 然后继续下去就可以了。</p>
+<p>理解了上面三种情况之后，就可以根据它们来归纳出从初值 <code class="docutils literal notranslate"><span class="pre">next[0]</span> <span class="pre">==</span> <span class="pre">-1,</span> <span class="pre">next[1]</span> <span class="pre">==</span> <span class="pre">0</span></code> 开始推算整个next数组的算法了。但如果直接依据三种情况来写程序，代码会比较复杂。越是复杂的代码越容易有bug，所以实际编程时还要再改进一下。复杂在什么地方呢？复杂在算法的两个递归终止条件，情况1和情况2，二者相差比较大，判断条件和终止方式都不相同，我们应该设法让它们统一起来。</p>
+<p>这里我们还是利用 <code class="docutils literal notranslate"><span class="pre">next[0]</span> <span class="pre">==</span> <span class="pre">-1</span></code>。遇到情况2的时候不要直接去终止递归，而是视作为情况3，让 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">next[0]</span> <span class="pre">==</span> <span class="pre">-1</span></code> 并继续递归下去。本来我们是要在这一层让 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span></code> 变成0并终止递归的，现在变成了让 <code class="docutils literal notranslate"><span class="pre">k</span></code> 变成-1并进入下一层，不过-1加1不就是0吗？所以只要给情况1加一个条件：当 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">-1</span></code> 时也和正常的情况1一样处理，令 <code class="docutils literal notranslate"><span class="pre">next[j+1]</span> <span class="pre">=</span> <span class="pre">k</span> <span class="pre">+</span> <span class="pre">1</span></code> 并终止递归。这样就能把我们故意“漏”下来的情况2视作情况1一样处理掉了。是不是感觉和KMP算法主框架的技巧非常相似？下面就是这种朴素的next算法：</p>
+<div class="admonition-next admonition">
+<p class="admonition-title">朴素next算法</p>
+<p><span class="math notranslate nohighlight">\(\text{Naive_Next}(next, P):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(next[0]\leftarrow-1\)</span></p>
+<p><span class="math notranslate nohighlight">\(k\leftarrow-1\)</span></p>
+<p><span class="math notranslate nohighlight">\(j\leftarrow0\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{WHILE  }j\lt \text{Len}(P) \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{IF  }k=-1\text{  OR  }P[j]=P[k] \text{  THEN}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(k\leftarrow k+1\)</span></p>
+<p><span class="math notranslate nohighlight">\(j\leftarrow j+1\)</span></p>
+<p><span class="math notranslate nohighlight">\(next[j]\leftarrow k\)</span></p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{ELSE}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(k\leftarrow next[k]\)</span></p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>请自己用纸笔按照上面这个算法计算一下模式串 <code class="docutils literal notranslate"><span class="pre">&quot;ABAAXABABY&quot;</span></code> 对应的next数组。</p>
+<p>正确的答案应该是：<code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">-1</span> <span class="pre">,</span> <span class="pre">0</span> <span class="pre">,</span> <span class="pre">0</span> <span class="pre">,</span> <span class="pre">1</span> <span class="pre">,</span> <span class="pre">1</span> <span class="pre">,</span> <span class="pre">0</span> <span class="pre">,</span> <span class="pre">1</span> <span class="pre">,</span> <span class="pre">2</span> <span class="pre">,</span> <span class="pre">3</span> <span class="pre">,</span> <span class="pre">2</span> <span class="pre">]</span></code>。</p>
+</div>
+<p>但是这样就结束了吗？上面这个算法既然被叫做“朴素”的算法，说明肯定还有点什么可以进一步改进的地方。</p>
+<p>请看这样一个模式串：<code class="docutils literal notranslate"><span class="pre">&quot;ABAB&quot;</span></code>，经过计算，它的next数组为 <code class="docutils literal notranslate"><span class="pre">[-1,0,0,1]</span></code>。下面我们来看它在文本串 <code class="docutils literal notranslate"><span class="pre">&quot;ABACABAD&quot;</span></code> 中的搜索过程：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第1次比对，从 i = j = 0 开始，到 i = 3 时匹配失败
+   i: 0  1  2 [3] 4  5  6  7
+   S: A  B  A  C  A  B  A  D
+   P: A  B  A  B
+   j: 0  1  2 [3]
+next:-1  0  0 [1]
+在S[3]=&#39;C&#39;, P[3]=&#39;B&#39;处匹配失败，根据next[3]=1的指示，下一次应该从P[1]开始继续匹配
+
+第2次比对，i = 3， j = 1
+   i: 0  1  2 [3] 4  5  6  7
+   S: A  B  A  C  A  B  A  D
+   P:       A  B  A  B
+   j:       0 [1] 2  3
+next:      -1 [0] 0  1
+S[3]=&#39;C&#39;和P[1]=&#39;B&#39;的匹配再次失败
+</pre></div>
+</div>
+<p>到这里我们就看出了问题，当第一次匹配失败时，按照 <code class="docutils literal notranslate"><span class="pre">next[3]</span></code> 的指示，改为从 <code class="docutils literal notranslate"><span class="pre">P[next[3]]</span> <span class="pre">==</span> <span class="pre">P[1]</span></code> 继续匹配，但 <code class="docutils literal notranslate"><span class="pre">P[1]</span></code> 是等于 <code class="docutils literal notranslate"><span class="pre">P[3]</span></code> 的，都是字符 <code class="docutils literal notranslate"><span class="pre">'B'</span></code>，所以下一次匹配注定仍将失败。换句话说，这次移动实质上是无效的！这个问题会在一定程度上影响搜索效率，应该设法改进，也就是不能出现 <code class="docutils literal notranslate"><span class="pre">P[j]</span> <span class="pre">==</span> <span class="pre">P[next[j]]</span></code> 的现象。</p>
+<p>从next数组本身的意义来看，这个问题很好理解。next数组实质上是一个移动模式串的“导航表”，每一个元素 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 都是一条导航指令，表示如果与模式串中的字符 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code> 匹配失败，那么下一步请将 <code class="docutils literal notranslate"><span class="pre">P[next[j]]</span></code> 移动过来尝试匹配。这个过程是会一路连续下去的，如果下一步和 <code class="docutils literal notranslate"><span class="pre">P[next[j]]</span></code> 匹配仍然失败，那么再下一步请尝试和 <code class="docutils literal notranslate"><span class="pre">P[next[next[j]]]</span></code> 进行匹配，如此一直进行下去。</p>
+<p>所以，如果我们事先就能确定一定以及肯定地知道 <code class="docutils literal notranslate"><span class="pre">P[next[j]]</span> <span class="pre">==</span> <span class="pre">P[j]</span></code>，那么这个 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 就会把比对过程导航到一个坑里去。下一步必定仍然失败，然后必定会进一步被导航去 <code class="docutils literal notranslate"><span class="pre">P[next[next[j]]</span></code>。既然如此，我们为什么还要跳这个坑呢？我们何不在计算next数组的时候就查出这些坑来并且直接跨过去？</p>
+<p>对！我们只要在每次计算 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 之后检查是否 <code class="docutils literal notranslate"><span class="pre">P[next[j]]</span> <span class="pre">==</span> <span class="pre">P[j]</span></code>，如果是的话就直接将 <code class="docutils literal notranslate"><span class="pre">next[j]</span></code> 设置成 <code class="docutils literal notranslate"><span class="pre">next[next[j]]</span></code>，这样就可以在设计“导航表”的时候直接把这些坑都越过了。</p>
+<p>用这种方法再计算一下 <code class="docutils literal notranslate"><span class="pre">&quot;ABAB&quot;</span></code> 的next数组，<code class="docutils literal notranslate"><span class="pre">next[0]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">next[1]</span></code> 的值不会变，仍然为-1和0。当计算得到 <code class="docutils literal notranslate"><span class="pre">next[2]</span></code> 等于0的时候，我们发现 <code class="docutils literal notranslate"><span class="pre">P[2]</span> <span class="pre">==</span> <span class="pre">P[0]</span> <span class="pre">==</span> <span class="pre">'A'</span></code>，所以应该把 <code class="docutils literal notranslate"><span class="pre">next[2]</span></code> 设置成 <code class="docutils literal notranslate"><span class="pre">next[0]</span></code>，即-1。然后计算 <code class="docutils literal notranslate"><span class="pre">next[3]</span></code>，按照计算规则，由于上一个 <code class="docutils literal notranslate"><span class="pre">next[2]</span></code> 等于-1，所以 <code class="docutils literal notranslate"><span class="pre">next[3]</span></code> 应该直接设置为 <code class="docutils literal notranslate"><span class="pre">next[2]</span> <span class="pre">+</span> <span class="pre">1</span></code>，即0。这样得到的next数组为 <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">0,</span> <span class="pre">-1,</span> <span class="pre">0]</span></code>。然后再来看看它在 <code class="docutils literal notranslate"><span class="pre">&quot;ABACABAD&quot;</span></code> 中的搜索过程：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第1次比对，从 i = j = 0 开始，到 i = 3 时匹配失败
+   i: 0  1  2 [3] 4  5  6  7
+   S: A  B  A  C  A  B  A  D
+   P: A  B  A  B
+   j: 0  1  2 [3]
+next:-1  0 -1 [0]
+在S[3]=&#39;C&#39;, P[3]=&#39;B&#39;处匹配失败，根据next[3]=0的指示，下一次应该从P[0]开始继续匹配
+
+第2次比对，i = 3， j = 0
+   i: 0  1  2 [3] 4  5  6  7
+   S: A  B  A  C  A  B  A  D
+   P:          A  B  A  B
+   j:         [0] 1  2  3
+next:        [-1] 0 -1  0
+S[3]=&#39;C&#39;和P[0]=&#39;A&#39;的匹配再次失败
+
+后续步骤省略...
+</pre></div>
+</div>
+<p>可以看到，现在不会再跳那个坑了！下面是一个使用KMP算法进行子串搜索的示例程序，采用的是改进过的next数组算法。这个示例程序假定文本串和模式串的最大长度分别为1000和100个字符，允许包含空格。程序分两行按行输入文本串和模式串，然后输出搜索结果，即第2行的模式串在第1行的文本串中首次出现的首字符位置，如果搜索不到则输出-1。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">compute_next_array</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">next</span><span class="p">[]);</span>
+<span class="kt">int</span> <span class="nf">kmp_search</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">1001</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">101</span><span class="p">];</span>
+	<span class="n">fgets</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">1001</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
+	<span class="n">fgets</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">len_s</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">len_p</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">len_s</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span> <span class="n">s</span><span class="p">[</span><span class="o">--</span><span class="n">len_s</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>	<span class="c1">// 去除末尾可能存在的换行符</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">len_p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;\n&#39;</span><span class="p">)</span> <span class="n">p</span><span class="p">[</span><span class="o">--</span><span class="n">len_p</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>	<span class="c1">// 去除末尾可能存在的换行符</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">kmp_search</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">compute_next_array</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">next</span><span class="p">[])</span>
+<span class="p">{</span>
+	<span class="n">next</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">next</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>	<span class="c1">// 递归终止，由next[j]推导出next[j+1]</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">++</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">[</span><span class="o">++</span><span class="n">k</span><span class="p">])</span>	<span class="c1">// 判断是否为坑，两个前置++确保先完成计算再判断</span>
+				<span class="n">next</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">next</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+			<span class="k">else</span>
+				<span class="n">next</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
+		<span class="k">else</span>
+			<span class="n">k</span> <span class="o">=</span> <span class="n">next</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>		<span class="c1">// 情况3，递归</span>
+
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">kmp_search</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">next</span><span class="p">[</span><span class="mi">101</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span> <span class="p">};</span>
+	<span class="n">compute_next_array</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">next</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">len_s</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">len_p</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">len_p</span> <span class="o">&amp;&amp;</span> <span class="n">len_s</span> <span class="o">-</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">len_p</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+			<span class="o">++</span><span class="n">i</span><span class="p">;</span>
+			<span class="o">++</span><span class="n">j</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">j</span> <span class="o">=</span> <span class="n">next</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+		<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">len_p</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">;</span>
+	<span class="k">else</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>有一个问题不知道大家有没有想过，我们在改进的next算法中只检查了下一步会不会是坑，即是不是 <code class="docutils literal notranslate"><span class="pre">P[j]</span> <span class="pre">==</span> <span class="pre">P[next[j]]</span></code>，并没有进一步去判断越过第一个坑后会不会掉进第二个坑。也就是说，我们只让 <code class="docutils literal notranslate"><span class="pre">next[j]</span> <span class="pre">=</span> <span class="pre">next[next[j]]</span></code>，但会不会 <code class="docutils literal notranslate"><span class="pre">P[next[next[j]]]</span></code> 也是等于 <code class="docutils literal notranslate"><span class="pre">P[j]</span></code> 的呢？</p>
+<p>当然是有可能的，比如 <code class="docutils literal notranslate"><span class="pre">&quot;ABABAB&quot;</span></code> 或类似这样子的模式串都会有“连续坑”。用朴素的next算法，会得到next数组 <code class="docutils literal notranslate"><span class="pre">[-1,0,0,1,2,3]</span></code>。如果在 <code class="docutils literal notranslate"><span class="pre">P[5]</span></code> 处匹配失败，下一步会跳到 <code class="docutils literal notranslate"><span class="pre">P[next[5]]</span></code> 即 <code class="docutils literal notranslate"><span class="pre">P[3]</span></code>，这个字符还是 <code class="docutils literal notranslate"><span class="pre">'B'</span></code> 所以匹配肯定失败。再下一步会找到 <code class="docutils literal notranslate"><span class="pre">P[next[3]]</span></code> 即 <code class="docutils literal notranslate"><span class="pre">P[1]</span></code>，仍然是坑 <code class="docutils literal notranslate"><span class="pre">'B'</span></code>！</p>
+<p>所以我们上面的算法对吗？我们不是只判断了一步吗？难道不是应该递归地判断下去直到没有坑为止吗？然而算法是对的，大家可以试试在 <code class="docutils literal notranslate"><span class="pre">compute_next_array()</span></code> 函数里增加输出语句来观察next数组的计算结果，比如模式串 <code class="docutils literal notranslate"><span class="pre">&quot;ABABAB&quot;</span></code> 会得到正确的 <code class="docutils literal notranslate"><span class="pre">[-1,0,-1,0,-1,0]</span></code>，连续坑确实被全部填平了的！</p>
+<p>这是为什么？请务必想明白这个问题！</p>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>这个KMP算法应该是到目前为止我们接触到的最为玄学的一个经典算法了，不光算法思路理解有点麻烦，而且代码也有点难读。但是千万记住，KMP是字符串处理的必学算法，哪怕你记不住算法，哪怕你离开课本就写不出这个算法的正确代码，但是必须读懂它，必须用纸笔模拟运行它，必须看懂每一行代码的用意！这个算法非常重要，彻底搞懂KMP算法，尝试着不看教材自己正确地写出来，能做到了，那么大多数的字符串处理问题对你来说都不是问题了。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.3.4.3. </span>小结<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>KMP算法的时间复杂度是 <span class="math notranslate nohighlight">\(O(n+M)\)</span>。其中 <span class="math notranslate nohighlight">\(n\)</span> 是文本串的长度，算法的子串搜索部分由于实现了文本串字符位置不走回头路，所以搜索需要花费的时间为 <span class="math notranslate nohighlight">\(O(n)\)</span>。<span class="math notranslate nohighlight">\(M\)</span> 是模式串的长度，搜索之前要耗费 <span class="math notranslate nohighlight">\(O(M)\)</span> 的时间来计算出整个next数组，这部分的时间复杂度分析相当复杂，就不详细讲解了。总之KMP算法的时间复杂度为 <span class="math notranslate nohighlight">\(O(n+M)\)</span>，这比起蛮力搜索的 <span class="math notranslate nohighlight">\(O(nM)\)</span> 是数量级的改进。</p>
+<p>KMP算法虽然是子串搜索的经典算法，但它现在已经不是最快最好的了。比如1977年发明的Boyer-Moore算法，简称BM算法，从模式串的尾部开始向前匹配，最坏情况下达到 <span class="math notranslate nohighlight">\(O(n)\)</span> 的时间复杂度。在实践中，它比KMP算法的效率略高。1990年发明的Sunday算法，和BM算法一样从后向前进行匹配，它的实现比KMP算法和BM算法都简单，而且在实践中比BM算法的速度更快。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">附加题</p>
+<p>搜索相关资料，学习Sunday算法，并自己编程练习。其实这个算法比KMP可简单得太多了，平均速度据说比KMP快3到5倍，真是一个优秀的算法。</p>
+<p>参考资料：<a class="reference external" href="https://www.subetter.com/algorithm/sunday-algorithm.html">Sunday算法 by 刘毅</a>，<a class="reference external" href="https://blog.csdn.net/q547550831/article/details/51860017">字符串匹配——Sunday算法</a>。</p>
+</div>
+<p>在实际的算法问题编程时，如果需要进行子串搜索，我们完全不推荐手写KMP算法来自己实现，就算你会Sunday算法，我们也完全不推荐自己手写Sunday算法来实现。这种情况下应该遵循“不重复造轮子”的原则，使用语言提供的库函数来进行子串搜索。如果使用C-string来处理字符串，那么请使用 <code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 函数（另有一个在搜索时忽略大小写的 <code class="docutils literal notranslate"><span class="pre">strcasestr()</span></code> 函数和一个限定最大匹配长度的 <code class="docutils literal notranslate"><span class="pre">strnstr()</span></code> 函数，偶尔可能用得着，大家可以自行上网查询它们的用法）。比较复杂一些的字符串处理问题，更建议使用C++ string，它有两个很好用速度也很快的成员函数 <code class="docutils literal notranslate"><span class="pre">string::find()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">string::rfind()</span></code>，前者从前向后找模式串第一次出现的位置，后者从后向前找模式串最后一次出现的位置。</p>
+<p>建议在实际编程时使用现成“轮子”还有一个原因是，这些现成的轮子都是经过优化的，一般自己手写的模板算法在运行效率上是比不过它们的。比如最简单的 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 函数往往在实践中会比自己手写的KMP算法速度更快，C++ string的两个成员函数现在则多是用优化过的Sunday算法实现的，自己手写的模板Sunday算法是不如它们速度快的。</p>
+<p>这种不要重复造轮子的原则在今后我们还会遇到，比如在学习排序算法之后，我们会建议大家在实际编程时使用C++ <code class="docutils literal notranslate"><span class="pre">algorithm</span></code> 库（算法库）提供的排序类函数，而不要自己手写排序函数。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>学些KMP这些经典算法，并不是要大家在实际解决问题的时候自己手写这些经典算法来实现所需功能。学习经典算法的目的是学习这些算法的设计思路和思考问题的一般方法，这些经典算法中凝聚的是算法设计最伟大的智慧和最精妙的思想，学好它们能够大大提升解决算法问题的能力。另外，还要学习从算法到代码的能力和技巧，有了思路还要有能力把思路变成实际的C++代码。这就是为什么我们在前面说过，必须做好理解算法、读懂代码、纸笔模拟，并且手写实现的学习步骤，一步都不能少，甚至可以在此基础上尝试做一做改进优化代码的练习。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="235_palindromic_string.html" title="3.3.5. 回文字符串"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="233_string_basic_3.html" title="3.3.3. 字符串处理基础知识(III)"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" ><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

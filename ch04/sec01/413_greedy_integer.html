@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>5.1.3. 贪心法(III) 整数的分分合合 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="6. 较为复杂的经典算法" href="../../500_medium_algos.html" />
+    <link rel="prev" title="5.1.2. 贪心法(II) 复杂任务调度" href="412_greedy_complex_scheduling.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../500_medium_algos.html" title="6. 较为复杂的经典算法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="412_greedy_complex_scheduling.html" title="5.1.2. 贪心法(II) 复杂任务调度"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../400_basic_algo_design.html" ><span class="section-number">5. </span>算法设计方法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../410_greedy.html" accesskey="U"><span class="section-number">5.1. </span>贪心法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5.1.3. 贪心法(III) 整数的分分合合</a><ul>
+<li><a class="reference internal" href="#id1">5.1.3.1. 找零问题</a></li>
+<li><a class="reference internal" href="#id2">5.1.3.2. 整数最大拼接问题</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="412_greedy_complex_scheduling.html"
+                        title="上一章"><span class="section-number">5.1.2. </span>贪心法(II) 复杂任务调度</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../500_medium_algos.html"
+                        title="下一章"><span class="section-number">6. </span>较为复杂的经典算法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch04/sec01/413_greedy_integer.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="iii">
+<h1><span class="section-number">5.1.3. </span>贪心法(III) 整数的分分合合<a class="headerlink" href="#iii" title="永久链接至标题">¶</a></h1>
+<p>这次讲两个与整数有关的贪心算法例子，分别是<strong>找零问题</strong>和<strong>整数最大拼接问题</strong>。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">5.1.3.1. </span>找零问题<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><strong>找零问题</strong>是许多算法书中贪心算法的入门例题。找零问题看似很简单，但是实际上也大有玄机。</p>
+<p>一个典型的找零问题大概是这样的，给出一套货币的所有面值，比如1元、5元、10元一共三种面值的纸币，数量不限。再给出一个要找零的金额，比如33元，要求出一个找零方案，所用的纸币数量最少。这个问题一看就很简单直接，一般用过钱的人都知道，尽量先挑面值大的就可以得到这个最优解，比如33元就可以是3张10元加3张1元，一共6张纸币，这就是最优解，没有比这数量更少的方法了。这种找零方法显然是一种典型的贪心法。</p>
+<p><strong>找零问题的一般描述</strong></p>
+<p>设有一套货币，共有 <span class="math notranslate nohighlight">\(n\)</span> 种面值，分别为正整数 <span class="math notranslate nohighlight">\(c_1,c_2,\dots,c_n\)</span>，其中 <span class="math notranslate nohighlight">\(c_1=1\)</span>，求一种使用货币数量最少的方法来组合出金额 <span class="math notranslate nohighlight">\(a\)</span>，<span class="math notranslate nohighlight">\(a\)</span> 为大于等于1的整数。</p>
+<p>根据生活经验，如果货币为人民币（不失一般性，暂不考虑角和分这两种货币单位），面值共有1元、2元、5元、10元、20元、50元、100元七种，只要使用如前所述的贪心法，从最大能使用的面额开始，每次都先选用最大面额的人民币，就可以得到最优解。例如79元，按照这个贪心策略，先选用50元的人民币1张，剩余29元继续使用这个策略，先选20元的1张，然后剩余9元，先选5元的1张，最后剩4元就选用2元的2张，这样一共使用了1+1+1+2=5张，这是最优解。</p>
+<p>但是问题来了。首先，怎么证明对于人民币来说这个贪心策略是正确的？其次，是不是任意的面值组合都可以使用贪心法求解？</p>
+<p>事实上并不是任何面值组合的货币都可以用贪心法来求解找零问题的。我们可以举一个反例，比如题目给出的货币面值为1元、5元和7元三种，这套奇怪的货币用贪心法就会失误。假设现在要找零的金额是11元，使用贪心法，先用最大面值的7元货币一张，剩余4元，再用四张1元的，得到贪心解一共需用5张货币。但是实际上最优解是用两张5元和一张1元，一共3张货币。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">结论</p>
+<p>有些货币面值组合不能用贪心法求解找零问题。对于这样的问题可以用一种动态规划的方法来求解，留到以后讲解动态规划方法的时候再详细讲述。</p>
+</div>
+<p>让人不快的是，任意给定一套货币，很难用一种通用的方法来证明它是否适用贪心法。一般我们依据经验和寻找反例来进行判断，大概可以有下面这么几条规则：</p>
+<ol class="arabic simple">
+<li><p>来自真实世界真正在用的货币体系的，比如人民币、美元等，一般都适用贪心法，即使只是取了其中一部分货币。例如著名的《算法导论》里的例题就使用了四种美元硬币：1美分、5美分、10美分和25美分，但它们也是可以用贪心法求解的。</p></li>
+<li><p>可以证明，货币的面值如果从1开始，构成等比数列 <span class="math notranslate nohighlight">\(\{1,c,c^2,\dots,c^k\},(c\gt1,k\gt0)\)</span> 的，一定适用贪心法。在著名的《算法导论》里有详细的证明，但是证明过程比较纯数学，这里就不详细解释了，记住这个结论就好。</p></li>
+<li><p>如果和通常的真实货币面值不同，特别是有一些奇怪的数值，例如7、11等，又构不成等比数列的，就要小心不能使用贪心法了。遇到这样的数值可以用略高于那个奇怪的面值的数字来试试能不能找到反例。</p></li>
+</ol>
+<p>至于可以使用贪心法的情况，程序的编写非常简单，以至于一般面向竞赛的OJ网站上都不会有完全使用贪心法即可解决的找零问题题目。比如力扣网站的322号和518号题目，都是找零问题，但是都不保证所有测试点都适用贪心法。但现在这个阶段请大家一定要自己动手编程试一试下面这个自编的问题：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">人民币找零问题</p>
+<p>输入一个以元为单位的人民币金额 <span class="math notranslate nohighlight">\(a\ge1\)</span>，使用1元、2元、5元、10元、20元、50元、100元七种人民币纸币来组合出这个金额。请使用贪心法计算出使用纸币数量最少的组合方法。</p>
+<p>输出格式：一行七个整数，分别表示1元、2元、5元、10元、20元、50元、100元七种纸币的使用数量，不使用的为0，数字之间用一个空格分隔。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">5.1.3.2. </span>整数最大拼接问题<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p><strong>整数拼接</strong>是指将数个非负整数按一定顺序首尾相接成为一个新的整数，一般来说要求每一个整数都出现在拼接成的新整数中，所以如果有0，不能拼接在最前面。例如0，12，345，可以拼接成123450，或者120345，或者345012，或者345120。<strong>整数最大拼接问题</strong>就是给定 <span class="math notranslate nohighlight">\(n\)</span> 个整数 <span class="math notranslate nohighlight">\(\{a_1,a_2,\dots,a_n\}\)</span>，找到它们能拼接出的最大整数，例如0，12，345能拼接出的最大整数是345120。</p>
+<p>要找到能拼接出的最大整数，应该按照一定的策略从左到右的选择整数进行拼接。这个问题一看就有贪心法的气息，但是它的贪心策略却并不是那么直观的。</p>
+<p>最容易想到的一个策略是从左到右尽量先选数值大的，例如前面举的例子就是按照345、12、0的顺序从大到小进行选择的。但事实如此吗？让我们看看这个例子：4个整数342、45、7、98，如果按照最大者优先的策略，拼接得到的整数为34298457，而正确答案为98745342。</p>
+<p>所以第二种容易想到的策略是把两个整数右对齐之后从高位向低位逐位比较大小，也就是类似字符串的“字典序”比较，优先取字典序最大者。例如上面这个例子的四个数如果视作字符串按字典序排序，那么排序结果为 <code class="docutils literal notranslate"><span class="pre">&quot;342&quot;</span> <span class="pre">&lt;</span> <span class="pre">&quot;45&quot;</span> <span class="pre">&lt;</span> <span class="pre">&quot;7&quot;</span> <span class="pre">&lt;</span> <span class="pre">&quot;98&quot;</span></code>， 依字典序排序后按最大者优先的顺序拼接就能得到正确结果98745342。然而这就是正确的策略了吗？既然这么问，那么答案肯定是 No! No! No! 请看这两个整数：12、121。按照字典序的规则，12小于121，所以拼接结果为12112，但正确答案只有一个，那就是12在前、121在后的12121。</p>
+<p>事实上，无论用数值比较还是用字典序比较，都只有在两个数的位数完全相同的情况下才能确保正确。为了寻找一个正确的贪心策略，我们必须为这个问题设计一种新的顺序，那就是直接比较拼接之后的数值大小来确定先后顺序。</p>
+<p>首先来看两个非负整数的情况，<span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span>，各有 <span class="math notranslate nohighlight">\(A\)</span> 位和 <span class="math notranslate nohighlight">\(B\)</span> 位，一共有两种拼接：<span class="math notranslate nohighlight">\(\overline{ab}=a\times10^{B}+b\)</span> 和 <span class="math notranslate nohighlight">\(\overline{ba}=b\times10^A+a\)</span>。我们直接比较两个拼接后得到的新整数，如果 <span class="math notranslate nohighlight">\(\overline{ab}\gt\overline{ba}\)</span>，那么在拼接时就应该 <span class="math notranslate nohighlight">\(a\)</span> 先于 <span class="math notranslate nohighlight">\(b\)</span>，记作 <span class="math notranslate nohighlight">\(a\prec b\)</span>；反之，若 <span class="math notranslate nohighlight">\(\overline{ab}\lt\overline{ba}\)</span>，那么在拼接时就应该 <span class="math notranslate nohighlight">\(b\)</span> 先于 <span class="math notranslate nohighlight">\(a\)</span>，记作 <span class="math notranslate nohighlight">\(b\prec a\)</span>；若拼接后的两个新整数相等，那么谁先谁后都没有关系，二者先后序相等，用等于号表示。和数值小于关系类似，我们可以定义先于或等于关系 <span class="math notranslate nohighlight">\(\preceq\)</span>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">序和排序</p>
+<p>在离散数学里，像这样给元素定义的明确的先后关系叫做元素的<strong>序</strong>关系，符号 <span class="math notranslate nohighlight">\(\prec\)</span> 称<strong>先于</strong>符，相应的有<strong>后于</strong>符 <span class="math notranslate nohighlight">\(\succ\)</span>。</p>
+<p>通常对于实数，最常用的序关系就是它们的大小关系，但是也可以定义其他的序关系。而对于很多非实数的事物，往往就需要根据实际问题设计一些特定的序关系。比如这里我们就对非负整数设计了一种特定的序，再比如我们已经学过的图顶点的拓扑序。这些都需要具体问题具体分析。</p>
+<p>为某类元素定义一种序，除了进行比较外，最主要的功能是可以对它们进行排序。</p>
+<p>C++语言通过为自定义数据类型重载比较运算和提供自定义比较函数两种方式，使得algorithm库的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code>、<code class="docutils literal notranslate"><span class="pre">stable_sort()</span></code> 等函数具备了对所有类型的数据按任意指定序关系进行排序的能力。</p>
+</div>
+<p>现在拓展到两个以上非负整数拼接的情况。对于给定的 <span class="math notranslate nohighlight">\(n\)</span> 个整数，如果按照 <span class="math notranslate nohighlight">\(a_1 \preceq a_2 \preceq \cdots \preceq a_n\)</span> 的顺序排序并拼接，那么这个拼接就能得到最大整数。也就是说，我们在进行拼接时优先选择先后序<strong>最先</strong>的数。为了证明这个策略的正确性，可以使用微扰法，但是我们首先要证明先后序具有可传递性。即要证明：如果 <span class="math notranslate nohighlight">\(a \prec b\)</span> 而且 <span class="math notranslate nohighlight">\(b\prec c\)</span>，那么 <span class="math notranslate nohighlight">\(a\prec c\)</span>。要证明这个性质并不难，大家可以自己动手试一试。</p>
+<p>假设按照最先者拼接在最左的贪心策略得到的拼接结果是 <span class="math notranslate nohighlight">\(\overline{a_1a_2\cdots a_n}\)</span>，满足 <span class="math notranslate nohighlight">\(a_1 \preceq a_2 \preceq \cdots \preceq a_n\)</span>。如果对这个拼接序列引入微扰，交换其中任意两个数。根据先后序的传递性，这样的扰动必然带入了至少一个逆序对 <span class="math notranslate nohighlight">\(\cdots\overline{a_ia_{i+1}}\cdots\)</span>，其中 <span class="math notranslate nohighlight">\(a_{i+1}\prec a_i\)</span>。那么在这个片段上，新的拼接的数值会变得更小：<span class="math notranslate nohighlight">\(\overline{a_ia_{i+1}}\lt\overline{a_{i+1}a_i}\)</span>。如果这是唯一一个逆序对，那么整个拼接出的整数显然变小了；如果其他地方还有逆序对，那么其他的逆序对片段也都是局部变小了，整个拼接的结果当然也只能是变小了。这就证明了我们的贪心算法的正确性。</p>
+<p>最后我们来看看怎样编制一个解决整数最大拼接问题的程序。程序首先输入一个整数 <span class="math notranslate nohighlight">\(n\gt 1\)</span>，然后连续输入 <span class="math notranslate nohighlight">\(n\)</span> 个整数 <span class="math notranslate nohighlight">\(0\le a_1,\dots,a_n\le 10^9\)</span>，要求输出最大的拼接整数。</p>
+<p><strong>1、定义数据类型</strong></p>
+<p>根据前面的算法描述，我们要对输入的数进行依自定义的拼接先后序的排序，所以不能简单地使用库函数对它们进行排序，而需要使用自定义的比较方法。</p>
+<p>先考虑给排序函数传入自定义比较函数的方法。它进行的是先于比较：<span class="math notranslate nohighlight">\(\overline{ab}=a\times10^{B}+b \gt \overline{ba}=b\times10^A+a\)</span>，这个很容易实现：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="nf">cmp</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">la</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">lb</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>     <span class="c1">// 10^A 和 10^B</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">la</span><span class="p">)</span> <span class="n">la</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>        <span class="c1">// 计算 10^A</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="n">lb</span><span class="p">)</span> <span class="n">lb</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>        <span class="c1">// 计算 10^A</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">lb</span> <span class="o">+</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">*</span> <span class="n">la</span> <span class="o">+</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>但是仔细一想，这种方法虽然可行但是效率堪忧。因为在对整个数组进行排序的时候，要不断地进行两两比较，每一个数都会被多次作为参数调用这个比较函数，里面的两个循环会被重复执行很多次。这是一种极大的浪费，因为对于每一个数 <span class="math notranslate nohighlight">\(a\)</span>，它对应的 <span class="math notranslate nohighlight">\(10^A\)</span> 都只需要被计算一次就够了。所以我们何不定义一个新的结构类型来存放每一个数 <span class="math notranslate nohighlight">\(a_i\)</span> 本身以及 <span class="math notranslate nohighlight">\(10^{A_i}\)</span> 呢？为了让算法主程序的编写更加简洁，甚至可以重载输入流运算符 <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code>，在读入每一个数的同时就计算好与它的位数对应的10的幂次方。并且我们可以直接为它重载小于运算为“先于”运算，这样就可以直接调用排序函数对它排序了。</p>
+<p>于是就有了下面的代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Element</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">num</span><span class="p">;</span>
+	<span class="kt">long</span> <span class="kt">long</span> <span class="n">pow</span><span class="p">;</span>
+
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Element</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">num</span> <span class="o">*</span> <span class="n">b</span><span class="p">.</span><span class="n">pow</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">num</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">num</span> <span class="o">*</span> <span class="n">pow</span> <span class="o">+</span> <span class="n">num</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">istream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">Element</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">is</span> <span class="o">&gt;&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">num</span><span class="p">;</span>
+	<span class="n">e</span><span class="p">.</span><span class="n">pow</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">num</span> <span class="o">/</span> <span class="n">e</span><span class="p">.</span><span class="n">pow</span><span class="p">)</span> <span class="n">e</span><span class="p">.</span><span class="n">pow</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">is</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>算法的主程序于是变得极为简单，建立一个Element类型的vector，逐个读入整数，然后用algorithm库的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数对它整体排序。这里使用速度最快的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 进行不稳定排序即可，因为两个相等的数谁先谁后没有关系。然后把排完序的数逐个按先后次序输出即可。</p>
+<p>需要注意最后输出的步骤有一个隐藏的陷阱：如果输入的整数全为0的话，就不能逐个输出所有数，只需要输出一个0就可以了。这个陷阱要用特判来处理，共有两种特判方法：</p>
+<ol class="arabic simple">
+<li><p>事前特判。在输入数据的同时我们就判断是否输入的全为0，由于本问题没有负数，所以我们可以边输入边对数据求和，输入结束后如果和为0，那么就是全零，否则就一定不是全零。这时候就可以完成特判，如果输入全零，那么输出0并结束程序即可。</p></li>
+<li><p>事后特判。在排完序之后，检查第一个（最先一个）数是不是0，如果是0那么说明全零，这时候输出最先一个数之后，后面的数就不用再输出了。这是因为根据我们定义的先后序规则，0比任何正数都要更后（为什么0后于所有正数，或者说任意正数都先于0，相信大家一定会用数学方法证明出来）。所以除非输入的数全为0，否则0不会出现在最先的位置上。</p></li>
+</ol>
+<p>我的代码采用了事后特判的方法，请看完整的源程序：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">Element</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">num</span><span class="p">;</span>
+	<span class="kt">long</span> <span class="kt">long</span> <span class="n">pow</span><span class="p">;</span>
+
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Element</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">num</span> <span class="o">*</span> <span class="n">b</span><span class="p">.</span><span class="n">pow</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">num</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">num</span> <span class="o">*</span> <span class="n">pow</span> <span class="o">+</span> <span class="n">num</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">istream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">Element</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">is</span> <span class="o">&gt;&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">num</span><span class="p">;</span>
+	<span class="n">e</span><span class="p">.</span><span class="n">pow</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">num</span> <span class="o">/</span> <span class="n">e</span><span class="p">.</span><span class="n">pow</span><span class="p">)</span> <span class="n">e</span><span class="p">.</span><span class="n">pow</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">is</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="n">Element</span><span class="o">&gt;</span> <span class="n">elements</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+	<span class="n">sort</span><span class="p">(</span><span class="n">elements</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">elements</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">num</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">num</span><span class="p">)</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">num</span><span class="p">;</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>力扣网站的179号题就是一个类似的题目，用我们这个算法可以测试通过，并且速度非常之快。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../500_medium_algos.html" title="6. 较为复杂的经典算法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="412_greedy_complex_scheduling.html" title="5.1.2. 贪心法(II) 复杂任务调度"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../400_basic_algo_design.html" ><span class="section-number">5. </span>算法设计方法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../410_greedy.html" ><span class="section-number">5.1. </span>贪心法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

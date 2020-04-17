@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1.6. 高精算法例题：国王游戏（洛谷P1080） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.1.5. 高精度整数算法(IV) 除法及取余" href="315_big_int_4.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="315_big_int_4.html" title="4.1.5. 高精度整数算法(IV) 除法及取余"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" accesskey="U"><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.1.6. 高精算法例题：国王游戏（洛谷P1080）</a><ul>
+<li><a class="reference internal" href="#id1">4.1.6.1. 题目解析</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="315_big_int_4.html"
+                        title="上一章"><span class="section-number">4.1.5. </span>高精度整数算法(IV) 除法及取余</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec01/316_big_int_5.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="p1080">
+<span id="index-0"></span><h1><span class="section-number">4.1.6. </span>高精算法例题：国王游戏（洛谷P1080）<a class="headerlink" href="#p1080" title="永久链接至标题">¶</a></h1>
+<p><strong>题目描述</strong></p>
+<p>恰逢 <span class="math notranslate nohighlight">\(H\)</span> 国国庆，国王邀请 <span class="math notranslate nohighlight">\(n\)</span> 位大臣来玩一个有奖游戏。首先，他让每个大臣在左、右手上面分别写下一个整数，国王自己也在左、右手上各写一个整数。然后，让这 <span class="math notranslate nohighlight">\(n\)</span> 位大臣排成一排，国王站在队伍的最前面。排好队后，所有的大臣都会获得国王奖赏的若干金币，每位大臣获得的金币数分别是：排在该大臣前面的所有人的左手上的数的乘积除以他自己右手上的数，然后向下取整得到的结果。</p>
+<p>国王不希望某一个大臣获得特别多的奖赏，所以他想请你帮他重新安排一下队伍的顺序，使得获得奖赏最多的大臣，所获奖赏尽可能的少。注意，国王的位置始终在队伍的最前面。</p>
+<p><strong>输入格式</strong></p>
+<p>第一行包含一个整数 <span class="math notranslate nohighlight">\(n\)</span>，表示大臣的人数。</p>
+<p>第二行包含两个整数 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span>，之间用一个空格隔开，分别表示国王左手和右手上的整数。</p>
+<p>接下来 <span class="math notranslate nohighlight">\(n\)</span> 行，每行包含两个整数 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span>，之间用一个空格隔开，分别表示每个大臣左手和右手上的整数。</p>
+<p><strong>输出格式</strong></p>
+<p>一个整数，表示重新排列后的队伍中获奖赏最多的大臣所获得的金币数。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>3
+1 1
+2 3
+7 4
+4 6
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+<p><strong>说明/提示</strong></p>
+<p>【输入输出样例说明】</p>
+<p>按 <span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(3\)</span> 这样排列队伍，获得奖赏最多的大臣所获得金币数为 <span class="math notranslate nohighlight">\(2\)</span>；</p>
+<p>按 <span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(3\)</span>、<span class="math notranslate nohighlight">\(2\)</span> 这样排列队伍，获得奖赏最多的大臣所获得金币数为 <span class="math notranslate nohighlight">\(2\)</span>；</p>
+<p>按 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(3\)</span> 这样排列队伍，获得奖赏最多的大臣所获得金币数为 <span class="math notranslate nohighlight">\(2\)</span>；</p>
+<p>按 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(3\)</span>、<span class="math notranslate nohighlight">\(1\)</span> 这样排列队伍，获得奖赏最多的大臣所获得金币数为 <span class="math notranslate nohighlight">\(9\)</span>；</p>
+<p>按 <span class="math notranslate nohighlight">\(3\)</span>、<span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(2\)</span> 这样排列队伍，获得奖赏最多的大臣所获得金币数为 <span class="math notranslate nohighlight">\(2\)</span>；</p>
+<p>按 <span class="math notranslate nohighlight">\(3\)</span>、<span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(1\)</span> 这样排列队伍，获得奖赏最多的大臣所获得金币数为 <span class="math notranslate nohighlight">\(9\)</span>。</p>
+<p>因此，奖赏最多的大臣最少获得 <span class="math notranslate nohighlight">\(2\)</span>。</p>
+<p>【数据范围】</p>
+<p>对于 <span class="math notranslate nohighlight">\(20\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 10,0 \lt a,b \lt 8\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(40\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 20,0 \lt a,b \lt 8\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(60\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 100\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(60\%\)</span> 的数据，保证答案不超过 <span class="math notranslate nohighlight">\(10^9\)</span>；</p>
+<p>对于 <span class="math notranslate nohighlight">\(100\%\)</span> 的数据，有 <span class="math notranslate nohighlight">\(1 \le n \le 1000,0 \lt a,b \lt 10000\)</span>。</p>
+<p>NOIP 2012 提高组 第一天 第二题</p>
+<div class="section" id="id1">
+<h2><span class="section-number">4.1.6.1. </span>题目解析<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>这道题目对于普及组的初学者来说有一定的难度，涉及到一个比较隐蔽的贪心策略和一个简化版高精度算法，同时在实际编程时会遇到复杂结构、排序、STL容器等的灵活运用，代码量比较大，成员函数比较多，对于初学者来说在编程技法上也有较高的考验。下面我们逐步来分析如何解题。</p>
+<p><strong>1、大臣排队的策略发现</strong></p>
+<p>大臣们如何排队才能满足“获得奖赏最多的大臣其所获得的奖赏尽可能少”这个要求呢？这个排队策略是比较隐蔽的，并不容易发现，下面我们来讨论一下怎么找出这个策略。</p>
+<p>假如大臣数量 <span class="math notranslate nohighlight">\(n=1\)</span>，那么没有什么排队可言，所以递推的起点为 <span class="math notranslate nohighlight">\(n=2\)</span>。不妨设国王左右手的数字分别为 <span class="math notranslate nohighlight">\(a_0\)</span> 和 <span class="math notranslate nohighlight">\(b_0\)</span>，两位大臣为 <span class="math notranslate nohighlight">\(p_1\)</span> 和 <span class="math notranslate nohighlight">\(p_2\)</span>，它们的左右手数字分别为 <span class="math notranslate nohighlight">\(a_1,b_1\)</span> 和 <span class="math notranslate nohighlight">\(a_2,b_2\)</span>。显然这时总共有两种排队方法，要么 <span class="math notranslate nohighlight">\(p1\)</span> 在前要么 <span class="math notranslate nohighlight">\(p_2\)</span> 在前：</p>
+<img alt="../../_images/316_p1080_q.png" src="../../_images/316_p1080_q.png" />
+<p>队列1：大臣 <span class="math notranslate nohighlight">\(p_1\)</span> 的奖赏为 <span class="math notranslate nohighlight">\(k^1_1=a_0/b_1\)</span>，<span class="math notranslate nohighlight">\(p_2\)</span> 的奖赏为 <span class="math notranslate nohighlight">\(k^1_2=a_0a_1/b_2\)</span>，奖赏最多的大臣将获得 <span class="math notranslate nohighlight">\(K^1=\max\{k^1_1,k^1_2\}\)</span>。</p>
+<p>队列2：大臣 <span class="math notranslate nohighlight">\(p_2\)</span> 的奖赏为 <span class="math notranslate nohighlight">\(k^2_2=a_0/b_2\)</span>，<span class="math notranslate nohighlight">\(p_1\)</span> 的奖赏为 <span class="math notranslate nohighlight">\(k^2_1=a_0a_2/b_1\)</span>，奖赏最多的大臣将获得 <span class="math notranslate nohighlight">\(K^2=\max\{k^2_2,k^2_1\}\)</span>。</p>
+<p>从上面的计算公式我们可以看出两个基本的不等式：<span class="math notranslate nohighlight">\(k^1_1=a_0/b_1 \lt k^2_1=a_0a_2/b_1\)</span>，<span class="math notranslate nohighlight">\(k^2_2=a_0/b_2 \lt k^1_2=a_0a_1/b_2\)</span>。有了这两个不等式就可以继续后面的分析了。事实上纯粹用代数方法分情况讨论还是很麻烦的，为了观察方便，我们可以把已经知道的这两个数字关系标在数轴上，然后直观地进行几何意义上的分析：</p>
+<img alt="../../_images/316_p1080_cmp.png" src="../../_images/316_p1080_cmp.png" />
+<p>在这个图里，我把队列1时两位大臣的奖赏数点标为蓝色，队列2的两个奖赏数点标为红色。在分别的两个数轴里，我们只关心大小关系，一红一蓝两个点只要顺序不变，二者之间的距离是无所谓的，它们也不会重合。接下来我们要把两条数轴拼合到一起，由于上下两条数轴上的点相互之间的大小关系不确定，所以拼合的时候两条数轴之间可以左右移动，产生多种拼合结果，例如下面这样的各种情况：</p>
+<img alt="../../_images/316_p1080_combined.png" src="../../_images/316_p1080_combined.png" />
+<p>当然拼合的结果远不止这四种，还可以有很多很多种，大家可以试着画画看。但是不论怎样，我们关心的只是最右边（最大）的蓝点和最右边（最大）的红点之间的位置关系。所以我们可以发现，我们只需要关心 <span class="math notranslate nohighlight">\(k^2_1\)</span> 和 <span class="math notranslate nohighlight">\(k^1_2\)</span> 之间的大小关系。</p>
+<ol class="arabic">
+<li><p>如果 <span class="math notranslate nohighlight">\(k^2_1 \lt k^1_2\)</span>，那么 <span class="math notranslate nohighlight">\(k^1_2\)</span> 就一定是最右边的点，它比两个红点都更右边，此时 <span class="math notranslate nohighlight">\(K^1=k^1_2\)</span> 而且一定满足 <span class="math notranslate nohighlight">\(K^1 \gt K^2\)</span>，因此我们应该采取队列2的排法才能使得奖赏的最大值更小。把具体数字代进去我们可以得到：</p>
+<div class="math notranslate nohighlight">
+\[k^2_1 \lt k^1_2 \implies \frac{a_0 \cdot a_2}{b_1} \lt \frac{a_0 \cdot a_1}{b_2} \implies a_2 \cdot b_2 \lt a_1 \cdot b_1\]</div>
+<p>换句话说，要让大臣 <span class="math notranslate nohighlight">\(p_2\)</span> 排在大臣 <span class="math notranslate nohighlight">\(p_1\)</span> 前面，就要使得它左右手数字的乘积更小：<span class="math notranslate nohighlight">\(a_2 \cdot b_2 \lt a_1 \cdot b_1\)</span>。</p>
+</li>
+<li><p>如果 <span class="math notranslate nohighlight">\(k^2_1 \gt k^1_2\)</span>，那么 <span class="math notranslate nohighlight">\(k^2_1\)</span> 就一定是最右边的点，它比两个蓝点都更右边，此时 <span class="math notranslate nohighlight">\(K^2=k^2_1\)</span> 而且一定满足 <span class="math notranslate nohighlight">\(K^2 \gt K^1\)</span>，因此我们应该采取队列1的排法才能使得奖赏的最大值更小。把具体数字代进去我们可以得到：</p>
+<div class="math notranslate nohighlight">
+\[k^2_1 \gt k^1_2 \implies \frac{a_0 \cdot a_2}{b_1} \gt \frac{a_0 \cdot a_1}{b_2} \implies a_2 \cdot b_2 \gt a_1 \cdot b_1\]</div>
+<p>换句话说，要让大臣 <span class="math notranslate nohighlight">\(p_1\)</span> 排在大臣 <span class="math notranslate nohighlight">\(p_2\)</span> 前面，就要使得它左右手数字的乘积更小：<span class="math notranslate nohighlight">\(a_2 \cdot b_2 \gt a_1 \cdot b_1\)</span>。</p>
+</li>
+<li><p>如果 <span class="math notranslate nohighlight">\(k^2_1 = k^1_2\)</span>，那么最右边的蓝点和红点重合，而且 <span class="math notranslate nohighlight">\(K^1=k^1_2=k^2_1=K^2\)</span>，二者相等，取任意一种排队方法都可以，这种情况可以不用考虑。</p></li>
+</ol>
+<p>总之，现在我们可以知道，当 <span class="math notranslate nohighlight">\(n=2\)</span> 时，两个大臣的排法应该是让左右手数字之积较小的那一个排在另一个前面。依此类推，我们完全有理由猜测排队的正确策略是<strong>“按照大臣左右手数字之积从小到大的顺序排队”</strong>。但是我们需要证明，我们的证明方法称为<strong>微扰法</strong>。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这个策略是一个典型的但比较隐蔽的<strong>贪心策略</strong>，即每次都取比较简单的局部最优解，而不考虑复杂的全局最优解。如果每次的局部最优解都不会对前面已经产生的和后续将要产生的局部解产生影响，那么通过每一步都取局部最优，最后能达到全局最优。使用贪心策略来解决问题的方法叫做<strong>贪心法</strong>。使用贪心法解决问题必须证明其贪心策略的正确性，而证明贪心策略正确性的最常用方法即为<strong>微扰法</strong>。关于贪心法，在后续算法设计方法一章中会有专题讲解。</p>
+</div>
+<p>所谓微扰法，就是先假定用待证明的贪心策略生成出了一个贪心解，然后给这个贪心解加入一点与策略相违背的最小程度的改变（微扰），通过证明加入任意微扰后是否会使得解变差或可能变差来证明此贪心策略的正确性。</p>
+<p>设大臣人数为 <span class="math notranslate nohighlight">\(n \gt 2\)</span>，已经按照“左右手数字之积从小到大”的策略排好队伍，设其中奖赏最多的大臣获得的奖赏数为 <span class="math notranslate nohighlight">\(M\)</span>。从游戏规则很容易看出，对于任意两个相邻大臣 <span class="math notranslate nohighlight">\(p_i\)</span> 和 <span class="math notranslate nohighlight">\(p_{i+1}\)</span>，其中 <span class="math notranslate nohighlight">\(1 \le i \lt n\)</span>，改变他们俩在队伍中的顺序，并不会改变排在他们俩前面的大臣们的奖赏，也不会改变排在他们俩后面的大臣们的奖赏。现在记排在 <span class="math notranslate nohighlight">\(p_i\)</span> 前面的所有大臣中获得的最大奖赏数为 <span class="math notranslate nohighlight">\(M_{1:i-1}\)</span>，如果 <span class="math notranslate nohighlight">\(i=1\)</span>，则 <span class="math notranslate nohighlight">\(M_{1:i-1}=0\)</span>；记排在 <span class="math notranslate nohighlight">\(p_{i+1}\)</span> 后面的所有大臣中获得的最大奖赏数为 <span class="math notranslate nohighlight">\(M_{i+2:n}\)</span>，如果 <span class="math notranslate nohighlight">\(i=n-1\)</span>，则 <span class="math notranslate nohighlight">\(M_{i+2:n}=0\)</span>；记他们二人中奖赏较多的那个人的奖赏数为 <span class="math notranslate nohighlight">\(M_{i:i+1}\)</span>，显然现在的全局解 <span class="math notranslate nohighlight">\(M=\max\{M_{1:i-1},M_{i:i+1},M_{i+2:n}\}\)</span>。</p>
+<p>现在调换 <span class="math notranslate nohighlight">\(p_i\)</span> 和 <span class="math notranslate nohighlight">\(p_{i+1}\)</span> 的位置，用这个微扰来改变贪心解。设得到的新的解为 <span class="math notranslate nohighlight">\(M^\prime\)</span>。仍然以这两个大臣为界分为前中后三段，显然，排在他们俩之前的所有大臣中的最高奖赏仍然为 <span class="math notranslate nohighlight">\(M_{1:i-1}\)</span> 不变，排在他俩之后的所有大臣中的最高奖赏也仍然为 <span class="math notranslate nohighlight">\(M_{i+2:n}\)</span> 不会变。改变的仅仅是他俩中得到较高奖赏的那个人的奖赏数，我们把它记为 <span class="math notranslate nohighlight">\(M^\prime_{i:i+1}\)</span>。故 <span class="math notranslate nohighlight">\(M^\prime=\max\{M_{1:i-1},M^\prime_{i:i+1},M_{i+2:n}\}\)</span>。</p>
+<p>现在尽管在这两个大臣可能已经不是紧挨在国王之后的了，但是我们在考虑他们两人的奖赏时，完全可以把他俩前面的所有大臣和国王进行“合体”，即把这些队伍前面的大臣左手上的数字与国王左手上的数字都乘起来，把这个乘积看作是一个“合体”后的国王左手上的数字。这样，我们前面针对 <span class="math notranslate nohighlight">\(n=2\)</span> 情形的结论完全适用于大臣 <span class="math notranslate nohighlight">\(p_i\)</span> 和 <span class="math notranslate nohighlight">\(p_{i+1}\)</span> 的情况，<span class="math notranslate nohighlight">\(M_{i:i+1} \le M^\prime_{i:i+1}\)</span> 恒成立。</p>
+<p>那么，虽然贪心解 <span class="math notranslate nohighlight">\(M=\max\{M_{1:i-1},M_{i:i+1},M_{i+2:n}\}\)</span> 有可能等于 <span class="math notranslate nohighlight">\(M_{1:i-1}\)</span>、<span class="math notranslate nohighlight">\(M_{i:i+1}\)</span>、<span class="math notranslate nohighlight">\(M_{i+2:n}\)</span> 中的任一个，微扰后得到的解 <span class="math notranslate nohighlight">\(M^\prime=\max\{M_{1:i-1},M^\prime_{i:i+1},M_{i+2:n}\}\)</span> 同样也可能等于 <span class="math notranslate nohighlight">\(M_{1:i-1}\)</span>、<span class="math notranslate nohighlight">\(M^\prime_{i:i+1}\)</span>、<span class="math notranslate nohighlight">\(M_{i+2:n}\)</span> 中的任一个，但无论如何，现在成立着这样的关系：<span class="math notranslate nohighlight">\(M \le M^\prime\)</span>。</p>
+<p>结论：对贪心解引入任意逆序微扰都有可能使得全局解的值增大。“按照大臣左右手上数字之积从小到大的顺序排队”是正确的贪心策略，能保证“获得奖赏最多的大臣其所获得的奖赏尽可能少”。</p>
+<p><strong>2、数据的组织，Person结构以及STL算法库排序函数的应用</strong></p>
+<p>得到上面的贪心策略之后，我们就可以搭建出本题算法的框架：</p>
+<ol class="arabic simple">
+<li><p>读入国王和所有大臣的左右手数字，并按各自左右手数字之积进行升序排序。</p></li>
+<li><p>依此计算每一个大臣应得奖赏的数额，并统计出其中的最大值。</p></li>
+<li><p>输出答案。</p></li>
+</ol>
+<p>看上去事情已经非常简单了，但实际上只有第三步还算简单，其他两步都不是那么简单的，对于初学者来说。我们先考虑第一步怎么做。</p>
+<p>数据的组织方式很明确应该是顺序表，每个人（国王和大臣）有左手右手两个数字，显然用一个结构来组织这两个数字并把他们放入一个顺序表中是最合理的数据结构。所以我们可以先定义这样一个数据结构：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Person</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>然后在main函数中用一个vector来存放所有人，按顺序读入所有数据，组织成结构变量依序存放起来即可：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>这样数据就被正确的读入了，按照输入数据格式，国王天然地会被存放在第一个元素。so easy！接下来就是不easy的部分了，排序。感恩吧，现在算法竞赛放开了对C++ STL库的限制，我们不用自己手写排序算法。STL的通用算法库algorithm中提供了一个速度极快的排序算法函数 <code class="docutils literal notranslate"><span class="pre">sort()</span></code>，可以比手写模板快速排序更快那么一丢丢的速度进行排序。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>切记：<code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数提供的不稳定排序。本题无需进行稳定排序，所以我们就用它来进行排序。如果遇到需要进行稳定排序的，要使用algorithm库中的 <code class="docutils literal notranslate"><span class="pre">stable_sort()</span></code> 函数，二者的用法完全一样，区别就在于一个是不稳定排序，一个是稳定排序。</p>
+<p>但是稳定排序的运行速度比不稳定排序要慢许多，所以通常对稳定性没有要求的情况下，都使用不稳定的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code>。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数能对所有STL顺序容器以及普通的C++数组进行升序排序。它可以对其中所有元素或部分连续元素进行排序，比如我们这个题中就需要对除第一个元素（国王）以外的其他元素进行排序，是属于其中一部分。这时候就需要指定一个范围，由两个参数 <code class="docutils literal notranslate"><span class="pre">first</span></code> 和 <code class="docutils literal notranslate"><span class="pre">last</span></code> 按“含头不含尾”的原则指定。如果要排序的是数组，那么这两个参数就是两个指针；如果是对vector这样的STL标准容器，那么要用两个<strong>迭代器</strong>来作为参数。所谓迭代器，其实就是一种包装过的指针。所有容器都提供了首尾两个迭代器，首迭代器用 <code class="docutils literal notranslate"><span class="pre">begin()</span></code> 成员函数获得，指向容器中第一个元素；尾迭代器用 <code class="docutils literal notranslate"><span class="pre">end()</span></code> 成员函数获得，指向容器中最后一个元素之后的那个位置。迭代器和指针一样，是可以进行加减运算的。</p>
+<p>要使用 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数，需要引入algorithm库，也要用到命名空间std。我们这里在读完所有数据后，应该马上调用 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数对第2个元素到最后一个元素这一段数据进行排序：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="c1">// ...</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="n">sort</span><span class="p">(</span><span class="n">persons</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">persons</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+        <span class="c1">// ...</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这样就可以了吗？如果容器中的元素数据类型是C++基本数据类型，这样就可以了。但是 <code class="docutils literal notranslate"><span class="pre">persons</span></code> 中的元素是一个自定义的结构类型，C++本身并不知道怎样比较两个 <code class="docutils literal notranslate"><span class="pre">Person</span></code> 结构变量的大小，所以 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数没法进行元素大小比较，这样是不可能进行排序的！</p>
+<p>既然C++不知道，那么我们就直接告诉 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数怎么比较两个 <code class="docutils literal notranslate"><span class="pre">Person</span></code> 型元素的大小吧。事实上 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 有两个途径可以了解自定义类型元素之间怎么比较大小，一是给这种自定义类型重载小于比较运算 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>，另一种是给 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数传入第三个参数，一个用于比较元素大小的自定义函数。我们建议使用第一种方法，代码比较简洁易读。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p><code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数为什么要提供传入一个比较函数这种较为复杂的方式呢？这是为了应付同一种数据类型在程序中可能有多种比较大小方式的情况。如果在程序某个部分要这样比大小，另一个部分又要那样比大小，重载 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算的方法就不适用了。所以传比较函数的方法也是今后必须要掌握的，下一次遇到需要对自定义类型数据排序的问题时，我们将采用传比较函数的方法。</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>这里我们推荐一种良好的编程习惯：当需要编写大量自定义函数（成员函数）的时候，先在main函数之前写好所有自定义函数的原型，暂时先不要去写函数的定义。我们先集中精力把算法的主程序写完，然后再去写自定义函数。自定义函数的函数体全部放在main函数之后，整个程序各部分的先后顺序依次为：引入库、命名空间、全局变量（常量）、自定义数据结构、自定义函数原型、main函数、自定义函数。这样main函数中的算法主程序和数据结构这些部分尽量贴近，易于阅读。</p>
+</div>
+<p>现在，我们可以完成整个算法的第一步了，读入数据，按照每个元素中两个成员变量的乘积进行升序排序。写完主体后在最后写上 <code class="docutils literal notranslate"><span class="pre">Person</span></code> 结构的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算符重载函数，很简单，返回比较两个乘积的结果即可。下面是这部分的完整代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">Person</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Person</span> <span class="n">p</span><span class="p">;</span>
+		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
+		<span class="n">persons</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">sort</span><span class="p">(</span><span class="n">persons</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">persons</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">Person</span><span class="o">::</span><span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>留一个思考题：<code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数是对容器中元素进行升序排序的，请问你有没有什么办法让它完成降序排序？对于自定义数据类型应该怎么做？对于内置数据类型，比如 <code class="docutils literal notranslate"><span class="pre">int</span></code> 又该怎么做？</p>
+</div>
+<p><strong>3、简化版高精度算法</strong></p>
+<p>接下来我们把算法的剩余部分完成。理论上讲，第2部分只是一个普普通通的最大值在线统计，我们按照游戏规则逐一计算所有大臣的奖赏数额，找出其中最大值，最后输出这个最大值就可以了。但是题目的数据取值范围显示，大臣人数最大可能有1000人，而左手的数字最大可能为9999。在计算大臣奖赏额度时，他前面所有人的左手数字乘积显然会超过C++内置整数中最大的 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 型的取值范围。</p>
+<p>坏消息：来自数据取值范围，必须使用高精度算法。</p>
+<p>但是仔细观察上述取值范围和奖赏数计算方法，我们可以发现所有的数据不超过10000，连乘的时候其中一个乘数必是一万以内的正整数，整个算法中只用到乘法、除法和比较大小三种运算。这就给我们的高精度算法带来了诸多便利：</p>
+<ol class="arabic simple">
+<li><p>恰好可以采用万进制；</p></li>
+<li><p>不需要实现高精度的输入流重载，只需实现输出即可；</p></li>
+<li><p>不需要实现各种赋值，构造器也只需要支持用 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型初始值构造即可，构造器代码会非常简单；</p></li>
+<li><p>只需重载 <code class="docutils literal notranslate"><span class="pre">*=,</span> <span class="pre">/,</span> <span class="pre">&lt;</span></code> 三个运算；</p></li>
+<li><p>因为 <code class="docutils literal notranslate"><span class="pre">*=</span></code> 运算的参数一定是10000以内的正整数，所以乘法可以直接将该参数从低到高依次乘到自身各节上去，然后按运算规则写数进位即可；</p></li>
+<li><p>因为 <code class="docutils literal notranslate"><span class="pre">/</span></code> 运算的除数一定是10000以内的正整数，所以除法可以直接从高到低用各节除以除数，取数留余即可，使用的是 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的除法和取余运算，不需要用高精度减法来模拟。</p></li>
+</ol>
+<p>下面是完整的AC代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">Person</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_BASE</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_s</span><span class="p">;</span>
+
+	<span class="n">BigInt</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">);</span>
+	<span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">*=</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">);</span>
+	<span class="n">BigInt</span> <span class="k">operator</span><span class="o">/</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Person</span> <span class="n">p</span><span class="p">;</span>
+		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
+		<span class="n">persons</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">sort</span><span class="p">(</span><span class="n">persons</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">persons</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+	<span class="n">BigInt</span> <span class="n">left</span><span class="p">(</span><span class="n">persons</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">a</span><span class="p">);</span>
+	<span class="n">BigInt</span> <span class="n">max</span><span class="p">(</span><span class="n">persons</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">a</span> <span class="o">/</span> <span class="n">persons</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">b</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">left</span> <span class="o">*=</span> <span class="n">persons</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">a</span><span class="p">;</span>
+		<span class="n">BigInt</span> <span class="n">current</span> <span class="o">=</span> <span class="n">left</span> <span class="o">/</span> <span class="n">persons</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">b</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">max</span> <span class="o">&lt;</span> <span class="n">current</span><span class="p">)</span> <span class="n">max</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">max</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">Person</span><span class="o">::</span><span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">BigInt</span><span class="o">::</span><span class="n">BigInt</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">*=</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">a</span><span class="p">;</span>
+		<span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">carry</span><span class="p">;</span>
+		<span class="n">carry</span> <span class="o">=</span> <span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">_BASE</span><span class="p">;</span>
+		<span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%=</span> <span class="n">_BASE</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span> <span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">carry</span><span class="p">);</span>
+	<span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">/</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">BigInt</span> <span class="n">q</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">q</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">part</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">part</span> <span class="o">=</span> <span class="n">part</span> <span class="o">*</span> <span class="n">_BASE</span> <span class="o">+</span> <span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="n">q</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span> <span class="o">/</span> <span class="n">a</span><span class="p">;</span>
+		<span class="n">part</span> <span class="o">%=</span> <span class="n">a</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">q</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">q</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">q</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">return</span> <span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="o">--</span><span class="n">i</span><span class="p">];</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">right</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+	<span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p><code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的输出流重载函数和 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 比较函数和前面几节已经讲解过的完全一样。请记住，同种数据类型的变量之间的赋值是不需要自己重载赋值运算来实现的，这种拷贝赋值是C++天生就会完成的任务。</p>
+<p>算法主体程序中，<code class="docutils literal notranslate"><span class="pre">left</span></code> 变量保存到目前为止前面所有人左手上数字的乘积，<code class="docutils literal notranslate"><span class="pre">max</span></code> 变量保存的是到目前为止最大的奖赏数，统计最大值的循环体中的临时变量 <code class="docutils literal notranslate"><span class="pre">current</span></code> 是当前大臣应得的奖赏数。</p>
+<p>最后再强调一下，一定要看懂 <code class="docutils literal notranslate"><span class="pre">*=</span></code> 和 <code class="docutils literal notranslate"><span class="pre">/</span></code> 这两个简化过的高精度乘除运算。</p>
+</div>
+<p>有不少人认为C++新增的高级特性运行速度都很慢，比如vector容器比普通数组慢，比如cin和cout比scanf和printf慢。实际上它们确实是慢一点的，但是一般来说这点慢基本上感觉不出来。特别是vector容器，它的实际运行速度是非常非常接近普通数组的。这个程序的代码可以证明，它们其实并不是某些人想象的那样“慢到飞起”。</p>
+<img alt="../../_images/316_p1080.png" src="../../_images/316_p1080.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="315_big_int_4.html" title="4.1.5. 高精度整数算法(IV) 除法及取余"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" ><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

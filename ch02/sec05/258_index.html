@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.5.8. 简单建索引算法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.6. 基础组合算法与模拟算法" href="../260_other_algos.html" />
+    <link rel="prev" title="3.5.7. 复杂规则的排序技巧" href="257_complex_sorts.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../260_other_algos.html" title="3.6. 基础组合算法与模拟算法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="257_complex_sorts.html" title="3.5.7. 复杂规则的排序技巧"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../250_sort_algos.html" accesskey="U"><span class="section-number">3.5. </span>基础排序算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.5.8. 简单建索引算法</a><ul>
+<li><a class="reference internal" href="#id2">3.5.8.1. 带下标排序</a></li>
+<li><a class="reference internal" href="#id3">3.5.8.2. 逆序统计法</a></li>
+<li><a class="reference internal" href="#id4">3.5.8.3. 计数排序法</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="257_complex_sorts.html"
+                        title="上一章"><span class="section-number">3.5.7. </span>复杂规则的排序技巧</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../260_other_algos.html"
+                        title="下一章"><span class="section-number">3.6. </span>基础组合算法与模拟算法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec05/258_index.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.5.8. </span>简单建索引算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p><strong>建索引</strong>就是不改变原序列，而是为每一个元素生成一个整数值，表示如果对序列进行排序的话，这个元素将被放置到的位置，称为元素的<strong>索引</strong>。如果索引从1开始编号的话，元素的索引值也就是这个元素在序列中排第几小的序号，索引为1的元素是最小的元素，索引为k的元素是就是序列的k位数。当然在C++语言中容器和数组的元素位置都是从0开始编号的，所以k位数的索引应该是k-1。</p>
+<p>通常，对于长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span>，元素的索引值就取从 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(n-1\)</span> 的整数，元素的索引值都是唯一的，互不相同。算法会生成一个新的长度为 <span class="math notranslate nohighlight">\(n\)</span> 的整数序列 <span class="math notranslate nohighlight">\(K\)</span> 用来存放所有元素的索引值，<span class="math notranslate nohighlight">\(K[i]\)</span> 存放元素 <span class="math notranslate nohighlight">\(A[i]\)</span> 的索引，表示如果对序列 <span class="math notranslate nohighlight">\(A\)</span> 进行排序的话，位于位置 <span class="math notranslate nohighlight">\(i\)</span> 的元素 <span class="math notranslate nohighlight">\(A[i]\)</span> 排序后的新位置将是 <span class="math notranslate nohighlight">\(K[i]\)</span>。这个新的序列 <span class="math notranslate nohighlight">\(K\)</span> 称为 <span class="math notranslate nohighlight">\(A\)</span> 的<strong>索引表</strong>。建索引算法的任务就是为一个序列按照一定的排序规则建立索引表，但不改变原序列。</p>
+<p>建索引的算法通常需要用到一些高级数据结构，最常见的是用B树、B+树等检索树结构，是属于比较复杂的算法。但是对于一些特殊场景，也有一些简单的建索引算法，不需要用到高级数据结构就可以实现，但是在时间或者空间上就会有所限制。这一节我们将介绍几种这样的简单索引算法。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">3.5.8.1. </span>带下标排序<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>对长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span> 建索引最简单粗暴的做法是所谓的“带下标排序”。定义一个结构类型，把元素和元素在序列中的位置序号复制一份一起保存起来，然后对复制出来的结构类型序列进行排序，排完序后把保存起来的老位置和排完序后的新位置对应起来就得到了索引。</p>
+<p>例如下面这个程序：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="c1">// 用来组合原数据及其原数组中位置下标的结构类型，重载小于运算以便排序</span>
+<span class="k">struct</span> <span class="n">Combo</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>  <span class="c1">// 数据</span>
+        <span class="kt">int</span> <span class="n">index</span><span class="p">;</span> <span class="c1">// 下标</span>
+        <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Combo</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">.</span><span class="n">data</span><span class="p">;</span> <span class="p">}</span> 
+<span class="p">};</span>
+
+<span class="c1">// 工具函数</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>  <span class="c1">// 数据量</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>         <span class="c1">// 数据原数组</span>
+        <span class="n">Combo</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Combo</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>      <span class="c1">// 带下标的结构变量数组，临时排序用</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+                <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  <span class="c1">// 读入数据的同时生成临时结构数组</span>
+                <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">tmp</span> <span class="o">+</span> <span class="n">n</span><span class="p">);</span>        <span class="c1">// 排序，根据需要也可用稳定排序 stable_sort()</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">ind</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>          <span class="c1">// 生成空索引表</span>
+        <span class="c1">// 遍历排好序的临时结构体，建立索引表</span>
+        <span class="c1">// tmp[i].index 是这个数在原数组里的下标</span>
+        <span class="c1">// i 是这个数排完序后的下标位置，也就是索引值</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">ind</span><span class="p">[</span><span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">tmp</span><span class="p">;</span>          <span class="c1">// 删除临时数组，释放空间</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>         <span class="c1">// 输出结果：原数组</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>          <span class="c1">// 输出结果：索引表</span>
+
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">ind</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">data</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种方法在排序前要进行一次数据加下标的包装，复制到一个临时数组里，这是 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间的操作，排序后建立索引表的过程也是 <span class="math notranslate nohighlight">\(O(n)\)</span> 的，所以整个过程的时间复杂度取决于对临时数组的排序时间。若采用C++算法库的不稳定排序函数 <code class="docutils literal notranslate"><span class="pre">std::sort()</span></code> 则约为 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>，若采用其稳定排序函数 <code class="docutils literal notranslate"><span class="pre">std::stable_sort()</span></code> 则大约在 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 到 <span class="math notranslate nohighlight">\(O(n\log^2 n)\)</span> 之间。从时间效率来看还是不错的。但是它的空间复杂度比较大，需要 <span class="math notranslate nohighlight">\(O(n)\)</span> 的额外空间占用。</p>
+<p>这种方法思路极其简单，不容易错不容易忘，但是代码量有点偏大，不过速度不慢，在空间不成问题的情况下，也不失为一种好用的方法。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.5.8.2. </span>逆序统计法<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>通过观察，其实不难发现一个元素的索引值由三个因素决定，它在原序列中的位置下标 <span class="math notranslate nohighlight">\(i\)</span>、原序列中位于它之前但是大于它的元素数量 <span class="math notranslate nohighlight">\(s\)</span>、原序列中位于它之后但是小于它的元素数量 <span class="math notranslate nohighlight">\(t\)</span>，它最终的索引值为 <span class="math notranslate nohighlight">\(k=i-s+t\)</span>。</p>
+<p>例如序列 [3, 1, 17, 8]，如果对它建立索引，那么索引表应该是 [1, 0, 3, 2]。对它的每一个数字进行分析如下：</p>
+<ol class="arabic simple">
+<li><p>元素3，在原序列中下标为0，在它之前没有元素，在它之后有1个元素小于它，说明元素3如果排序，它应该向后移动1个位置，以便把它后面那1个比它小的元素放到它前面去，所以元素3的索引为 <span class="math notranslate nohighlight">\(0+1=1\)</span>。</p></li>
+<li><p>元素0，在原序列中下标为1，在它之前有1个元素比它大，因此如果排序，它首先要向前移动1个位置，以便把它前面的那个逆序数放到它后面去，在它后面没有比它小的逆序元素，所以元素1的索引为 <span class="math notranslate nohighlight">\(1-1=0\)</span>。</p></li>
+<li><p>元素17，在原序列中下标为2，在它之前没有元素比它大，在它之后有1个元素小于它，说明元素17如果排序，它应该向后移动1个位置，以便把它后面那1个比它小的元素放到它前面去，所以元素17的索引为 <span class="math notranslate nohighlight">\(2+1=3\)</span>。</p></li>
+<li><p>元素8，在原序列中下标为3，在它之前有1个元素比它大，因此如果排序，它首先要向前移动1个位置，以便把它前面的那个逆序数放到它后面去，在它后面没有元素了，所以元素1的索引为 <span class="math notranslate nohighlight">\(3-1=2\)</span>。</p></li>
+</ol>
+<p>概括来说，元素的索引可以由其原有位置根据其前后与之构成逆序的其他元素数量来确定。对于原序列中位于位置 <span class="math notranslate nohighlight">\(i\)</span> 的元素，设在它之前有 <span class="math notranslate nohighlight">\(s\)</span> 个元素比它大，那么首先要把它向前移动 <span class="math notranslate nohighlight">\(s\)</span> 个位置，以便把那 <span class="math notranslate nohighlight">\(s\)</span> 个比它大的元素搬到它后面去，消除逆序，如此一来在它的新位置 <span class="math notranslate nohighlight">\(i-s\)</span> 之前所有元素都不大于它了。再看它的后面，设有 <span class="math notranslate nohighlight">\(t\)</span> 个元素比它小，所以接下来又要把它向后移动 <span class="math notranslate nohighlight">\(t\)</span> 个位置以便把这些元素搬到它前面去，于是它最终应该处于的位置，也就是其索引值应为 <span class="math notranslate nohighlight">\(i-s+t\)</span>。而且这样一个算法建立的索引，如果对应到排序之后的顺序，是具有稳定性的，请大家思考一下为什么它是稳定的。</p>
+<p>实际编程的时候，上面这个过程还可以优化一下。我们首先建立一张初始的索引表，初始索引就用元素在原序列中的位置下标。然后从第一个元素开始，对每一个元素检查在它后面而且值更小的元素，每发现一个就把元素的索引值加1，同时把那个比它小的元素的索引值减1。这样我们就不再需要寻找元素之前比它大的元素了，因为对于任何一个元素，它之前如果有比它大的元素，那么在前面的循环中已经检查到过而且已经相应地把自己的索引值减下去过了。</p>
+<p>例如前面所举的那个例子，序列 [3, 1, 17, 8]，按照我们的算法它的建立索引表过程如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>初始状态：
+
+数据：[3, 1, 17, 8]
+索引：[0, 1, 2,  3]
+
+第1步，元素3与其后3个元素逐个比较，发现元素1比3小，因此元素3的索引加1，元素1的索引减1
+数据：[3, 1, 17, 8]
+索引：[1, 0, 2,  3]
+
+第2步，元素1与其后2个元素逐个比较，没有比1更小的元素，索引值无变化
+数据：[3, 1, 17, 8]
+索引：[1, 0, 2,  3]
+
+第3步，元素17与其后1个元素逐个比较，发现元素8比17小，因此元素17的索引加1，元素8的索引减1
+数据：[3, 1, 17, 8]
+索引：[1, 0, 3,  2]
+
+第4步，元素8为最后一个元素，建索引结束
+</pre></div>
+</div>
+<p>最终得到的索引表为 [1, 0, 3, 2]，没有问题。这个算法的编程也很简单，很适合考场使用，程序如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">index</span><span class="p">(</span><span class="kt">int</span> <span class="n">da</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">dx</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">da</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="o">*</span><span class="n">dx</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">da</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+                <span class="n">dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">index</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">da</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">dx</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">index</span><span class="p">(</span><span class="kt">int</span> <span class="n">da</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">dx</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">da</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">da</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span> <span class="o">++</span><span class="n">dx</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="o">--</span><span class="n">dx</span><span class="p">[</span><span class="n">j</span><span class="p">];</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个算法没有使用额外空间，空间复杂度为 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
+<p>以元素比较为基本运算，此算法的工作量和冒泡排序一样是 <span class="math notranslate nohighlight">\(1+2+\cdots+(n-1)=\frac{n(n-1)}{2}\)</span>，所以时间复杂度为 <span class="math notranslate nohighlight">\(O(n^2)\)</span>，但是因为它没有元素交换、搬移之类的操作，所以实际运行速度要略快于冒泡排序。</p>
+<p>在数据量不大的情况下，使用这种方法来建立索引还是可行的，况且这个算法的代码量实在是简短到感人，所以在适当的问题规模内也是经常会用到的一种简单索引算法。</p>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">3.5.8.3. </span>计数排序法<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>前面两种方法各有优缺点，带下标排序法可以达到接近于排序算法的速度，但是空间消耗大，代码略显复杂，逆序统计法时间复杂度偏高，不适合大数据量。那么不使用高级数据结构，有没有折中一点的更好的建索引方法呢？对于符合计数排序要求的数据，我们可以修改一下计数排序算法来实现快速建索引。</p>
+<p>在讲解计数排序的时候我们说过，数据满足以下几个条件的，就可以考虑采用计数排序法进行排序：</p>
+<ol class="arabic simple">
+<li><p>关键字的值属于一个有限集合；</p></li>
+<li><p>关键字的值本身就是或者可以一一对应到从0开始的一段整数范围之内；</p></li>
+<li><p>关键字的值或其对应到的整数范围不是太大，一般在10万以内是可以接受的。</p></li>
+</ol>
+<p>常见的一种计数排序算法采用“计数 -&gt; 计数前缀和 -&gt; 确定元素位置 -&gt; 将元素放置到正确位置”这样一个流程，那么我们现在只要把流程的最后一步“把元素放置到正确位置”改成“记录下元素的正确位置”就将计数排序改成了建立索引表。非常非常简单，例如下面这个程序，实现了对取值范围为0到9999的整数序列进行计数排序法建索引的功能：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">cnt</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">10000</span><span class="p">]();</span>    <span class="c1">// 计数数组，动态申请数组时加上()会自动初始化为全0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+                <span class="o">++</span><span class="n">cnt</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>         <span class="c1">// 一边输入数据一边计数</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="c1">// 计数值前缀和，使计数变成累积计数</span>
+                <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">index</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>        <span class="c1">// 分配索引表数组</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span><span class="c1">// 将排序改成记录排序后的位置，即完成索引表的建立</span>
+                <span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">--</span><span class="n">cnt</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">cnt</span><span class="p">;</span>
+
+        <span class="n">print</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">data</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="p">[]</span> <span class="n">index</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个算法，空间复杂度为 <span class="math notranslate nohighlight">\(O(K)\)</span>，其中 <span class="math notranslate nohighlight">\(K\)</span> 为取值范围的宽度（现在索引表占用的一个 <span class="math notranslate nohighlight">\(O(n)\)</span> 的空间已经不是临时空间而是所需要的算法结果了，所以不能算入空间复杂度里去）。时间复杂度为 <span class="math notranslate nohighlight">\(O(n+K)\)</span>，当然了它是指数时间，不是线性时间这一点一定要搞明白，当 <span class="math notranslate nohighlight">\(K\)</span> 很大时就不太好用了，超过100万会突然变得奇慢无比而且空间占用极大，很容易造成空间耗尽的MLE错误。当有关键字重复的元素时，它排出来的索引是具有稳定性的。对于符合计数排序条件的合适的问题，这是一个实际运行非常快速的索引算法，是很实用的。</p>
+<p>上面所述的三种比较简单，不需要用到复杂的数据结构的建索引算法。虽然各有各的局限性，但它们有一个共同的优点就是简单，无论是设计思想还是编程实现都不难，在实际问题中也有不少场景适用，所以也是非常重要的基础算法。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>逆序统计法或计数排序法，任选一种，将示例程序改写为按逆序建索引，要求索引位置具有稳定性。</p>
+</div>
+<p>最后再考虑一种特殊情况。前面三种都是通常意义上的建索引，而且都具有稳定性。比如对整数序列 [98, 95, 100, 95, 90] 建立逆序的索引表，得到的索引表会是 [1, 2, 0, 3, 4]，其中前后两个元素95在索引表中还是保持原来的前后相对位置。但是还有一种应用场景非常类似于建索引，但在处理同值元素时规则不同，那就是排名次。</p>
+<p>比如在按照考试成绩排名次的时候，如果所有学生的分数各不相同，那么排名次就等价于建索引。但是如果有同分的情况，那就要使用并列名次的规则。比如上面这个整数序列 [98, 95, 100, 95, 90]，假如它是五名学生的语文考试成绩，那么它们的名次应该是 [2, 3, 1, 3, 5]。它和索引有两个区别：</p>
+<p>一是索引从0开始计数，名次从1开始计数。这个区别无关紧要，不过是把索引值每一个都加了1而已，我们可以有无数种方法来处理这点区别。</p>
+<p>重要的区别在于并列名次的处理。现在两个同为95的元素的索引不再一前一后了，而是同为3，表示并列第三名，而它后面的90则不能算作第四名，有两个并列第三，就会吃掉第四名，接下来就应该是第五名了。这个根据考试成绩排名次的规则大家应该非常熟悉了吧。那么该怎么办呢？带下标排序法、逆序统计法、计数排序法三种方法哪一种最适合改造成排名次算法？要怎么改造？这留作本节的第二个练习题。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>编写一个程序实现对 <span class="math notranslate nohighlight">\(n\)</span> 名学生按考试成绩排名次。每名学生有一个学号，从1号开始一直到 <span class="math notranslate nohighlight">\(n\)</span> 号，考试成绩表按学号排序。考试成绩最高分为120分，最低0分，均为整数。现要求按成绩进行排名，分数最高的为第1名，排名不得改变原有的考试成绩表。</p>
+<p>输入格式：第一行一个整数 <span class="math notranslate nohighlight">\(n\)</span>，范围为 <span class="math notranslate nohighlight">\(0\lt n \lt 1000\)</span>，后面 <span class="math notranslate nohighlight">\(n\)</span> 个整数，每个一行，依次为学号1号到 <span class="math notranslate nohighlight">\(n\)</span> 号的学生的分数，按学号顺序排列。</p>
+<p>输出格式：<span class="math notranslate nohighlight">\(n\)</span> 行，每行一个整数，第一行的整数为1号学生的名次，第二行为2号学生的名次，依此类推直到 <span class="math notranslate nohighlight">\(n\)</span> 号学生的名次。</p>
+<p>测试用例数据文件下载： <a class="reference download internal" download="" href="../../_downloads/efef989769d9c344455ed1bd68049b8c/rank.in"><code class="xref download docutils literal notranslate"><span class="pre">学生成绩排名测试点输入文件</span></code></a>， <a class="reference download internal" download="" href="../../_downloads/7ac32d2641757f4816c190bb6682bf7d/rank.out"><code class="xref download docutils literal notranslate"><span class="pre">学生成绩排名测试点输出文件</span></code></a></p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>1、可以假设还有一个虚拟的121分，而得到121分的人数肯定是0人。</p>
+<p>2、按照排名规则，得X分的学生的名次应该是所有得高于X分的学生人数加一。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../260_other_algos.html" title="3.6. 基础组合算法与模拟算法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="257_complex_sorts.html" title="3.5.7. 复杂规则的排序技巧"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../250_sort_algos.html" ><span class="section-number">3.5. </span>基础排序算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

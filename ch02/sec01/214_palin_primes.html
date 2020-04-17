@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.1.4. 回文质数（USACO1.5；洛谷P1217） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.1.5. 有理小数的精确表示" href="215_long_decimal.html" />
+    <link rel="prev" title="3.1.3. 回文数专题" href="213_palindrome_numbers.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="215_long_decimal.html" title="3.1.5. 有理小数的精确表示"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="213_palindrome_numbers.html" title="3.1.3. 回文数专题"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../210_basic_number_algos.html" accesskey="U"><span class="section-number">3.1. </span>简单数值算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.1.4. 回文质数（USACO1.5；洛谷P1217）</a><ul>
+<li><a class="reference internal" href="#id1">3.1.4.1. 朴素的算法</a></li>
+<li><a class="reference internal" href="#id2">3.1.4.2. 从质数中找回文数</a></li>
+<li><a class="reference internal" href="#id3">3.1.4.3. 从回文数中找质数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="213_palindrome_numbers.html"
+                        title="上一章"><span class="section-number">3.1.3. </span>回文数专题</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="215_long_decimal.html"
+                        title="下一章"><span class="section-number">3.1.5. </span>有理小数的精确表示</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec01/214_palin_primes.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="usaco1-5-p1217">
+<span id="index-0"></span><h1><span class="section-number">3.1.4. </span>回文质数（USACO1.5；洛谷P1217）<a class="headerlink" href="#usaco1-5-p1217" title="永久链接至标题">¶</a></h1>
+<p><strong>题目描述</strong></p>
+<p>因为151既是一个回文数又是一个质数，所以称151是一个回文质数。</p>
+<p>写一个程序来找出范围在 <span class="math notranslate nohighlight">\([a,b],(5\le a\lt b\le 100,000,000)\)</span> 之间的所有回文质数。</p>
+<p><strong>输入格式</strong></p>
+<p>第1行：二个整数，a和b。</p>
+<p><strong>输出格式</strong></p>
+<p>按从小到大的顺序输出一个回文质数的列表，一行一个。</p>
+<p><strong>输入输出样例</strong></p>
+<p>输入：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>5 500
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>5
+7
+11
+101
+131
+151
+181
+191
+313
+353
+373
+383
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2><span class="section-number">3.1.4.1. </span>朴素的算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>遇到问题，一般总是先从最朴素的思路出发考虑如何解决。这个题最朴素的思路就是从最小值 <span class="math notranslate nohighlight">\(a\)</span> 到最大值 <span class="math notranslate nohighlight">\(b\)</span> 挨个儿把所有整数循环一遍，然后对每一个数判断它是否既是质数又是回文数。非常简单直接粗暴，这种思路一般叫做<strong>枚举法</strong>或<strong>蛮力法</strong>。</p>
+<p>由于偶数不可能是质数，个位数为5的奇数除5以外也不可能是质数，所以我们只需要暴力搜索所有奇数，并且抛弃除了5以外那些个位数为5的数，这样可以节省一大半时间。同时因为偶数已经全部抛弃，所以在判断一个数是不是质数时，可以从3开始找它的因数，而不是从2开始，这样又可以稍微节省一丢丢的时间。下面我们把代码写出来，试着运行一下看看效果如何。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">bool</span> <span class="nf">is_prime</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">is_palindrome</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">is_prime</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">prime</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="hll">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">f</span> <span class="o">*</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">prime</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="n">f</span><span class="p">);</span> <span class="n">f</span><span class="o">++</span><span class="p">);</span>
+</span>	<span class="k">return</span> <span class="n">prime</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">ori</span> <span class="o">=</span> <span class="n">n</span><span class="p">,</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">)</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">rev</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">ori</span> <span class="o">==</span> <span class="n">rev</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这个蛮力算法的程序其实没有什么可多解释的，非常简单直接。</p>
+<p>唯一值得一看的地方是函数 <code class="docutils literal notranslate"><span class="pre">is_prime()</span></code> 用了一点小技巧来使得代码更简洁。通常中规中矩的质数判断会在循环体中检查是否发现因数，一旦发现一个因数就中断循环并返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>，否则直到循环结束后返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。这里我们换了一种写法，先预设一个逻辑型变量 <code class="docutils literal notranslate"><span class="pre">prime</span></code> 作为是否质数的标志，初始化它为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。然后在寻找因数时，我们利用C++语言把0视为 <code class="docutils literal notranslate"><span class="pre">false</span></code>、非0视为 <code class="docutils literal notranslate"><span class="pre">true</span></code> 的特点，用余数去直接赋值它。如果余数为0，说明找到了一个因数，这会使 <code class="docutils literal notranslate"><span class="pre">prime</span></code> 被赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>；如果余数不为0则恰好相反。然后我们把这个赋值表达式直接用在循环条件里，使得一旦这个标志成为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，循环就会中止。如果一直找不到因数，那么它就会始终保持为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。于是循环体里面就不需要做任何事情了，该做的事情在判断循环条件时就一并做完了，空循环足矣。最终我们只要返回这个 <code class="docutils literal notranslate"><span class="pre">prime</span></code> 的值就可以了。</p>
+<p>如果你看到这里还不明白这个小技巧的运行原理，我建议找几个小一点的奇数在纸面上自己模拟运行一下看看，把这个小技巧搞懂。如果你对这种小技巧不感兴趣，你也完全可以忽视它，就用中规中矩的方式写程序。这并没有什么实质性的区别。</p>
+</div>
+<p>如果测量一下这个程序的运行时间，我们发现当数据范围在5到1,000,000的时候，它大概要运行250ms的样子，在可以接受的秒答范围内。当数据范围扩大到5到3,000,000时，它大概率就要运行1秒以上才能结束了。当数据范围扩大到5到10,000,000时它大概要运行6400ms左右，远远超出了算法竞赛所要求的一秒限制。而当数据范围扩大到本题所给出的5到100,000,000时它竟然运行了近170秒！</p>
+<p>蛮力算法有三大特点：思路简单、程序不易错、运行常超时。而常超时这个大缺点彻底掩盖了简单和不易错两个优点，使得在算法编程中往往不能采用这种方法。这也促使我们要不断设法改进思路，设计出更加精妙的高性能算法。但是那样的算法也一定更加复杂和难懂。</p>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">3.1.4.2. </span>从质数中找回文数<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>朴素算法的问题在于毫无差别地枚举了所有可能的数，并且对每一个数都进行质数判断和回文数判断。所以我们能够想到的一种改进是用埃氏筛子筛出从 <span class="math notranslate nohighlight">\(a\)</span> 到 <span class="math notranslate nohighlight">\(b\)</span> 之间的所有质数。每筛出一个质数，就判断它是不是回文数。在筛子正常筛选结束后，别忘了继续向后遍历完范围内的所有质数。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mf">1e8</span><span class="p">;</span>
+<span class="kt">bool</span> <span class="n">primes</span><span class="p">[</span><span class="n">MAXN</span><span class="o">+</span><span class="mi">10</span><span class="p">];</span>
+
+<span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+
+	<span class="n">memset</span><span class="p">(</span><span class="n">primes</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">primes</span><span class="p">));</span>
+	<span class="n">primes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">p</span><span class="p">)</span>
+			<span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;=</span> <span class="n">a</span> <span class="o">&amp;&amp;</span> <span class="n">is_palindrome</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">primes</span><span class="p">[</span><span class="o">++</span><span class="n">p</span><span class="p">]);</span>
+	<span class="p">}</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;=</span> <span class="n">a</span> <span class="o">&amp;&amp;</span> <span class="n">is_palindrome</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">primes</span><span class="p">[</span><span class="o">++</span><span class="n">p</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">ori</span> <span class="o">=</span> <span class="n">n</span><span class="p">,</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">)</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">rev</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">ori</span> <span class="o">==</span> <span class="n">rev</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>加上测量运行时间的功能后运行这个程序可以看到速度有了明显提升，但是当数据范围扩大到接近一亿时运行时间仍然超过了1秒。在洛谷网站实测，10个测试点中后5个TLE，耗时都在1.2秒左右。对每一个步骤进行计时分析后发现，问题出在埃筛进行质数筛选的初期，特别是筛除2的倍数和3的倍数时，由于数据规模太大，2的倍数和3的倍数过多，导致速度很慢。我们的算法已经接近成功了，但是还需要一点改进。</p>
+<p>上一节曾经说过，偶数位的回文数除了11以外全部是合数。而10<sup>8</sup>以内最大的奇数位回文质数通过打表可以知道是9989899。所以我们至少可以把数据的最大值限制在9989899封顶的范围内，这就比一亿小了10倍，值得一试。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mf">1e8</span><span class="p">;</span>
+<span class="kt">bool</span> <span class="n">primes</span><span class="p">[</span><span class="n">MAXN</span><span class="o">+</span><span class="mi">10</span><span class="p">];</span>
+
+<span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+
+<span class="hll">	<span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">9989899</span> <span class="o">?</span> <span class="mi">9989899</span> <span class="o">:</span> <span class="n">b</span><span class="p">;</span>
+</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">primes</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">primes</span><span class="p">));</span>
+	<span class="n">primes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">p</span><span class="p">)</span>
+			<span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;=</span> <span class="n">a</span> <span class="o">&amp;&amp;</span> <span class="n">is_palindrome</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">primes</span><span class="p">[</span><span class="o">++</span><span class="n">p</span><span class="p">]);</span>
+	<span class="p">}</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;=</span> <span class="n">a</span> <span class="o">&amp;&amp;</span> <span class="n">is_palindrome</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">primes</span><span class="p">[</span><span class="o">++</span><span class="n">p</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">ori</span> <span class="o">=</span> <span class="n">n</span><span class="p">,</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">)</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">rev</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">ori</span> <span class="o">==</span> <span class="n">rev</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>只需要加一句语句，然后在洛谷网站测试一下，结果全部测试点AC。从测试点的运行时间来看，当数据规模从10<sup>7</sup>增长到10<sup>8</sup>后埃筛的耗时增长幅度高达4至5倍。</p>
+<img alt="../../_images/214_p1217_ER.png" src="../../_images/214_p1217_ER.png" />
+<p>那么有没有更加好的方法？答案是有的。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.1.4.3. </span>从回文数中找质数<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>进一步考量回文质数除11以外全部是奇数位的性质，容易发现从5到100的范围内其实只有3个回文质数：5、7、11。如果我们事先把这三个数特判掉，那么剩下的回文质数可选范围就只能是三位数、五位数和七位数了。三位的回文数从101到999，最高两位从10到99一共有90种可能，最低位由最高位确定，故三位回文数一共有90个。类似的，五位回文数由最高三位确定，一共有900个；七位回文数由最高四位确定，一共9000个。总共只有9990个候选回文数。再加上质数的个位数不能是偶数或5，所以最高位只能选用1、3、7、9这四个数，这让候选回文数的数量锐减到只有4440个，比起从5到9989899之间的质数数量（663959个）要少很多。</p>
+<p>所以我们只要设法构造出这4440个候选回文数，然后判断它们是否为质数即可，这是一个非常高效的算法。构造奇数位数的回文数并不难，使用一个三层循环就可以了。外循环依次生成最高位（1、3、7、9），第二层循环依次生成最高位和中间位之间的数，最内层循环从0到9循环生成整个回文数的中间位，并在最内层循环体中完成回文数的构造。</p>
+<p>用 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">f</span></code> 表示最高位，用 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">m</span></code> 表示最高位和中间位之间的部分，用 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">l</span></code> 表示中间位的数。另外用一个宽度变量 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">size</span></code> 来表示当前要生成几位的回文数。</p>
+<ul class="simple">
+<li><p>三位回文数，最高位和中间位之间没有数位，<code class="docutils literal notranslate"><span class="pre">m</span></code> 没得选择，只能为0，用 <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">1</span></code> 来表示要构造三位回文数。</p></li>
+<li><p>五位回文数，最高位和中间位之间有一个数位，<code class="docutils literal notranslate"><span class="pre">m</span></code> 有从0到9一共十种选择，用 <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">10</span></code> 来表示要构造五位回文数。</p></li>
+<li><p>七位回文数，最高位和中间位之间有两个数位，<code class="docutils literal notranslate"><span class="pre">m</span></code> 有从0到99一共一百种选择，用 <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">100</span></code> 来表示要构造七位回文数。</p></li>
+</ul>
+<p>当给定一组 <code class="docutils literal notranslate"><span class="pre">f,</span> <span class="pre">m,</span> <span class="pre">l,</span> <span class="pre">size</span></code> 时，我们就可以用下面这个算法来构造出一个回文数，其中 <code class="docutils literal notranslate"><span class="pre">Reverse</span></code> 是整数反转。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">算法</p>
+<p><span class="math notranslate nohighlight">\(\text{Palindrome}(f, m, l, size):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(p\leftarrow f\times size + m\)</span></p>
+<p><span class="math notranslate nohighlight">\(r\leftarrow \text{Reverse}(p)\)</span></p>
+<p><span class="math notranslate nohighlight">\(p\leftarrow (p\times10+l)\times size\times10+r\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{return }p\)</span></p>
+</div></blockquote>
+</div>
+<p>让这些变量按要求循环起来就可以构造候选回文数了，在程序中我们先把下界 <span class="math notranslate nohighlight">\(a\)</span> 和上界 <span class="math notranslate nohighlight">\(b\)</span> 限制在101和9989899之间，然后依次去构造三位、五位和七位的候选回文数进行判断。如果生成出来的数小于下界，就直接跳过进入下一次构造，如果大于上界就结束整个构造过程。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">bool</span> <span class="nf">is_prime</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">reverse</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">palindromes</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">min</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">5</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;5</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">7</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;7</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">11</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;=</span> <span class="mi">11</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;11</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">101</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="mi">101</span><span class="p">;</span>
+	<span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">9989899</span> <span class="o">?</span> <span class="mi">9989899</span> <span class="o">:</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">;</span> <span class="n">size</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">)</span>
+		<span class="n">palindromes</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">is_prime</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">prime</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">a</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">prime</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">i</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">prime</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">reverse</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">palindromes</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">min</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span> <span class="n">f</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">m</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">l</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">p</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="n">size</span> <span class="o">+</span> <span class="n">m</span><span class="p">;</span>
+				<span class="n">r</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+				<span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">l</span><span class="p">)</span> <span class="o">*</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">r</span><span class="p">;</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="n">min</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">max</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+					<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>为什么不从下界值开始构造候选回文数，而是要从101开始然后抛弃那些小于下界值的数？这样不是会浪费时间吗？确实会浪费一点时间，但是不影响时间复杂度的等级。反过来如果那样做的话需要写上一大堆的 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">...</span> <span class="pre">else</span> <span class="pre">...</span></code> 来控制循环起点，编程的复杂度增加不少，容易引入错误，但实际上速度并不会得到多少改进，这种得不偿失的事情我们不做。提交到洛谷网站OJ后得到的结果显示，速度非常之快。</p>
+<img alt="../../_images/214_p1217_GEN.png" src="../../_images/214_p1217_GEN.png" />
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>到此为止，这个算法编程题可以完美地结束了。但是还有别的可行的方法吗？当然有，比如朴素算法经过一定的改进也可以做到AC，只要我们限制暴搜的范围。首先把5、7和11特判掉，就可以把暴搜的范围缩小到101到9989899之间，然后我们在暴搜时排除2的倍数，还不行就再排除3的倍数、5的倍数……最后我们还可以设法跳过偶数位的数，总之在不断优化之后朴素算法也总有一天能达到1秒以内的速度。另外我们还可以改进第二种算法，例如改用欧拉线性筛。如果有兴趣建议自己动手试一试。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="215_long_decimal.html" title="3.1.5. 有理小数的精确表示"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="213_palindrome_numbers.html" title="3.1.3. 回文数专题"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../210_basic_number_algos.html" ><span class="section-number">3.1. </span>简单数值算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

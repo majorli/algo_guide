@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.2. 简单在线统计 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3.2.1. 单调区间在线统计" href="sec02/221_mono_intervals.html" />
+    <link rel="prev" title="3.1.6. 整数快速幂算法（洛谷P1226）" href="sec01/216_fast_power.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="sec02/221_mono_intervals.html" title="3.2.1. 单调区间在线统计"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec01/216_fast_power.html" title="3.1.6. 整数快速幂算法（洛谷P1226）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" accesskey="U"><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec01/216_fast_power.html"
+                        title="上一章"><span class="section-number">3.1.6. </span>整数快速幂算法（洛谷P1226）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="sec02/221_mono_intervals.html"
+                        title="下一章"><span class="section-number">3.2.1. </span>单调区间在线统计</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch02/220_basic_online_algos.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.2. </span>简单在线统计<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p><strong>统计算法</strong>用于对一系列数据进行统计指标计算，比如平均数、最大值、最小值、方差、区间和、中值等等。统计算法在数值算法中有广泛应用，一些简单的统计指标例如最大值、最小值、平均值往往是更复杂的数值算法中的基础计算单元，有些复杂的统计指标的计算例如最大区间和、多组数据的中值等本身就是非常有技巧的算法问题，有些统计指标例如单调区间统计、前缀和等可以用来构造其他精巧的算法。</p>
+<p><strong>在线算法</strong>（online algorithms）是指在读数据的同时完成算法运算，读入的数据不储存下来，数据读完，结果就计算出来的算法。比如最简单的求n个数的平均值，通过一个单循环一边读入数据，一边进行累加，同时记录数据的个数。一旦数据读完，循环结束之后用平均值公式进行一次计算就可以得出结果。在线算法的时间复杂度一定是<span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<p><strong>在线统计算法</strong>顾名思义，就是用于计算统计指标的在线算法。数据只读一遍，并不保存，读完之后指标就计算完成。</p>
+<p>虽说本部分讨论简单在线统计算法，但我们并不打算讨论怎样计算平均数、最大值、最小值、方差这几个可以通过一个简单的算术公式计算出的简单指标。我们会对较为复杂一点的单调区间统计、最大区间和、前缀和、差分法、尺读法以及它们的典型应用进行介绍。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec02/221_mono_intervals.html">3.2.1. 单调区间在线统计</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec02/221_mono_intervals.html#p1567">3.2.1.1. 最长单调区间问题（洛谷P1567）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec02/221_mono_intervals.html#index-2">3.2.1.2. 最大单调区间振幅</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec02/222_road_block.html">3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec02/222_road_block.html#noip2013-s1-1-p1969">3.2.2.1. 积木大赛（NOIP2013-S组1.1，洛谷P1969）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec02/222_road_block.html#noip2018-s1-1-p5019">3.2.2.2. 铺设道路（NOIP2018-S组1.1，洛谷P5019）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec02/223_kadanes_algo.html">3.2.3. 最大区间和问题（洛谷P1115）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec02/224_prefix_sum.html">3.2.4. 前缀和</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec02/224_prefix_sum.html#index-0">3.2.4.1. 一维前缀和</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec02/224_prefix_sum.html#id3">3.2.4.2. 二维前缀和</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec02/224_prefix_sum.html#id4">3.2.4.3. 前缀和的常见应用</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec02/225_diff.html">3.2.5. 差分法（洛谷P3397）</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec02/225_diff.html#id1">3.2.5.1. 线性差分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec02/225_diff.html#id2">3.2.5.2. 二维差分（洛谷P3397）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec02/226_two_points.html">3.2.6. 尺取法（洛谷P1147）</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="sec02/221_mono_intervals.html" title="3.2.1. 单调区间在线统计"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec01/216_fast_power.html" title="3.1.6. 整数快速幂算法（洛谷P1226）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.2.3. 最大区间和问题（洛谷P1115） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.2.4. 前缀和" href="224_prefix_sum.html" />
+    <link rel="prev" title="3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题" href="222_road_block.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="224_prefix_sum.html" title="3.2.4. 前缀和"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="222_road_block.html" title="3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../220_basic_online_algos.html" accesskey="U"><span class="section-number">3.2. </span>简单在线统计</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="222_road_block.html"
+                        title="上一章"><span class="section-number">3.2.2. </span>单调区间问题的应用：两个NOIP提高组复赛题</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="224_prefix_sum.html"
+                        title="下一章"><span class="section-number">3.2.4. </span>前缀和</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec02/223_kadanes_algo.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="p1115">
+<span id="index-0"></span><h1><span class="section-number">3.2.3. </span>最大区间和问题（洛谷P1115）<a class="headerlink" href="#p1115" title="永久链接至标题">¶</a></h1>
+<p><strong>最大区间和</strong>（Largest Interval Sum）问题就是在一个数列 <span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 中寻找一段连续的子区间 <span class="math notranslate nohighlight">\(\{a_i,\dots,a_j\}\)</span> 使得这个子区间中数字之和 <span class="math notranslate nohighlight">\(\sum_{k=i}^j{a_k}\)</span> 是该数列的所有连续子区间数字之和的最大者。</p>
+<p>例如，数列 [-2,-3,4,-1,-2,1,5,-3] 的最大区间和为7，是其中第3项到第7项的子区间 [4,-1,-2,1,5] 的和。注意：最大区间和问题只求那个最大的和数，不求子区间是哪一个。</p>
+<img alt="../../_images/223_largest_sub_sum.png" src="../../_images/223_largest_sub_sum.png" />
+<p>数列 <span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 中项数为1的连续子区间有 <span class="math notranslate nohighlight">\(\{a_1\},\dots,\{a_n\}\)</span>，共 <span class="math notranslate nohighlight">\(n\)</span> 个；项数为2的连续子区间有 <span class="math notranslate nohighlight">\(\{a1,a2\},\dots,\{a_{n-1},a_n\}\)</span>，共 <span class="math notranslate nohighlight">\(n-1\)</span> 个，依此类推，项数为 <span class="math notranslate nohighlight">\(n-1\)</span> 的连续子区间共有 <span class="math notranslate nohighlight">\(2\)</span> 个，分别为 <span class="math notranslate nohighlight">\(\{a_1,\dots,a_{n-1}\}\)</span> 和 <span class="math notranslate nohighlight">\(\{a_2,\dots,a_n\}\)</span>；最后项数为 <span class="math notranslate nohighlight">\(n\)</span> 的连续子区间共 <span class="math notranslate nohighlight">\(1\)</span> 个，就是数列 <span class="math notranslate nohighlight">\(A\)</span> 本身。所以它的连续非空子区间的总数为 <span class="math notranslate nohighlight">\(1+2+\cdots+n=\frac{n(n+1)}{2}\)</span> 个。如果采用暴力搜索，就要对所有这些子区间分别进行求和，然后比较各自的大小找出最大的那一个，每次求和需要用一个次数和项数相等的循环，这是一个 <span class="math notranslate nohighlight">\(O(n^3)\)</span> 时间复杂度的算法，显然不是一种好的算法。</p>
+<p>如果采用下一节要介绍的<strong>前缀和</strong>方法，那么计算每一个子区间之和的步骤可以降为 <span class="math notranslate nohighlight">\(O(1)\)</span>，这样如果还是用暴力搜索的话，整个算法的时间复杂度可以降低到 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 级别，但仍然不够好。另外还有一些别的精巧的算法思路，可以通过二分等方法来把时间复杂度降到 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>，但是这些算法对于这么一个问题来说过于复杂了，一般我们不推荐使用。</p>
+<p>求解最大区间和问题，有一个叫做Kadane算法（Kadane是卡内基梅隆大学的一名计算机科学家，他发明了这种算法）的经典算法，也是这个问题的标准算法，它的思路和代码都相当简单。而且它是一个在线算法，可以一边读数一边统计，不需要保存数据，读完结果就统计出来，时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在大多数中文网站上去查Kadane算法，会查到Kadane教授最初设计的第一个版本，这个版本适用于数列中至少有一个非负项的情况，但是对于全负项数列是会出错的。我们将要介绍的是一个由Mohit Kumar改进过的Kadane算法，它适用于全负项的数列。</p>
+<p>其实对于全负项数列，它的最大区间和就是其中最大的那个负数。Kadane教授最初设计时可能觉得这种情况是没有什么实际意义的，所以并没有考虑它，但是算法编程题往往会放进一些全负数的坑测试点。所以我们直接学习改进的Kadane算法。</p>
+</div>
+<p><strong>算法思路</strong></p>
+<p>Kadane算法在不断读数过程中，同时不断计算读到当前为止的正数的区间和，对这些正数区间和进行逐个比较大小，最后确定出最大区间和为多少。</p>
+<p>算法的思路其实很简单，那就是最大和子区间的前任意个数之和都不能为负数。比如 <span class="math notranslate nohighlight">\([-2,4]\)</span>，它的和是2。但是它就不可能成为一个最大和子区间，因为它的前1个数是负数-2，所以去掉第1项-2就可以分离出一个和更大的子区间 <span class="math notranslate nohighlight">\([4]\)</span>。再比如 <span class="math notranslate nohighlight">\([2,-3,5]\)</span> 也不可能成为最大和子区间，因为它的前2项之和是负数-1，所以去除前2项之后就能得到一个和更大的子区间 <span class="math notranslate nohighlight">\([5]\)</span>。</p>
+<p>所以算法在逐个读入数据的同时，不断地累加读入的数，作为到当前项为止的潜在最大和 <span class="math notranslate nohighlight">\(S\)</span>。每当这个累加结果成为一个负数时，它就成为了一个“拖后腿”的负前缀，应该抛弃掉。这时候应该将下一个数作为潜在的最大和子数列的起始元素，重新开始累加。</p>
+<p>每当我们读入一个新数 <span class="math notranslate nohighlight">\(a_i\)</span> 后，按照上面的说法，如果此时 <span class="math notranslate nohighlight">\(S\lt0\)</span> 那么就应该从 <span class="math notranslate nohighlight">\(a_i\)</span> 开始重新累加，即应该让 <span class="math notranslate nohighlight">\(S\leftarrow a_i\)</span>；否则就应该继续累加，即让 <span class="math notranslate nohighlight">\(S\leftarrow S+a_i\)</span>。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}S \leftarrow \begin{cases}a_i&amp;,S\lt 0\\S+a_i&amp;,S\ge0\end{cases}\end{split}\]</div>
+<p>无论 <span class="math notranslate nohighlight">\(a_i\)</span> 是正是负还是零，总之按照不等式运算的规则，当 <span class="math notranslate nohighlight">\(S\lt0\)</span> 时，有 <span class="math notranslate nohighlight">\(S+a_i\lt a_i\)</span>，这时候要让 <span class="math notranslate nohighlight">\(S\)</span> 变成 <span class="math notranslate nohighlight">\(a_i\)</span>；而当 <span class="math notranslate nohighlight">\(S\ge 0\)</span> 时，则 <span class="math notranslate nohighlight">\(S+a_i\ge a_i\)</span>，这时候要让 <span class="math notranslate nohighlight">\(S\)</span> 变成 <span class="math notranslate nohighlight">\(S+a_i\)</span>。所以上面这个分情况赋值可以改写成更加简洁的形式：</p>
+<div class="math notranslate nohighlight">
+\[S\leftarrow \max\{S+a_i, a_i\}\]</div>
+<p>同时，累加过程中得到的潜在最大和要记录其最大值 <span class="math notranslate nohighlight">\(Max\)</span>。这个步骤其实就是最简单的在多个数中找最大者，每次更新了候选值 <span class="math notranslate nohighlight">\(S\)</span> 之后让它和 <span class="math notranslate nohighlight">\(Max\)</span> 进行比较然后记录下较大的那一个就可以了：</p>
+<div class="math notranslate nohighlight">
+\[Max\leftarrow \max\{S,Max\}\]</div>
+<p>最后，解决全负项数列的问题。其实很简单，我们只要把数列的第一项 <span class="math notranslate nohighlight">\(a_1\)</span> 作为 <span class="math notranslate nohighlight">\(S\)</span> 和 <span class="math notranslate nohighlight">\(Max\)</span> 的初始值就可以了。全负项的情况下，每一次更新 <span class="math notranslate nohighlight">\(S\)</span> 都会导致从新读入的项开始重新累加，于是所有的潜在最大和其实就是每一个项的值，算法于是退化成在数列中寻找最大项。</p>
+<p>于是我们得出以下算法：</p>
+<div class="admonition-kadane admonition">
+<p class="admonition-title">改进的Kadane算法</p>
+<p><span class="math notranslate nohighlight">\(\text{Kadane}(A,n):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(S\leftarrow a_1\)</span></p>
+<p><span class="math notranslate nohighlight">\(Max\leftarrow a_1\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{FOR  } i \leftarrow 2 \text{  TO  } n \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(S\leftarrow \max(S+a_i, a_i)\)</span></p>
+<p><span class="math notranslate nohighlight">\(Max\leftarrow \max(S,Max)\)</span></p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{RETURN  } Max\)</span></p>
+</div></blockquote>
+</div>
+<p>算法很简单，代码同样很简单。根据Kadane教授使用的变量名，“到当前项为止的潜在最大和” <span class="math notranslate nohighlight">\(S\)</span> 用变量名 <code class="docutils literal notranslate"><span class="pre">max_end_here</span></code>，“到目前为止已经得到的最大和” <span class="math notranslate nohighlight">\(Max\)</span> 用变量名 <code class="docutils literal notranslate"><span class="pre">max_so_far</span></code>。下面是在线算法版的代码，是一边从键盘读取数据，一边计算最后数据读完，结果出来的版本。为了让代码更加整洁易读，我们定义了一个内联函数 <code class="docutils literal notranslate"><span class="pre">max(int</span> <span class="pre">a,</span> <span class="pre">int</span> <span class="pre">b)</span></code> 来获取两个整数的较大者。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">max</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">max_so_far</span><span class="p">,</span> <span class="n">max_end_here</span><span class="p">;</span>
+
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+	<span class="n">max_so_far</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+	<span class="n">max_end_here</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+		<span class="n">max_end_here</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">max_end_here</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+		<span class="n">max_so_far</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">max_so_far</span><span class="p">,</span> <span class="n">max_end_here</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">max_so_far</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p id="index-1">这个程序不加任何修改就可以直接通过洛谷P1115题“最大子段和”的测试，请大家自行尝试一下。</p>
+<img alt="../../_images/223_p1115.png" src="../../_images/223_p1115.png" />
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="224_prefix_sum.html" title="3.2.4. 前缀和"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="222_road_block.html" title="3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../220_basic_online_algos.html" ><span class="section-number">3.2. </span>简单在线统计</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

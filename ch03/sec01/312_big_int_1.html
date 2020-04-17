@@ -1,0 +1,477 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1.2. 高精度整数算法(I) 数据的表示 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="4.1.3. 高精度整数算法(II) 加法与乘法" href="313_big_int_2.html" />
+    <link rel="prev" title="4.1.1. 顺序表" href="311_sequence_list.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="313_big_int_2.html" title="4.1.3. 高精度整数算法(II) 加法与乘法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="311_sequence_list.html" title="4.1.1. 顺序表"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" accesskey="U"><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.1.2. 高精度整数算法(I) 数据的表示</a><ul>
+<li><a class="reference internal" href="#bigint">4.1.2.1. BigInt数据结构</a></li>
+<li><a class="reference internal" href="#id1">4.1.2.2. BigInt构造器：初始化</a></li>
+<li><a class="reference internal" href="#id2">4.1.2.3. BigInt赋值运算</a></li>
+<li><a class="reference internal" href="#id3">4.1.2.4. BigInt输入输出</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="311_sequence_list.html"
+                        title="上一章"><span class="section-number">4.1.1. </span>顺序表</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="313_big_int_2.html"
+                        title="下一章"><span class="section-number">4.1.3. </span>高精度整数算法(II) 加法与乘法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec01/312_big_int_1.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="i">
+<h1><span class="section-number">4.1.2. </span>高精度整数算法(I) 数据的表示<a class="headerlink" href="#i" title="永久链接至标题">¶</a></h1>
+<p>我们在数值算法的编程中，常常会遇到C++内置的整型数据类型可以表示的数值大小范围有限不够用导致的<strong>溢出</strong>问题，<strong>高精度整数算法</strong>就是用来解决这个问题的。我们可以利用C++的基础整数类型来拼接构造出一个理论上能达到无限位的超大整数数据类型，并且自己编程模拟手算过程来实现它的四则运算等数值计算，这就是<strong>高精度整数算法</strong>，简称<strong>高精度算法</strong>。</p>
+<p>要实现一种完美的高精度整型及其运算不是一件容易的事情。一般来说，我们会定义一个结构体作为它的数据存储（在大型项目开发的实际工程编程中往往是用类而不是结构，但在算法编程中一般就用struct简化了），然后我们要给这个结构添加必要的成员函数来实现运算能力，最常见的有加减乘除、比较和赋值，另外还有一些辅助功能，比如初始化、输入输出（支持 <code class="docutils literal notranslate"><span class="pre">cin</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cout</span></code>），更加完善的还可以让它支持取模、运算赋值 <code class="docutils literal notranslate"><span class="pre">+=,-=,*=,/=,%=</span></code>、自增减 <code class="docutils literal notranslate"><span class="pre">++,--</span></code>、移位 <code class="docutils literal notranslate"><span class="pre">&lt;&lt;,&gt;&gt;,&lt;&lt;=,&gt;&gt;=</span></code>、按位逻辑运算等等。这里有一些操作的实现是相当复杂的，比如除法和取模，有些运算则一般在具体的问题中用不着，甚至有一些在算法编程领域基本上不会用到。所以，除非你是在从事大型工程软件开发，需要实现一个完美的高精度整型数类，或者最近实在闲着无聊想找点事情挑战一下自己，否则一般我们不会去完全实现这些功能。</p>
+<p>在算法编程中，最最常见的用到高精度算法的情形有以下几个要求：</p>
+<ol class="arabic simple">
+<li><p>实现一个理论上数值范围无限大的整型数据类型；</p></li>
+<li><p>通常不要求支持负数；</p></li>
+<li><p>实现加减乘除四则运算和相互比较大小，若为非负型，则减法通常会改为“类补码”或“取绝对值”的求差运算；</p></li>
+<li><p>要求能够用C++内置整型数、字面量进行初始化和赋值。</p></li>
+</ol>
+<p>有时候，为了编程时更加方便，还可以适当增加以下辅助功能：</p>
+<ol class="arabic simple">
+<li><p>能够用 <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> 进行输入，用 <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> 进行输出；</p></li>
+<li><p>能够用字符串对象、C字符串、字符串字面量进行初始化和赋值；</p></li>
+<li><p>支持和C++内置整型数之间的加减乘除运算和相互比较大小；</p></li>
+<li><p>支持 <code class="docutils literal notranslate"><span class="pre">+=,</span> <span class="pre">-=,</span> <span class="pre">*=,</span> <span class="pre">\=,</span> <span class="pre">++,</span> <span class="pre">--</span></code> 等能带来编程便捷性的运算；</p></li>
+<li><p>声明变量但没有初始化时能自动初始化为0。</p></li>
+</ol>
+<p>从这一节起我们将逐步实现符合上述要求的一个非负高精度整数算法（BigInt）。掌握了这些常用功能的实现之后，其他不常见的功能实现起来也应该不难了。最后我们会完成一个实际的算法编程题，看看在实际解决问题的时候可以如何简化高精度算法。</p>
+<div class="section" id="bigint">
+<h2><span class="section-number">4.1.2.1. </span>BigInt数据结构<a class="headerlink" href="#bigint" title="永久链接至标题">¶</a></h2>
+<p><strong>原理</strong></p>
+<p>为了实现高精度整型数，我们的基本思路很简单，用现有的C++基本整数类型构造一个顺序表来拼接出超大整型数。具体要怎样构造呢？</p>
+<p>一个朴素的思路是这样的，既然我们的目标是无符号整数，那么何不用最大的基本类型 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 来进行拼接呢？一个 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 最大可以表示 <span class="math notranslate nohighlight">\(2^{64}-1\)</span>，所以两个拼接就能使上限达到 <span class="math notranslate nohighlight">\(2^{128}-1\)</span>，<span class="math notranslate nohighlight">\(n\)</span> 个 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 就可以拼接成一个 <span class="math notranslate nohighlight">\(64n\)</span> 位的无符号二进制整数，最大可以表示十进制数 <span class="math notranslate nohighlight">\(2^{64n}-1\)</span>。</p>
+<p>事实上这种朴素的思路是汇编语言实现高精度整数的标准思路，但是并不适合C++语言。原因是这样的表示方法是基于二进制的，在进行运算时需要直接进行二进制运算。二进制运算是汇编语言的拿手好戏，但C++毕竟是一种高级语言，它并不提供完备的二进制运算能力，C++的数值运算是十进制的。所以我们要基于十进制来进行拼接，这里涉及到好几个技术细节问题需要逐一确定。</p>
+<p>问题一，用哪一种基本数据类型来作为拼接单位？答案当然是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，因为C++标准规定，所有计算机系统上的所有C++版本，必须确保 <code class="docutils literal notranslate"><span class="pre">int</span></code> 是运算速度最快的数据类型！有人可能会问，既然我们的目标类型是非负的，那么为什么不用 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code> 呢？那是因为在做减法的时候，对位相减可能会出现负数需要借位，而 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code> 无法表示负数，导致用它来构造会很难实现减法运算。事实上，所有 <code class="docutils literal notranslate"><span class="pre">unsigned</span></code> 整型都不适合用来构造高精度整数。</p>
+<p>问题二，采用多大的进制？用于拼接的每一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 数相当于整个 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 数的一个数位，不妨把它叫做一个“<strong>节</strong>”吧（这是我自己给它取的名字，以避免和十进制的数位产生混淆，并不是标准的名称）。前面已经说过了拼接要基于十进制，即 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 在内部要看成是 <span class="math notranslate nohighlight">\(10^n\)</span> 进制的数，一个节的取值范围相应就是 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(10^n-1\)</span>，对应十进制数的 <span class="math notranslate nohighlight">\(n\)</span> 个数位。所以 <span class="math notranslate nohighlight">\(n\)</span> 要取多大合适呢？由于 <code class="docutils literal notranslate"><span class="pre">int</span></code> 最大可表示的正数大约为21亿左右，所以理论上最大可以支持到 <span class="math notranslate nohighlight">\(10^9\)</span>，即十亿进制。实践中常见的有采用亿进制的，也有采用万进制的。</p>
+<p>在这里，我们选用我喜欢的万进制。为什么？明明一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 最大可以表示到十亿的数量级，但我们要让一个节限制在一万以内，即0到9999呢？这是极大的存储资源浪费！理由还是因为算法编程的特性。算法编程首先考虑的是程序编写正确，然后是运行速度够快，而存储空间往往可以用来大把大把地挥霍以换取便捷性和高速性。所以我们有两个理由来支持万进制：</p>
+<ol class="arabic simple">
+<li><p>模拟乘法运算，基本操作是节与节之间的整数乘法，采用万进制，结果最大为 <span class="math notranslate nohighlight">\(9999\times9999\)</span>，这个结果恰好还在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的可表示范围之内。所以 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 乘法运算时，可以直接在节上进行运算，无需引入 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 型的中间变量，大大简化乘法运算的代码。这是编程便捷性、减少错误点的理由。</p></li>
+<li><p>类似地，所有加减乘除运算都可以直接在节上采用 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型运算完成，无需引入中间变量，能够提高运算速度，尤其是乘除法这样的复杂运算。这是提高速度的理由。</p></li>
+</ol>
+<p>这就是我们建议在算法编程时采用万进制节来构造高精度的理由。而大型软件开发的工程编程时往往会更优先考虑空间消耗，故常选用亿进制。</p>
+<p>通常，我们把进制数称为<strong>基</strong>（Base），例如十进制的基就是10，2进制的基就是2，所以 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的基等于10000。每一个节所表示的十进制位数我们习惯上称之为<strong>宽</strong>（Width），这里 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的宽是4，一个节对应4位十进制数位。所以万进制的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 数和通常的十进制数是可以对位划分节的（就好像2进制和16进制一样）。</p>
+<p>例如：十进制数 <code class="docutils literal notranslate"><span class="pre">1234567890987654321</span></code>，总共19位。用 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 型表示它，可以从个位开始每4位划分为1节，总共分为5节，表示成 <code class="docutils literal notranslate"><span class="pre">|123|4567|8909|8765|4321|</span></code>，其数值为 <span class="math notranslate nohighlight">\(4321\times b^0+8765\times b^1+8909\times b^2+4567\times b^3+123\times b^4\)</span>，其中 <span class="math notranslate nohighlight">\(b\)</span> 是基，等于10000。</p>
+<p>问题三，具体用什么数据结构拼接？怎么拼接？从前面的表示形式就可以看出，最合适的数据结构是顺序表，具体实现时使用 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 是最常见的。但是怎么拼接确是有一定技巧性的。熟悉汇编语言的人会知道，以Intel的x86架构为代表的现代计算机系统里，整数在内存中存放时通常都采用一种叫做<strong>小端序</strong>（Little-Endian）的存放方式，即所谓的“低位在前、高位在后”。例如一个两字节的数 <code class="docutils literal notranslate"><span class="pre">1234</span></code>，存放在内存里的时候会是 <code class="docutils literal notranslate"><span class="pre">3412</span></code>。为什么会这样？因为加减法和乘法运算都需要两个运算数低位对齐！虽然除法运算从最高位对齐开始，但是整数除法往往不采用直接模拟竖式手工除法运算的方法，而且往往可以用乘法来代替。所以，为了更方便地实现不同长度整数之间的算术运算，小端序是现代更流行的整数存储方式。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">补充</p>
+<p>整数存放于内存时，为了计算方便，常采用小端序。但在网络传输时，没有了计算了需求，所以常采用大端序，以人们习惯的高位在前的方式进行传输，同时也便于接收一方查看。毕竟人眼看数，还是习惯先看高位。</p>
+</div>
+<p>鉴于以上原因，我们的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 在拼接时也采用小端序！即低位节在前，高位节在后。例如 <code class="docutils literal notranslate"><span class="pre">1234567890987654321</span></code>，用 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 表示时，在其内部的顺序表中存放的情形将是：<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">4321,</span> <span class="pre">8765,</span> <span class="pre">8909,</span> <span class="pre">4567,</span> <span class="pre">123</span> <span class="pre">}</span></code>。看起来挺诡异，但是到编写算术运算代码时就会发现它的好处了。</p>
+<p><strong>基本结构</strong></p>
+<p>下面我们就可以写出最基础的结构体定义了。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_BASE</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>	<span class="c1">// 基，每个节的数值范围为0-9999</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_WIDTH</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>	<span class="c1">// 节数码宽度，每节4个十进制数码</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_s</span><span class="p">;</span>			<span class="c1">// 用于存放数值的节向量，小端序存放</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>在这个结构里面定义了两个成员常量 <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">const</span> <span class="pre">int</span> <span class="pre">BASE</span> <span class="pre">=</span> <span class="pre">10000;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">const</span> <span class="pre">int</span> <span class="pre">WIDTH</span> <span class="pre">=</span> <span class="pre">4;</span></code>。它们分别表示 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的基和节的占位数，即采用万进制，每一节对应4个十进制位。这两个常量是类型本身固有的属性，后面对它进行各种操作的代码中时常会用到这两个属性。所以我们事先把它们定义成结构的成员常量。</p>
+<p>这里我们第一次见到的是 <code class="docutils literal notranslate"><span class="pre">static</span></code> 这个修饰词，它表示<strong>静态</strong>的意思。<code class="docutils literal notranslate"><span class="pre">BASE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">WIDTH</span></code> 这两个常量对于所有的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量来说都是一样的，从不改变。如果我们像通常那样的定义它们，不加上静态修饰，那么它们就是普通的<strong>成员常量</strong>，每个结构变量里面都存有一份。这就造成了空间浪费。<code class="docutils literal notranslate"><span class="pre">static</span></code> 修饰可以解决这个问题，现在 <code class="docutils literal notranslate"><span class="pre">BASE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">WIDTH</span></code> 成为了<strong>静态成员</strong>，它们在内存里只保存一份，所有结构体变量共享使用。</p>
+<p>结构体的成员函数如果要使用这样的静态成员，那么只要简单地用它们的名字 <code class="docutils literal notranslate"><span class="pre">BASE</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">WIDTH</span></code> 就可以了。程序里其他地方如果要访问它们，就需要加上结构名的命名限定：<code class="docutils literal notranslate"><span class="pre">BigInt::BASE</span></code>、<code class="docutils literal notranslate"><span class="pre">BigInt::WIDTH</span></code>。所以静态成员可以认为是隶属于这种结构类型的成员，而普通的成员则是隶属于这种结构的变量的成员。</p>
+<p>类似地，其实成员变量和成员函数也可以用 <code class="docutils literal notranslate"><span class="pre">static</span></code> 修饰成静态的。凡是静态的成员，就升格为隶属于类型的成员，用 <code class="docutils literal notranslate"><span class="pre">类型名::成员名</span></code> 的方式访问，这个类型的所有变量共用一份。</p>
+<p>这里，我们在每一个成员的名称之前都加了一个下划线 <code class="docutils literal notranslate"><span class="pre">_</span></code>。这是一种编程的惯例，通常用来表示这个成员是“仅限内部使用”的，即只供本结构的成员函数使用，请除此以外的程序都不要去访问这样的成员。</p>
+</div>
+<p>现在我们已经有了最基本的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的数据存储结构，但是它还没什么用，我们要对它进行功能扩展。和C语言结构只能用来组合数据不同，C++的结构除了可以用成员变量、常量来组合数据，还可以有成员函数来给它定义专属自己的功能。另外还有一种特殊的成员函数叫做<strong>构造器</strong>，用来提供丰富灵活的初始化能力。</p>
+</div>
+<div class="section" id="id1">
+<h2><span class="section-number">4.1.2.2. </span>BigInt构造器：初始化<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>下面我们先从利用构造器来实现C++风格的初始化功能开始。目前的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 还只是一个类似C语言风格的结构类型，如果用它来定义新的变量，没有办法对它进行初始化。<code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">b;</span></code> 这样的语句定义出来的新变量 <code class="docutils literal notranslate"><span class="pre">b</span></code> 内部的成员 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span> <span class="pre">_s</span></code> 处于未初始化状态，长度为0，无法进行任何操作。</p>
+<p>我们希望可以在定义新变量时自动把它的值设置为0，或者我们可以用一个C++内置整数类型的数值来赋予它初始值，避免新变量为空的尴尬。这种情况下用<strong>构造器</strong>是最合适的。所谓构造器，顾名思义，就是在生成新变量的时候用来构造初始状态的函数。</p>
+<ul class="simple">
+<li><p>构造器没有返回类型，不需要返回语句，构造器的函数名必须和结构名完全相同。</p></li>
+<li><p>构造器总是在一个结构变量被生成的时候首先被运行，它的作用是初始化新变量。</p></li>
+<li><p>一个结构可以有多个参数表不同的构造器，使其具有多种多样的构造方法。</p></li>
+<li><p>构造器的使用方法是在定义新变量时在变量名后面加上构造器参数，就像调用一个函数一样。具体调用哪个构造器，C++会根据提供的参数来自动确定。</p></li>
+<li><p>如果定义新变量时没有提供构造器参数，那么C++会检查有没有不需要提供参数的构造器，如果有就调用它，如果没有就什么都不干，就像C语言的时候一样。</p></li>
+</ul>
+<p>所以让我们先来实现我们想要的这个构造器：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_BASE</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>	<span class="c1">// 基，每个节的数值范围为0-9999</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_WIDTH</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>	<span class="c1">// 节数码宽度，每节4个十进制数码</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_s</span><span class="p">;</span>			<span class="c1">// 用于存放数值的节向量，小端序存放</span>
+	<span class="c1">// 内部功能函数</span>
+	<span class="kt">void</span> <span class="nf">_assign</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">);</span>
+	<span class="c1">// 构造器</span>
+	<span class="n">BigInt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">BigInt</span><span class="o">::</span><span class="n">_assign</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">_BASE</span><span class="p">);</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">value</span> <span class="o">/=</span> <span class="n">_BASE</span><span class="p">)</span>
+		<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">_BASE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span><span class="o">::</span><span class="n">BigInt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">_assign</span><span class="p">(</span><span class="n">value</span><span class="p">);</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这里我们先定义了一个成员函数 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">_assign(unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">value)</span></code>，它真正实现把一个C++整数转换为 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 内部数据的功能。构造器 <code class="docutils literal notranslate"><span class="pre">BigInt(unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">value</span> <span class="pre">=</span> <span class="pre">0)</span></code> 只是简单地调用了它而已。为啥要把这个功能单独写成一个函数，而不是直接写在构造器里呢？这是因为这个功能以后在别的地方还用得着，单独写出来就可以重复利用了。这叫做代码的<strong>复用</strong>，是一种重要的软件设计思想。</p>
+<p>在成员函数名前面加上一个下划线 <code class="docutils literal notranslate"><span class="pre">_</span></code> 表示这个成员函数只供本结构的成员函数调用，请外部函数不要去调用它。这叫做<strong>封装</strong>，也是一种特别重要的软件设计思想。但事实上给成员名称前加一个下划线只是一种惯例，并不具备强制性。如果希望让C++严格地执行封装规则，那么可以使用C++的面向对象编程。它提供了一套复杂而严密的封装规则。在算法编程时我们一般不需要用到那么复杂的东西，在适当的时候引入一点小小的惯例来提醒一下自己就够了。</p>
+<p>这里还用到一个语法点：成员函数的原型与定义分离。为了减少结构内部的代码长度，我们在结构内只声明了函数原型，它们的函数定义被写在结构外部。<strong>C++规范建议所有函数都采用原型与定义分离的方式书写</strong>。成员函数和普通函数的函数定义写法稍有不同，在成员函数的函数定义中，函数名之前要加上命名限定 <code class="docutils literal notranslate"><span class="pre">BigInt::</span></code>，用以表明自己是属于 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的成员函数。这是因为不同结构之间往往会有同名函数，加上命名限定就不会互相冲突了。</p>
+<p>这个构造器需要一个 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 参数，这是C++内置整型的最大者，用它就可以使实参支持C++所有的内置整型。另外我们还把这个参数定义为有<strong>默认值</strong>的参数，于是构造器就有了两个版本，既可以提供一个初始值参数，也可以不提供任何参数，这时就默认初始化为0。</p>
+<p>注意：当函数采用原型和定义分离的方式来写的时候，默认参数只能写在一个地方，要么写在函数原型的参数表里，要么写在函数定义中函数头的参数表里，不能两个地方都出现。一般我们都建议写在函数原型的参数表里。</p>
+<p>至于 <code class="docutils literal notranslate"><span class="pre">_assign()</span></code> 函数内部将参数值转成节，并用小端序依次存入 <code class="docutils literal notranslate"><span class="pre">_s</span></code> 中的功能是怎样实现的，我想大家应该很容易看懂。这里可以看出，即使函数体的定义被分离在结构之外，代码和写在结构内部时不会有任何区别，仍然可以无障碍地访问成员变量 <code class="docutils literal notranslate"><span class="pre">_s</span></code>，成员常量 <code class="docutils literal notranslate"><span class="pre">_BASE</span></code> 等，没有任何限制。</p>
+</div>
+<p>现在，我们可以像这样来定义 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 型的变量了：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">(</span><span class="mi">347</span><span class="p">),</span> <span class="n">b3</span><span class="p">(</span><span class="mi">123456789000012</span><span class="p">),</span> <span class="n">b4</span><span class="p">(</span><span class="mi">100001</span><span class="p">);</span>  <span class="c1">// b1 会被初始化为0</span>
+</pre></div>
+</div>
+<p>好像还缺点什么？对了，我们现在的构造器只能支持最大不超过 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 的整数初始值，可是 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的目标是要理论上能支持无限长的整数的。如果我们要用一个100位的超长整数来初始化怎么办？</p>
+<p>显然这样超长的整数在C++本身的数据类型中，恐怕也只能用字符串来模拟它。所以我们是不是还应该有一个可以用字符串来进行初始化的构造器呢？有了前面的经验，这项任务也并不难办到。于是 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 结构再一次升级：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_BASE</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>	<span class="c1">// 基，每个节的数值范围为0-9999</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_WIDTH</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>	<span class="c1">// 节数码宽度，每节4个十进制数码</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_s</span><span class="p">;</span>			<span class="c1">// 用于存放数值的节向量，小端序存放</span>
+	<span class="c1">// 内部功能函数</span>
+	<span class="kt">void</span> <span class="nf">_assign</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">);</span>
+	<span class="kt">void</span> <span class="nf">_assign</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
+	<span class="c1">// 构造器</span>
+	<span class="n">BigInt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">BigInt</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">BigInt</span><span class="o">::</span><span class="n">_assign</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">_BASE</span><span class="p">);</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">value</span> <span class="o">/=</span> <span class="n">_BASE</span><span class="p">)</span>
+		<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">_BASE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">BigInt</span><span class="o">::</span><span class="n">_assign</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">h</span><span class="p">,</span> <span class="n">v</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="nf">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">h</span> <span class="o">=</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">_WIDTH</span> <span class="o">?</span> <span class="n">p</span> <span class="o">-</span> <span class="nl">_WIDTH</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">)</span> <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">str</span><span class="p">[</span><span class="n">h</span><span class="o">++</span><span class="p">]</span> <span class="o">-</span> <span class="sc">&#39;0&#39;</span><span class="p">;</span>
+			<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+			<span class="n">p</span> <span class="o">-=</span> <span class="n">_WIDTH</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_s</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">_s</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span><span class="o">::</span><span class="n">BigInt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">_assign</span><span class="p">(</span><span class="n">value</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="n">BigInt</span><span class="o">::</span><span class="n">BigInt</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span> <span class="n">_assign</span><span class="p">(</span><span class="n">str</span><span class="p">);</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这里利用C++函数重载的能力，定义了另一套基于字符串的构造器和 <code class="docutils literal notranslate"><span class="pre">_assign()</span></code> 函数。看起来用字符串来初始化的代码稍微复杂一点，但是也不难理解，请务必看懂理解。</p>
+</div>
+<p>由于C++的 <code class="docutils literal notranslate"><span class="pre">string</span></code> 类和C语言字符串之间有很好的相互转换能力，所以我们现在又具备了这样的能力：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="n">BigInt</span> <span class="nf">b5</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>    <span class="c1">// 空字符串使初始值为0</span>
+<span class="n">BitInt</span> <span class="nf">b6</span><span class="p">(</span><span class="s">&quot;987654321012345678909876543210123456789000&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>这里我们没有对字符串进行有效性验证，如果字符串不是一个合法的整数形式，那么会出现错误。这是因为考虑到算法编程题目的输入数据格式都是确保有效的，所以我们不费心去进行有效性验证。这也是算法编程的特殊性，在实际的软件开发中，输入有效性验证是必不可少的。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">4.1.2.3. </span>BigInt赋值运算<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>光有初始化显然还不够，我们当然还需要有给 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量赋值的能力，而且有了赋值的能力后我们还能像通常的内置数据类型一样使用 <code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">3;</span></code> 这样的语句来初始化变量。</p>
+<p>要让自定义数据类型具有赋值运算的功能，就需要用到C++的一项神技：<strong>运算符重载</strong>。没错，就是像重载成员函数一样，为特定的自定义数据类型重载各类运算符，使得这些运算符能给特定的数据类型提供特定的功能。最典型的一个例子就是C++的 <code class="docutils literal notranslate"><span class="pre">string</span></code> 类，它重载了加法运算符 <code class="docutils literal notranslate"><span class="pre">+</span></code>，使得我们可以用 <code class="docutils literal notranslate"><span class="pre">str1</span> <span class="pre">+</span> <span class="pre">str2</span></code> 这样的运算来实现两个字符串的首尾相接，而不是通常意义上的加法。</p>
+<p>现在我们就来看看怎样为 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 重载赋值运算符 <code class="docutils literal notranslate"><span class="pre">=</span></code>。由于已经有了可以复用的函数 <code class="docutils literal notranslate"><span class="pre">_assign()</span></code>，所以我们接下来只要在结构体内增加重载赋值运算符的函数原型：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">);</span>
+        <span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>然后给出它的定义：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="n">_assign</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+	<span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>现在我们可以在程序里使用这样的代码了：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="n">b7</span> <span class="o">=</span> <span class="n">b8</span> <span class="o">=</span> <span class="mi">666</span><span class="p">,</span> <span class="n">b9</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">b9</span> <span class="o">=</span> <span class="mi">373</span> <span class="o">+</span> <span class="mi">737</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>运算符重载有特定的函数原型，不同的运算符重载函数原型可能不太一样。接下来我们还会看到很多其他常见的运算符重载，基本上记住这些就足够了。关于运算符重载函数的语法规则，有兴趣的可以去查阅相关的书籍和网站。</p>
+<p>赋值运算要返回的被赋值变量被赋予的值，这通过以引用方式返回 <code class="docutils literal notranslate"><span class="pre">*this</span></code> 来实现。<code class="docutils literal notranslate"><span class="pre">this</span></code> 是一个C++的特殊指针，用于成员函数中。顾名思义就是指向自己的指针，所以返回 <code class="docutils literal notranslate"><span class="pre">*this</span></code> 就是返回自己。</p>
+<p>运算符重载函数的函数名有固定格式：<code class="docutils literal notranslate"><span class="pre">operator</span></code> 后跟运算符，比如这里的 <code class="docutils literal notranslate"><span class="pre">operator=</span></code>。</p>
+<p>运算符重载函数的参数，如果是基本数据类型的就用普通的传值方式，派生数据类型则用 <code class="docutils literal notranslate"><span class="pre">const</span></code> 引用传参，避免在运算时改变外部变量的值。</p>
+<p>调用 <code class="docutils literal notranslate"><span class="pre">_assign()</span></code> 函数完成赋值之前先调用的 <code class="docutils literal notranslate"><span class="pre">_s.clear()</span></code> 函数是用来清空原有数据的。</p>
+</div>
+<p>要知道，运算符重载函数本身也是可以重载的，所以我们可以用类似的方式来实现用字符串赋值。函数原型：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
+        <span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>函数定义：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="n">_assign</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+	<span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>现在我们比较完美地完成了 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 类型的赋值功能，我们可以这样来使用：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">b9</span> <span class="o">=</span> <span class="s">&quot;1234567890987654321&quot;</span><span class="p">;</span>
+<span class="n">b8</span> <span class="o">=</span> <span class="n">b9</span><span class="p">;</span>      <span class="c1">// 别忘了结构变量天生具有相互赋值的能力</span>
+<span class="c1">// 唯一的遗憾是在初始化时如果要用C字符串，则不能用传统的赋初始值的方式</span>
+<span class="n">BigInt</span> <span class="n">b10</span> <span class="o">=</span> <span class="s">&quot;12345&quot;</span><span class="p">;</span>   <span class="c1">// 这样是不行的，编译会报错：不支持的类型转换</span>
+<span class="c1">// 替代方案1：用C++构造器</span>
+<span class="n">BigInt</span> <span class="nf">b11</span><span class="p">(</span><span class="s">&quot;12345&quot;</span><span class="p">);</span>
+<span class="c1">// 替代方案2：先定义，后赋值</span>
+<span class="n">BigInt</span> <span class="n">b12</span><span class="p">;</span>
+<span class="n">b12</span> <span class="o">=</span> <span class="s">&quot;12345&quot;</span><span class="p">;</span>
+<span class="c1">// 替代方案3：生成临时的c++ string</span>
+<span class="n">BigInt</span> <span class="n">b13</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="s">&quot;12345&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.1.2.4. </span>BigInt输入输出<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>如果我们可以让 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 也能像内置数据类型一样使用IO流输入输出的话，它就更加完美了。为了达到这个目的，我们可以重载C++的IO流运算符 <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code>。这两个运算符是IO流的运算符，要重载它们，我们首先需要引入iostream库。为了在输出的时候能够控制输出格式，还需要引入iomanip库（流操纵库）。</p>
+<p>因为它们俩并不是 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的运算符，而是输出流 <code class="docutils literal notranslate"><span class="pre">ostream</span></code> 和 <code class="docutils literal notranslate"><span class="pre">istream</span></code> 的，所以重载函数不定义在结构内部。重载函数的原型如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp"></span>
+
+<span class="c1">// 输入输出流运算不能重载为成员函数，只能重载为普通函数</span>
+<span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
+<span class="n">istream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p><code class="docutils literal notranslate"><span class="pre">ostream</span></code> 和 <code class="docutils literal notranslate"><span class="pre">istream</span></code> 是C++输出流和输入流的基本类型（基类），所有实际的输入输出流对象都是从它们两个继承而来的，比如最常见的标准输入输出流 <code class="docutils literal notranslate"><span class="pre">cin</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cout</span></code>，还有文件流、字符串流等。所以重载了这两个运算符之后，不光我们可以实现用 <code class="docutils literal notranslate"><span class="pre">cin</span> <span class="pre">&gt;&gt;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cout</span> <span class="pre">&lt;&lt;</span></code> 来从键盘输入、向屏幕输出 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 型数据，而且我们同时实现了读写文件等其他所有方式的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 数据输入输出。这一点非常棒！</p>
+<p>上面这两个重载函数的原型格式是固定的，如果我们还要实现对其他自定义类型的输入输出，那么也参考这两个原型，只需改一下参数表中第二个参数的类型就可以了。</p>
+</div>
+<p>实现 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 输入的方法非常简单，因为我们已经有了用字符串赋值的方法，所以我们只要先以字符串形式读入数据，然后用这个字符串去赋值就可以了。</p>
+<p>实现输出的方法同样很简单，只要从高到低的输出每一个节的数值就可以了。第一个节，也就是最高位上的节，用默认格式输出即可。从第二个节开始，每个节要确保按4位十进制整数的格式输出，不足4位的要在左边补0。比如12，就要输出为0012这样的形式。这里涉及到一些格式化输出的技巧：</p>
+<ol class="arabic simple">
+<li><p>在输出流中，可以使用一些叫做<strong>流操纵算子</strong>的函数来控制输出格式，它们包含在 <code class="docutils literal notranslate"><span class="pre">iomanip</span></code> 库中，所以要引入这个库；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">setw()</span></code> 算子，可以控制下一次输出时的最短宽度，比如 <code class="docutils literal notranslate"><span class="pre">cout</span> <span class="pre">&lt;&lt;</span> <span class="pre">setw(4)</span> <span class="pre">&lt;&lt;</span> <span class="pre">x</span></code> 就可以使得变量 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值在输出时至少占用4个字符的宽度；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">left</span></code>、<code class="docutils literal notranslate"><span class="pre">right</span></code> 这两个算子，可以控制下一次输出时数据的对齐方式，左对齐或右对齐；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">setfill()</span></code> 算子，可以控制下一次输出时如果实际数值位数小于指定的最小宽度，那么在空余地方填进什么字符，默认是填空格；</p></li>
+<li><p>请注意每次使用操纵算子设置的格式都是一次性的，仅针对下一次输出，随即就会自动复原为默认格式。</p></li>
+</ol>
+<p>所以每次在输出非最高位的节之前应这样控制输出格式：<code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">&lt;&lt;</span> <span class="pre">right</span> <span class="pre">&lt;&lt;</span> <span class="pre">setw(4)</span> <span class="pre">&lt;&lt;</span> <span class="pre">setfill('0')</span> <span class="pre">&lt;&lt;</span> <span class="pre">...</span></code>。</p>
+<p>现在我们已经让 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 类初具雏形了，已经实现了定义、初始化、赋值和输入输出。为了给今后实现加减乘除的算术运算时提供一点小便利，我们还给 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 增加了一个小小的辅助功能函数 <code class="docutils literal notranslate"><span class="pre">zero()</span></code> 用来判断自己是不是等于0。下面给出到目前为止的完整代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_BASE</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>	<span class="c1">// 基，每个节的数值范围为0-9999</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">_WIDTH</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>	<span class="c1">// 节数码宽度，每节4个十进制数码</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">_s</span><span class="p">;</span>			<span class="c1">// 用于存放数值的节向量，小端序存放</span>
+	<span class="c1">// 内部功能函数</span>
+	<span class="kt">void</span> <span class="nf">_assign</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">);</span>
+	<span class="kt">void</span> <span class="nf">_assign</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
+	<span class="c1">// 构造器</span>
+	<span class="n">BigInt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">BigInt</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
+	<span class="c1">// 辅助功能函数</span>
+	<span class="kt">bool</span> <span class="nf">zero</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>		<span class="c1">// 判断是不是等于0</span>
+	<span class="c1">// 赋值运算</span>
+	<span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">);</span>
+	<span class="n">BigInt</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// 输入输出流运算不能重载为成员函数，只能重载为普通函数</span>
+<span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
+<span class="n">istream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
+
+<span class="c1">// 以下为函数定义。算法编程中通常函数定义放在main()函数的后面，工程编程中函数定义往往写在另一个单独的程序文件里</span>
+<span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="o">--</span><span class="n">i</span><span class="p">];</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">right</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+	<span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">istream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+	<span class="n">is</span> <span class="o">&gt;&gt;</span> <span class="n">str</span><span class="p">;</span>
+	<span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="n">bi</span><span class="p">.</span><span class="n">_assign</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">is</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">BigInt</span><span class="o">::</span><span class="n">_assign</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">_BASE</span><span class="p">);</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">value</span> <span class="o">/=</span> <span class="n">_BASE</span><span class="p">)</span>
+		<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="n">_BASE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">BigInt</span><span class="o">::</span><span class="n">_assign</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">h</span><span class="p">,</span> <span class="n">v</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="nf">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">h</span> <span class="o">=</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">_WIDTH</span> <span class="o">?</span> <span class="n">p</span> <span class="o">-</span> <span class="nl">_WIDTH</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">)</span> <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">str</span><span class="p">[</span><span class="n">h</span><span class="o">++</span><span class="p">]</span> <span class="o">-</span> <span class="sc">&#39;0&#39;</span><span class="p">;</span>
+			<span class="n">_s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+			<span class="n">p</span> <span class="o">-=</span> <span class="n">_WIDTH</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_s</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">_s</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span><span class="o">::</span><span class="n">BigInt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">_assign</span><span class="p">(</span><span class="n">value</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="n">BigInt</span><span class="o">::</span><span class="n">BigInt</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span> <span class="n">_assign</span><span class="p">(</span><span class="n">str</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">BigInt</span><span class="o">::</span><span class="n">zero</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="n">_assign</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+	<span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">_s</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="n">_assign</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+	<span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>为了比较完整地说明自定义数据类型和高精度整数类型的实现技术，我们实现了比较多的功能，比如用多种方式进行初始化，比如流输入输出等。在实际编程解决算法问题的时候，往往并不一定要用到所有的功能。考场编程必然是采取“极简”的策略，只实现必不可少的部分，任何可有可无的代码都应该避免。所以具体解决问题的时候，高精度整数算法要如何实现，实现哪些功能，还需不需要增加一些其他功能等等问题，都是要临场判断随机应变的。</p>
+<p>重要的是理解方法，记住必须记住的语法，不要死记硬背代码。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="313_big_int_2.html" title="4.1.3. 高精度整数算法(II) 加法与乘法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="311_sequence_list.html" title="4.1.1. 顺序表"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" ><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

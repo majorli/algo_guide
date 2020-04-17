@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.4. C++模板的妙用 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2.5. 指针 VS 引用" href="150_pointers_refs.html" />
+    <link rel="prev" title="2.3. 内存块操作" href="130_mem_block.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="150_pointers_refs.html" title="2.5. 指针 VS 引用"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="130_mem_block.html" title="2.3. 内存块操作"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" accesskey="U"><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="130_mem_block.html"
+                        title="上一章"><span class="section-number">2.3. </span>内存块操作</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="150_pointers_refs.html"
+                        title="下一章"><span class="section-number">2.5. </span>指针 VS 引用</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch01/140_cpp_template.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="c">
+<h1><span class="section-number">2.4. </span>C++模板的妙用<a class="headerlink" href="#c" title="永久链接至标题">¶</a></h1>
+<p>C++语言提供了一种叫做<strong>模板</strong>（template）的技术，用来支持所谓的<strong>泛型</strong>（generic types）编程。那么什么叫做泛型呢？简单地说就是使某些特定变量可以支持多种数据类型，比如函数参数、返回值、结构体成员变量等。C++实现泛型编程的具体方式就是使用模板技术。</p>
+<p>虽然模板技术更多地被应用在面向对象的工程编程领域，但是它在算法编程中也有自己的用武之地。尤其在数据结构这个部分，模板技术是实现所谓抽象数据类型（ADT）的关键技术。在这里我们先了解一下模板技术的一些典型用法。</p>
+<p><strong>模板函数：让一个函数适用多种数据类型</strong></p>
+<p>通常调用函数时参数的数据类型必须和函数参数表里的定义一致或相兼容。例如下面这个两个整数取大者的函数，我们已经很熟悉了。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">max</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>调用这个函数，两个参数必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型或者可以隐式转换为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型的数据类型，比如 <code class="docutils literal notranslate"><span class="pre">short</span></code> 和 <code class="docutils literal notranslate"><span class="pre">char</span></code>。如果是 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span> <span class="pre">int</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">double</span></code>，虽然也可以强制转换为 <code class="docutils literal notranslate"><span class="pre">int</span></code>，但是不安全，有可能造成错误。如果为每一种数据类型都写一个这样的函数，分别叫做 <code class="docutils literal notranslate"><span class="pre">max_int()</span></code>、<code class="docutils literal notranslate"><span class="pre">max_long_long()</span></code>、<code class="docutils literal notranslate"><span class="pre">max_double()</span></code> 等等等等，是不是很傻？用模板技术就可以轻松解决这个问题，先看代码。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="hll"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span><span class="hll"><span class="n">T</span> <span class="n">max</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span>
+</span><span class="p">{</span>
+	<span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d is bigger</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">));</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lf is bigger</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">max</span><span class="p">(</span><span class="mf">2.7817</span><span class="p">,</span> <span class="mf">3.1415</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">template&lt;...&gt;</span></code> 是一条C++模板指令，写在函数头的前面，这个函数就变成了模板函数。</p></li>
+<li><p>尖括号里的 <code class="docutils literal notranslate"><span class="pre">typename</span></code> 是模板指令的关键字，用来指定这里要使用一个泛型数据类型。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span></code> 指令之后就把紧跟在它后面的那个函数变成了模板函数，这个函数的形参和返回值可以用 <code class="docutils literal notranslate"><span class="pre">T</span></code> 来指代数据类型，而不需要确定真实的数据类型。</p></li>
+</ul>
+</div>
+<p>于是通过这种方式，模板函数 <code class="docutils literal notranslate"><span class="pre">max()</span></code> 就实现了适应各种数据类型。如果函数写成声明与定义分离的形式，那么在函数声明和函数定义两处都应该加上相同的模板指令。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>值得注意的是，C++模板技术并没有想象中严格，模板函数能否正确运行完全取决于程序员是否传递了不会引起错误的参数值。例如我们的 <code class="docutils literal notranslate"><span class="pre">max()</span></code> 函数，能够正确运行的参数类型应该是数值类型。但如果我们传入了两个C-string：</p>
+<p><code class="docutils literal notranslate"><span class="pre">printf(&quot;%s</span> <span class="pre">is</span> <span class="pre">bigger\n&quot;,</span> <span class="pre">max(&quot;abc&quot;,</span> <span class="pre">&quot;def&quot;));</span></code></p>
+<p>程序编译仍会通过，而运行结果八成会告诉我们 <code class="docutils literal notranslate"><span class="pre">abc</span> <span class="pre">is</span> <span class="pre">bigger</span></code>。这就不对了，按照字符串比较的规则，明明应该是 <code class="docutils literal notranslate"><span class="pre">def</span></code> 更大啊。这是因为C-string不支持小于运算，所以 <code class="docutils literal notranslate"><span class="pre">max()</span></code> 函数不适用于比较C-string。但是C++模板并不会对传入的参数类型是否合适进行检验，于是它就一本正经地胡说八道。</p>
+</div>
+<p>C++模板并不限制一个模板函数里的泛型数量，也允许泛型和指定类型混用，所以一个模板函数可以有多个泛型，也可以同时存在指定类型。接下来我们让刚才的 <code class="docutils literal notranslate"><span class="pre">max()</span></code> 函数华丽变身为一个更加强大灵活的比较大小函数，它能接收两个不同数据类型的数值，把后一个参数强制转换为前一个参数的类型然后进行比较，返回值也采用前一个参数的数据类型。另外它还接收一个可选的逻辑型参数来指定是用来找较大的值还是较小的值。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="hll"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+</span><span class="hll"><span class="n">T</span> <span class="n">compare</span><span class="p">(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">V</span> <span class="n">b</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">max</span> <span class="o">=</span> <span class="nb">true</span><span class="p">)</span>
+</span><span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">max</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="n">b</span><span class="p">;</span>
+	<span class="k">else</span>
+		<span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">3.1415926</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="kt">long</span> <span class="kt">long</span> <span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="p">;</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lf is bigger</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">compare</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lld is smaller</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">compare</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>在这个比较函数的参数表中，最后一个逻辑参数 <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">max</span> <span class="pre">=</span> <span class="pre">true</span></code> 这样的写法叫做<strong>默认值参数</strong>。对于这样的函数，在调用时可以不提供这个参数，让函数自动使用参数表里指定的默认值。所以我们调用这个函数时可以只提供前两个参数，此时函数就默认选较大的值。</p>
+<p>C++允许函数有一个或多个默认值参数，但是它们必须放在参数表的最后面。在任何一个默认值参数之后不能出现普通参数。</p>
+</div>
+<p>上面这段程序的运行结果如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>3.141593 is bigger
+-3 is smaller
+</pre></div>
+</div>
+<p><strong>模板结构：让成员变量可以适应多种数据类型</strong></p>
+<p>模板结构是实现所谓抽象数据类型的关键技术，在数据结构的领域里会广泛使用到，C++的STL模板库就大量采用了这种技术。</p>
+<p>其实它的用法和模板函数没什么太大的区别，并不复杂。例如用结构来定义一份数据表，最多可存放100项数据，可用来存放多种不同数据类型的表格，比如有的表格存放的是整数，有的表格存放的是浮点数等等。普通的方法需要为每一种数据类型的表格定义各自的结构，使用模板结构就可以一种定义、多种用途了。看代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span> <span class="o">=</span> <span class="mf">3.1415926536</span><span class="p">;</span>
+
+<span class="hll"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span><span class="k">struct</span> <span class="n">List</span> <span class="p">{</span>
+<span class="hll">	<span class="n">T</span> <span class="n">values</span><span class="p">[</span><span class="n">MAXN</span><span class="p">];</span>
+</span>	<span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="hll">	<span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">sqr</span><span class="p">;</span>
+</span>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">sqr</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span><span class="p">;</span>
+	<span class="n">sqr</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqr</span><span class="p">.</span><span class="n">len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;sqr(%d) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">sqr</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+<span class="hll">	<span class="n">List</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cir</span><span class="p">;</span>
+</span>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">cir</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">PI</span> <span class="o">*</span> <span class="n">sqr</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+	<span class="n">cir</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">sqr</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cir</span><span class="p">.</span><span class="n">len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;area of radius %d circle = %12.8lf</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cir</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>运行结果：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sqr(0) = 0
+sqr(1) = 1
+sqr(2) = 4
+sqr(3) = 9
+sqr(4) = 16
+sqr(5) = 25
+sqr(6) = 36
+sqr(7) = 49
+sqr(8) = 64
+sqr(9) = 81
+area of radius 0 circle =   0.00000000
+area of radius 1 circle =   3.14159265
+area of radius 2 circle =  12.56637061
+area of radius 3 circle =  28.27433388
+area of radius 4 circle =  50.26548246
+area of radius 5 circle =  78.53981634
+area of radius 6 circle = 113.09733553
+area of radius 7 circle = 153.93804003
+area of radius 8 circle = 201.06192983
+area of radius 9 circle = 254.46900494
+</pre></div>
+</div>
+<p>上面这个程序计算了从0到9十个整数的平方以及它们对应半径的圆的面积，分别放在两张表里面，但是表的结构定义只有一个。这就是模板结构的威力。</p>
+<p>模板结构的定义方式和模板函数并无二致。声明模板结构变量时，在结构名后面要紧跟一对尖括号，在里面给出和泛型对应的实际数据类型。如果模板结构使用了多个泛型，那么声明变量的时候尖括号里也要按顺序依次给出对应的具体类型，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">S</span> <span class="p">{</span>
+        <span class="n">T</span> <span class="n">a</span><span class="p">;</span>
+        <span class="n">V</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">S</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">s1</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">3.14159</span> <span class="p">};</span>
+</pre></div>
+</div>
+<p id="ref-140-template-array"><strong>模板参数：搞定数组作为函数参数时的种种不爽</strong></p>
+<p>我们知道，数组用作函数参数是一件很恶心的事情，总是有许多不愉快的地方。在传统的C语言里数组作为函数参数时这个参数实际上是一个指针类型的参数，把数组名作为实参传递给函数，形参得到的实际上是指向这个数组头一个元素的指针 <code class="docutils literal notranslate"><span class="pre">&amp;a[0]</span></code>。因此函数内部的代码并不知道这个数组的长度是多少，我们还需要增加一个额外的参数来告诉函数数组的长度。所以我们的函数参数表会是这样的：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sqr_sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
+<span class="kt">double</span> <span class="nf">cube_sum</span><span class="p">(</span><span class="kt">double</span> <span class="n">data</span><span class="p">[][],</span> <span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">);</span>
+<span class="c1">// 也可以写成指针的方式，下面的两个声明和上面的是等价的</span>
+<span class="kt">int</span> <span class="nf">sqr_sum</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
+<span class="kt">double</span> <span class="nf">cube_sum</span><span class="p">(</span><span class="kt">double</span> <span class="o">**</span><span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>即使在函数参数表的数组参数中写上长度值（例如 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a[10]</span></code>）也是没有用的，写着只是给程序员看看而已，C++语言并不买这个帐，函数内部代码根本不需要管这个数字。</p>
+<p>这就造成了数组作为函数参数时的几大问题：</p>
+<ol class="arabic simple">
+<li><p>函数参数表变得冗长，尤其是当参数中有多个数组，或者有多维数组的时候。</p></li>
+<li><p>函数代码容易发生超限错误。</p></li>
+<li><p>多维数组用指针的指针的…指针表示，非常烧脑，有安全隐患，是任何一个程序员都要避之不及的用法。</p></li>
+</ol>
+<p>用C++模板技术（配合上一点点C++引用）就可以完美地解决数组作为函数参数的种种问题。先来看一个简单的例子，对一个整型一维数组里的所有元素求平方和。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="hll"><span class="k">template</span><span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span>
+</span><span class="hll"><span class="kt">int</span> <span class="n">sqr_sum</span><span class="p">(</span><span class="kt">int</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">)[</span><span class="n">N</span><span class="p">])</span>
+</span><span class="p">{</span>
+	<span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="hll">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span>		<span class="n">s</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+	<span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span> <span class="p">};</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sqr_sum</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在这个示例里，我们用C++的模板参数技术解决了传递数组长度的问题，数组的长度作为一个模板参数 <code class="docutils literal notranslate"><span class="pre">N</span></code> 被定义在模板中。当调用该函数时，C++会自动把实参数组的真实长度填到这个模板参数里面去，于是函数就简单、安全地获取到了关于数组的一切信息。</p>
+<p>这样定义了模板参数的函数也是一种模板函数，数组参数采用C++的<strong>传引用</strong>方式进行传递。传引用的参数和传统的传指针一样，函数代码是可以修改实参的，若想不允许函数修改实参，可以在形参前面加上 <code class="docutils literal notranslate"><span class="pre">const</span></code> 修饰。</p>
+<p>在一个模板函数里，可以同时存在泛型和模板参数。模板参数也可以有多个，所以完全不用担心参数表里有多个数组或者多维数组的问题。下面是一个较为复杂的例子，计算一个泛型二维数组里各个元素的立方和，并且确保函数不修改原数组里的数值。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="hll"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span>
+</span><span class="hll"><span class="n">T</span> <span class="n">cube_sum</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">num</span><span class="p">)[</span><span class="n">M</span><span class="p">][</span><span class="n">N</span><span class="p">])</span>
+</span><span class="p">{</span>
+	<span class="n">T</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="hll">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span><span class="hll">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</span>			<span class="n">s</span> <span class="o">+=</span> <span class="n">num</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">num</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+	<span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">double</span> <span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{{</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.2</span> <span class="p">},</span> <span class="p">{</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">4.4</span> <span class="p">}};</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%lf</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">cube_sum</span><span class="p">(</span><span class="n">f</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>怎么样？是不是很完美？害怕指针的我们以后再也不用担心给函数传递数组了。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="150_pointers_refs.html" title="2.5. 指针 VS 引用"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="130_mem_block.html" title="2.3. 内存块操作"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" ><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

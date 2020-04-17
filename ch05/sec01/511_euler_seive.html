@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>6.1.1. 欧拉线性筛和欧拉函数 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="7. 高级数据结构与算法" href="../../600_advanced_topics.html" />
+    <link rel="prev" title="6.1. 经典数值算法" href="../510_medium_number_algos.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../600_advanced_topics.html" title="7. 高级数据结构与算法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="../510_medium_number_algos.html" title="6.1. 经典数值算法"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../500_medium_algos.html" ><span class="section-number">6. </span>较为复杂的经典算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../510_medium_number_algos.html" accesskey="U"><span class="section-number">6.1. </span>经典数值算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6.1.1. 欧拉线性筛和欧拉函数</a><ul>
+<li><a class="reference internal" href="#id2">6.1.1.1. 欧拉线性筛</a></li>
+<li><a class="reference internal" href="#id3">6.1.1.2. 欧拉函数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="../510_medium_number_algos.html"
+                        title="上一章"><span class="section-number">6.1. </span>经典数值算法</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../600_advanced_topics.html"
+                        title="下一章"><span class="section-number">7. </span>高级数据结构与算法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch05/sec01/511_euler_seive.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ref-511">
+<span id="index-0"></span><span id="id1"></span><h1><span class="section-number">6.1.1. </span>欧拉线性筛和欧拉函数<a class="headerlink" href="#ref-511" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id2">
+<h2><span class="section-number">6.1.1.1. </span>欧拉线性筛<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>在基础算法部分我们已经学习过怎么利用埃氏筛法来打出一张指定范围内的质数表。我们也提到过，埃氏筛法虽然已经快到足以满足绝大多数的题目要求，但是如果数据范围极其残暴而且程序其他部分还有非常耗时的复杂算法时，有可能还是会不够快。这种时候需要用一种称为 <em>欧拉线性筛</em> 或简称为 <em>欧拉筛</em>、<em>线性筛</em> 的 <span class="math notranslate nohighlight">\(O(n)\)</span> 算法来打质数表。</p>
+<p>这种算法为什么能比埃氏筛更加高效以至于能达到线性时间效率呢？秘密就在于欧拉巧妙地颠倒了内外两层循环，因此就可以设法保证每一个合数只会被它的最小质因数晒掉。为了直观理解，我们用筛选20以内质数的过程来具体看一看。现在我们需要从2到20这一组整数中先后筛掉4,6,8,9,10,12,14,15,16,18,20这11个合数，留下2,3,5,7,11,13,17,19这8个质数。</p>
+<p>先来回顾埃氏筛子的做法。埃氏筛子利用两层循环来完成筛选。外层循环是从小到大的已知质数，从2开始，直到某个数的平方超过20；内存循环则是从2开始逐一递增的正整数，就是每次筛选时的倍数。所以用埃氏筛子进行筛选，依次会晒掉以下这些数：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 13%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>外循环轮次</p></th>
+<th class="head"><p>质数</p></th>
+<th class="head"><p>被筛除的合数</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>4, 6, 8, 10, 12, 14, 16, 18, 20</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>3</p></td>
+<td><p><em>6</em>, 9, <em>12</em>, 15, <em>18</em></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>5</p></td>
+<td><p>5的平方大于20，筛选结束</p></td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，在第二轮用质数3进行筛选的时候，我们实际上重复筛了三个数：6、12和18。原因在于它们都有比3更小的质因数2，而外循环是按照质数从小到大的顺序进行的。这就是埃筛达不到线性时间效率的原因。</p>
+<p>下面我们来看欧拉线性筛是怎么操作的。我们如果能按下面这个顺序来进行筛选，就不会出现重复：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 21%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>倍数</p></th>
+<th class="head"><p>已知质数</p></th>
+<th class="head"><p>合数</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>[2]</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>[2,3]</p></td>
+<td><p>6, 9</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>[2,3]</p></td>
+<td><p>8, 但不筛掉3的4倍12</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>[2,3,5]</p></td>
+<td><p>10, 15</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>[2,3,5]</p></td>
+<td><p>12, 但不筛掉3的6倍18</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>[2,3,5,7]</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>[2,3,5,7]</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>[2,3,5,7]</p></td>
+<td><p>18</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>[2,3,5,7]</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td><p>11+</p></td>
+<td><p>…</p></td>
+<td><p>超过20，不再有筛选，仅收集已知质数</p></td>
+</tr>
+</tbody>
+</table>
+<p>要实现这个顺序有两个关键点：一是以倍数从小到大为外层循环，以已知质数从小到大为内层循环，如何确定每一轮外循环时的已知质数列表；二是确保每一个合数都被它的最小的那个质因数筛掉，例如18，它在第9轮外循环以2的9倍这个身份被筛，而不是在第6轮以3的6倍的身份被筛掉。</p>
+<p>每一次进入外循环，假设倍数为i，那么我们可以一定确定以及肯定的已经经过筛选的已知质数，就是存在于从2到i的范围之内的所有质数，可以证明这个范围里的所有合数都是已经被筛掉了的。因为最大到i本身，如果它是一个合数，那么它一定可以表示为 <span class="math notranslate nohighlight">\(i=k\cdot q\)</span>，其中q是它的最小质因数，k是倍数，而且一定 <span class="math notranslate nohighlight">\(k&lt;i,q&lt;i\)</span>，所以这个合数i一定已经在第k次外循环的时候作为q的k倍数被筛掉了。其他比i更小的合数就更不用说了。例如上面的表格里，在4倍数的外循环时，4这个整数已经在2倍数的外循环中作为质数2的2倍数被筛掉；在6倍数的外循环时，6已经在3倍数的外循环里作为质数2的3倍数筛掉了。但是比i更大的合数就不能保证了，例如在7倍数的外循环时，仅比7大1的整数8还没有被筛掉呢。综上所述，我们就可以顺利地解决第一个关键点了。在每一轮以i为倍数的外循环时，我们只要判断整数i本身是不是已经被筛掉，如果还没有被筛就足以说明i本身就是下一个已知质数，将它加入到已知质数表里就可以了，而最初的最初那个质数2就是天然的第一个已知质数。</p>
+<p>外循环从2倍开始，逐次提升。设我们要筛选的范围为2到n，那么因为最小质数为2，所以会发生筛掉合数的外循环最多到n/2（整数除法，向下取整）倍。如果n是偶数例如20，那么外循环到11倍数时最小的候选合数是22，超过20了；如果n是奇数例如21，那么同样的22已经超过了21。因此外循环在 <span class="math notranslate nohighlight">\(2\to \lfloor n/2 \rfloor\)</span> 倍时会发生筛掉合数，此后每一轮外循环其实已经不会再发生筛选了，它们的作用只是收集已经筛出来的质数。</p>
+<p>第二个关键点如何实现就比较微妙了。从上面这个具体的例子来看，就是要怎样在4倍数的循环时，确保3的4倍数12不需要筛，而是把它留给后面的6倍数循环去筛。同样的，在6倍数循环时怎样确保18不会被筛，而是把它留给后面的9倍数循环去。我们来看一下4倍数循环的情况。在4倍数循环时，已知质数列表为[2,3]。按照从小到大的顺序来进行筛选，筛掉2的4倍数8后我们发现倍数4本身能够被质数2整除，所以对于质数3，它的4倍数12一定可以这样分解：<span class="math notranslate nohighlight">\(12=4\cdot3=(2\cdot2)\cdot3=(3\cdot2)\cdot2=6\cdot2\)</span>，也就是说它一定能分解成2的6倍数。如果还有比3更大的质数，那么同理也一定可以分解成2的若干倍数。所以2之后的任何质数的4倍数都不需要筛掉了，以后一定会在某次后续的外循环时作为2的若干倍被再次找到并筛掉。这个规律可以推广为一般情况，在i倍数外循环时，如果筛掉某个质数p的i倍数后我们发现i本身就是p的倍数（i可以被p整除），设 <span class="math notranslate nohighlight">\(i=kp\)</span>，那么对于任何比p更大的质数q，它的i倍数一定可以表示为 <span class="math notranslate nohighlight">\(iq=(kp)q=(kq)p\)</span>，即可以表示为p的某个更大的倍数。所以为了确保每一个合数都被它的最小质因数筛掉，当遇到这种情况时，i倍数的外循环就可以结束了，直接进入到下一轮i+1倍数的外循环去。</p>
+<p>好了，上面说了一大堆分析说明，可能还是有点抽象，现在上代码。欧拉线性筛的算法设计比较精巧，也比较难读懂，所以建议学习时一定要自己试着运行一下看看，最好能先在纸面上用一个比较小的n来推演一遍，然后运行一下程序试试，所以请务必在代码里合适的地方加上观察筛选过程的语句进行试验。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>和埃氏筛子的程序一样，如果为了避免手动初始化筛子里每个元素为true，我们可以把筛子元素的bool值反过来用，即用true表示不是质数而false表示是质数。当然这么做会让编程者的思维比较别扭，考虑到欧拉线性筛算法本身就比较别扭，这里我就用了正常的表示法，在每次筛选开始前用 <code class="docutils literal notranslate"><span class="pre">memset()</span></code> 函数初始化整个筛子，毕竟这样做比循环赋值的速度是要快许多的。</p>
+</div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mf">1e6</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">primes</span><span class="p">[</span><span class="n">MAXN</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+<span class="kt">bool</span> <span class="n">is_prime</span><span class="p">[</span><span class="n">MAXN</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nb">false</span> <span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">euler_seive</span><span class="p">(</span><span class="kt">int</span> <span class="n">max</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">is_prime</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">));</span>
+	<span class="n">is_prime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="hll">		<span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</span><span class="hll">			<span class="n">primes</span><span class="p">[</span><span class="n">n</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</span>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">is_prime</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="hll">			<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="hll">				<span class="k">break</span><span class="p">;</span>
+</span>		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d primes found in [2, %d]:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">euler_seive</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">n</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%3d,&quot;</span><span class="p">,</span> <span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<ol class="arabic simple">
+<li><p>第15、16行的作用就是实现关键点一：收集到i倍数外循环时的已知质数。请注意观察它是怎样确保按从小到大的顺序正确收集到[2,max]范围内的所有质数的。</p></li>
+<li><p>第19、20行就是那一行实现了关键点二的神奇代码，请注意理解，这才是使得这种筛子能成为线性筛的关键。</p></li>
+</ol>
+</div>
+<p>我们可以看到，欧拉线性筛由于需要留存一个已知质数列表 <code class="docutils literal notranslate"><span class="pre">primes[MAXN]</span></code>，所以比埃氏筛子要多用数倍的内存（int占用4个字节，而bool只用一个字节），而且大多数情况下它和埃氏筛子相比速度的差异并不明显。其实用欧拉线性筛来打质数表是一件杀鸡用牛刀的事情，它的主要作用是用来计算所谓积性函数，最典型的是下面一节要介绍的欧拉 <span class="math notranslate nohighlight">\(\varphi\)</span> 函数。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">6.1.1.2. </span>欧拉函数<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>欧拉函数，也叫 <span class="math notranslate nohighlight">\(varphi\)</span> 函数，是数论的一个基础知识点，也是信息学竞赛的一个必备知识点。<span class="math notranslate nohighlight">\(varphi(x):\Bbb{Z}^+\mapsto\Bbb{Z}^+\)</span> 是一个正整数自变量到正整数函数值的函数，它表示在正整数区间 <span class="math notranslate nohighlight">\([1,x-1]\)</span> 内和 <span class="math notranslate nohighlight">\(x\)</span> 互质的数的个数，包括1。例如 <span class="math notranslate nohighlight">\(\varphi(4)=2\)</span>，因为4有两个小于它自己的互质数{1,3}。</p>
+<p>欧拉函数的计算公式为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\varphi(x)=
+\begin{cases}
+1&amp;\text{when }x=1\\
+x\prod_{i=1}^n\left(1-\frac{1}{p_i}\right)&amp;\text{when }x&gt;1
+\end{cases}\end{split}\]</div>
+<p>其中，<span class="math notranslate nohighlight">\(p_i,(i=1,\dots,n)\)</span> 是x的质因数。例如12有两个质因数2和3，所以 <span class="math notranslate nohighlight">\(\varphi(12)=12(1-{1\over2})(1-{1\over3})=4\)</span>，事实上，12确实恰有4个小于它的互质数{1,5,7,11}。</p>
+<p>很多算法教材并不会去证明欧拉函数的算式，但是我们还是有必要了解一下为什么会有这样一个奇怪的算式。我们知道，两个互质的数没有共同质因数。如果 <span class="math notranslate nohighlight">\(x\)</span> 有 <span class="math notranslate nohighlight">\(n\)</span> 个质因数 <span class="math notranslate nohighlight">\(p_1,p_2,\dots,p_n\)</span>，那么和它互质的数一定不是这中间任何一个 <span class="math notranslate nohighlight">\(p_i\)</span> 的倍数。另外，一个数的倍数在整个整数范围内是均匀分布的，所以在任意一段均匀分布的整数内，<span class="math notranslate nohighlight">\(p_i\)</span> 的倍数一定占有 <span class="math notranslate nohighlight">\(1\over p_i\)</span> 的比例，因而不是 <span class="math notranslate nohighlight">\(p_i\)</span> 的倍数的数一定占有 <span class="math notranslate nohighlight">\(1-{1\over p_i}\)</span> 的比例。按照乘法原则，在任意一段均匀分布的整数内，既不是 <span class="math notranslate nohighlight">\(p_1\)</span>，又不是 <span class="math notranslate nohighlight">\(p_2\)</span>，……，又不是 <span class="math notranslate nohighlight">\(p_n\)</span> 的倍数的数占据的比例就是 <span class="math notranslate nohighlight">\(\prod_{i=1}^n\left(1-\frac{1}{p_i}\right)\)</span>。于是，在从 <span class="math notranslate nohighlight">\(1\)</span> 到 <span class="math notranslate nohighlight">\(x\)</span> 这一段连续的 <span class="math notranslate nohighlight">\(x\)</span> 个整数里，和 <span class="math notranslate nohighlight">\(x\)</span> 互质的数就一共有 <span class="math notranslate nohighlight">\(x\prod_{i=1}^n\left(1-\frac{1}{p_i}\right)\)</span> 个。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">示例</p>
+<p>仍以12为例，我们知道12有两个质因数2和3。在1到12这一段整数里有 <span class="math notranslate nohighlight">\(1-{1\over2}={1\over2}\)</span> 的数不是2的倍数，一共6个，分别是{1,3,5,7,9,11}。在这6个数中有 <span class="math notranslate nohighlight">\(1-{1\over3}={2\over3}\)</span> 的数不是3的倍数，一共4个，{1,5,7,9}。所以 <span class="math notranslate nohighlight">\(\varphi(12)=12(1-{1\over2})(1-{1\over3})=4\)</span>。</p>
+</div>
+<p><strong>欧拉函数的几个计算性质</strong></p>
+<ol class="arabic simple">
+<li><p>对于质数 <span class="math notranslate nohighlight">\(p\)</span>，<span class="math notranslate nohighlight">\(\varphi(p)=p-1\)</span>。</p></li>
+<li><p>若 <span class="math notranslate nohighlight">\(p\)</span> 为质数，<span class="math notranslate nohighlight">\(n\)</span> 是 <span class="math notranslate nohighlight">\(p\)</span> 的幂，即 <span class="math notranslate nohighlight">\(n=p^k,(k\in\Bbb{Z}^+,k&gt;1)\)</span>，则 <span class="math notranslate nohighlight">\(\varphi(n)=p^k-p^{k-1}\)</span>。</p></li>
+<li><p>积性：若 <span class="math notranslate nohighlight">\(m\)</span> 和 <span class="math notranslate nohighlight">\(n\)</span> 互质，则 <span class="math notranslate nohighlight">\(\varphi(m\cdot n)=\varphi(m)\cdot\varphi(n)\)</span>。</p></li>
+<li><p>非完全积性：若 <span class="math notranslate nohighlight">\(p\)</span> 是质数，<span class="math notranslate nohighlight">\(n=kp\)</span> 是其倍数，则 <span class="math notranslate nohighlight">\(\varphi(n\cdot p)=\varphi(n)\cdot p\)</span>。</p></li>
+<li><p>若 <span class="math notranslate nohighlight">\(n\)</span> 为奇数，则 <span class="math notranslate nohighlight">\(\varphi(2n)=\varphi(n)\)</span>。</p></li>
+</ol>
+<div class="admonition- admonition">
+<p class="admonition-title">证明</p>
+<ol class="arabic simple">
+<li><p>根据与质数互质的数的数学性质可直接推出结论，或者用欧拉函数的计算公式推出：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\varphi(p)=p\left(1-{1\over p}\right)=p-1\]</div>
+<ol class="arabic simple" start="2">
+<li><p>利用欧拉函数的计算公式推导：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\varphi(n)=n\left(1-{1\over p}\right)=p^k\left(1-{1\over p}\right)=p^k-p^{k-1}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>利用欧拉函数的计算公式推导，设 <span class="math notranslate nohighlight">\(m\)</span> 有 <span class="math notranslate nohighlight">\(k\)</span> 个质因数 <span class="math notranslate nohighlight">\(p_1,\dots,p_k\)</span>，<span class="math notranslate nohighlight">\(n\)</span> 有 <span class="math notranslate nohighlight">\(l\)</span> 个质因数 <span class="math notranslate nohighlight">\(q_1,\dots,q_l\)</span>，因为 <span class="math notranslate nohighlight">\(m\)</span> 和 <span class="math notranslate nohighlight">\(n\)</span> 互质，所以这些质因数全无重复，且恰为 <span class="math notranslate nohighlight">\(mn\)</span> 的所有质因数，因此：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\varphi(m\cdot n)&amp;=mn\prod_{i=1}^k\left(1-{1\over{p_i}}\right)\prod_{j=1}^l\left(1-{1\over{q_j}}\right)\notag\\
+&amp;=\left[m\prod_{i=1}^k\left(1-{1\over{p_i}}\right)\right]\cdot\left[n\prod_{j=1}^l\left(1-{1\over{q_j}}\right)\right]\notag\\
+&amp;=\varphi(m)\varphi(n)
+\end{align}\end{split}\]</div>
+<ol class="arabic simple" start="4">
+<li><p>利用欧拉函数的计算公式推导，<span class="math notranslate nohighlight">\(n\cdot p=n\cdot p^2\)</span>，它和 <span class="math notranslate nohighlight">\(n\)</span> 有完全相同的质因数，假设它们是 <span class="math notranslate nohighlight">\(p_1,\cdots,p_n\)</span>，其中包含 <span class="math notranslate nohighlight">\(p\)</span>。于是：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\varphi(n\cdot p)=np\prod_{i=1}^n\left(1-{1\over{p_i}}\right)=\left[n\prod_{i=1}^n\left(1-{1\over{p_i}}\right)\right]\cdot p=\varphi(n)\cdot p\]</div>
+<ol class="arabic simple" start="5">
+<li><p>若 <span class="math notranslate nohighlight">\(n\)</span> 为奇数，那么它一定和2互质，所以根据性质1和3可直接得出：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\varphi(2n)=\varphi(n)\cdot\varphi(2)=\varphi(n)\cdot(2-1)=\varphi(n)\]</div>
+</div>
+<p><strong>欧拉函数的算法</strong></p>
+<p>首先来看如何直接通过欧拉函数的表达式来计算函数值。这很简单，我们只要从2开始逐个找出x的所有质因数，然后按照函数表达式陆续计算即可。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">phi</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>		<span class="c1">// 特判：输入数据错误</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>		<span class="c1">// 特判：phi(1) = 1</span>
+	
+	<span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>	<span class="c1">// p一定是一个质数</span>
+			<span class="n">phi</span> <span class="o">-=</span> <span class="n">phi</span> <span class="o">/</span><span class="n">p</span><span class="p">;</span>	<span class="c1">// 相当于phi = phi * (1 - 1 / p)</span>
+			<span class="c1">// 除尽n中的所有p，确保下一个能被n整除的p一定是质数</span>
+			<span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">n</span> <span class="o">/=</span> <span class="n">p</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="n">p</span><span class="o">++</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">phi</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个小函数很好理解，唯一的小窍门就是将 <span class="math notranslate nohighlight">\(n(1-1/p)\)</span> 改成了 <span class="math notranslate nohighlight">\(n-n/p\)</span>。很多网上的代码直接按数学公式计算 <span class="math notranslate nohighlight">\(n(p-1)/p\)</span>，并且为了避免中间结果超限而使用了先除后乘两行代码。而这里采用的写法把一除一乘两次复杂运算改成了一行代码里的一次除法和一次减法，并且同时避免了乘法超限隐患。</p>
+<p><strong>用欧拉线性筛打表欧拉函数</strong></p>
+<p>前面已经说过，欧拉线性筛的一个重要用途就是用来计算积性函数，而欧拉 <span class="math notranslate nohighlight">\(\varphi\)</span> 函数就是一个积性函数（尽管它不是完全积性函数），所以利用它的计算性质，结合欧拉线性筛的特点，我们可以在一定范围内打出质数表的同时方便地打出欧拉函数表，时间效率为 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mf">1e6</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">phi_euler</span><span class="p">[</span><span class="n">MAXN</span><span class="p">],</span> <span class="n">primes</span><span class="p">[</span><span class="n">MAXN</span><span class="p">];</span>	<span class="c1">// 欧拉筛打phi函数值的表，已知质数表</span>
+
+<span class="kt">void</span> <span class="nf">phi_by_euler_seive</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 初始化为phi[i] = 0，作为该数是否质数的标志</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">phi_euler</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+	<span class="n">phi_euler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>	<span class="c1">// 特判：phi[1] = 1</span>
+
+	<span class="kt">int</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>		<span class="c1">// 已知质数的个数</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">phi_euler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>		<span class="c1">// 说明i是一个质数</span>
+			<span class="n">primes</span><span class="p">[</span><span class="n">p</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>		<span class="c1">// 收录进已知质数表</span>
+			<span class="n">phi_euler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>		<span class="c1">// phi函数计算性质1</span>
+		<span class="p">}</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>	<span class="c1">// i是primes[j]的倍数</span>
+				<span class="c1">// phi函数计算性质4</span>
+				<span class="n">phi_euler</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span>
+					<span class="n">phi_euler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>			<span class="c1">// i和primes[j]互质</span>
+				<span class="c1">// phi函数计算性质3</span>
+				<span class="n">phi_euler</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span>
+					<span class="n">phi_euler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">phi_euler</span><span class="p">[</span><span class="n">primes</span><span class="p">[</span><span class="n">j</span><span class="p">]];</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>和用来单纯筛质数的筛子稍有区别，这里我们不再维护一个用来表示是否质数的 <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">is_prime[MAXN]</span></code> 数组，而是改为函数值表 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">phi_euler[MAXN]</span></code>。在初始化时把除了 <code class="docutils literal notranslate"><span class="pre">phi[1]</span></code> 以外的所有函数值设置为0，因为欧拉函数的值永远大于0，所以这样做能起到标志该数是否为质数的作用。后面就简单了，用和欧拉质数筛一样的结构，在每筛到一个数时根据计算性质1、3、4计算出它的函数值即可。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>欧拉线性筛需要两个数组，一个用来存放已知质数，另一个根据筛子当前的作用可以零活自定。例如当它用来筛选质数时，用一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型数组表示是否质数，当它用来计算某个积性函数时，可以像上面的代码里一样，用一个数值型的数组来存放函数值。要注意的一点是这个数值型数组要实现初始化为一个该函数值域以外的数，以便筛子能判断某个数有没有被计算过函数值（根据欧拉筛的特点，外循环每遇到一个还没计算过函数值的数，它一定是质数）。</p>
+</div>
+<p><strong>用埃氏筛打表欧拉函数</strong></p>
+<p>其实埃氏筛也可以用来打表欧拉函数，但是它的速度会比较慢一点。那为什么还要提到它？因为它用的内存小，而且在百万级以内的数据规模上它跑得并不比欧拉筛慢多少。最重要的一点是，埃氏筛简单易懂，代码简单好写。说实话如果是在考场上要快速写出一个正确无误的欧拉线性筛是有一定难度的，有时候数据规模不大完全可以用简单的埃氏筛来代替。就算遇到难以判断数据规模是否过大的题目，也完全可以先尝试用埃氏筛子，会TLE再改欧拉筛，说不定就过了呢？</p>
+<p>埃氏筛打表欧拉函数的代码如下，不解释了，自己阅读注释把它看懂吧（试卷上程序阅读题的代码可都没有注释的，所以读代码是必备技能哦）。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mf">1e6</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">phi_erato</span><span class="p">[</span><span class="n">MAXN</span><span class="p">];</span>			<span class="c1">// 埃氏筛打phi函数值的表</span>
+
+<span class="kt">void</span> <span class="nf">phi_by_erato_seive</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 初始化为phi[i] = i，一方面先保存好原数值</span>
+	<span class="c1">// 另一方面作为该数是否被处理过的标志</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">phi_erato</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// 从2开始依序逐一处理，遇到phi[i] == i的则表示i一定是质数</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">phi_erato</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">phi_erato</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>	<span class="c1">// 质数的phi值为自己减1</span>
+			<span class="c1">// 从i的2倍开始对范围内所有i的倍数进行处理，即乘上</span>
+			<span class="c1">// 关于质因数i的项(1 - 1 / i)</span>
+			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">j</span> <span class="o">*</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+				<span class="n">phi_erato</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">phi_erato</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">i</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>上面介绍的几个算法代码，一定要在理解的基础上记忆，不要死记硬背代码。为了加深理解，请务必自己敲一遍，加上观察用的中间过程输出语句，然后加上一个main函数自己去试试，直到搞懂为止。</p>
+<p><strong>欧拉函数的应用</strong></p>
+<p>欧拉函数最常见的一个应用是计算一定范围的整数对中互质对的数量。例如给定一个大于1的正整数n，把从1到n这n个整数两两配对可以组成n<sup>2</sup>个整数对：(1,1),(1,2),…,(1,n),(2,1),(2,2),…,(2,n),…,(n,1),(n,2),…,(n,n)，这里面有多少个数对是互质的呢？这个问题我们留在以后的例题中去解答，现在可以先思考一下用欧拉函数怎么解，有没有不用欧拉函数的解法？</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../600_advanced_topics.html" title="7. 高级数据结构与算法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="../510_medium_number_algos.html" title="6.1. 经典数值算法"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../500_medium_algos.html" ><span class="section-number">6. </span>较为复杂的经典算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../510_medium_number_algos.html" ><span class="section-number">6.1. </span>经典数值算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

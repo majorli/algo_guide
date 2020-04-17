@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.5.5. 非比较型排序算法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.5.6. C++算法库排序函数" href="256_cpp_sort.html" />
+    <link rel="prev" title="3.5.4. 快速排序" href="254_quick_sort.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="256_cpp_sort.html" title="3.5.6. C++算法库排序函数"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="254_quick_sort.html" title="3.5.4. 快速排序"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../250_sort_algos.html" accesskey="U"><span class="section-number">3.5. </span>基础排序算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.5.5. 非比较型排序算法</a><ul>
+<li><a class="reference internal" href="#id2">3.5.5.1. 计数排序</a></li>
+<li><a class="reference internal" href="#id3">3.5.5.2. 桶排序</a></li>
+<li><a class="reference internal" href="#id4">3.5.5.3. 基数排序</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="254_quick_sort.html"
+                        title="上一章"><span class="section-number">3.5.4. </span>快速排序</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="256_cpp_sort.html"
+                        title="下一章"><span class="section-number">3.5.6. </span>C++算法库排序函数</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec05/255_non_cmp_sorts.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.5.5. </span>非比较型排序算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>本节介绍三种经典的<strong>非比较型排序</strong>算法：<strong>计数排序</strong>、<strong>桶排序</strong>和<strong>基数排序</strong>。</p>
+<p>所谓非比较型排序算法就是指不使用元素之间的比较运算来实现的排序算法。非比较型排序算法一般使用范围有限，对数据类型、取值范围、数据量、数据分布规律等都有一些特殊要求，符合这些特定要求的情况才能适用。但是这些算法在满足各自特定条件的时候往往会速度非常快，实际的效果超过快速排序等最快的比较型排序算法。</p>
+<p>非比较型排序的设计思想往往是紧扣特定条件，充分利用特殊数据的特殊性质的精巧构思。相比于实际应用，学习它们的算法设计思想更为重要。在算法竞赛的编程环节中一般很少遇到非要使用这些算法的题目，但是在笔试环节却经常会考到此类排序算法或者它们的变种。所以本节将重点针对它们的设计思路进行介绍，实际编程留作练习。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">3.5.5.1. </span>计数排序<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p><strong>计数排序</strong>是基于“出现次数”统计的一种排序算法。如果待排序序列中的数据是一个有限集合的元素，理论上就可以使用计数排序算法。</p>
+<p>最天然的有限集合是有取值范围的整数，例如0到100之间的整数。但是0到100之间的实数就不是有限集合。再如中国所有城市的名称是一个字符串型的有限集合，但中国人所有可能的姓名就是不是一个有限集合。计数排序最常见的应用场景是对1000以内的自然数序列进行排序，排序速度接近于线性。</p>
+<p>以对 <span class="math notranslate nohighlight">\(K\)</span> 以内的自然数序列进行排序为例，待排序序列为 <span class="math notranslate nohighlight">\(A\)</span>，长度为 <span class="math notranslate nohighlight">\(n\)</span>，任一元素都满足 <span class="math notranslate nohighlight">\(0\le A[i]\lt K\)</span>。这时我们可以申请一个长度为 <span class="math notranslate nohighlight">\(K\)</span> 的整型数组 <span class="math notranslate nohighlight">\(C\)</span>，用于给序列中的元素进行计数。对于 <span class="math notranslate nohighlight">\(0\le j\lt K\)</span>，<span class="math notranslate nohighlight">\(C[j]\)</span> 表示值为 <span class="math notranslate nohighlight">\(j\)</span> 的元素出现的个数。所以初始化的时候我们让 <span class="math notranslate nohighlight">\(C\)</span> 的所有值都等于0，然后从头到尾遍历每一个待排序序列中的元素，每遍历一个元素 <span class="math notranslate nohighlight">\(A[i]\)</span> 就把它对应的计数值 <span class="math notranslate nohighlight">\(C[A[i]]\)</span> 增1。<span class="math notranslate nohighlight">\(A\)</span> 中所有元素遍历结束计数也就完成了。接下来我们再从头到尾遍历 <span class="math notranslate nohighlight">\(C\)</span> 中的每一个计数值，按照每一个计数值将对应的元素值依次写回到原序列中就完成了排序。</p>
+<p>例如我们对10以内的8个自然数的数组 A: [5, 3, 2, 7, 3, 9, 1, 7] 进行计数排序。我们需要开一个长度为10的数组 C，排序过程如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1、计数过程，从 A[0] 到 A[7] 依次遍历每一个元素值并进行计数: ++C[A[i]]
+
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+    ^                                               ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 0, 0, 1, 0, 1, 0, 0, 0, 0]
+       ^                                      ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 0, 1, 1, 0, 1, 0, 0, 0, 0]
+          ^                                ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 0, 1, 1, 0, 1, 0, 1, 0, 0]
+             ^                                            ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 0, 1, 2, 0, 1, 0, 1, 0, 0]
+                ^                             ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 0, 1, 2, 0, 1, 0, 1, 0, 1]
+                   ^                                            ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 1, 1, 2, 0, 1, 0, 1, 0, 1]
+                      ^                 ^
+A: [5, 3, 2, 7, 3, 9, 1, 7]  ==&gt; C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1]
+                         ^                                ^
+2、回写过程，从 C[0] 到 C[9] 依次遍历每一个计数值并将对应值回写到原数组
+
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [] 值0没有出现过，不回写
+    ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1] 值1出现1次，回写1个1
+       ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2] 值2出现1次，回写1个2
+          ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3] 值3出现2次，回写2个3
+             ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3] 值4没有出现过，不回写
+                ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3, 5] 值5出现1次，回写1个5
+                   ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3, 5] 值6没有出现，不回写
+                      ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3, 5, 7, 7] 值7出现2次，回写2个7
+                         ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3, 5, 7, 7] 值8没有出现，不回写
+                            ^
+C: [0, 1, 1, 2, 0, 1, 0, 2, 0, 1] ==&gt; A: [1, 2, 3, 3, 5, 7, 7, 9] 值9出现1次，回写1个9
+                               ^
+排序完成。
+</pre></div>
+</div>
+<p>可见计数排序的思路非常简单，如果是对一定范围内的自然数进行编程也是非常方便的，因为元素值刚好可以构成从小到大的计数数组下标值。如果元素取值范围不是一定范围内的自然数，就需要将元素值和计数数组的下标值做一一对映。注意对映的规则要确保计数数组的下标对应的元素值是有序的。例如要排序的数据取值范围为从-100到100的整数，包括-100和100两个端点，一共201个可能值。那么我们一般就需要把-100对应为计数数组的 <span class="math notranslate nohighlight">\(C[0]\)</span> 元素，把100对映为 <span class="math notranslate nohighlight">\(C[200]\)</span>，中间的值保持有序地对映，可以总结为这样一条规律：元素值 <span class="math notranslate nohighlight">\(j\)</span> 的计数值对映到 <span class="math notranslate nohighlight">\(C[j+100]\)</span>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>编写一个对 <span class="math notranslate nohighlight">\(n\)</span> 个奇数进行计数排序的程序，<span class="math notranslate nohighlight">\(0\lt n \lt 100000\)</span>。所有奇数保证大于等于-199且小于等于401。</p>
+<p>输入两行，第一行一个整数 <span class="math notranslate nohighlight">\(n\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个奇数 <span class="math notranslate nohighlight">\(a_i\)</span>。</p>
+<p>输出一行，为排好序的 <span class="math notranslate nohighlight">\(n\)</span> 个奇数，每两个数之间用一个空格隔开，行首和行尾不能有空格。</p>
+</div>
+<p>如果是单纯的计数排序，那么无所谓稳定不稳定，因为它很难实现对复杂结构数据的排序，也很难适应多关键字的排序。但是一般我们会采用一个技巧，计数结束后对计数数组做前缀和，使其值从单纯的计数值变成指示对应的元素在排完序的序列中所处的最后一个位置，然后逆序读取每一个待排序元素，按照计数数组中的位置写到一块新开辟的临时空间里去，这样处理完之后新的临时空间里存放的就是已经排好序的新序列。这样以来就变成了稳定排序，而且可以支持复杂数据结构元素的排序了。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>上面所说的这个技巧很重要，笔试经常会考到，一定要学会。具体的实现方法参考本节最后的基数排序示例程序。</p>
+</div>
+<p>它的空间复杂度为 <span class="math notranslate nohighlight">\(O(K)\)</span>，有些时候计数过程结束后并不把数据回写到原数组，而是另外存储，或是如上面所述的技巧新开辟一块临时空间的，那么空间复杂度为 <span class="math notranslate nohighlight">\(O(n+K)\)</span>。</p>
+<p>以读写数据元素为基本运算，计数排序的计数过程遍历所有待排序数据，共 <span class="math notranslate nohighlight">\(n\)</span> 个元素，回写排序过程遍历整个计数数组，共 <span class="math notranslate nohighlight">\(K\)</span> 个元素，故时间复杂度为 <span class="math notranslate nohighlight">\(O(n+K)\)</span>。</p>
+<p>当 <span class="math notranslate nohighlight">\(K\)</span> 过大时，无论空间还是时间都会变得很大，尤其是空间占用会变得难以承受。比如要对long long型取值范围内的整数排序，<span class="math notranslate nohighlight">\(K=2^{64}\)</span>，计数数组占用的空间至少为 <span class="math notranslate nohighlight">\(2^{52}\)</span> (TB)，恐怕全中国的计算机内存加起来也没有那么大。一般来说，计数排序适用于 <span class="math notranslate nohighlight">\(K\)</span> 在万级以内的场景，一千以内效果最佳。</p>
+<p>最后是一个必须要澄清的问题，时间复杂度 <span class="math notranslate nohighlight">\(O(n+K)\)</span> 是什么级别？很多网站和教程上说是“线性”，是吗？错！按照正规的算法理论，这是<strong>指数</strong>级！</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>再次强调：按照正规的算法理论，数据规模的大小以占用多少个二进制位(bit)为单位，而不是数据的个数。凡是在数据规模中有涉及到数据的“值”的，例如这里的 <span class="math notranslate nohighlight">\(K\)</span> 不是数据的数量而是其取值范围，就应视为指数级 <span class="math notranslate nohighlight">\(2^L\)</span>，其中 <span class="math notranslate nohighlight">\(L\)</span> 为数值 <span class="math notranslate nohighlight">\(K\)</span> 的二进制位数。</p>
+</div>
+<p>对于一定的数据类型，比如int，每一个int型数据占用32个bits，输入 <span class="math notranslate nohighlight">\(n\)</span> 个这样的数就占用 <span class="math notranslate nohighlight">\(32n\)</span> 个bits，因此对应的数据规模实际上是 <span class="math notranslate nohighlight">\(32n\)</span>。在衡量时间复杂度时，这样的常数系数会被略去，例如 <span class="math notranslate nohighlight">\(O(32n)\)</span> 就是 <span class="math notranslate nohighlight">\(O(n)\)</span>，<span class="math notranslate nohighlight">\(O\bigl((32n)^2\bigr)=O(1024n^2)=O(n^2)\)</span>，<span class="math notranslate nohighlight">\(O(\log{32n})=O(\log{32}+\log n)=O(\log n)\)</span>，如此而已。</p>
+<p>但若是表示数据的值，情况就和数据数量不同了。例如这里的 <span class="math notranslate nohighlight">\(K\)</span> 表示数据可能的取值有多少种，它表示的数据规模其实是它的二进制位数 <span class="math notranslate nohighlight">\(L\)</span>，随着 <span class="math notranslate nohighlight">\(L\)</span> 的增加，<span class="math notranslate nohighlight">\(K\)</span> 以指数级增长。每当 <span class="math notranslate nohighlight">\(L\)</span> 增加1，<span class="math notranslate nohighlight">\(K\)</span> 的值就会翻倍。如果 <span class="math notranslate nohighlight">\(L=10\)</span>，表示数据的值最多有1024种，如果增长1位，<span class="math notranslate nohighlight">\(L=11\)</span>，数据的值就变成最多有2048种，这是指数型增长！</p>
+<p>很多人误以为计数排序这样的 <span class="math notranslate nohighlight">\(O(n+K)\)</span> 是线性时间，主要是因为把随着 <span class="math notranslate nohighlight">\(L\)</span> 呈 <span class="math notranslate nohighlight">\(2^L\)</span> 指数型增长误以为是随着 <span class="math notranslate nohighlight">\(K\)</span> 呈线性增长。只看到了表面的 <span class="math notranslate nohighlight">\(K\)</span> 而没有看到背后隐藏的 <span class="math notranslate nohighlight">\(K=2^L\)</span>。事实上这个增长是很厉害的，只是大家没有机会看到所以才会误以为 <span class="math notranslate nohighlight">\(O(n+K)\)</span> 是很高的效率。</p>
+<p>假如我们真的有足够的内存开辟出一个长度为 <span class="math notranslate nohighlight">\(2^{64}\)</span> 的数组来对long long型数据进行计数，那么最后的回写排序循环将会慢到天荒地老，大家在Hanoi塔问题里已经见识过 <span class="math notranslate nohighlight">\(2^{64}\)</span> 这个数的可怕了吧？现在即便是从头到尾遍历一遍，哪怕用亿次以上的超算级别的计算机，恐怕没有一两百年也结束不了。如果 <span class="math notranslate nohighlight">\(K\)</span> 达到128位的规模，那么按照密码学家最近的估计，哪怕把全世界所有计算资源，小到手机大到超算全部集中起来用于枚举，也需要超过宇宙寿命的时间才能枚举完！</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.5.5.2. </span>桶排序<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p><strong>桶排序</strong>严格来说不能说是一种排序算法，它需要配合使用其他排序算法，本身只是一种安排排序任务的策略。</p>
+<p>待排序的元素无论是属于一个有限的集合还是无限集合，只要能够将它们的取值范围分成若干个互不重叠、相互有序而且能完全覆盖整个取值范围的的小区域，就可以使用桶排序的策略来进行排序。例如待排序元素为概率值，即从0到1的所有实数，虽然它本身是无限多的，但是我们可以把这个范围分成五份，即下面这样五个区间：<span class="math notranslate nohighlight">\([0,0.2)\)</span>, <span class="math notranslate nohighlight">\([0.2,0.4)\)</span>, <span class="math notranslate nohighlight">\([0.4,0.6)\)</span>, <span class="math notranslate nohighlight">\([0.6,0.8)\)</span>, <span class="math notranslate nohighlight">\([0.8,1.0]\)</span>，这五个区间相互不重叠而且完整覆盖了概率值的整个取值范围，最重要的是它们本身有序，即前一个区间里的数值全部小于后一个区间里的数值。</p>
+<p>桶排序的方法很简单，把待排序元素的整个取值范围按照上述的原则划分成若干个小区域，称为“桶”。这些桶本身也按序排好，然后用一个映射关系（通常是一个函数）把每一个元素直接放进它所对应的桶里面。所有元素放进各自的桶之后，借助其他排序算法对每一个桶里的元素进行排序。最后按照桶的大小顺序，把各个桶里已经排好序的元素按顺序读出来拼在一起，就完成了整个排序过程。</p>
+<p>例如，我们有8个小于20的自然数 [1, 4, 11, 7, 19, 5, 10, 3] 需要排序。利用桶排序的思路，我们先把整个取值范围分为4个桶，依次分别为0号桶放置0到4的自然数、1号桶放置5到9的自然数、2号桶放置10到14的自然数、3号桶放置15到19的自然数。对于序列中的任意一个自然数 <span class="math notranslate nohighlight">\(a_i\)</span>，我们可以整数除法对其除5，得到的商就是它应该放置的桶的编号。这样我们可以把这个序列里的8个自然数分别放到对应的桶里，形成下面这样的情况：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    0#       1#       2#      3#
+[1, 4, 3], [7, 5], [11, 10], [19]
+</pre></div>
+</div>
+<p>然后我们可以利用其他各种排序算法对每一个桶里的元素分别进行排序，形成下面的情况</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    0#       1#       2#      3#
+[1, 3, 4], [5, 7], [10, 11], [19]
+</pre></div>
+</div>
+<p>最后按照桶的顺序把每个桶里已经排好序的元素依次取出来拼到一起就完成了排序，得到 [1, 3, 4, 5, 7, 10, 11, 19]。</p>
+<p>这就是桶排序的方法。由于它要利用其他排序算法对桶内元素进行排序，所以它的稳定性、空间复杂度和时间复杂度都取决于它所采用的真正的排序算法。</p>
+<p>但是这种方法是不是真的能够比直接排序更快？打个比方，一次性对一万个元素排序和分一百次分别对一百个元素排序有区别吗？答案是有区别的，但是有条件，下面我们来分析一下。不失一般性，我们使用快速排序来进行分析。</p>
+<p>对 <span class="math notranslate nohighlight">\(n\)</span> 个元素进行排序，如果用快速排序对它们进行一次性排序，时间复杂度为 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>。如果改用桶排，实际分到元素的有 <span class="math notranslate nohighlight">\(k\)</span> 个桶，<span class="math notranslate nohighlight">\(j\)</span> 号桶里分到 <span class="math notranslate nohighlight">\(n_j\)</span> 个元素，<span class="math notranslate nohighlight">\(0\le j\le k-1\)</span>。这个分桶过程无疑需要 <span class="math notranslate nohighlight">\(O(n)\)</span> 的工作量，然后逐个桶排序，<span class="math notranslate nohighlight">\(j\)</span> 号桶排序的工作量为 <span class="math notranslate nohighlight">\(O(n_j\log n_j)\)</span>。最后各个桶里取出元素在拼接的过程的工作量也是 <span class="math notranslate nohighlight">\(O(n)\)</span>，它可以和分桶的工作量合并为一个 <span class="math notranslate nohighlight">\(O(n)\)</span>。所以桶排的总工作量为：</p>
+<div class="math notranslate nohighlight">
+\[W(n)=O(n_0\log n_0+n_1\log n_1+\cdots+n_{k-1}\log n_{k-1})+O(n)\]</div>
+<p>假设每个桶里的元素数量完全相等，即 <span class="math notranslate nohighlight">\(n_0=n_1=\cdots=n_{k-1}={n\over k}\)</span>，上面的工作量就可以化简为：</p>
+<div class="math notranslate nohighlight">
+\[W(n)=O\bigl(k\cdot({n\over k}\log{n\over k})\bigr)+O(n)=O(n\log{n\over k})+O(n)\]</div>
+<p>通常情况下，<span class="math notranslate nohighlight">\(O(n\log{n\over k})\)</span> 比 <span class="math notranslate nohighlight">\(O(n)\)</span> 更高阶，这时只要元素在桶中呈均匀分布或者接近于均匀分布，那么桶排序的时间复杂度就为 <span class="math notranslate nohighlight">\(O(n\log{n\over k})\)</span>，确实可以得到更快的时间效率。</p>
+<p>但是如果分布很不均匀，比如绝大多数元素都分到了一个桶里，其余的桶几乎没有分到元素，那么 <span class="math notranslate nohighlight">\(k\)</span> 接近于1，时间复杂度就会退化为 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>，也就是说桶排退化成了快速排序。</p>
+<p>反过来如果 <span class="math notranslate nohighlight">\(k\)</span> 足够大，大到接近于 <span class="math notranslate nohighlight">\(n\)</span>，由于 <span class="math notranslate nohighlight">\(\log 1=0\)</span>，那么 <span class="math notranslate nohighlight">\(O(n\log{n\over k})\)</span> 就会接近于一个有很小很小的常系数的线性时间，这时候工作量的第二项 <span class="math notranslate nohighlight">\(O(n)\)</span> 就起了主要作用，时间复杂度降到接近于线性时间 <span class="math notranslate nohighlight">\(O(n)\)</span> 了。当 <span class="math notranslate nohighlight">\(k=n\)</span> 时，就真正达到了 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间。但是在实际应用中，要做到恰好把 <span class="math notranslate nohighlight">\(n\)</span> 个元素分到 <span class="math notranslate nohighlight">\(n\)</span> 个桶里，其实就是演变成计数排序了。除非是对整数 [1, 2, 3, 4, 5] 这样的稠密序列进行排序，否则一般情况下要做到 <span class="math notranslate nohighlight">\(k\)</span> 接近甚至等于 <span class="math notranslate nohighlight">\(n\)</span> 必然会产生许多额外的空桶，于是时间复杂度又会增长为计数排序的指数级。</p>
+<p>另外还有一点要注意，桶排的分桶过程一般都需要能通过一次函数计算的方式直接获得结果，而不能采用比较大小的方式。例如上面的例子中，我们用一次整数除法直接得到任一元素的桶编号，而不能采用分支语句进行元素比较判断，比如像下面这样的代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">)</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">else</span> <span class="n">j</span><span class="o">=</span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>这样做会把分桶工作量 <span class="math notranslate nohighlight">\(O(n)\)</span> 的系数搞得非常大，这样在数据量不是超大的时候，反而会得不偿失。所以我们要有一种类似哈利波特里霍格沃茨学院的分院帽的分桶方法，把帽子往新生头上一扣它就能直接说出分院结果，而不是要一点一点得进行分析比较。</p>
+<p>因此，适合采用桶排的场景一般要满足以下几个条件（说实话这样的场景并不是太多）：</p>
+<ol class="arabic simple">
+<li><p>元素的取值范围可以按要求分成若干个桶；</p></li>
+<li><p>元素要能够在这些桶中均匀分布或者接近于均匀分布，每个桶里分到的元素数量要差不多，最好相等；</p></li>
+<li><p>桶的数量要适中，既不能太少（少于4个就接近于退化成普通的排序算法），也不能太多（会退化成计数排序）；</p></li>
+<li><p>能够实现一步计算得到结果的分院帽式分桶方法。</p></li>
+</ol>
+<p>最后要说一说桶排的常见实现技术。为了提高分桶、分别排序和最后的合并结果这些步骤的效率，一般来说桶排的实现要依赖于比较复杂的数据结构。比如，由于每个桶里会分到多少个元素很难事先预料，所以往往会利用链表来构造桶，以便能够快速地动态添加和顺序读取元素。更加精细一点的会利用排序二叉树、堆、优先级队列这些能够随着添加元素而自动进行排序的高级动态数据结构来构造桶。这些内容以后我们会在数据结构部分进行学习。如果数据量不是太大，而且桶的长度可以事先预计其上限，也可以简单地使用数组来用作桶，但是这种情况不太多见。</p>
+<p>如果不使用具有自动排序功能的桶，那么桶排还需要选择一种排序算法来对桶中元素进行排序。通常会选择快速排序，桶内元素数量在一两百以内时也可以用二分插入排序。如果对稳定性有要求，那么分桶顺序、排序算法和读桶顺序也要有相应的选择。</p>
+<p>桶排序和计数排序有一个不同点，它使用的桶是切切实实用来装入元素的，而不是仅用来计数。所以桶排序可以对复杂的复合结构数据类型进行排序，经过一些精心的设计也能实现多关键字的排序。尤其是对于具有复合含义的分段关键字，比如身份证号码、商品条码、ISBN书号等进行排序。</p>
+<p>例如一场全国性的考试，一共设有2000个考场，每个考场可以容纳300名左右考生。考生的准考证号由7位数字构成，前4位为考场编号，从0001号到2000号，后4位为考生在报名时生成的序号，每个考场的考生序号从001号起编，不会出现重复，且每个考场的考生数量基本相同。如果要对近60万名考生的准考证号进行排序，就可以考虑采用桶排，以考场号为桶，只要取准考证号的前4位转为整数就可以确定桶编号。每个桶里装入该考场考生准考证号后3位对应的整数，然后对每个桶进行快速排序，最后从1号桶开始依次取出每个桶里的整数，和桶号拼接起来就可以还原为准考证号。这样能够比直接对60万个准考证号进行快速排序快许多。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>桶排序是不是突破了元素比较型排序算法 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间效率的极限？请大家想一想。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">3.5.5.3. </span>基数排序<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p><strong>基数排序</strong>是桶排序的一种特殊变种，它一般用于整数排序，经过改造也可以用于浮点数、特定格式的字符串等进行排序，但很少见。</p>
+<p>以整数排序为例，基数排序使用0号到9号共10个桶，排序时以待排序元素每一个数位上的数码为桶编号，按照从最低位（个位）到最高位的顺序进行多次分桶，每次分完桶之后并不对桶内元素进行排序，而仅仅是按照桶的顺序把所有元素读出来，然后就紧接着按照下一位上的数码再次分桶。这个分桶、读桶的过程一直循环下去直到所有元素的最高位都变成0为止，这时所有元素都已经有序地排列在了0号桶内。</p>
+<p>例如，对整数序列 [5, 121, 23, 9, 72, 1, 18, 44, 206, 33] 进行基数排序，过程如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>第1轮分桶，以每个元素的第1位（个位）为桶编号，分完后的结果为：
+0#  1#        2#    3#        4#    5#   6#     7#  8#    9#
+[], [121, 1], [72], [23, 33], [44], [5], [206], [], [18], [9]
+依此从桶中读出数据写回原序列，原序列变为：
+[121, 1, 72, 23, 33, 44, 5, 206, 18, 9]
+现在所有元素已经按个位数有序了
+
+第2轮分桶，以每个元素的第2位（十位）为桶编号，分完后的结果为：
+0#              1#    2#         3#    4#    5#  6#  7#    8#  9#
+[1, 5, 206, 9], [18], [121, 23], [33], [44], [], [], [72], [], []
+依此从桶中读出数据写回原序列，原序列变为：
+[1, 5, 206, 9, 18, 121, 23, 33, 44, 72]
+现在所有元素已经变成了先按十位数有序，相同十位数的情况下按个位数有序
+
+第3轮分桶，以每个元素的第3位（百位）为桶编号，分完后的结果为：
+0#                             1#     2#     3#  4#  5#  6#  7#  8#  9#
+[1, 5, 9, 18, 23, 33, 44, 72], [121], [206], [], [], [], [], [], [], []
+依此从桶中读出数据写回原序列，原序列变为：
+[1, 5, 9, 18, 23, 33, 44, 72, 121, 206]
+现在所有元素已经变成了先按百位数，然后按十位数，再按个位数有序
+
+如果事先知道待排序数最大为三位数，那么到这里基数排序以经结束，可以看出原序列已经完全有序。
+如果事先无法预知最大的数有几位，那么最多也只需要再多做一轮。
+
+第4轮分桶，以每个元素的第4位（千位）为桶编号，分完后的结果为：
+0#                                       1#  2#  3#  4#  5#  6#  7#  8#  9#
+[1, 5, 9, 18, 23, 33, 44, 72, 121, 206], [], [], [], [], [], [], [], [], []
+在此过程中会发现所有元素的千位都为0，所有元素都分入了0号桶，说明排序已经结束，
+原序列中的数本就已经排序完成，这一轮不需要再读桶回写了。
+</pre></div>
+</div>
+<p>基数排序是利用了十进制整数每个数位上的数码只有0到9这九种的特性，通过从最低位到最高位依次进行多轮分桶读桶的操作，逐步实现排序。它的空间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>，属于稳定排序，时间复杂度为 <span class="math notranslate nohighlight">\(O(nL)\)</span>，其中 <span class="math notranslate nohighlight">\(L\)</span> 为待排序元素的最大位数。这是一种相当优秀的时间效率，可惜适用场景比较狭窄。</p>
+<p>通常为了提高分桶和回写的效率，会使用链表来作为基数排序的数据结构，为什么？等学完链表之后大家就明白了。如果要编写基数排序的程序，又不会链表，那么用数组当然也可以，但是一般就需要在逐位循环时把分桶读桶改为计数排序，并使用本节开头计数排序部分所说的那种技巧，而且要多用一个 <span class="math notranslate nohighlight">\(O(n)\)</span> 级别的内存空间。不管怎样，代码编写不够简单总是基数排序的一个问题。</p>
+<p>下面就是一个使用数组和计数排序技巧的基数排序函数示例代码，可以对正整数进行基数排序。这里使用的计数排序技巧非常重要，一定要看懂、理解、学会！</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+
+<span class="c1">// 基数排序主函数</span>
+<span class="kt">void</span> <span class="nf">radix_sort</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="c1">// 获取整数 n 的 radix 位上的数，采用内联函数以提高速度</span>
+<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">digit</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">radix</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">radix</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">radix_sort</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">cnt</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">radix</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// cnt[10]: 计数数组, radix: 位,1为个位,10为十位...</span>
+	<span class="kt">int</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>	<span class="c1">// 临时空间，用于临时放置排好序的元素</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">memset</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cnt</span><span class="p">));</span>	<span class="c1">// 开始时清空计数值</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>	<span class="c1">// 对radix位上的数进行计数</span>
+			<span class="o">++</span><span class="n">cnt</span><span class="p">[</span><span class="n">digit</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">radix</span><span class="p">)];</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>	<span class="c1">// 全部元素计数都在0上,说明已经超过最高位,排序结束</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>	<span class="c1">// 计数值做前缀和</span>
+			<span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+		<span class="cm">/*</span>
+<span class="cm">		 * 对计数值做前缀和后，计数值变成指示对应元素在排完序后应处的最后位置</span>
+<span class="cm">		 * 例如序列 [3, 2, 3, 1, 0]，计数数组长度为5，对值为从0到4的元素计数</span>
+<span class="cm">		 * 计数后各计数值为 [1, 1, 1, 2, 0]，表示1个0，1个1，1个2，2个3，0个4</span>
+<span class="cm">		 * 做前缀和得到 [1, 2, 3, 5, 5]，表示以下含义：</span>
+<span class="cm">		 * 最后一个值为0的元素在排完序的数组中应该在第1个</span>
+<span class="cm">		 * 最后一个值为1的元素在排完序的数组中应该在第2个</span>
+<span class="cm">		 * 最后一个值为2的元素在排完序的数组中应该在第3个</span>
+<span class="cm">		 * 最后一个值为3的元素在排完序的数组中应该在第5个</span>
+<span class="cm">		 * 最后一个值为4的元素在排完序的数组中应该在第5个</span>
+<span class="cm">		 * 按照上述规律，为保持排序的稳定性，应该逆序遍历原数组中的元素。</span>
+<span class="cm">		 * 这样，每遇到一个元素，它对应的计数数组值减1就是它排序后应处的位置。</span>
+<span class="cm">		 * 按照这个位置复制元素到临时空间里，然后把这个计数值减1，改变为下一个</span>
+<span class="cm">		 * 相同元素的位置，这种方法同时保证了排序的稳定性</span>
+<span class="cm">		 */</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span><span class="c1">// 按上述规律逆序遍历并复制元素</span>
+			<span class="n">tmp</span><span class="p">[</span><span class="o">--</span><span class="n">cnt</span><span class="p">[</span><span class="n">digit</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">radix</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="c1">// 将临时空间里按从个位到当前radix位排好序的中间结果复制回原数组</span>
+		<span class="n">memcpy</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+		<span class="c1">// 循环进入更高一位</span>
+		<span class="n">radix</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">delete</span> <span class="p">[]</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>看懂上面的基数排序函数，尤其是其中使用的计数排序技巧，并使用这种技巧重新做一遍本节计数排序部分的第一个练习题。当然如果第一题做的时候就使用了这种技巧那就不用重复做了。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="256_cpp_sort.html" title="3.5.6. C++算法库排序函数"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="254_quick_sort.html" title="3.5.4. 快速排序"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../250_sort_algos.html" ><span class="section-number">3.5. </span>基础排序算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

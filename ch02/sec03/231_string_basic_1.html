@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.3.1. 字符串处理基础知识(I) &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.3.2. 字符串处理基础知识(II)" href="232_string_basic_2.html" />
+    <link rel="prev" title="3.3. 简单字符串处理" href="../230_basic_string_algos.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="232_string_basic_2.html" title="3.3.2. 字符串处理基础知识(II)"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="../230_basic_string_algos.html" title="3.3. 简单字符串处理"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" accesskey="U"><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.3.1. 字符串处理基础知识(I)</a><ul>
+<li><a class="reference internal" href="#uva455">3.3.1.1. 周期串问题（UVa455）</a></li>
+<li><a class="reference internal" href="#uva10340">3.3.1.2. 子序列问题（UVa10340）</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="../230_basic_string_algos.html"
+                        title="上一章"><span class="section-number">3.3. </span>简单字符串处理</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="232_string_basic_2.html"
+                        title="下一章"><span class="section-number">3.3.2. </span>字符串处理基础知识(II)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec03/231_string_basic_1.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="i">
+<h1><span class="section-number">3.3.1. </span>字符串处理基础知识(I)<a class="headerlink" href="#i" title="永久链接至标题">¶</a></h1>
+<p><strong>基本概念</strong></p>
+<p>字符串说到底就是由一系列字符按照一定顺序排列而成的，我们目前只处理ASCII字符串，在C++语言中就是一连串的 <code class="docutils literal notranslate"><span class="pre">char</span></code>。正如前面所说，C++有继承自C语言的C-string和自己特有的C++ string类型两种字符串解决方案。</p>
+<p>1、传统的C-string采用一个 <code class="docutils literal notranslate"><span class="pre">char</span></code> 型数组来存放字符串，以一个空字符 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 来标识字符串的结尾，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Hello</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>就是一个字符串，在内存中，这个C-string的实际存储情况是：</p>
+<img alt="../../_images/231_cstring.png" src="../../_images/231_cstring.png" />
+<p>由于C-string本质上就是一个数组，所以可以用访问数组元素的方式访问其中的单个字符，例如 <code class="docutils literal notranslate"><span class="pre">str[0]</span></code> 就是第1个字符 <code class="docutils literal notranslate"><span class="pre">'H'</span></code>。也可以方便地使用指针，还记得数组的名字就是指向第一个元素的指针吗？所以 <code class="docutils literal notranslate"><span class="pre">*(str+5)</span></code> 就是第6个字符 <code class="docutils literal notranslate"><span class="pre">'\n'</span></code>，这是一个“换行”字符（newline）。每个C-string的最后一定要用一个空字符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code> （NULL）来标识结尾，否则C++就不知道该到哪里结束了，这个特殊的空字符的实际数值就等于0，所以可以视作整数0，也可以视作逻辑值false，这就给C-string的字符串处理带来了很大的便利。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>正因为有一个空字符收尾，C-string才成为了字符串，而不是普通的字符数组。但是这个空字符是不计入字符串的长度的。</p>
+</div>
+<p>由于C++数组的数组名单独使用时就是指向该数组第一个元素的指针，C-string既然是一个字符型数组，所以它又可以用字符型指针来表示。这通常用在给函数传递C-string参数时，例如下面这两种给函数传C-string的方式事实上是一样的：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">func1</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">func2</span><span class="p">(</span><span class="kt">char</span> <span class="n">s</span><span class="p">[]);</span>
+</pre></div>
+</div>
+<p>但是通常我们在传递字符串时会采用指针的形式而不是数组的形式，这是为了能够一眼看出这里要传递的是C-string而不是字符数组。</p>
+<p>还记不记得传递数组的时候，由于本质上只是传递了指向数组第一个元素的指针，所以数组本身的长度（元素个数）这个重要的信息是丢失了的，因此给函数传递数组时往往还需要额外传递一个表示数组长度的参数。但是传递C-string不同，虽然本质上也只是传递了指向第一个字符的指针，但是由于字符串尾部会有一个特殊的空字符来标识结束，所以不需要单独给函数再传一个字符串长度的参数，在函数内部可以方便地找到字符串的结尾，获知字符串的长度。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>现在我们知道了，实际上一个C-string对于C++语言内部来说，仅仅只是一个字符型指针，从它所指向的那个字符开始一直顺序向后，直到第一个空字符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code>，这一整段内存里存放的所有字符就构成了一个C-string。</p>
+<p>例如我们定义了这样一个C-string：<code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">s[20]</span> <span class="pre">=</span> <span class="pre">&quot;abcdefg&quot;;</span></code>，然后我们再定义这样一个字符型指针：<code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*t</span> <span class="pre">=</span> <span class="pre">s</span> <span class="pre">+</span> <span class="pre">2;</span></code>，这样 <code class="docutils literal notranslate"><span class="pre">t</span></code> 就是一个从 <code class="docutils literal notranslate"><span class="pre">s[2]</span></code> 开始直到结束的C-string：<code class="docutils literal notranslate"><span class="pre">&quot;cdefg&quot;</span></code>。</p>
+<p>这个技巧非常有用，在下面要讲的第一个问题“周期串”中我们就会用到这个技巧。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>和数组一样，采用C-string方式处理字符串，最大的危险是长度超限。一定要记住，长度为n的数组，最多能存放的字符串长度为n-1！因为至少要留出一个元素的位置来存放收尾的空字符。</p>
+</div>
+<p>要处理C-string方式的字符串，需要引入 <code class="docutils literal notranslate"><span class="pre">cstring</span></code> 标准库，其中提供了一些基本的字符串处理函数，例如测量长度、拼接、复制、比较、子串搜索等。它们的共同点是速度快，使用简单，但是功能有限，有几个函数使用起来还有点怪异。</p>
+<p>2、C++的string类型则是一个定义完好的封装起来的类，它的底层是向程序员隐蔽起来的，但它开放了许多功能强大的成员函数供编程使用。要使用C++ string，先要引入STL库 <code class="docutils literal notranslate"><span class="pre">string</span></code>，使用命名空间 <code class="docutils literal notranslate"><span class="pre">std</span></code>。定义一个C++ string变量非常方便，和定义一个基本数据类型的变量一模一样，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="n">string</span> <span class="n">str</span> <span class="o">=</span> <span class="s">&quot;Hello</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>要访问C++ string中指定位置的字符，也有两种方法，和C-string非常类似。通常我们也用 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 下标运算符，例如 <code class="docutils literal notranslate"><span class="pre">str[1]</span></code> 就可以访问到第2个字符 <code class="docutils literal notranslate"><span class="pre">'e'</span></code>。也可以用和指针非常相似的迭代器来访问元素，<code class="docutils literal notranslate"><span class="pre">str.begin()</span></code> 返回头迭代器，指向第1个字符，<code class="docutils literal notranslate"><span class="pre">str.end()</span></code> 则返回尾迭代器，指向最后一个字符的后面一个位置。所以 <code class="docutils literal notranslate"><span class="pre">*(str.begin()+1)</span></code> 就是第2个字符 <code class="docutils literal notranslate"><span class="pre">'e'</span></code>，而 <code class="docutils literal notranslate"><span class="pre">*(str.end()-1)</span></code> 则是最后一个字符 <code class="docutils literal notranslate"><span class="pre">'\n'</span></code>。我们可以自己定义一个类型为 <code class="docutils literal notranslate"><span class="pre">string::iterator</span></code> 的变量来存放迭代器。例如下面这段代码片段会从尾到头逆向地输出字符串中的每一个字符：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">string</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">it</span> <span class="o">&gt;=</span> <span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="o">--</span><span class="n">it</span><span class="p">)</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>C++ string除了速度比C-string略慢外，其他各方面都比C-string要优秀得多。例如它没有长度超限的危险，它可以自动根据内容来调整自己占用的空间，它的成员函数也比 <code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库函数丰富和强大得多。如果不是特别简单或者对速度要求特别高的情况，我们都建议在编程时使用C++ string进行字符串处理。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>通常说的C++ string速度比C-string慢，不仅仅来自于它本身的处理速度慢，更多地来自于输入输出慢。C++ string只能采用C++的IO流方式进行输入输出，IO流相比传统的C语言标准IO要慢很多。所以当字符串算法的输入输出量特别大时，应该考虑使用C-string。</p>
+</div>
+<p>在后面的内容中我们将先使用C-string来进行简单字符串处理，当对C-string及其常用操作有了一定的掌握之后就将改为使用C++ string。这一节我们先来看两个字符串处理问题：周期串和子序列。前两个问题来自《算法入门经典（第2版）》第三章的两个练习题，也是知名OJ网站UVa的题目，它们的解法都很简单，但都包含了最基本的字符串处理技巧。</p>
+<div class="section" id="uva455">
+<span id="index-0"></span><h2><span class="section-number">3.3.1.1. </span>周期串问题（UVa455）<a class="headerlink" href="#uva455" title="永久链接至标题">¶</a></h2>
+<p><strong>周期串</strong>是指这样一种字符串，它是由某一个非空字符串重复若干次之后得到的。例如 <code class="docutils literal notranslate"><span class="pre">&quot;abcabcabcabc&quot;</span></code> 就是一个周期串，它是由子串 <code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code> 重复4次之后得到的，也可以认为是由 <code class="docutils literal notranslate"><span class="pre">&quot;abcabc&quot;</span></code> 重复2次得到的。<strong>周期</strong>是指被重复的那个短字符串的长度，所以一个周期串可能有多个周期。例如前面举的这个例子里，如果把它看作是 <code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code> 重复4次，那么它的周期就是3；如果看作是 <code class="docutils literal notranslate"><span class="pre">&quot;abcabc&quot;</span></code> 重复2次，那么周期就是6。所有周期中最小的那个叫做<strong>最小正周期</strong>。</p>
+<p>特别要注意，任何一个非空字符串都可以看成是由它自己重复1次得到的，所以任何非空字符串都可视作是一个以它自身的长度为周期的周期串。例如 <code class="docutils literal notranslate"><span class="pre">&quot;abcabcabcabc&quot;</span></code> 的周期可以是12，<code class="docutils literal notranslate"><span class="pre">&quot;Hello,World!&quot;</span></code> 也可以看作是一个周期为12的周期串。</p>
+<p>现在，输入一个长度不超过80个字符、不含空白字符的非空字符串，请输出它的最小正周期。例如输入 <code class="docutils literal notranslate"><span class="pre">&quot;abcabcabcabc&quot;</span></code>，那么输出3；如果输入 <code class="docutils literal notranslate"><span class="pre">&quot;Hello,World!&quot;</span></code> 那么输出12。</p>
+<p><strong>解题思路</strong></p>
+<p>一个字符串s，若其长度为n。那么它的周期可能有哪些呢？显然周期的取值范围一定是在整数区间 [1, n] 内的，而且这个周期一定能被n整除。换句话说，周期一定是长度的因数。并且除了n本身以外，其他的周期值都不会超过n的一半。所以我们只需要从1开始逐个检查n的不大于其自身一半的因数是不是s的周期，第一个找到是周期的因数就是最小正周期。如果找不到，那么最小正周期就是n本身。</p>
+<p>这就是算法的大框架，可以这样描述：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">最小正周期算法</p>
+<p><span class="math notranslate nohighlight">\(\text{Min_Period}(s):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(n \leftarrow \text{length of }s\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{FOR  } p \leftarrow 1 \text{  TO  } n/2 \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{IF  } n \bmod p \neq 0 \text{  THEN continue}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{IF Is_Period}(s, n, p) = \text{true THEN RETURN  } p\)</span></p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{RETURN  } n\)</span></p>
+</div></blockquote>
+</div>
+<p>第二步要解决如何判断一个数是不是周期的问题，也就是算法中调用的那个子算法 <span class="math notranslate nohighlight">\(\text{Is_Period}(s, n, p)\)</span>。</p>
+<p>测试的原理也很简单，我们只要对原字符串s的所有长度为p的分段进行逐个比较是否相等即可，算法如下（注意，字符串的范围一律采用含头不含尾的原则表示）：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">判断是否周期</p>
+<p><span class="math notranslate nohighlight">\(\text{Is_Period}(s, n, p):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{FOR  } j \leftarrow p \text{  TO  } n-p \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{IF  } s[0:p] \neq s[j:j+p] \text{  THEN RETURN false}\)</span></p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{RETURN true}\)</span></p>
+</div></blockquote>
+</div>
+<p><strong>程序编写</strong></p>
+<p>有了上述算法，要写出这样一个程序就不难了。我们现在用C-string来进行处理，首先要了解一些必要的C-string处理技术。</p>
+<p>1、表示</p>
+<p>C-string用字符数组表示。题中说明了输入的字符串长度不超过80个字符，但是考虑到最后还要有一个额外的空字符作为结尾，所以我们需要定义一个长度至少为81的字符数组用来接收输入的字符串。</p>
+<p>2、输入</p>
+<p>用 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库的标准输入函数 <code class="docutils literal notranslate"><span class="pre">scanf()</span></code> 可以输入不含空白符的字符串，占位符为 <code class="docutils literal notranslate"><span class="pre">%s</span></code>。函数允许在占位符中提供一个限制长度，如果输入超长就会被截断为这个长度。</p>
+<p>3、长度</p>
+<p>用 <code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">strlen()</span></code> 函数即可方便地获取字符串的长度。</p>
+<p>4、比较</p>
+<p><code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库提供了两个函数 <code class="docutils literal notranslate"><span class="pre">strcmp()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strncmp()</span></code> 来比较字符串，如果相等就返回0，否则就返回二者的字典序之差（按照英语词典中单词排序的方式对字符串进行排序，越前面的字典序越小）。这两个函数的不同之处在于，前者比较两个字符串的大小，后者比较两个字符串规定长度内的大小。</p>
+<p>代码如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">bool</span> <span class="nf">is_period</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">81</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%80s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">p</span><span class="p">;</span>	<span class="c1">// 调用strlen()获取s的长度</span>
+	<span class="kt">int</span> <span class="n">half</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">half</span><span class="p">;</span> <span class="o">++</span><span class="n">p</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">p</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">is_period</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span> <span class="k">break</span><span class="p">;</span><span class="c1">// 利用逻辑短路，若p不是因数则判断直接结束</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">half</span> <span class="o">?</span> <span class="nl">n</span> <span class="p">:</span> <span class="n">p</span><span class="p">);</span>	<span class="c1">// p &gt; half 说明全部可能的因数都判断失败了</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">is_period</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">p</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">strncmp</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="o">+</span><span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// 比较从s开始的和从s[j]开始的p个字符</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">问题</p>
+<p>有心的你可能会发现，在 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数和 <code class="docutils literal notranslate"><span class="pre">is_period()</span></code> 函数里我们都计算了字符串长度，这确实是一种时间开销上的浪费。你有什么办法可以优化这个小小的浪费问题吗？</p>
+</div>
+</div>
+<div class="section" id="uva10340">
+<span id="index-1"></span><h2><span class="section-number">3.3.1.2. </span>子序列问题（UVa10340）<a class="headerlink" href="#uva10340" title="永久链接至标题">¶</a></h2>
+<p>输入两个长度不超过80个字符的字符串s和t，判断是否可以从t中删除若干个字符（可以是0个），保留下来的字符顺序不变，从而得到s。例如从 <code class="docutils literal notranslate"><span class="pre">&quot;abcde&quot;</span></code> 中删去 <code class="docutils literal notranslate"><span class="pre">'a'</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'d'</span></code> 就可以得到 <code class="docutils literal notranslate"><span class="pre">&quot;bce&quot;</span></code>，但是无法从 <code class="docutils literal notranslate"><span class="pre">&quot;abcde&quot;</span></code> 得到 <code class="docutils literal notranslate"><span class="pre">&quot;dc&quot;</span></code>。</p>
+<p>要解决这个问题，我们需要分别遍历目标字符串s和源字符串t的每一个字符来进行“不走回头路”的比对。用两个下标 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">j</span></code> 分别表示s和t当前被访问的字符位置，二者都从0开始直到各自字符串的结尾为止，逐个字符地向后行进，任何时候都不会往回走。</p>
+<p>我们把对目标串s的遍历放在外循环。对于每一个字符 <code class="docutils literal notranslate"><span class="pre">s[i]</span></code>，我们都通过向后遍历t来找到下一个 <code class="docutils literal notranslate"><span class="pre">t[j]==s[i]</span></code>。如果能够找到，那么就继续比对下一个目标字符 <code class="docutils literal notranslate"><span class="pre">s[i+1]</span></code>，直到s中的每一个字符都找到为止。如果中途任何一次发生找不到的情况则说明不能通过t得到s。</p>
+<p>下面是几个具体的例子，首先是一个能成功匹配的例子，从 <code class="docutils literal notranslate"><span class="pre">&quot;abcde&quot;</span></code> 中匹配 <code class="docutils literal notranslate"><span class="pre">&quot;bce&quot;</span></code>：</p>
+<img alt="../../_images/231_subseq_1.png" src="../../_images/231_subseq_1.png" />
+<p>然后是一个不能成功匹配的例子，从 <code class="docutils literal notranslate"><span class="pre">&quot;abcde&quot;</span></code> 中匹配 <code class="docutils literal notranslate"><span class="pre">&quot;dec&quot;</span></code>：</p>
+<img alt="../../_images/231_subseq_2.png" src="../../_images/231_subseq_2.png" />
+<p>现在可以给出这个算法的描述和具体的代码了。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">子序列匹配算法</p>
+<p><span class="math notranslate nohighlight">\(\text{SubSequence}(s, t):\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(m\leftarrow \text{len}(s), n\leftarrow \text{len}(t), i\leftarrow0, j\leftarrow 0\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{FOR  } i \leftarrow 0 \text{  TO  } m-1 \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{WHILE  } j \lt n \text{  AND  } t[j] \neq s[i] \text{  DO}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(j \leftarrow j+1\)</span></p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{IF  } j=n \text{  THEN RETURN false}\)</span></p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\text{ELSE  } j \leftarrow j+1\)</span></p>
+</div></blockquote>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\text{RETURN true}\)</span></p>
+</div></blockquote>
+</div>
+<p>下面是具体的代码，对于能够匹配到子序列的情况，我们输出Yes，否则输出No：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">bool</span> <span class="nf">sub_sequence</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">t</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">81</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">81</span><span class="p">];</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%80s %80s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sub_sequence</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">?</span> <span class="s">&quot;Yes&quot;</span> <span class="o">:</span> <span class="s">&quot;No&quot;</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">sub_sequence</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">n</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">++</span><span class="n">j</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">j</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>把算法的代码单独实现在一个自定义函数里是一个好习惯，会让 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数更加简洁和专注，也让算法代码的编写有了更多的技巧。例如我们这里在匹配失败的时候可以直接 <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">false;</span></code> 来退出函数，返回失败信息。如果把算法全部写在 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数里就无法做到这么直接了当。大家可以试一试直接在 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数里实现这个算法应该怎么写，对于初学者来说还真是有一点小麻烦的呢。</p>
+<p>另外给大家留一个思考问题：为什么不需要考虑s和t是空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 的情况？</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="232_string_basic_2.html" title="3.3.2. 字符串处理基础知识(II)"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="../230_basic_string_algos.html" title="3.3. 简单字符串处理"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../230_basic_string_algos.html" ><span class="section-number">3.3. </span>简单字符串处理</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

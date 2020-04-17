@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.1.5. 有理小数的精确表示 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.1.6. 整数快速幂算法（洛谷P1226）" href="216_fast_power.html" />
+    <link rel="prev" title="3.1.4. 回文质数（USACO1.5；洛谷P1217）" href="214_palin_primes.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="216_fast_power.html" title="3.1.6. 整数快速幂算法（洛谷P1226）"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="214_palin_primes.html" title="3.1.4. 回文质数（USACO1.5；洛谷P1217）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../210_basic_number_algos.html" accesskey="U"><span class="section-number">3.1. </span>简单数值算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3.1.5. 有理小数的精确表示</a><ul>
+<li><a class="reference internal" href="#id2">3.1.5.1. 超高精度有理小数</a></li>
+<li><a class="reference internal" href="#id3">3.1.5.2. 用循环节表示小数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="214_palin_primes.html"
+                        title="上一章"><span class="section-number">3.1.4. </span>回文质数（USACO1.5；洛谷P1217）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="216_fast_power.html"
+                        title="下一章"><span class="section-number">3.1.6. </span>整数快速幂算法（洛谷P1226）</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch02/sec01/215_long_decimal.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="index-0">
+<span id="id1"></span><h1><span class="section-number">3.1.5. </span>有理小数的精确表示<a class="headerlink" href="#index-0" title="永久链接至标题">¶</a></h1>
+<p>C++的浮点数精度有限，最低的 <code class="docutils literal notranslate"><span class="pre">float</span></code> 型单精度浮点数只有最多6位有效数字的精度，最常用的双精度浮点数 <code class="docutils literal notranslate"><span class="pre">double</span></code> 为15到16位，哪怕是高精度浮点数 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">double</span></code> 也只有19位精度。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>注意：描述C++浮点数精度时常说的多少多少位，是指有效数字的位数，从整数部分的最高位开始算，而不是小数点后面多少位！比如单精度浮点数 <code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">f</span> <span class="pre">=</span> <span class="pre">12345.67</span></code>，由于 <code class="docutils literal notranslate"><span class="pre">float</span></code> 类型最多只保证6位有效数字的精度，所以这个数的百分位上的7就已经不能保证准确了。</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>C++浮点数和其他编程语言的浮点数都是采用的IEEE标准的单精度、双精度、高精度浮点数格式，并不是只有C++的浮点数才精度有限，所有语言都是一样的。事实上这样的精度用于科学计算一般来说是没有什么问题的，但是如果是用在金融领域等对小数精度要求特别高的场景里就往往不够用了。</p>
+</div>
+<p>我们知道实数分为有理数和无理数两类，但由于受到存储空间的限制，在计算机里不可能真正表示无限小数。尽管可以保留非常非常多的位，但无论是无理数还是循环小数最终也只能限定在固定的位数之内，所以我们仅考虑有理小数的情况。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">3.1.5.1. </span>超高精度有理小数<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>有时候我们需要用很高的精度来表示小数，比如需要精确到小数点后面50位，这就需要我们自己编程来计算出所需的小数点后50位精确数值了。我们知道，有理数是一定可以表示成分数形式的，所以算法的核心就是用整数除法和取余两个运算来模拟竖式除法运算的笔算过程。</p>
+<p>整数竖式除法是一种完善的循环算法，它的过程就是用除数去除被除数，得到一个商和一个余数，然后把余数乘以10作为新的被除数来重复上述过程，直至除尽（余数为0）或者达到所需的小数位数。通常如果达到所需的小数位数时还未除尽，那么需要再多算一位并从这一位上开始做四舍五入。四舍五入可能会向前传播，例如小数0.99999在最后一位上开始四舍五入后，会一路向前传播使得最终得到的结果成为1。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">问题</p>
+<p>输入三个整数：<span class="math notranslate nohighlight">\(-10^8\le a \le10^8,-10^8\le b \le10^8,0\le c \le 100,(b\neq0)\)</span>，输出有理数 <span class="math notranslate nohighlight">\(a/b\)</span> 的小数形式，最多保留 <span class="math notranslate nohighlight">\(c\)</span> 位小数。例如：</p>
+<ul class="simple">
+<li><p>输入8, 5, 3，输出1.6</p></li>
+<li><p>输入8, -5, 0，输出-2</p></li>
+<li><p>输入-1, 7, 4，输出-0.1429</p></li>
+<li><p>输入-9, -3, 100，输出3</p></li>
+</ul>
+</div>
+<p><strong>结果如何表示？</strong></p>
+<p>此问题解的整数部分用一次整数除法即可直接得到。小数部分需要模仿竖式除法逐次计算小数点后面的位，直到除尽或者达到所需要的位数。由于 <span class="math notranslate nohighlight">\(c\le100\)</span>，所以我们可以用一个长度为101的整型数组来保存结果。其中第0个元素用来保存结果的整数部分，从第1个开始的各个元素就用来存放小数点后对应位上的数字。</p>
+<p>实际的结果可能在 <span class="math notranslate nohighlight">\(c\)</span> 位以内就除尽了，所以我们还需要一个整型变量来记录结果的实际小数位数。它可以从0开始，随着小数位的逐步计算而逐步增加。</p>
+<p>又因为除数和被除数有正有负，所以结果也可能有正有负，所以我们还需要一个逻辑型变量来表示结果的正负。输入数据读取结束后马上判断结果的正负，保存在这个变量里，然后把除数和被除数全都改为正数（或零）。这样我们在后面的计算中就不需要考虑正负的问题了，而计算得到的结果需要配合符号变量才是完整的。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>这里为什么不把结果的正负表示在整数部分里，而要单独把符号作为一个逻辑变量另外保存呢？请想一想这个问题。</p>
+</div>
+<p>最后我们还需要一个整型的临时变量，用来在每一步计算时放置得到的余数，并且每次都乘以10以用作下一步计算时的被除数。</p>
+<p>下面整理出算法所需的全部变量：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">digits</span><span class="p">[</span><span class="mi">101</span><span class="p">],</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="p">;</span>   <span class="c1">// d：实际的小数位数；r：临时变量，余数*10</span>
+<span class="kt">bool</span> <span class="n">neg</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>     <span class="c1">// 结果是否为负</span>
+</pre></div>
+</div>
+<p><strong>算法的计算过程</strong></p>
+<p>这个算法是一个模拟算法，模拟的是整数竖式除法。下面以能除尽和不能除尽两种情况为例，用图表来观察一下算法要模拟的计算过程。</p>
+<img alt="../../_images/215_decimal.png" src="../../_images/215_decimal.png" />
+<p>前面说过，四舍五入可能不止影响最后一个小数位，它有可能会向前传播。</p>
+<p>例如 <span class="math notranslate nohighlight">\(198\div199\approx 0.99497\cdots\)</span>，如果我们要求最多保留4位小数，那么在小数点后第4位上四舍五入后会继续向前进位，最终结果剩下3位小数，为0.995。</p>
+<p>再如 <span class="math notranslate nohighlight">\(2018\div2019\approx 0.99950\cdots\)</span>，如果我们要保留最多3位小数，那么四舍五入引发的向前进位会一直传播到整数部分，最终结果为1。</p>
+<p>这是我们算法里在四舍五入时要考虑到的情况。舍入首先肯定是发生在当前最后一位，也就是第d位上的。舍入后要判断其是否等于10，如果是则说明要向前进位，这就需要把当前最后位改为0，然后把前面一位变成新的最后位，然后新的最后位加1，再判断是否需要继续向前进位……如此不断重复这一过程直至某次舍入之后不需要向前进位或一直推进到了整数部分。这和小学算术所学的四舍五入过程完全一致。</p>
+<p><strong>代码及其改进</strong></p>
+<p>经过上面的分析，应该不难写出实际的C++代码了。编写输出语句时要注意两处容易引起错误的地方。一是结果的正负不要忘记；二是如果结果是整数则不需要输出小数点。代码里没有加注释，请大家务必自己把它读懂。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;0</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="kt">bool</span> <span class="n">neg</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">a</span> <span class="p">:</span> <span class="n">a</span><span class="p">;</span>
+	<span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">b</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">digits</span><span class="p">[</span><span class="mi">101</span><span class="p">],</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="p">;</span>
+	<span class="n">digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">r</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span> <span class="o">*</span> <span class="mi">10</span><span class="p">;</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="n">c</span><span class="o">--</span> <span class="o">&amp;&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">digits</span><span class="p">[</span><span class="o">++</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">b</span><span class="p">;</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">%</span> <span class="n">b</span> <span class="o">*</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="n">digits</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">);</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">digits</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">==</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">digits</span><span class="p">[</span><span class="n">d</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">digits</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">neg</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">d</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个算法还有可以改进的地方吗？当然有。试想如果问题没有限定 <span class="math notranslate nohighlight">\(c\le100\)</span> 呢？用静态的数组就很难确定应该开多大的长度了，这种时候用STL库的vector容器就能很方便地解决问题。关于vector容器的简介可以看这里：<a class="reference internal" href="../../ch03/sec01/311_sequence_list.html#ref-311-vector"><span class="std std-ref">STL的vector容器</span></a>。</p>
+<p>vector是一种可变长度的数组，也是一种顺序表，利用它的特性不仅能解决精度值没有限制范围的问题，而且能让算法变得略微简洁一些。</p>
+<ol class="arabic simple">
+<li><p>利用vector容器的可变长特性，我们不再需要用一个单独的变量来记录实际计算了多少小数位，用 <code class="docutils literal notranslate"><span class="pre">size()</span></code> 可以获得容器内当前元素的数量。</p></li>
+<li><p>利用vector容器的 <code class="docutils literal notranslate"><span class="pre">push_back()</span></code> 函数，随着循环不断计算出来的小数位可以简单地添加进容器的末尾。</p></li>
+<li><p>由于vector容器的 <code class="docutils literal notranslate"><span class="pre">back()</span></code> 函数返回的是最后一个元素的引用，所以可以直接对其进行修改，再配合上 <code class="docutils literal notranslate"><span class="pre">pop_back()</span></code> 函数就可以很方便地完成四舍五入。</p></li>
+</ol>
+<p>下面是用vector容器实现的版本，请仔细阅读并和数组版进行对比，理解它们的不同之处。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;0</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">bool</span> <span class="n">neg</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">a</span> <span class="p">:</span> <span class="n">a</span><span class="p">;</span>
+	<span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">b</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">digits</span><span class="p">;</span>
+	<span class="n">digits</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span> <span class="o">*</span> <span class="mi">10</span><span class="p">;</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="n">c</span><span class="o">--</span> <span class="o">&amp;&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">digits</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="n">b</span><span class="p">);</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">%</span> <span class="n">b</span> <span class="o">*</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">digits</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">);</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">digits</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">==</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">digits</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+		<span class="n">digits</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">++</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">neg</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">digits</span><span class="p">.</span><span class="n">front</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">);</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">digits</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">digits</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">it</span><span class="o">++</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">3.1.5.2. </span>用循环节表示小数<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>无论保留多少位小数，如果遇到循环小数，那它总还是不精确的。如果要得到任何一个有理小数的精确表示形式，就必须用循环节来表示它。</p>
+<p>我们现在要编写这样一个程序：输入两个整数，被除数 <span class="math notranslate nohighlight">\(a\)</span> 和除数 <span class="math notranslate nohighlight">\(b\neq 0\)</span>，输出 <span class="math notranslate nohighlight">\(a/b\)</span> 的循环小数形式，循环节用一对小括号标识，在循环小数后面紧跟一个整数 <span class="math notranslate nohighlight">\(n\)</span>，为循环节的长度。如果 <span class="math notranslate nohighlight">\(a/b\)</span> 不是循环小数，那么在小数结尾后添加一个为0的循环节。</p>
+<p>例如：<span class="math notranslate nohighlight">\(a=5,b=43\)</span>，则输出 <span class="math notranslate nohighlight">\(0.(116279069767441860465)21\)</span>；<span class="math notranslate nohighlight">\(a=-1,b=25\)</span>，则输出 <span class="math notranslate nohighlight">\(-0.04(0)1\)</span>。</p>
+<p>经过前面的超高精度小数计算，相信大家马上就可以想到这个循环小数问题仍然可以用模拟竖式除法运算来实现。我们只需知道循环节开始于哪一位，又结束于哪一位就可以了。为此需要另外用一个数组来记录每一位上得到的余数，每做完一次除法得到一个非零的余数时我们就去查一下这个余数是不是已经出现过了，如果已经出现过了就说明找到循环节了。</p>
+<p>余数 <span class="math notranslate nohighlight">\(r\)</span> 的取值范围为 <span class="math notranslate nohighlight">\([0,b-1]\)</span>，可以用一个长度为 <span class="math notranslate nohighlight">\(b\)</span> 的数组来保存每一个余数值首次出现的位置，0表示这个余数值还没出现过, 1表示在进行第1次除法的时候得到了这个余数值，说明这个余数值和小数点后第1位小数对应。依此类推，数组元素的下标表示余数值，元素值表示该余数值第一次出现时对应小数点后第几位。在运算过程中，每除出一个非零余数，就把当前位置记录在对应的数组元素里。如果对应的元素已经非零，那就说明这个余数值重复出现了，前一次保存下来的元素值就是循环节起始位置，现在的位置就是循环节结束位置的后一位。</p>
+<p>例1：<span class="math notranslate nohighlight">\(a=5, b=7\)</span>，数组 <code class="docutils literal notranslate"><span class="pre">quo[]</span></code> 存放每次除法运算的商，数组 <code class="docutils literal notranslate"><span class="pre">rem_pos[]</span></code> 存放每个余数值第一次出现时的小数位数。计算过程和结果可以用下面这张图来表示：</p>
+<img alt="../../_images/215_cycle.png" src="../../_images/215_cycle.png" />
+<p>如果结果不是循环小数，那么肯定在某一位上会除尽，也就是出现了余数0。这时候只需要在下一位上添加一个0，然后让循环节的起始位置和结束位置按照“含头不含尾”的原则指向这个额外添加的0即可。</p>
+<p>例2：<span class="math notranslate nohighlight">\(a=1, b= 25\)</span> 的运算结果为数组 <code class="docutils literal notranslate"><span class="pre">quo[]</span> <span class="pre">=</span> <span class="pre">{0,0,4,0}</span></code>，循环节的一头一尾分别为 <code class="docutils literal notranslate"><span class="pre">cyc_start</span> <span class="pre">=</span> <span class="pre">3,</span> <span class="pre">cyc_end</span> <span class="pre">=</span> <span class="pre">4</span></code>。</p>
+<p>下面的C++程序仍然使用了vector容器，而不是传统的数组来解决这个问题。利用vector的动态长度性质，就可以不需要事先知道被除数 <span class="math notranslate nohighlight">\(b\)</span> 的取值范围了。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span>				<span class="c1">// 特判，被除数为0</span>
+		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;0.(0)1&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">bool</span> <span class="n">neg</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">a</span> <span class="p">:</span> <span class="n">a</span><span class="p">;</span>
+	<span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">b</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+
+	<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">quo</span><span class="p">,</span> <span class="n">rem_pos</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">a</span><span class="p">,</span> <span class="n">cyc_start</span><span class="p">,</span> <span class="n">cyc_end</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">quo</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="n">b</span><span class="p">);</span>
+		<span class="n">r</span> <span class="o">%=</span> <span class="n">b</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>			<span class="c1">// 余数为0，除尽</span>
+			<span class="n">quo</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+			<span class="n">cyc_start</span> <span class="o">=</span> <span class="n">pos</span><span class="o">++</span><span class="p">;</span>
+			<span class="n">cyc_end</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">rem_pos</span><span class="p">[</span><span class="n">r</span><span class="p">])</span> <span class="p">{</span>	<span class="c1">// 余数非零且第二次出现，循环节结束</span>
+			<span class="n">cyc_start</span> <span class="o">=</span> <span class="n">rem_pos</span><span class="p">[</span><span class="n">r</span><span class="p">];</span>
+			<span class="n">cyc_end</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>			<span class="c1">// 余数非零且第一次出现，记录位置</span>
+			<span class="n">rem_pos</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="o">++</span><span class="p">;</span>	<span class="c1">// 记录完成后，位置向后推进一位</span>
+			<span class="n">r</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>		<span class="c1">// 余数自乘10，准备下一轮计算</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">neg</span><span class="p">)</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span><span class="p">;</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">quo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;.&quot;</span><span class="p">;</span>
+	<span class="n">pos</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">pos</span> <span class="o">&lt;</span> <span class="n">cyc_start</span><span class="p">)</span>
+		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">quo</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">];</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(&quot;</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">pos</span> <span class="o">&lt;</span> <span class="n">cyc_end</span><span class="p">)</span>
+		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">quo</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">];</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)&quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">cyc_end</span> <span class="o">-</span> <span class="n">cyc_start</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个算法并不难，但是编程上使用了不少技巧，特别是位置的使用，请一定要搞懂每一句语句、每一个变量的作用。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>不使用vector容器，只使用普通的数组再编写一次循环节表示法的程序，<span class="math notranslate nohighlight">\(\vert b \vert \le10000\)</span>。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="216_fast_power.html" title="3.1.6. 整数快速幂算法（洛谷P1226）"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="214_palin_primes.html" title="3.1.4. 回文质数（USACO1.5；洛谷P1217）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../210_basic_number_algos.html" ><span class="section-number">3.1. </span>简单数值算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. 前言 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="2. C++语言常用技巧" href="100_cpp_tricks.html" />
+    <link rel="prev" title="C++算法编程指南" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="100_cpp_tricks.html" title="2. C++语言常用技巧"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="C++算法编程指南"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. 前言</a><ul>
+<li><a class="reference internal" href="#id2">1.1. 目标读者</a></li>
+<li><a class="reference internal" href="#id3">1.2. 代码环境</a></li>
+<li><a class="reference internal" href="#vs">1.3. 算法编程 vs 工程编程</a></li>
+<li><a class="reference internal" href="#c-vs-c-c">1.4. 纯C++ vs C/C++混合</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="index.html"
+                        title="上一章">C++算法编程指南</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="100_cpp_tricks.html"
+                        title="下一章"><span class="section-number">2. </span>C++语言常用技巧</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/000_preface.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">1. </span>前言<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id2">
+<h2><span class="section-number">1.1. </span>目标读者<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li><p>对C/C++语言有初步了解，能使用g++编译器编译运行C++语言程序。</p></li>
+<li><p>计划参加NOI、CSP-J/S等认证考试或算法竞赛。</p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">1.2. </span>代码环境<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li><p>所有代码符合C++98规范，并在NOI Linux下用g++ 4.8.4编译器编译运行通过。</p></li>
+<li><p>代码在Windows系统下使用Dev C++编译运行可能会有微小差异。</p></li>
+</ul>
+</div>
+<div class="section" id="vs">
+<h2><span class="section-number">1.3. </span>算法编程 vs 工程编程<a class="headerlink" href="#vs" title="永久链接至标题">¶</a></h2>
+<p>算法编程和工程编程在编码风格、程序设计等方面存在许多不同之处。从算法编程起步的学习者，常会养成许多被工程编程视为洪水猛兽的“坏习惯”。此处逐一列举说明，以免从一开始就养成一些不好的编码习惯。</p>
+<ol class="arabic">
+<li><p><strong>不对输入数据进行有效性检验</strong>。算法编程题的输入数据不会存在无效数据，例如格式错误、类型错误、数值超限、遗漏、重复等，因此算法编程在输入数据时不进行数据有效性检验。工程编程则不然，要面对软件用户各种有意无意地输错数据点错按钮等，所以工程编程时对于获得的外部数据总是要进行严格的有效性检验才能使用。在学习算法编程阶段，确实可以不用检验数据有效性，但是如果今后参与工程编程，千万记住绝对不可以读到数据就拿来用。</p></li>
+<li><p><strong>代码可读性差</strong>。算法编程极少出现多人合作的情况，基本都是独自完成，而且程序一般都是以解决单一问题为目标的简单结构。因此代码可读性往往很差，甚至许多教材上的代码都是极为“丑陋”的，比如：</p>
+<ul class="simple">
+<li><p>变量、函数、自定义类型取名简短甚至无意义，例如 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a</span></code>；</p></li>
+<li><p>变量命名不符惯例，例如用大写字母命名变量，小写字母命名常量；</p></li>
+<li><p>代码不写注释，甚至自定义函数、类型都不写注释；</p></li>
+<li><p>自定义函数不使用原型(prototype)与定义(definition)分离的原则，全部堆积在 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数前直接定义。</p></li>
+</ul>
+<p>针对这一点，我们建议在算法编程时至少应该做到：除了题目中明确给出了名字的变量以外，其他变量名、函数名、类型名都要遵循C++语言的惯例定义一个好名字，即变量和函数用符合其含义的英语单词、惯例缩写或词组取名，单词之间用下划线连接，全部小写字母，例如 <code class="docutils literal notranslate"><span class="pre">data</span></code>、<code class="docutils literal notranslate"><span class="pre">exp_table</span></code>；常量的取名规则相同，但全部用大写字母；自定义类型的名称不用下划线连接单词，而是每个单词首字母大写，单词和单词连在一起，英语缩写的全部用大写，例如 <code class="docutils literal notranslate"><span class="pre">MyDataType</span></code>、<code class="docutils literal notranslate"><span class="pre">NOIDataType</span></code>；自定义的函数，除了内联函数以外，其他都要原型与定义分离，原型放在 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数前面，定义放在整个程序的后部。</p>
+</li>
+<li><p><strong>大量使用全局变量</strong>。算法编程为了方便经常使用全局变量，而工程编程的铁律是“不到万不得已绝不使用全局变量”。算法编程滥用全局变量的原因有：</p>
+<ul class="simple">
+<li><p>超大型数组：为了定义局部变量空间不够容纳的超大数组；</p></li>
+<li><p>避免数据初始化：局部变量必须由程序进行显式的初始化，而全局变量会自动初始化为全0；</p></li>
+<li><p>减少自定义函数的参数：使自定义函数能直接使用这些变量，而不是通过传递参数，当变量是大数组、大结构体时尤其方便。</p></li>
+</ul>
+<p>在算法编程这一特殊领域，偶尔使用全局变量确实能带来一些便捷，但若滥用必然弊大于利，不能从一开始就养成这一不良习惯。事实上，就算是算法编程，最好也应该尽量不用全局变量。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="c-vs-c-c">
+<h2><span class="section-number">1.4. </span>纯C++ vs C/C++混合<a class="headerlink" href="#c-vs-c-c" title="永久链接至标题">¶</a></h2>
+<p>C++语言是C语言的扩展，它不光有自己的一整套完整的编程语言体系和功能强大的STL模板库，而且完全继承了传统的C语言标准库。C标准库虽然功能不如C++的STL库强大，但其库函数的运行速度往往极快，故目前仍被大量使用，不会被淘汰，笔试题也仍然会考传统C语言代码。因此非常有必要学习掌握这些来自传统C语言的内容，至少要学会以下这些部分：</p>
+<ol class="arabic simple">
+<li><p>输入输出：<code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">printf()</span></code>、<code class="docutils literal notranslate"><span class="pre">scanf()</span></code>、<code class="docutils literal notranslate"><span class="pre">getchar()</span></code>、<code class="docutils literal notranslate"><span class="pre">putchar()</span></code>、<code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 函数属于必须掌握的内容，它们的运行速度远远高于C++输入输出流，且格式化输出更方便灵活。</p></li>
+<li><p>数据类型：<code class="docutils literal notranslate"><span class="pre">cctype</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">isXXX()</span></code> 系列字符种类判断函数，<code class="docutils literal notranslate"><span class="pre">toupper()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tolower()</span></code> 两个大小写转换函数，<code class="docutils literal notranslate"><span class="pre">climits</span></code> 库的九种基本数据类型最大最小值宏，例如表示 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数据最大值的 <code class="docutils literal notranslate"><span class="pre">INT_MAX</span></code>，这些也是应当掌握的内容。</p></li>
+<li><p>字符串：C语言使用字符数组来实现字符串，称为C-string，这是必须掌握的内容，要熟知其概念，并会熟练使用数组操作来进行简单的字符串处理，同时应能熟练使用 <code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">strlen()</span></code>、<code class="docutils literal notranslate"><span class="pre">strcpy()</span></code>、<code class="docutils literal notranslate"><span class="pre">strcmp()</span></code> 三个函数，<code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库中的其他函数最好也能有一定了解。</p></li>
+</ol>
+<p>也有一些传统的C语言语法是现在C++编程时不建议使用的，包括下面这些：</p>
+<ol class="arabic simple">
+<li><p>动态内存分配：应该使用C++的 <code class="docutils literal notranslate"><span class="pre">new</span></code> 和 <code class="docutils literal notranslate"><span class="pre">delete</span></code> 命令来进行动态内存分配，不再使用传统的 <code class="docutils literal notranslate"><span class="pre">malloc()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">free()</span></code> 函数；</p></li>
+<li><p>指针型函数参数：除了利用指针型参数模拟传数组和C-string以外，其他情况都应使用C++的传引用来代替传指针；</p></li>
+<li><p>指针操纵数组：算法编程时尽量不要使用指针来访问数组元素，应该使用下标，尤其是对二维及以上的多维数组，指针操作极其危险。</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="100_cpp_tricks.html" title="2. C++语言常用技巧"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="C++算法编程指南"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

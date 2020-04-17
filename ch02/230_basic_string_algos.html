@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.3. 简单字符串处理 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3.3.1. 字符串处理基础知识(I)" href="sec03/231_string_basic_1.html" />
+    <link rel="prev" title="3.2.6. 尺取法（洛谷P1147）" href="sec02/226_two_points.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="sec03/231_string_basic_1.html" title="3.3.1. 字符串处理基础知识(I)"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec02/226_two_points.html" title="3.2.6. 尺取法（洛谷P1147）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" accesskey="U"><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec02/226_two_points.html"
+                        title="上一章"><span class="section-number">3.2.6. </span>尺取法（洛谷P1147）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="sec03/231_string_basic_1.html"
+                        title="下一章"><span class="section-number">3.3.1. </span>字符串处理基础知识(I)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch02/230_basic_string_algos.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.3. </span>简单字符串处理<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>除了数值计算，计算机软件的第二大重要任务就是处理字符串。事实上随着现在计算机的应用越来越渗透到每一个角角落落，字符串处理的场景甚至已经超过了单纯的数值计算。</p>
+<p>在实际应用中，字符串处理的重要程度、复杂程度和难度都一点也不亚于数值计算，比如全文检索的技术难度就非常之高，比如中文分词就是一个到目前为止都没有完全完善的复杂算法，再比如机器翻译，这是目前最为前沿和热门的研究课题。</p>
+<p>这一部分我们先学习掌握一些最基础的简单字符串算法。要处理的字符串是ASCII字符串，即组成字符串的每一个字符都是ASCII字符。我们并不考虑中文等使用Unicode编码的字符串，事实上这也是算法竞赛的约定，所以不必担心会不会考到处理中文文本的题目。我们将要学习的内容包括：</p>
+<ol class="arabic simple">
+<li><p>字符串处理基础</p></li>
+<li><p>子串搜索</p></li>
+<li><p>回文子串相关算法</p></li>
+<li><p>初识有限自动机：字符串转整数</p></li>
+</ol>
+<p>在C++语言中，提供了两套字符串解决方案。一套是沿用了C语言的字符数组型字符串（C-string）解决方案，使用C语言标准库进行输入输出和处理，这主要是为了和旧时代遗留下来的C程序保持兼容。另一套是C++利用面向对象技术实现的全新的专用字符串类（C++ string）解决方案，它和C-string有一定的兼容性，比如可以用C-string进行赋值，但本质上是不同的。C++ string只能使用C++的IO流进行读写，它拥有数量众多的成员函数，处理能力非常强大。</p>
+<p>C-string现在还有许多人喜欢用，算法竞赛的笔试部分还会有许多C-string处理的程序阅读题。这是因为C-string相比C++ string确实是有一些优势的，它的处理速度非常之快，C标准库中用于处理C-string的库函数非常简洁实用。所以在初学阶段，我们必须要了解C-string，但自己动手编程时建议使用C++ string。我们在这部分要学习的前三项内容会使用C-string编写代码，到最后一项内容“字符串转整数”时我们就将全面转为使用C++ string了。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec03/231_string_basic_1.html">3.3.1. 字符串处理基础知识(I)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/231_string_basic_1.html#uva455">3.3.1.1. 周期串问题（UVa455）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/231_string_basic_1.html#uva10340">3.3.1.2. 子序列问题（UVa10340）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec03/232_string_basic_2.html">3.3.2. 字符串处理基础知识(II)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/232_string_basic_2.html#leetcode-3">3.3.2.1. 最长无重复字符子串（LeetCode#3）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/232_string_basic_2.html#z-leetcode-6">3.3.2.2. Z字形变换（LeetCode#6）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec03/233_string_basic_3.html">3.3.3. 字符串处理基础知识(III)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/233_string_basic_3.html#id1">3.3.3.1. 字典序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/233_string_basic_3.html#c-string">3.3.3.2. C-string小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec03/234_substr_kmp.html">3.3.4. 子串搜索及KMP算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/234_substr_kmp.html#id1">3.3.4.1. 朴素的蛮力搜索算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/234_substr_kmp.html#index-0">3.3.4.2. KMP算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/234_substr_kmp.html#id3">3.3.4.3. 小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec03/235_palindromic_string.html">3.3.5. 回文字符串</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/235_palindromic_string.html#id2">3.3.5.1. 回文串的判断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/235_palindromic_string.html#id3">3.3.5.2. 最长回文子串（蛮力、动态规划和中心扩展）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec03/236_cpp_string_intro.html">3.3.6. C++ string简介</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/236_cpp_string_intro.html#id1">3.3.6.1. 常见用法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/236_cpp_string_intro.html#id2">3.3.6.2. 输入输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/236_cpp_string_intro.html#id3">3.3.6.3. 字符串流</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec03/237_atoi.html">3.3.7. 初识有限自动机：字符串转整数</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/237_atoi.html#id2">3.3.7.1. 正则表达式简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/237_atoi.html#id3">3.3.7.2. 有限状态自动机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/237_atoi.html#atoi">3.3.7.3. atoi问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="sec03/231_string_basic_1.html" title="3.3.1. 字符串处理基础知识(I)"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec02/226_two_points.html" title="3.2.6. 尺取法（洛谷P1147）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

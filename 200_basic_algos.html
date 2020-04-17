@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3. 简单的基础算法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="3.1. 简单数值算法" href="ch02/210_basic_number_algos.html" />
+    <link rel="prev" title="2.5. 指针 VS 引用" href="ch01/150_pointers_refs.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="ch02/210_basic_number_algos.html" title="3.1. 简单数值算法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="ch01/150_pointers_refs.html" title="2.5. 指针 VS 引用"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="ch01/150_pointers_refs.html"
+                        title="上一章"><span class="section-number">2.5. </span>指针 VS 引用</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="ch02/210_basic_number_algos.html"
+                        title="下一章"><span class="section-number">3.1. </span>简单数值算法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/200_basic_algos.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3. </span>简单的基础算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>本章介绍算法学习入门阶段必须掌握的基础算法和经典算法，是复杂算法的基础构件。这些算法虽然基础，但它们都蕴含着算法设计的巧思和智慧，同时也是算法竞赛考试的必考点。本章分为6个部分，每个部分讲解数个经典算法，包括以下内容：</p>
+<ol class="arabic simple">
+<li><p>简单数值算法</p></li>
+<li><p>简单在线统计</p></li>
+<li><p>简单字符串处理</p></li>
+<li><p>递归与二分</p></li>
+<li><p>基础排序算法</p></li>
+<li><p>基础组合算法与模拟算法</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ch02/210_basic_number_algos.html">3.1. 简单数值算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec01/211_gcd_lcm.html">3.1.1. 最大公因数与最小公倍数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec01/212_primes.html">3.1.2. 和质数相关的基础算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec01/213_palindrome_numbers.html">3.1.3. 回文数专题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec01/214_palin_primes.html">3.1.4. 回文质数（USACO1.5；洛谷P1217）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec01/215_long_decimal.html">3.1.5. 有理小数的精确表示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec01/216_fast_power.html">3.1.6. 整数快速幂算法（洛谷P1226）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ch02/220_basic_online_algos.html">3.2. 简单在线统计</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec02/221_mono_intervals.html">3.2.1. 单调区间在线统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec02/222_road_block.html">3.2.2. 单调区间问题的应用：两个NOIP提高组复赛题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec02/223_kadanes_algo.html">3.2.3. 最大区间和问题（洛谷P1115）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec02/224_prefix_sum.html">3.2.4. 前缀和</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec02/225_diff.html">3.2.5. 差分法（洛谷P3397）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec02/226_two_points.html">3.2.6. 尺取法（洛谷P1147）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ch02/230_basic_string_algos.html">3.3. 简单字符串处理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/231_string_basic_1.html">3.3.1. 字符串处理基础知识(I)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/232_string_basic_2.html">3.3.2. 字符串处理基础知识(II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/233_string_basic_3.html">3.3.3. 字符串处理基础知识(III)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/234_substr_kmp.html">3.3.4. 子串搜索及KMP算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/235_palindromic_string.html">3.3.5. 回文字符串</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/236_cpp_string_intro.html">3.3.6. C++ string简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec03/237_atoi.html">3.3.7. 初识有限自动机：字符串转整数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ch02/240_rec_bin.html">3.4. 递归与二分</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/241_recursive.html">3.4.1. 递归法介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/242_hanoi.html">3.4.2. 经典递归问题：Hanoi塔游戏</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/243_fibo.html">3.4.3. Fibonacci数列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/244_lg1028.html">3.4.4. 递归与递推例题：数的计算（洛谷P1028）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/245_bin_search.html">3.4.5. 二分法基础及二分查找</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/246_cubic_root.html">3.4.6. 二分迭代法求方程根</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/247_p1024.html">3.4.7. 一元三次方程求解（洛谷P1024）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/248_p2678.html">3.4.8. 二分法例题：跳石头（洛谷P2678）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/249_p1577.html">3.4.9. 二分法例题：切绳子（洛谷P1577）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec04/24A_median.html">3.4.10. 中位数问题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ch02/250_sort_algos.html">3.5. 基础排序算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/251_two_simple_sorts.html">3.5.1. 两种简单比较排序方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/252_insertion_sort.html">3.5.2. 插入排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/253_merge_sort.html">3.5.3. 归并排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/254_quick_sort.html">3.5.4. 快速排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/255_non_cmp_sorts.html">3.5.5. 非比较型排序算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/256_cpp_sort.html">3.5.6. C++算法库排序函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/257_complex_sorts.html">3.5.7. 复杂规则的排序技巧</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec05/258_index.html">3.5.8. 简单建索引算法</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ch02/260_other_algos.html">3.6. 基础组合算法与模拟算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/261_perm_comb.html">3.6.1. 排列与组合：数学的概念</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/262_perm_comb_tables.html">3.6.2. 排列组合打表与杨辉三角形</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/263_permuting_1.html">3.6.3. 排列的生成算法(I)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/264_permuting_2.html">3.6.4. 排列的生成算法(II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/265_choosing.html">3.6.5. 组合生成算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/266_luogu_problems_1.html">3.6.6. 复杂排序技巧：排座椅（洛谷P1056）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/267_luogu_problems_2.html">3.6.7. 数组环形访问：玩具谜题（洛谷P1563）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/268_luogu_problems_3.html">3.6.8. 字符串处理：字符串的展开（洛谷P1098）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/269_luogu_problems_4.html">3.6.9. 查表的技巧：生活大爆炸版石头剪刀布（洛谷P1328）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch02/sec06/269_luogu_problems_4.html#p1538">3.6.10. 查表的技巧：迎春舞会之数字舞蹈（洛谷P1538）</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="ch02/210_basic_number_algos.html" title="3.1. 简单数值算法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="ch01/150_pointers_refs.html" title="2.5. 指针 VS 引用"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

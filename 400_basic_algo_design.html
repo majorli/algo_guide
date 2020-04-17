@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>5. 算法设计方法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="5.1. 贪心法" href="ch04/410_greedy.html" />
+    <link rel="prev" title="4.1.6. 高精算法例题：国王游戏（洛谷P1080）" href="ch03/sec01/316_big_int_5.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="ch04/410_greedy.html" title="5.1. 贪心法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="ch03/sec01/316_big_int_5.html" title="4.1.6. 高精算法例题：国王游戏（洛谷P1080）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="ch03/sec01/316_big_int_5.html"
+                        title="上一章"><span class="section-number">4.1.6. </span>高精算法例题：国王游戏（洛谷P1080）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="ch04/410_greedy.html"
+                        title="下一章"><span class="section-number">5.1. </span>贪心法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/400_basic_algo_design.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">5. </span>算法设计方法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>算法设计的方法有许许多多，根据算法界的第一神书《算法导论》，可以分为五种基本类型：<strong>贪心法</strong>、<strong>分治法</strong>、<strong>动态规划法</strong>、<strong>回溯法</strong>和<strong>分支限界法</strong>，常被尊称为“五大算法”。算法设计方法不同于我们在前面学过的前缀和、差分法、递归、二分法、深搜、宽搜等具体的算法技巧，而是设计算法的思路和方法。</p>
+<p>简单的问题往往用一种方法设计出一个算法就可以解决，有些复杂的问题则需要同时用到多种设计方法，结合多种算法技巧来设计出一套精细复杂的算法来解决问题，还有一些问题则是到目前为止人类还没有找到有效的算法的。</p>
+<p>一个优秀的算法，必须同时关注存储空间的使用量和完成运算的时间量两个指标，通常用空间复杂度和时间复杂度来进行描述。二者往往会出现相互矛盾对立的情况，为了加快算法运行的速度有时候就需要使用更多的存储空间，而有时候为了减少空间使用则不得不使算法运行时间延长。优秀的算法会综合考虑二者，取一个最佳的平衡点。</p>
+<p>考虑运行速度的时候，我们称不超过多项式时间复杂度的算法为有效算法。一般我们认为非常高效的算法包括常数（即0阶多项式）时间 <span class="math notranslate nohighlight">\(O(1)\)</span> 算法、对数时间 <span class="math notranslate nohighlight">\(O(\log n)\)</span> 算法、线性（1阶多项式）时间 <span class="math notranslate nohighlight">\(O(n)\)</span> 算法、<span class="math notranslate nohighlight">\(O(n\log n)\)</span> 算法，尤其是在算法竞赛时，上述这样的时间复杂度往往是要追求的目标。有些时候部分 <span class="math notranslate nohighlight">\(O(n^2)\)</span>、<span class="math notranslate nohighlight">\(O(n^2\log n)\)</span> 甚至少部分 <span class="math notranslate nohighlight">\(O(n^3)\)</span> 时间的算法可能也能在OJ或竞赛中被接受，但大多数情况下2阶多项式及以上的算法就很可能无法所有测试点AC了，3阶多项式以上的基本上大部分测试点都要TLE。</p>
+<p>但是在实际的算法设计领域，只要是多项式时间 <span class="math notranslate nohighlight">\(O(n^m)\)</span> 算法，无论阶多大，只要它是一个有穷的确定的阶，就被认为是一种有效的、可解的算法。而那些目前还没有多项式时间算法的问题，则被称为<strong>NP-hard问题</strong>，或<strong>NP难题</strong>，被认为是目前无法有效求解的问题。目前已知的NP难题已经有数千个，在各种应用领域都广泛存在。</p>
+<p>NP难题目前没有多项式时间的有效算法，但同时目前也无法证明它们确实不存在多项式时间的有效算法。而且它们相互之间具有等价性，如果某一个具体的NP难题被解决了，找到了多项式时间的算法，或者证明了它可以有多项式时间的算法，那就意味着大量的其他NP难题也都被证明了可以有多项式时间的算法。另外还有一类特殊的NP难题，是所有NP难题中最难的一类，称为<strong>NPC问题</strong>或<strong>NP完全问题</strong>，最经典的莫过于旅行商问题（又叫货郎问题）。只要有一个NPC问题被解决就意味着所有的NP难题都可以有多项式时间的有效算法。所以，“NP问题能否在多项式时间内解决”这个问题成为了著名的数学七大千禧难题之一，简称“P=NP？”问题，成为无数的数学家、计算机科学家竞相追逐的目标。</p>
+<p>尽管NP问题目前还没有一个找到有效的多项式时间算法，但这并不代表着这些问题就彻底无解。很多问题在一些特定条件下是可以有多项式时间算法的，有些问题可以在多项式时间内求出一个比较靠谱的较优解，还有很多问题还可以用一些近似算法、随机算法来求出尽量好的近似解，比如模拟退火、遗传算法等等。关于NP难题的这些问题我们在第6章高级算法部分再去讨论。本章主要介绍贪心法、分治法、动态规划和解搜索这四类最常见的算法设计方法。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ch04/410_greedy.html">5.1. 贪心法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch04/sec01/411_greedy_bag_problems.html">5.1.1. 贪心法(I) 背包问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch04/sec01/412_greedy_complex_scheduling.html">5.1.2. 贪心法(II) 复杂任务调度</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch04/sec01/413_greedy_integer.html">5.1.3. 贪心法(III) 整数的分分合合</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="ch04/410_greedy.html" title="5.1. 贪心法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="ch03/sec01/316_big_int_5.html" title="4.1.6. 高精算法例题：国王游戏（洛谷P1080）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">C++算法编程指南 0.1 文档</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

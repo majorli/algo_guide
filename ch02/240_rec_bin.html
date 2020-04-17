@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>3.4. 递归与二分 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3.4.1. 递归法介绍" href="sec04/241_recursive.html" />
+    <link rel="prev" title="3.3.7. 初识有限自动机：字符串转整数" href="sec03/237_atoi.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="sec04/241_recursive.html" title="3.4.1. 递归法介绍"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec03/237_atoi.html" title="3.3.7. 初识有限自动机：字符串转整数"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" accesskey="U"><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec03/237_atoi.html"
+                        title="上一章"><span class="section-number">3.3.7. </span>初识有限自动机：字符串转整数</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="sec04/241_recursive.html"
+                        title="下一章"><span class="section-number">3.4.1. </span>递归法介绍</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch02/240_rec_bin.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">3.4. </span>递归与二分<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>递归法是算法设计中最为重要的技巧之一，无数的经典算法使用了递归法进行设计，无数的难解之题使用了递归法之后变得思路清晰简洁，无数的实际问题使用了递归法之后得到了更加高效更加完美的解法。事实上我们已经学过一个递归算法：快速幂。学习递归的时候，大家可以回过头去看看：<a class="reference internal" href="sec01/216_fast_power.html#ref-216"><span class="std std-ref">整数快速幂算法（洛谷P1226）</span></a>，体会一下它为什么实际上是一个递归算法。</p>
+<p>递归是一个数学上的概念，递归法是利用递归方式来构造问题之解的算法设计方法，C++语言中一个函数自己调用自己称为递归调用，是程序实现递归算法的<strong>一种</strong>方法。在这一部分我们将学习什么是数学上递归的概念，递归怎么应用在算法设计中成为递归法，以及怎样用C++语言实现递归算法。我们将会学习几个经典的递归算法例子，也会看到一些滥用或者误用递归法的坏例子。在后面的基础排序算法部分以及后续其他章节中，我们将不断看到递归法的应用，编写各种各样的递归程序。</p>
+<p>学习了递归法之后，我们还会介绍一种很常用的递归算法：二分法。二分法利用递归的思路在有序的空间中快速寻找到问题的解，时间复杂度往往能够达到对数时间 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。二分法非常实用，应用场景也非常多，是算法竞赛的必考考点。普及组阶段往往会考一些单纯的二分算法，比如二分搜索、牛顿迭代法解方程等。提高组及以上阶段的竞赛中，常会考到在复杂算法中应用二分法来提高效率的考题。我们将通过四个例题由浅入深地介绍二分法的应用。</p>
+<p>本部分包括以下内容：</p>
+<ul class="simple">
+<li><p>递归的基本概念</p></li>
+<li><p>经典递归问题：Hanoi塔</p></li>
+<li><p>递归与递推：Fibonacci数列</p></li>
+<li><p>递归与递推：数的计算（洛谷P1028）</p></li>
+<li><p>二分法的基本概念</p></li>
+<li><p>二分迭代法解方程，立方根的计算</p></li>
+<li><p>一元三次方程求解（洛谷P1024）</p></li>
+<li><p>跳石头（洛谷P2678，NOIP2015）</p></li>
+<li><p>切绳子（洛谷P1577）</p></li>
+<li><p>中位数问题</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec04/241_recursive.html">3.4.1. 递归法介绍</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/241_recursive.html#id2">3.4.1.1. 递归的基本概念</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/241_recursive.html#id3">3.4.1.2. 计算阶乘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/241_recursive.html#id4">3.4.1.3. 寻找最大数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/242_hanoi.html">3.4.2. 经典递归问题：Hanoi塔游戏</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/242_hanoi.html#id1">3.4.2.1. 递推公式、迭代法和递归树</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/243_fibo.html">3.4.3. Fibonacci数列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/243_fibo.html#id1">3.4.3.1. 递归计算Fibonacci数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/243_fibo.html#id2">3.4.3.2. 递推计算Fibonacci数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/244_lg1028.html">3.4.4. 递归与递推例题：数的计算（洛谷P1028）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/245_bin_search.html">3.4.5. 二分法基础及二分查找</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/245_bin_search.html#id2">3.4.5.1. 二分查找</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/245_bin_search.html#id3">3.4.5.2. 二分查表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/245_bin_search.html#id4">3.4.5.3. 边界查找</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/246_cubic_root.html">3.4.6. 二分迭代法求方程根</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/246_cubic_root.html#id2">3.4.6.1. 求正负一百万之间任意实数的立方根</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/247_p1024.html">3.4.7. 一元三次方程求解（洛谷P1024）</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/247_p1024.html#index-0">3.4.7.1. 快速多项式算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/247_p1024.html#id2">3.4.7.2. 多项式方程的根：奇穿偶不穿</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/247_p1024.html#index-1">3.4.7.3. 洛谷P1024问题题解</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/248_p2678.html">3.4.8. 二分法例题：跳石头（洛谷P2678）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/249_p1577.html">3.4.9. 二分法例题：切绳子（洛谷P1577）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sec04/24A_median.html">3.4.10. 中位数问题</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec04/24A_median.html#id2">3.4.10.1. 归并法求两个有序数组的中位数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec04/24A_median.html#id3">3.4.10.2. 二分法求两个有序数组的中位数</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="sec04/241_recursive.html" title="3.4.1. 递归法介绍"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec03/237_atoi.html" title="3.3.7. 初识有限自动机：字符串转整数"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../200_basic_algos.html" ><span class="section-number">3. </span>简单的基础算法</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

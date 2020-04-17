@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.3. 内存块操作 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2.4. C++模板的妙用" href="140_cpp_template.html" />
+    <link rel="prev" title="2.2. 生成随机数" href="120_random_nums.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="140_cpp_template.html" title="2.4. C++模板的妙用"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="120_random_nums.html" title="2.2. 生成随机数"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" accesskey="U"><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="120_random_nums.html"
+                        title="上一章"><span class="section-number">2.2. </span>生成随机数</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="140_cpp_template.html"
+                        title="下一章"><span class="section-number">2.4. </span>C++模板的妙用</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch01/130_mem_block.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">2.3. </span>内存块操作<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p><strong>什么叫内存的块操作</strong></p>
+<p>事实上无论是诸如 <code class="docutils literal notranslate"><span class="pre">int</span></code> 这样的基础数据类型也好，还是数组、结构这样的派生数据类型也罢，都是计算机内存中的一块连续的存储空间，大小不一而已。例如现在通常的64位计算机系统里，一个C++的 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型变量占用的是连续4个字节。C++基础数据类型的单个变量占用空间都是固定的，最小的是 <code class="docutils literal notranslate"><span class="pre">char</span></code> 和 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 类型，单个变量占用一个最小单位内存，即一个字节，而 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span> <span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">double</span></code> 则需要8个字节，在某些系统下一个 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">double</span></code> 会占用16个连续字节。派生数据类型只是把组成它的基础类型变量连续存放起来而已。例如一个含有100个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 元素的数组在内存中就是连续的400个字节。结构体占用的内存空间也是连续的，例如下面这个结构：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">List</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">a</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>每一个这样的 <code class="docutils literal notranslate"><span class="pre">List</span></code> 类型结构变量在内存中占用804个连续字节，其中800个字节是100个元素的 <code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">a[100]</span></code> 数组，另外4个字节用来存放表示长度的 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">len</span></code> 变量。如果创建一个 <code class="docutils literal notranslate"><span class="pre">List</span></code> 型数组：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">List</span> <span class="n">lists</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>这个数组总共占用804×16=12,864字节的连续内存。这样的连续内存空间称为<strong>内存块</strong>，对内存块的操作称为<strong>块操作</strong>。</p>
+<p>我们常会遇到这样的批量操作场景：对数组中的所有元素赋相同的值、清空结构变量中所有成员变量的值、把一段连续的元素值从一个数组复制到另一个数组中去等等。这些操作当然可以用循环和赋值语句完成，但当数据量很大时则更适合使用内存块操作。块操作属于硬件层级的操作，相对于C++语句，它的优势就是快！</p>
+<p><strong>两个常用的块操作函数</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">cstring</span></code> 标准库中有两个常用的块操作函数，实现两种最基本的块操作。<code class="docutils literal notranslate"><span class="pre">memset()</span></code> 函数用来给一个内存块里的所有字节一次性统一设值，<code class="docutils literal notranslate"><span class="pre">memcpy()</span></code> 函数用来将一个内存块的内容整块复制到另一个内存块中。另外还有几个别的块操作函数，但是这两个是用得最多的。作为算法程序的辅助手段，掌握这两个函数的用法就足够了。几乎每一种计算机系统都会在硬件层级实现一些基本的内存块操作硬指令，块操作库函数会利用这些硬件指令来完成操作，它们的运行速度就是所谓的“硬件级速度”，比C++语句的速度要快上不知道多少倍。</p>
+<p><code class="docutils literal notranslate"><span class="pre">memset()</span></code> 函数的功能是给一块指定起点、指定长度（以字节为单位）的内存块里的每一个字节都同时设置为一个指定的值。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="o">*</span><span class="nf">memset</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>它的返回值其实就是这个内存块的起点地址，返回类型是一个“无类型指针” <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>，这是个什么东西先不用去管，大多数情况下可能一辈子都用不上这个返回值。它接收三个参数：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*s</span></code>：这个参数用来指定要操作的内存块首地址。对于数组，数组名，比如 <code class="docutils literal notranslate"><span class="pre">a</span></code>，就是数组第一个元素的地址，也就是整个数组的首地址，它等价于 <code class="docutils literal notranslate"><span class="pre">&amp;a[0]</span></code>；如果要操作的是从元素 <code class="docutils literal notranslate"><span class="pre">a[n]</span></code> 开始的部分，那么 <code class="docutils literal notranslate"><span class="pre">a+n</span></code> 就是数组第n号元素的首地址，它等价于 <code class="docutils literal notranslate"><span class="pre">&amp;a[n]</span></code>；结构型变量可以用C++的取地址运算符 <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> 来获得首地址，就像在 <code class="docutils literal notranslate"><span class="pre">scanf()</span></code> 函数里所做的一样。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">c</span></code>：这是要给每个字节设置的值。要注意，虽然这个参数的数据类型是 <code class="docutils literal notranslate"><span class="pre">int</span></code> ，但实际上块操作是针对字节的，最终被设置的值是这个参数值最后一个字节的内容，即 <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">%</span> <span class="pre">256</span></code> 的值，因此这个参数值通常应该取在-128到127的范围以内。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">n</span></code>：以字节为单位的内存块长度，<code class="docutils literal notranslate"><span class="pre">size_t</span></code> 其实是无符号长整型，实际使用的时候可以接受任意类型的整数。千万记得长度是以字节为单位的！例如 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a[100]</span></code> 这个数组，数组长度是100，但它占用的内存块的长度是400！初学者最容易在这里掉坑！所以我们推荐使用 <code class="docutils literal notranslate"><span class="pre">sizeof(a)</span></code> 来获取数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 占用的内存块长度，不要自己心算手写。</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">memcpy()</span></code> 函数的功能是将一块指定起点指定长度（以字节为单位）的内存块里的内容复制到另一块指定了起点的内存块中去。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="o">*</span><span class="nf">memcpy</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">dest</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">src</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>它的返回值也是一个很可能一辈子都用不上的 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code> 指针，其实就是目标内存块的首地址。它同样接收三个参数：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*dest</span></code>：这是要复制到的目标内存块的首地址。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">void</span> <span class="pre">*src</span></code>：这是要被复制的源内存块的首地址，<code class="docutils literal notranslate"><span class="pre">const</span></code> 修饰符规定函数不能改变源内存块里的内容。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">n</span></code>：要复制的内存块长度，也就是字节数。</p></li>
+</ol>
+<p>要注意内存块复制的时候，目标块和源块不能有重叠，也就是说目标块内的地址不能有包含在要被复制的源内存块里面的。</p>
+<a class="reference internal image-reference" href="../_images/130_memcpy.png"><img alt="../_images/130_memcpy.png" src="../_images/130_memcpy.png" style="width: 658.0px; height: 505.0px;" /></a>
+<p><strong>memset和memcpy的典型用例</strong></p>
+<p>下面所举的是在算法编程中内存块操作最为常见的典型用例，学会这些就差不多足够应付算法编程所需的块操作了。</p>
+<p>1、批量清空数组中的全部或部分连续元素</p>
+<p>所谓清空，就是把每一个字节都设置为0。对于 <code class="docutils literal notranslate"><span class="pre">char,</span> <span class="pre">short,</span> <span class="pre">int,</span> <span class="pre">long,</span> <span class="pre">long</span> <span class="pre">long,</span> <span class="pre">float,</span> <span class="pre">double,</span> <span class="pre">long</span> <span class="pre">double</span></code> 这些数值型变量，每一个字节都设为0后它们的值就变成了0；对于用作字符的 <code class="docutils literal notranslate"><span class="pre">char</span></code> 变量，设置为0就成了空字符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code>；对于C-string字符串 <code class="docutils literal notranslate"><span class="pre">char[]</span></code>，设置为0就变成了空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>；对于 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型变量，设为0就是设为 <code class="docutils literal notranslate"><span class="pre">false</span></code>；如果是指针，那么设置为0就成了空指针 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。而派生数据类型归根到底都是由基础数据类型组合而成的，所以用 <code class="docutils literal notranslate"><span class="pre">memset()</span></code> 可以方便地清空数组中的元素，至于部分还是全部，完全由首地址和长度两个参数决定。</p>
+<p>以整型数组为例：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mf">1e6</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="n">MAXN</span><span class="p">];</span>
+
+<span class="n">memset</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MAXN</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>       <span class="c1">// 清空整个数组</span>
+<span class="n">memset</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>        <span class="c1">// 清空前100个元素</span>
+<span class="n">memset</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>     <span class="c1">// 清空a[100]到a[149]这50个元素</span>
+</pre></div>
+</div>
+<p>同样的方法可以用来清空结构体变量中的所有成员值。但是尽量不要去尝试对结构体中的部分成员变量进行块操作，因为不同的计算机系统对于结构体中成员变量的存放位置规则可能有所不同。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">S</span> <span class="p">{</span>
+        <span class="c1">// 成员变量...</span>
+<span class="p">};</span>
+
+<span class="n">S</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+
+<span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">S</span><span class="p">));</span>       <span class="c1">// 清空结构体a</span>
+<span class="n">memset</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">S</span><span class="p">));</span>  <span class="c1">// 清空结构S数组b中的所有结构体</span>
+</pre></div>
+</div>
+<p id="ref-130-memset">2、批量给数组中的全部或部分连续元素赋值</p>
+<p>有一些特殊的值可以用块操作来批量赋值，例如0。但并不是每一个值都是可以这样批量赋值的。例如对于 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数组，就不能用 <code class="docutils literal notranslate"><span class="pre">memset(a,</span> <span class="pre">1,</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">sizeof(int))</span></code> 来把其中所有元素都赋值为1。这是因为一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 变量在内存中占据4个字节，而块操作是按字节来设置值的，执行上面这条语句使每个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 元素的所有4个字节都被设置为1，其值变成十六进制数0x01010101，转为十进制等于16,843,009。所以对于 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型变量来说，1这个数值是不能用块操作来批量赋值的。</p>
+<p>事实上每一种基础数据类型都有一些可以用块操作批量赋值的数值，有时候可以带来一些对编程有帮助的小技巧。常会用到的有两种，请务必记住。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+<span class="kt">bool</span> <span class="n">b</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+
+<span class="n">memset</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>       <span class="c1">// 把数组a中的所有元素赋值为-1</span>
+<span class="n">memset</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">));</span>       <span class="c1">// 把数组b中的所有元素赋值为true</span>
+</pre></div>
+</div>
+<p>至于 <code class="docutils literal notranslate"><span class="pre">char</span></code> 这种本身就只占用一个字节的数据类型，从-128到127都是可以批量赋值的，而 <code class="docutils literal notranslate"><span class="pre">float,</span> <span class="pre">double,</span> <span class="pre">long</span> <span class="pre">double</span></code> 这三种浮点数类型则除了0没有别的特殊值。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>千万不要轻易尝试对结构体的成员变量批量赋值，除了0以外哪怕是特殊值也不要轻易尝试。所以如果是一个结构体类型的数组，尽量不要用 <code class="docutils literal notranslate"><span class="pre">memset()</span></code> 去批量赋不是0的值。</p>
+</div>
+<p>3、批量复制数组内容</p>
+<p>块复制可以用来把一个数组的全部或部分元素复制到另一个数组里去，一般来说要复制到目标数组应该和源数组有相同的数据类型，并且要保证长度足够。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">100</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+
+<span class="n">memcpy</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>        <span class="c1">// 复制整个a数组中的内容到b数组</span>
+<span class="n">memcpy</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="mi">50</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">50</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>      <span class="c1">// 复制a[0]到a[49]到b[50]到b[99]</span>
+<span class="n">memcpy</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">20</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>   <span class="c1">// 复制b数组的后80个元素到a数组对应位置</span>
+</pre></div>
+</div>
+<p>当然了，只要源块和目标块不相互重叠，完全可以在同一个数组里实现在不同区块之间复制内容。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">a</span><span class="p">[</span><span class="mi">1000</span><span class="p">];</span>
+
+<span class="n">memcpy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span> <span class="c1">// 复制a[100]开始的100个元素到a[0]开始的位置去</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>用块复制来批量复制数组元素时，一定要当心目标块数组超限的问题！</p>
+</div>
+<p>另外，由于C-string本质上是一个字符型数组，所以 <code class="docutils literal notranslate"><span class="pre">memcpy()</span></code> 也可以用来复制C-string字符串，只是别忘了串尾必须有一个空字符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code>。<code class="docutils literal notranslate"><span class="pre">memcpy()</span></code> 函数同样可以用来复制结构变量，但是一般并没有这个必要，因为结构变量本身支持使用 <code class="docutils literal notranslate"><span class="pre">=</span></code> 相互赋值。</p>
+<p>块复制只是单纯地按字节来复制内存中的内容，它本身根本不关心复制的是什么数据类型，这也是硬件系统的一个特点。利用这个特点还可以实现一些奇特的技巧。</p>
+<p>例如在一些比较古老的计算机语言里，变量名实际上只有前8位字符起作用，如果两个变量的变量名前8位字符相同就会被认为是重名的，比如 <code class="docutils literal notranslate"><span class="pre">abcdefg_1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">abcdefg_2</span></code>。这些语言的编译器在编译源程序的时候，会把每一个变量名前8位字符的ASCII码从后往前串起来构成一个64位整数。这个整数叫做变量名的哈希值，是和前8位字符一一对应的，两个变量是否重名只需要对比二者的哈希值就可以了。</p>
+<p>如果我们用普通方法逐个字节从后向前去串起来构成一个64位整数，需要用到一个循环，共计算8次整数乘法、8次整数加法。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">var_name</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;variable_name_xxx&quot;</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">hash</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">+</span> <span class="n">var_name</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>如果用上内存块复制的话，这样就搞定了：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="kt">char</span> <span class="n">var_name</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;variable_name_xxx&quot;</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">hash</span><span class="p">;</span>
+<span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>代码简单速度快，堪称奇技淫巧的典范。</p>
+<p>老程序员往往有很多这样的小技巧，但是实际上这类技巧不容易把控，需要对计算机原理有比较深的掌握，而且在算法编程中能用的场景并不多，所以我们并不推荐在算法编程中使用这类技巧。对于内存块操作，掌握批量清零、特殊值批量赋值和数组区块复制即可。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="140_cpp_template.html" title="2.4. C++模板的妙用"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="120_random_nums.html" title="2.2. 生成随机数"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../100_cpp_tricks.html" ><span class="section-number">2. </span>C++语言常用技巧</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

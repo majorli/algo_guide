@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1. 线性表 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="4.1.1. 顺序表" href="sec01/311_sequence_list.html" />
+    <link rel="prev" title="4. 基础数据结构" href="../300_basic_data_structure.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="sec01/311_sequence_list.html" title="4.1.1. 顺序表"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="../300_basic_data_structure.html" title="4. 基础数据结构"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" accesskey="U"><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="../300_basic_data_structure.html"
+                        title="上一章"><span class="section-number">4. </span>基础数据结构</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="sec01/311_sequence_list.html"
+                        title="下一章"><span class="section-number">4.1.1. </span>顺序表</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch03/310_linear_list.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.1. </span>线性表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>所谓线性表，又叫<strong>线性存储数据结构</strong>，是指把一个数据序列中的多个数据项按照它们在序列中的先后次序一连串地存储在存储空间里的数据结构。直观的理解可以把数据项看成是一个一个的串珠，用一根线把这些串珠按顺序串起来就形成了线性表。</p>
+<img alt="../_images/310_linear_list.png" src="../_images/310_linear_list.png" />
+<p>按照数据结构的术语，我们把存储在线性表中的数据项称作<strong>元素</strong>。由于线性表中元素的存储是有先后次序的（请理解有次序和有序的区别），所以我们可以给每一个元素编号，然后按照编号一一对应地找指定序号的元素。另外还有两个术语需要知道，<strong>前驱</strong>表示某个元素的前一个元素；<strong>后继</strong>表示某个元素的后一个元素。线性表中的每一个元素，最多只能有一个确定的前驱，最多只能有一个确定的后继。</p>
+<p>例如上面这个图中表示的线形表中，a3元素的前驱是a2元素，它的后继是a4元素。对于第一个元素a1，它的前驱是空元素，有时候我们喜欢按C++的惯例把空元素写做 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。类似的，最后一个元素a5的后继是 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>在C++语言的世界里序号是从0开始的，千万要记住并熟悉这一规则。我们不建议某些算法书上常见的把0号元素留空不用，强行使序号从1开始的做法。</p>
+</div>
+<p>我们要知道，虽说线性表是把数据项按次序组织成一连串的数据结构，但是实际的物理存储方式并不一定要是连续的，只要在逻辑关系上它们是有次序的就可以。简单地说，不管元素在存储空间里是不是真正按次序并且紧挨着存放的，只要它能提供一种方法来准确地定位到每个元素的前驱和后继，我们就认为它是线性表。按照物理存储方式是否连续，线性表分为<strong>顺序存储结构（顺序表）</strong>和<strong>链式存储结构（链表）</strong>两大类。</p>
+<p>按照访问元素规则的不同，又产生出两种特别常用又特别重要的线形表：<strong>栈</strong>和<strong>队列</strong>。</p>
+<p>在这一部分我们将学习这些最基础的线性表类数据结构。</p>
+<ol class="arabic simple">
+<li><p>顺序表</p></li>
+<li><p>链表</p></li>
+<li><p>栈</p></li>
+<li><p>队列</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec01/311_sequence_list.html">4.1.1. 顺序表</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec01/311_sequence_list.html#stlvector">4.1.1.1. STL的vector容器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec01/312_big_int_1.html">4.1.2. 高精度整数算法(I) 数据的表示</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec01/312_big_int_1.html#bigint">4.1.2.1. BigInt数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/312_big_int_1.html#id1">4.1.2.2. BigInt构造器：初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/312_big_int_1.html#id2">4.1.2.3. BigInt赋值运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/312_big_int_1.html#id3">4.1.2.4. BigInt输入输出</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec01/313_big_int_2.html">4.1.3. 高精度整数算法(II) 加法与乘法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec01/313_big_int_2.html#bigint">4.1.3.1. BigInt加法运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/313_big_int_2.html#id1">4.1.3.2. BigInt乘法运算</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec01/314_big_int_3.html">4.1.4. 高精度整数算法(III) 减法与比较</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec01/314_big_int_3.html#id1">4.1.4.1. “类补码”的减法运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/314_big_int_3.html#bigint">4.1.4.2. BigInt减法运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/314_big_int_3.html#id2">4.1.4.3. BigInt比较运算</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec01/315_big_int_4.html">4.1.5. 高精度整数算法(IV) 除法及取余</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec01/315_big_int_4.html#bigint">4.1.5.1. BigInt除法运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/315_big_int_4.html#id1">4.1.5.2. BigInt取余运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec01/315_big_int_4.html#id2">4.1.5.3. BigInt结构的完整代码</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sec01/316_big_int_5.html">4.1.6. 高精算法例题：国王游戏（洛谷P1080）</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec01/316_big_int_5.html#id1">4.1.6.1. 题目解析</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="sec01/311_sequence_list.html" title="4.1.1. 顺序表"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="../300_basic_data_structure.html" title="4. 基础数据结构"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
