@@ -303,7 +303,7 @@ T(n)&amp;=T(2^k)=2T({n\over2})+n=2T(2^{k-1})+n\\
 <li><p>同样数据量的多次排序，运行时间也会有上下波动，为了测试精确，请设法尽量消除误差。</p></li>
 </ol>
 </div></blockquote>
-<p>3、下载此工具软件：<a class="reference download internal" download="" href="../../_downloads/874bcd01820515e306f41ce9162f4109/randints.cpp"><code class="xref download docutils literal notranslate"><span class="pre">随机整数序列生成器</span></code></a>，自行编译成可执行程序。使用此工具，输入一个整数 <span class="math notranslate nohighlight">\(n\)</span>，就会按照上述的排序程序输入格式生成一批随机的整数，可以用作排序程序的输入。有两种使用方法：</p>
+<p>3、下载此工具软件：<a class="reference download internal" download="" href="../../_downloads/067a23c18bf9584f0a5d3d5c2d524a2a/randints.cpp"><code class="xref download docutils literal notranslate"><span class="pre">随机整数序列生成器</span></code></a>，自行编译成可执行程序。使用此工具，输入一个整数 <span class="math notranslate nohighlight">\(n\)</span>，就会按照上述的排序程序输入格式生成一批随机的整数，可以用作排序程序的输入。有两种使用方法：</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>使用输出重定向功能将生成的数据保存在一个输入文件中，例如 <code class="docutils literal notranslate"><span class="pre">./randints</span> <span class="pre">&gt;</span> <span class="pre">s1.in</span></code> 即可将生成的数据保存到文件 <code class="docutils literal notranslate"><span class="pre">s1.in</span></code> 中，然后使用输入重定向功能，例如 <code class="docutils literal notranslate"><span class="pre">./merge_sort</span> <span class="pre">&lt;</span> <span class="pre">s1.in</span></code> 将这个输入文件作为排序程序的输入。</p></li>

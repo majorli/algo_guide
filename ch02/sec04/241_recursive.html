@@ -84,15 +84,15 @@
 <h1><span class="section-number">3.4.1. </span>递归法介绍<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
 <div class="section" id="id2">
 <h2><span class="section-number">3.4.1.1. </span>递归的基本概念<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p>学习递归算法，主要涉及三个基本概念：<strong>递归</strong>、<strong>递归法</strong>、<strong>递归调用</strong>。首先要弄清楚它们是三个相互关联但不互相同的概念。</p>
+<p>学习递归算法，主要涉及三个基本概念：<strong>递归</strong>、<strong>递归法</strong>、<strong>递归调用</strong>。它们是三个相互关联但互不相同的概念。</p>
 <p>递归，是一个数学上的概念，在描述概念之前先来看两幅图。</p>
 <img alt="../../_images/241_recursive_1.png" src="../../_images/241_recursive_1.png" />
 <p>这是大家都很熟悉的一组俄罗斯套娃玩具，一个大的娃娃里面套着一个一模一样但是尺寸略小的娃娃，这个略小的娃娃里面还套着一个更小一点的娃娃。这样一层一层的套下去，每次都是一模一样的娃娃，只是尺寸略小，直到最小的一个为止。</p>
 <img alt="../../_images/241_recursive_2.png" src="../../_images/241_recursive_2.png" />
 <p>这个图就更经典了，这是1900年一位瑞士画家为Droste牌可可粉设计的包装盒。在这个盒子上画着一名护士，手上的托盘里放着一盒同样的Droste可可粉和一杯美味的热巧克力。神奇的是托盘上的那一盒<strong>同样的</strong>Droste可可粉。因为同样，所以在图中这个盒子上自然也画着同样的内容：一名护士，手上的托盘里放着一盒同样的Droste可可粉和一杯热巧克力……你可以想象这个过程还会如此继续下去，非常神奇。</p>
 <p>这就是艺术史上非常著名的第一幅展现了递归效果的画，后来这一类的画作乃至电影电视作品呈现的递归效果，就被称为“Droste效应”，成为一种艺术流派。</p>
-<p>上面这两幅图展示了现实生活中的递归现象，类似这样的现象还有许多许多，几乎遍及所有场合。比如雪花边缘的分形构造、比如大家耳熟能详的鬼畜故事“从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：……”</p>
-<p>后来数学家对递归现象进行了深入研究，得到了许多重要的结论和发现，他们对递归下了这样的定义：<em>递归是一种现象，当一物体由和它自身相同或和它自身同类型的组成部分构成的时候，就称该物体通过递归进行定义。</em></p>
+<p>上面这两幅图展示了现实生活中的递归现象，类似这样的现象还有许多许多，几乎遍及所有场合。比如雪花边缘的分形结构、比如大家耳熟能详的鬼畜故事“从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：……”</p>
+<p>后来数学家对递归现象进行了深入研究，得到了许多重要的结论和发现，他们对递归下了这样的定义：<em>递归是一种现象，当一物体由和它自身相同或同类型的组成部分构成的时候，就称该物体通过递归进行定义。</em></p>
 <p>数学上的定义总是很抽象，计算机科学家们则利用递归现象归纳出了一套用于设计算法的方法，称为递归法。递归法把大型的复杂问题层层转化为一个或数个与原问题具有相同结构的小问题来求解，层层递归下去直到规模缩小到可以直接求解的程度，得出最小规模问题的解，然后再层层原路返回，用已经得到的小问题的解来反过来构造出大问题的解，直至得到原问题的解。</p>
 <p>使用递归法设计的算法就称为<strong>递归算法</strong>，是最为重要的一类算法。根据前面对递归法的描述可知，一个递归算法由<strong>终止条件</strong>、<strong>递归过程</strong>和<strong>返回过程</strong>三部分组成。</p>
 <p>终止条件就是递归结束的条件，当问题规模已经小到可以直接求解时，我们就说递归达到终止条件了，应当结束了。如果一个递归算法没有终止条件，那么就会出现“从前有座山”这样的无限递归错误。</p>
@@ -115,7 +115,7 @@
 <p><span class="math notranslate nohighlight">\(\text{RETURN  }ans\)</span></p>
 </div></blockquote>
 </div>
-<p>可以看到，递归算法的框架很简洁。开头第一段是终止条件判断，如果规模已经小到满足终止条件了就直接计算结果并返回。第二段是将问题分解为几个规模较小的问题并直接调用算法本身去求解，这一段对应的是递归过程。可以想象，如果分解下去的子问题的规模仍然不满足终止条件，那么它们也会进一步按照同样的规则分解自己并启动第二轮递归调用，如此循环下去。这是一个层层缩小规模层层递归调用的动态过程，但是写在算法描述或者程序代码里只是一轮递归调用而已。接下来就是把递归调用返回来的小问题的解组合起来构造出原问题的解，其实这也是一个层层返回的动态过程，整个过程是由一系列的RETURN返回串起来的，这是写在算法描述或者程序代码里只需要一段构造原问题解的步骤即可。</p>
+<p>可以看到，递归算法的框架很简洁。开头第一段是终止条件判断，如果规模已经小到满足终止条件了就直接计算结果并返回。第二段是将问题分解为几个规模较小的问题并直接调用算法本身去求解，这一段对应的是递归过程。可以想象，如果分解下去的子问题的规模仍然不满足终止条件，那么它们也会进一步按照同样的规则分解自己并启动第二轮递归调用，如此循环下去。这是一个层层缩小规模层层递归调用的动态过程，但是写在算法描述或者程序代码里只是一轮递归调用而已。接下来就是把递归调用返回来的小问题的解组合起来构造出原问题的解，其实这也是一个层层返回的动态过程，整个过程是由一系列的 <span class="math notranslate nohighlight">\(\text{RETURN}\)</span>语句串起来的。</p>
 <p>那么在实际拿到一个问题的时候，怎么样判断它是不是可以用递归算法呢？一般来说，能够用以下两个属性来定义解的问题具有递归特征，可以用递归法求解：</p>
 <p>1、有终止条件：一个或多个简单的基本情况，能直接得到结果。</p>
 <p>2、有递归规则：一系列可以让所有其他情况朝向基本情况退化的规则。</p>
@@ -145,10 +145,10 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>除了上面这个通常的定义以外，阶乘还有一个递归的定义。注意观察它的计算公式：<span class="math notranslate nohighlight">\(n!=n\cdot(n-1)\cdot(n-2)\cdots2\cdot1\)</span>。根据阶乘的通常定义，我们知道 <span class="math notranslate nohighlight">\((n-1)!=(n-1)\cdot(n-2)\cdots2\cdot1\)</span>，于是便可以得到阶乘的递归定义：<span class="math notranslate nohighlight">\(n\)</span> 的阶乘等于 <span class="math notranslate nohighlight">\(n\)</span> 乘以 <span class="math notranslate nohighlight">\(n-1\)</span> 的阶乘，<span class="math notranslate nohighlight">\(0\)</span> 的阶乘等于 <span class="math notranslate nohighlight">\(1\)</span>。可以用一个公式来表示这个递归定义：</p>
+<p>除了上面这个通常的定义以外，阶乘还有一个递归的定义。注意观察它的计算公式：<span class="math notranslate nohighlight">\(n!=n\cdot(n-1)\cdot(n-2)\cdots2\cdot1\)</span>。根据阶乘的通常定义，我们知道 <span class="math notranslate nohighlight">\((n-1)!=(n-1)\cdot(n-2)\cdots2\cdot1\)</span>，于是便可以得到阶乘的递归定义：<span class="math notranslate nohighlight">\(n\)</span> 的阶乘等于 <span class="math notranslate nohighlight">\(n\)</span> 乘以 <span class="math notranslate nohighlight">\(n-1\)</span> 的阶乘，0的阶乘等于1。可以用一个公式来表示这个递归定义：</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}n!=\begin{cases}1,&amp;n=0\\n\cdot(n-1)!,&amp;n&gt;0\end{cases}\end{split}\]</div>
-<p>这样的递归定义，如果用C++语言来实现一个递归的算法是非常方便的。因为C++的函数可以自己调用自己，称为函数的递归调用。这是C++实现递归算法最通常的方法，它在实现的时候代码可以做到和算法伪代码或者算法数学描述之间在视觉效果上非常一致。</p>
+\[\begin{split}n!=\begin{cases}1&amp;,n=0\\n\cdot(n-1)!&amp;,n&gt;0\end{cases}\end{split}\]</div>
+<p>根据这样的递归定义，用C++来实现一个递归的算法是非常方便的。因为C++的函数可以自己调用自己，称为函数的递归调用。这是C++实现递归算法最通常的方法，它在实现的时候代码可以做到和算法伪代码或解的数学定义之间在视觉效果上非常一致。</p>
 <div class="admonition attention">
 <p class="admonition-title">注意</p>
 <p>要知道函数的递归调用并不是实现递归算法的唯一方法。比如曾经有过（现在也还有）许多不支持函数递归调用的编程语言，它们就只能用别的方法来实现递归算法。</p>
@@ -159,12 +159,12 @@
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">fact</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>      <span class="c1">// 这里利用递归调用函数fact()自己来</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>      <span class="c1">// 这里利用递归调用fact()自己来实现递归</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>可以看出，这个函数的代码和阶乘的递归定义公式几乎是一一对应的“对译”，代码的可读性非常强。实际上，有许多比阶乘复杂得多的问题，如果能找到它们的解的递归求解形式，就可以利用C++函数的递归调用来直观地实现成程序代码，往往这个过程就是一个“对译”的过程。</p>
-<p>初学的时候，看懂这样的一个例子，就足以对递归算法和递归调用这些概念有一个直观认识了。再经过一些练习，就可以自己编程解决很多不太难的递归问题了。但是这时候如果深入思考下去，递归调用的深层运行机制到底是怎样的？往往会让人反而越来越陷入迷惑。许多教材都画了图解，尽量清楚地进行解释，大家可以方便地查阅到大量这一类教程。这里我们采用类似调试的方法，在 <code class="docutils literal notranslate"><span class="pre">fact()</span></code> 函数进入和返回的时候输出一些说明文字，然后运行一下来看看整个递归调用的过程是如何进行的。</p>
+<p>初学的时候，看懂这样的一个例子，就足以对递归算法和递归调用这些概念有一个直观认识了。再经过一些练习，就可以自己编程解决很多不太难的递归问题了。但是这时候如果深入思考下去，递归调用的深层运行机制到底是怎样的？往往会让人反而越来越陷入迷惑。为了说明递归调用到底是怎样在运作的，许多教材都画了图解进行解释，大家可以上网查询。这里我们采用另一种类似调试的方法，在 <code class="docutils literal notranslate"><span class="pre">fact()</span></code> 函数进入和返回的时候输出一些说明文字，然后运行起来看看递归调用的整个过程是如何进行的。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
 <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ull</span><span class="p">;</span>
@@ -209,10 +209,10 @@ return fact(5) = 120
 </pre></div>
 </div>
 <p>可以看出以下几个特点：</p>
-<p>1、只要递归终止条件（<span class="math notranslate nohighlight">\(n=0\)</span>）没有达到，递归就会沿着 <span class="math notranslate nohighlight">\(5\to4\to3\to2\to1\to0\)</span> 的过程不断地调用下去，直到 <span class="math notranslate nohighlight">\(n=0\)</span>。</p>
-<p>2、每一次发生递归调用，和普通的函数调用一样，调用者就会停下来等待被调用者返回。如果被调用者的状态没有达到终止递归的条件，它就会进一步再递归调用一次，于是它也成了一个调用者，它也会停下来等着它这一轮的被调用者函数返回，如此不断继续。</p>
-<p>3、一旦某一次递归调用，被调用者的状态达到了终止状态，于是它就会直接求解并返回（<span class="math notranslate nohighlight">\(0!=1\)</span>），它的上一层调用者于是苏醒过来继续运行，于是再次返回到更上一层的调用者……如此继续，直到回到最初的那一个调用者，然后整个过程就结束了。</p>
-<p>4、在每一次递归调用发生后，和普通的函数调用一样，C++会给新的那个被调用者创建自己独立的函数运行空间，在里面会根据代码定义生成一套属于它自己的局部变量（这里的 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">f</span></code> 就是这样一个局部变量）。从调试输出可以看出，每一次调用 <code class="docutils literal notranslate"><span class="pre">fact()</span></code> 函数，它都有自己的变量 <code class="docutils literal notranslate"><span class="pre">f</span></code>，相互之间不会有关联影响。</p>
+<p>1、只要递归终止条件 <span class="math notranslate nohighlight">\(n=0\)</span> 还没有达到，递归就会沿着 <span class="math notranslate nohighlight">\(5\to4\to3\to2\to1\to0\)</span> 的过程不断地调用下去，直到 <span class="math notranslate nohighlight">\(n=0\)</span>。</p>
+<p>2、递归调用和普通的函数调用一样，调用者会停下来等待被调用者返回。如果被调用者的状态没有达到终止递归的条件，它就会进一步再递归调用一次，于是它也成了一个调用者，它也会停下来等着它这一轮的被调用者函数返回，如此不断继续。</p>
+<p>3、一旦某一次递归调用时被调用者的状态达到了终止状态，它就会直接求出解并返回上一层，它的上一层调用者于是苏醒过来继续运行，于是再次返回到更上一层的调用者……如此继续，直到回到最初的那个调用者，然后整个过程就结束了。</p>
+<p>4、在每一次递归调用发生后，和普通的函数调用一样，C++会给新的那个被调用者创建自己独立的函数运行空间，在里面会根据代码定义生成一套属于它自己的局部变量，这里的 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">f</span></code> 就是这样一个局部变量。从调试输出可以看出，每一次调用 <code class="docutils literal notranslate"><span class="pre">fact()</span></code> 函数，它都有自己的变量 <code class="docutils literal notranslate"><span class="pre">f</span></code>，相互之间不会有关联影响。</p>
 <div class="admonition hint">
 <p class="admonition-title">提示</p>
 <p>阶乘的递归版并不比普通版更快，占用空间也更大，实用价值几乎没有。但它是最好的递归入门实例，代码清晰易读，使人一目了然，码风从没人爱的循环蝶变成为了简洁优雅的数学公式“对译”。</p>
@@ -232,7 +232,7 @@ return fact(5) = 120
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>这种方法总共需要比较的次数是 <code class="docutils literal notranslate"><span class="pre">n-1</span></code> 次。</p>
+<p>这种方法总共需要比较的次数是n-1次。</p>
 <p>另外我们还可以用递归的思路来寻找最大数。我们可以这样想，n个数中的最大值，就是其中任一个数和其余n-1个数的最大值相比的较大者。如果我们每次都取数组的第一个数，和其余的n-1个数中的最大值进行比较，就可以得到这样一个递归过程：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// 递归地寻找数组a的前n个元素中的最大值</span>
 <span class="kt">int</span> <span class="nf">max</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">a</span><span class="p">[])</span>
@@ -279,10 +279,10 @@ max of the first 10 numbers = 21
 </div>
 <p>可见，递归的方法并不能减少比较次数，而且由于不断地在调用函数，反而会增加开销。看来用递归的方法来做寻找最大值的工作是有点得不偿失了。实际上从n个数中寻找最大值或者最小值，比较次数最少是n-1次，这是可以用数学方法精确证明的。所以我们可以得到下面这样一条经验：递归并不一定是最好的方法，甚至经常是不太好的方法！可以不递归的就尽量不要递归。</p>
 <p><strong>小结和练习</strong></p>
-<p>到这里，递归、递归算法和递归调用的基本概念就讲完了。递归是算法设计中非常重要的一种设计技巧，虽然递归往往带来额外的内存和时间开销，但是对于那些符合递归结构的问题，递归往往能非常清晰地勾画出解题思路，从而得到一个简洁易懂的递归算法，而利用C++的函数递归调用，可以直观地一一对应地把递归算法实现为程序代码。</p>
-<p>学习递归的难点不在于设计，而在于分析。往往给出一个具有递归特征的问题后，设计递归算法并不太难。但是如果给出一个递归程序，要读懂它，还原出递归算法是比较困难的。如果要分析递归的过程、时间复杂度等就更复杂了。最困难的是如果这段代码不是利用C++函数递归调用来实现的递归算法，那往往对其的解读和分析会非常困难。</p>
-<p>这就引出了学习递归的另一个难点，就是在得到一个递归算法之后，如果不用函数递归调用的形式去实现它。特别是在一些数据规模很大、算法很复杂的情况下，例如大规模的深度优先搜索问题，为了避免函数递归调用造成的额外开销，往往需要改成普通的循环，或者将递归算法改成等价的递推算法。</p>
-<p>上面这些问题，在今后几节的学习中我们都会一一讲解和练习。但是要进入更深入的学习之前，首先还是要掌握好最基本的概念和技巧，所以我们留下一个练习：请弄明白上面的递归寻找最大值示例程序为什么会是这样的输出。</p>
+<p>到这里，递归、递归算法和递归调用的基本概念就讲完了。递归是算法设计中非常重要的一种设计技巧，虽然递归往往带来额外的内存和时间开销，但是对于那些符合递归结构的问题，递归往往能非常清晰地勾画出解题思路，从而得到一个简洁优雅的算法。而利用C++的函数递归调用，可以直观地一一对应地把递归算法实现为程序代码。</p>
+<p>学习递归的难点不在于设计，而在于分析。往往给出一个具有递归特征的问题后，设计递归算法并不太难。但是如果给出一个递归程序，要读懂它，还原出递归算法是比较困难的。如果要分析递归的过程、时间复杂度等等就更难了。特别是那些不使用递归调用的递归代码，解读和分析会非常困难。</p>
+<p>学习递归的另一个难点，就是如何不使用递归调用来实现递归算法。特别是数据规模很大、算法很复杂时，例如大规模的深度优先搜索问题，为了避免函数递归调用造成的额外开销，往往需要改成普通的循环，或者将递归算法改成等价的递推算法。</p>
+<p>上面这些问题，在今后几节的学习中我们都会一一讲解和练习。但是在进入更深入的学习之前，首先还是要掌握好最基本的概念和技巧，所以我们留下一个练习：请弄明白上面的递归寻找最大值示例程序为什么会是这样的输出。</p>
 </div>
 </div>
 
