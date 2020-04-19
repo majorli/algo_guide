@@ -101,10 +101,10 @@
 </div>
 </li>
 <li><p>候选解之间可以通过某一种特定的规则来进行比较，确定相互顺序。</p>
-<p>最常见的比较规则即为数的大小关系，但并不仅限于此。我们已经见过的一种并非数的大小关系的次序就是字符串的字典序，今后我们还会在图结构中看到所谓的图节点的“拓扑序”。总之，有一种明确的比较规则，能够<strong>唯一确定</strong>不同候选解之间的“先后顺序”即可。</p>
-<p>纯粹数学上的概念，元素之间若能通过一种明确的比较规则来判定一个唯一的明确的先后顺序的集合，叫做<strong>良序集</strong>，元素之间的先后顺序就叫做<strong>序</strong>。常见的整数集合、有理数集合、实数集合等都是良序集，数与数之间的大小关系就是它们的序，用小于号 <span class="math notranslate nohighlight">\(\lt\)</span> 就可以表示数与数之间的序关系。</p>
+<p>最常见的比较规则即为数的大小关系，但并不仅限于此。我们已经见过一种并非数的大小关系的次序就是字符串的字典序，今后我们还会在图结构中看到所谓的图节点的<strong>拓扑序</strong>。总之，有一种明确的比较规则，能够<strong>唯一确定</strong>不同候选解之间的先后顺序即可。</p>
+<p>纯数学的概念认为，元素之间若能通过一种明确的比较规则来判定一个唯一确定的先后顺序的集合，便叫做<strong>良序集</strong>，元素之间的先后顺序叫做<strong>序</strong>。常见的整数集合、有理数集合、实数集合等都是良序集，数与数之间的大小关系就是它们的序，用小于号 <span class="math notranslate nohighlight">\(\lt\)</span> 就可以表示数与数之间的序关系。</p>
 <p>一般情况下，不管是整数、实数，还是字符串、图的节点，都用符号 <span class="math notranslate nohighlight">\(\prec\)</span> 来表示“先于”关系，<span class="math notranslate nohighlight">\(a\prec b\)</span> 表示在序关系上，<span class="math notranslate nohighlight">\(a\)</span> 先于 <span class="math notranslate nohighlight">\(b\)</span>。对于数的大小关系，相当于小于号 <span class="math notranslate nohighlight">\(\lt\)</span>，而按照数轴左小右大的规则，我们也可以称较小的数在前、较大的数在后。</p>
-<p>当然了，等于和不等于这两个关系 <span class="math notranslate nohighlight">\(=,\neq\)</span> 总是通用的。另外，和数的其他三个大小关系 <span class="math notranslate nohighlight">\(\le,\gt,\ge\)</span> 对应，一般的序关系还有先于等于、后于和后于等于，符号分别为 <span class="math notranslate nohighlight">\(\preceq,\succ,\succeq\)</span>。</p>
+<p>当然了，等于和不等于这两个关系 <span class="math notranslate nohighlight">\(=,\neq\)</span> 总是通用的。另外，与数的其他三个大小关系 <span class="math notranslate nohighlight">\(\le,\gt,\ge\)</span> 对应，一般的序关系还有先于等于、后于和后于等于，符号分别为 <span class="math notranslate nohighlight">\(\preceq,\succ,\succeq\)</span>。</p>
 <div class="admonition attention">
 <p class="admonition-title">注意</p>
 <p>为了表述方便，可能也是为了向“数”这个最古老最重要的数学概念致敬，通常我们把“先于”、“后于”的一般序关系也称为“小于”和“大于”。</p>
@@ -112,7 +112,7 @@
 <div class="admonition- admonition">
 <p class="admonition-title">补充</p>
 <p>实际上，只有小于关系是必要的，其他关系都是补充性质的。使用大于、等于这些关系只是为了便利起见，因为所有其他关系都可以用小于关系表示出来。</p>
-<p>在C++语言中允许对任何自定义数据类型，通常是结构（struct），定义它们的关系运算，以便程序可以对自定义类型的数据进行大小比较。比如我们已经见过的C++ string，就可以直接用 <code class="docutils literal notranslate"><span class="pre">==,!=,&lt;,&gt;,&lt;=,&gt;=</span></code> 这六种关系运算来比较它们的字典序。而C++语言的规则规定，最少仅需要为自定义类型定义 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算就够了，这就是因为其他五种运算都可以用小于运算来实现。例如 <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> 运算只要对 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算的结果取反就可以了，大于等于就是不小于。</p>
+<p>在C++语言中允许对任何自定义数据类型，通常是结构（struct），定义它们的关系运算，以便程序可以对自定义类型的数据进行大小比较。比如我们已经见过的C++ string，就可以直接用 <code class="docutils literal notranslate"><span class="pre">==,!=,&lt;,&gt;,&lt;=,&gt;=</span></code> 这六种关系运算来比较它们的字典序。而C++语言的规则规定，最少仅需要为自定义类型定义 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算就够了，这是因为其他五种运算都可以用小于运算来实现。例如 <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> 运算只要对 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算的结果取反就可以了，大于等于就是不小于。</p>
 <p>请大家思考一下，怎样仅用小于运算就能实现所有六种关系运算。</p>
 </div>
 </li>
@@ -134,17 +134,23 @@
 <p>下面我们看一个最简单也是最常见的入门例子，二分查找及其应用。</p>
 <div class="section" id="id2">
 <h2><span class="section-number">3.4.5.1. </span>二分查找<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p><strong>二分查找</strong>是一种非常快速地在有序数组（或其中连续的一段）中查找特定值的元素位置的算法，时间复杂度为 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。如果数组中存在有相同值的元素，那么二分查找也可以找到其中一个，但是找到的是哪一个却不能确定。所以二分查找一般会要求数组中的元素没有重复值，某些具体应用对于查到的是哪一个元素没有特别要求的，当然也可以，要看具体问题而定。</p>
+<p><strong>二分查找</strong>是一种非常快速地在有序数组（或其中连续的一段）中查找等于某个特定值的元素的算法，实际上是查找该元素在数组中的所处位置，即下标值。二分查找的时间复杂度为 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。如果数组中存在有相同值的元素，那么二分查找也可以找到其中一个，但是找到的是哪一个却不能确定。所以二分查找一般会要求数组中的元素没有重复值，除非问题本身对于查到的是哪一个元素并没有特别要求。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">约定</p>
-<p>在算法描述中，说到“有序”，若没有特指的话，就是指从小到大的顺序。</p>
+<p>一、在算法描述中，说到“有序”，若没有特指的话，就是指从小到大的顺序，称为<strong>升序</strong>。反之称为<strong>逆序</strong>。</p>
+<p>二、在C++和其他绝大多数编程语言中，除了最普通的数组以外还有许多其他的顺序存放元素的数据结构，比如C++ STL库提供的顺序容器 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 等。在元素下标的规则上，它们和数组一般都是一样的，甚至访问元素的方式都是类似的。例如 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器中元素的下标也是从0开始编号的连续自然数，访问元素也是使用方括号加下标的方式。接下来我们约定采用数组来进行算法的讨论，元素在数组中的问题统一称为下标。</p>
 </div>
-<p>需要特别注意的是，二分查找算法要解决的问题，其解空间是数组中元素的位置（或者叫下标），而不是数组中元素的值。这一点很多教材都没有特别说明，初学者很容易误以为解空间是元素值。</p>
-<p>C++和所有其他编程语言中，数组或者向量、列表这一类的顺序表数据类型，其元素的位置都是从小到大的连续整数，C++数组的下标是从0开始排列的连续自然数。这符合解空间所需要的特征。其次，由于元素值本身也是有序的，所以我们可以用其中任意一个元素值和要查找的值进行比较，以确定要查找的值在该元素之前还是之后。最后，问题的解只有两种，要么存在某个元素，其值等于要查找的值，解就是该元素的位置，要么找不到，即无解。综上所述，在有序数组中查找某个特定值元素的位置这个算法符合采用二分法的条件。</p>
-<p>要在有序数组中进行二分查找，我们需要三个变量。<code class="docutils literal notranslate"><span class="pre">left</span></code> 和 <code class="docutils literal notranslate"><span class="pre">right</span></code> 分别表示要查找部分的左右两个端点，例如数组共有10个元素，要在整个数组中进行查找，那么初始时 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">right</span> <span class="pre">=</span> <span class="pre">9</span></code>，如果要在其中第3个到第7个元素这一段中查找，那么初始时 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">=</span> <span class="pre">2,</span> <span class="pre">right</span> <span class="pre">=</span> <span class="pre">6</span></code>。另外还需要一个用来比对的中间位置变量 <code class="docutils literal notranslate"><span class="pre">mid</span></code>，每一轮比对的时候，取 <code class="docutils literal notranslate"><span class="pre">mid</span> <span class="pre">=</span> <span class="pre">(left+right)/2</span></code>，也就是左右端点的中间位置，这个位置的元素就是每次用来和要查找的值进行比较的元素。</p>
+<p>需要特别注意的是，二分查找算法要解决的问题，其解空间是数组中元素的下标，而不是元素的值。这一点很多教材都没有特别说明，初学者很容易误以为解空间是元素值。</p>
+<p>在有序数组或其中某一连续区域中进行查找可以适用二分查找算法，首先因为下标是从0开始的连续自然数，这符合解空间所需要的特征。其次，由于元素值本身也是有序的，所以我们可以用其中任意一个元素值和要查找的值进行比较，以确定要查找的值在该元素之前还是之后。最后，问题的解只有两种，要么存在某个元素，其值等于要查找的值，解就是该元素的下标，要么找不到，即无解。综上所述，在有序数组中查找某个特定值元素的位置这个算法符合采用二分法的条件。</p>
+<p>要在有序数组中进行二分查找，我们需要三个变量。<code class="docutils literal notranslate"><span class="pre">left</span></code> 和 <code class="docutils literal notranslate"><span class="pre">right</span></code> 分别表示查找区域的左右两个端点，例如数组共有10个元素，要在整个数组中进行查找，那么初始时 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">right</span> <span class="pre">=</span> <span class="pre">9</span></code>，如果要在其中第3个到第7个元素这一段区域中查找，那么初始时 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">=</span> <span class="pre">2,</span> <span class="pre">right</span> <span class="pre">=</span> <span class="pre">6</span></code>。另外还需要一个用来比对的中间位置变量 <code class="docutils literal notranslate"><span class="pre">mid</span></code>，每一轮比对的时候，取 <code class="docutils literal notranslate"><span class="pre">mid</span> <span class="pre">=</span> <span class="pre">(left+right)/2</span></code>，也就是左右端点的中间位置，这个位置的元素就是每次用来和要查找的值进行比较的元素。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在二分查找的时候，一般不采用左开右闭原则表示区间，因为这里 <code class="docutils literal notranslate"><span class="pre">right</span></code> 的主要意义并不是要和 <code class="docutils literal notranslate"><span class="pre">left</span></code> 配合表示一个区间，而是表示当前查找范围内的最后一个元素的下标。</p>
+<p>如果一定要坚持左开右闭的表示规则当然也是可以，但是算法中的许多语句要进行修正，不能简单套用下面所述的算法。</p>
+</div>
 <p>从初始的左右端点开始，我们进行如下循环：在每一轮循环里，计算好 <code class="docutils literal notranslate"><span class="pre">mid</span></code>，然后比较该处元素值和要查找的值，如果 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 处的元素值恰好等于要查找的值，那么查找就成功结束了，<code class="docutils literal notranslate"><span class="pre">mid</span></code> 就是问题的解；如果 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 处元素更大，说明要查找的位置一定在 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 前面，于是我们让 <code class="docutils literal notranslate"><span class="pre">right</span> <span class="pre">=</span> <span class="pre">mid</span> <span class="pre">-</span> <span class="pre">1</span></code> 然后继续循环；反之若是 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 处的元素值小了，说明要查找的位置一定还在 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 的右边，于是我们让 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">=</span> <span class="pre">mid</span> <span class="pre">+</span> <span class="pre">1</span></code> 并继续循环。每一轮循环之后，要么查找成功结束，要么查找范围缩减一半。</p>
-<p>如果要没有任何元素的值等于要查找的值，那么上面这个循环一定会一轮一轮的进行下去，直到最后出现 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">&gt;</span> <span class="pre">right</span></code> 的情况，通俗地说，左右颠倒了。出现左右颠倒，即说明查找失败，一般的惯例会返回-1表示查无此值。</p>
-<p>下面是两个实例，分别表示了查找成功和查找失败的两种情况。设数组有6个元素，分别是整数1、3、5、7、9、11，在其中搜索数字3所在位置的二分查找过程如下图所示：</p>
+<p>如果没有任何元素的值等于要查找的值，那么上面这个循环一定会一轮一轮的进行下去，直到最后出现 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">&gt;</span> <span class="pre">right</span></code> 的情况，通俗地说，左右颠倒了。出现左右颠倒，即说明查找失败，一般的惯例会返回-1表示查无此值。</p>
+<p>下面是两个实例，分别表示了查找成功和查找失败的两种情况。设数组有6个元素，依次是整数1、3、5、7、9、11，在其中搜索数字3所在位置的二分查找过程如下图所示：</p>
 <img alt="../../_images/245_bisearch_1.png" src="../../_images/245_bisearch_1.png" />
 <p>如果要查找一个不存在的数字8，那么查找的过程如下图所示：</p>
 <img alt="../../_images/245_bisearch_2.png" src="../../_images/245_bisearch_2.png" />
@@ -174,7 +180,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>但是我们发现这种把查找过程直接在main函数中实现的方法其实并不太好。<code class="docutils literal notranslate"><span class="pre">left,</span> <span class="pre">right,</span> <span class="pre">mid</span></code> 这些只是用于查找过程的变量同时在main函数中定义和使用，在循环结束后需要判断循环退出的原因，这些都使得主程序显得比较杂乱。而且一般一个算法问题的程序结构会更加复杂，把二分查找过程和主程序合并在一起会让主程序的易读性变差。所以我们一般建议把二分查找这样的“小型”算法过程单独写在一个函数里，在主程序中调用这个函数来实现查找，这叫做“封装”。</p>
+<p>但是我们发现这种把查找过程直接在 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数中实现的方法其实并不太好，整个程序显得很混乱，在循环结束后还需要专门判断循环退出的原因。这种现象在软件设计领域叫做<strong>耦合</strong>，是应该要避免的不良方式。我们应该把二分查找这样的“专用型”功能模块单独写成一个函数，在主程序中调用这个函数来实现查找，这叫做<strong>封装</strong>，是软件设计中用于<strong>解耦</strong>的重要方法。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
 <span class="c1">// 这是用来获取一个传统C语言数组长度的宏</span>
@@ -215,8 +221,8 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">注解</p>
-<p>程序中使用了一个预定义宏 <code class="docutils literal notranslate"><span class="pre">LEN(a)</span></code> 来获取一个数组的长度，这是传统C语言数组处理时的一个常用技巧，需要记住。</p>
-<p>main函数在查找值 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的时候，用一个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 语句来判断查找是否成功，利用了“赋值表达式的值为被赋予的值”这个特点，在判断表达式里同时实现了二分查找函数的调用、保存查找函数返回值和判断返回值是否为-1这样三个功能，这也是C++语言常用的一种模式，需要记住。</p>
+<p>程序中使用了一个预定义宏 <code class="docutils literal notranslate"><span class="pre">LEN(a)</span></code> 来获取一个数组的长度，这是来自C语言的一个数组处理常用技巧，有时候很管用，值得记住。</p>
+<p><code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数在查找值 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的时候，用一个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 语句来判断查找是否成功，利用了“赋值表达式的值为被赋予的值”这个特点，在判断表达式里同时实现了二分查找函数的调用、保存查找函数返回值和判断返回值是否为-1这样三个功能，这也是C++语言常用的一种模式，需要记住。</p>
 </div>
 <p>这样一来，程序的结构就显得优雅多了，个中妙处大家慢慢在今后越来越复杂的程序编写时自然会体会得到。</p>
 </div>
@@ -239,7 +245,7 @@
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">Record</span> <span class="n">records</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>    <span class="c1">// 最多可以容纳100条考生信息记录的成绩单表</span>
 </pre></div>
 </div>
-<p>如果表的内容就如上面所示的8个考生的成绩信息，可见是已经按照姓名的字典序有序排列了的。通常我们把按照某个字段的值进行查表时，这个字段就叫做这次查找的<strong>关键字</strong>。那么如果我们以姓名为关键字进行查找，就可以使用二分查找来实现快速查表。</p>
+<p>如果表的内容就如上面所示的8个考生的成绩信息，可见是已经按照姓名的字典序有序排列了的。通常我们按照某个字段的值进行查表时，这个字段就叫做这次查找的<strong>关键字</strong>。那么如果我们以姓名为关键字进行查找，就可以使用二分查找来实现快速查表。</p>
 <p>这个问题作为一个练习题留给大家自行完成，下面是输入格式：</p>
 <blockquote>
 <div><p>第1行，一个整数n，表示共有n个考生。</p>
@@ -281,8 +287,8 @@ name: Alice, No.43, score = 98, rank = 3
 <p>有时候我们需要在一个有序数组中寻找以某个指定的值 <span class="math notranslate nohighlight">\(v\)</span> 为界的边界位置 <span class="math notranslate nohighlight">\(p\)</span>，即以 <span class="math notranslate nohighlight">\(v\)</span> 为边界，将数组分成大小两部分，左小右大。</p>
 <p>由于数组中本身就可能存在值为 <span class="math notranslate nohighlight">\(v\)</span> 的元素，所以边界一般有两种：一种叫左端边界，在它左边的所有元素值都小于 <span class="math notranslate nohighlight">\(v\)</span>，从它开始一直到数组末尾的所有元素值都大于等于 <span class="math notranslate nohighlight">\(v\)</span>；另一种叫右端边界，在它左边的所有元素值都小于等于 <span class="math notranslate nohighlight">\(v\)</span>，而从它开始一直到数组末尾的所有元素值都大于 <span class="math notranslate nohighlight">\(v\)</span>。从下面这张图中可以直观的看出什么叫边界，左端和右端又是什么意思：</p>
 <img alt="../../_images/245_edge.png" src="../../_images/245_edge.png" />
-<p>由于边界查找时数组本身有序，所以边界查找总是可以使用二分法。二分边界查找在其他更加复杂的算法中是经常要使用到的，比如二分插入排序。具体用哪一种边界要看具体问题而定，但是二者的查找过程是相同的，只是规则略有不同。我们下面将介绍二分查找右端边界的方法。</p>
-<p>和二分查找值不同，查找边界时找到某个元素的值等于 <span class="math notranslate nohighlight">\(v\)</span> 不代表查找结束，因为我们要找的是边界位置，而不是元素的位置。仍以整数数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 为例，我们需要找某个值 <code class="docutils literal notranslate"><span class="pre">v</span></code> 的右端边界。现在我们需要把所有等于 <code class="docutils literal notranslate"><span class="pre">v</span></code> 的元素都归在边界的左边，所以我们在比较时，应该把 <code class="docutils literal notranslate"><span class="pre">a[mid]</span> <span class="pre">==</span> <span class="pre">v</span></code> 视同为 <code class="docutils literal notranslate"><span class="pre">a[mid]</span> <span class="pre">&lt;</span> <span class="pre">v</span></code>。换句话说，假如 <code class="docutils literal notranslate"><span class="pre">a[mid]</span> <span class="pre">==</span> <span class="pre">v</span></code>，我们就当作是 <code class="docutils literal notranslate"><span class="pre">a[mid]</span></code> 小了，这样下一步要会把查找范围改到 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 后面那一半，这样就相当于把等于 <code class="docutils literal notranslate"><span class="pre">v</span></code> 的元素归到边界之前去了。</p>
+<p>由于数组本身有序，所以边界查找总是可以使用二分法。二分边界查找在其他更加复杂的算法中是经常要使用到的，比如二分插入排序。具体用哪一种边界要看具体问题而定，但是二者的查找过程是相同的，只是规则略有不同。我们下面将介绍二分查找右端边界的方法。</p>
+<p>和二分查找值不同，查找边界时找到某个元素的值等于 <span class="math notranslate nohighlight">\(v\)</span> 不代表查找结束，因为我们要找的是边界位置，而不是元素的位置。以在整数数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 中查找值 <code class="docutils literal notranslate"><span class="pre">v</span></code> 的右端边界为例，现在我们需要把所有等于 <code class="docutils literal notranslate"><span class="pre">v</span></code> 的元素都归在边界的左边，所以比较时 <code class="docutils literal notranslate"><span class="pre">a[mid]</span> <span class="pre">==</span> <span class="pre">v</span></code> 相当于 <code class="docutils literal notranslate"><span class="pre">a[mid]</span> <span class="pre">&lt;</span> <span class="pre">v</span></code>。换句话说，假如 <code class="docutils literal notranslate"><span class="pre">a[mid]</span> <span class="pre">==</span> <span class="pre">v</span></code>，我们就当作是 <code class="docutils literal notranslate"><span class="pre">a[mid]</span></code> 小了，这样下一步要会把查找范围改到 <code class="docutils literal notranslate"><span class="pre">mid</span></code> 后面那一半，这样就相当于把等于 <code class="docutils literal notranslate"><span class="pre">v</span></code> 的元素归到边界之前去了。</p>
 <p>所以边界查找一定会找到 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">&gt;</span> <span class="pre">right</span></code> 循环结束为止。根据二分查找的特征，查找范围总是在折半折半的缩小，最终如果查找失败，循环结束时，一定是 <code class="docutils literal notranslate"><span class="pre">left</span></code> 在 <code class="docutils literal notranslate"><span class="pre">right</span></code> 右边一个位置。而我们要找的边界就是最终的 <code class="docutils literal notranslate"><span class="pre">left</span></code> 位置。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">思考</p>
@@ -290,7 +296,7 @@ name: Alice, No.43, score = 98, rank = 3
 </div>
 <p>下面是怎样用二分查找来找到上图中那个3的右端位置的过程示意图：</p>
 <img alt="../../_images/245_edge_2.png" src="../../_images/245_edge_2.png" />
-<p>可见边界查找的算法只是对二分查找进行一点小小的改动即可。原先我们在找到一个中间位置元素和要查找的值相等时，查找就结束了。现在要查找右端边界，我们只需要把“等于”这种情况归为“小于”的情况里面去，即把“等于”强行认定为“小于”，这样就会让查找过程一直以为“找不到”要查找的值，最终查找失败。而我们要的边界正是查找失败后的 <code class="docutils literal notranslate"><span class="pre">left</span></code> 位置。示例代码如下：</p>
+<p>可见边界查找的算法只是对二分查找进行一点小小的改动即可。原先我们在找到一个中间位置元素和要查找的值相等时，查找就结束了。现在要查找右端边界，我们只需要把“等于”这种情况归到“小于”的情况里面去，即把“等于”强行认定为“小于”，这样就会让查找过程一直以为“找不到”要查找的值，最终查找失败。而我们要的边界正是查找失败后的 <code class="docutils literal notranslate"><span class="pre">left</span></code> 位置。示例代码如下：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
 <span class="cp">#define LEN(x) sizeof(x)/sizeof(x[0])</span>
