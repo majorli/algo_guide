@@ -81,9 +81,9 @@
   <div class="section" id="id1">
 <h1><span class="section-number">3.5.2. </span>插入排序<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
 <p><strong>插入排序</strong>的算法思路就不像冒泡和选择排序这样简单粗暴了，但是也很容易理解，它的思路来源于扑克牌游戏。玩过扑克牌的人都知道，在发牌阶段大多数人都会随时整理好手里的牌。一般人理牌的方法都是这样的，保持手里已有的牌按大小有序排列好，每拿到一张新的牌，就按顺序检查手里的牌，找到一个合适的位置把新牌插进去。这样在整个发牌阶段手里的牌就总是有序的，发完牌就可以开始玩了。这个理牌的初始状态就是每次拿到第一张牌的时候，手里只有一张牌，那当然就是天然有序的。</p>
-<p>插入排序的过程与此相同，从仅由第一个元素构成的天然的初始有序子序列开始，逐步构建更大的有序子序列，直到整个序列全部有序就完成了排序。构建更大的有序子序列的过程就是把后面部分的无序子序列中第一个元素插入到前面已经有序的子序列中合适的位置里去，这由一次查找插入位置和一次搬移部分元素两次操作共同完成。</p>
-<p>假设在一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span> 中，前 <span class="math notranslate nohighlight">\(m\)</span> 个元素 <span class="math notranslate nohighlight">\(A[0],\dots,A[m-1]\)</span> 是已经有序的子序列，此后的部分为无序子序列。那么下一次构建有序子序列的过程即将 <span class="math notranslate nohighlight">\(A[m]\)</span> 插入到有序子序列中去，使得有序子序列的范围扩展到 <span class="math notranslate nohighlight">\(A[0],\dots,A[m]\)</span> 这前 <span class="math notranslate nohighlight">\(m+1\)</span> 个元素。</p>
-<p>为了完成 <span class="math notranslate nohighlight">\(A[m]\)</span> 的插入过程，我们可以先用一个临时变量 <span class="math notranslate nohighlight">\(t\)</span> 保存下 <span class="math notranslate nohighlight">\(A[m]\)</span> 的值，然后在有序子序列中从后向前扫描每一个元素，如果元素值大于 <span class="math notranslate nohighlight">\(t\)</span> 就把它向后搬一个位置，直到遇到第一个小于等于 <span class="math notranslate nohighlight">\(t\)</span> 的元素，将 <span class="math notranslate nohighlight">\(t\)</span> 的值写入它后面那个位置。这样就完成了一次插入，可以形象地把这个过程理解为“逐个拉开那些比自己大的元素，在插入位置拉出一条缝然后把自己塞进去”。让我们看一个示例，假设有序列 [1, 3, 5, 2, 4]，前3个元素为已经构建好的有序子序列，现在要插入第4个元素2，过程如下：</p>
+<p>插入排序的过程与此相同，从仅由第一个元素构成的天然的初始有序子序列开始，逐步构建更大的有序子序列，直到整个序列全部有序就完成了排序。构建更大的有序子序列的过程就是把后面的无序子序列中第一个元素插入到前面已经有序的子序列中合适的位置里去，这由一次查找插入位置和一次搬移部分元素两次操作共同完成。</p>
+<p>假设在一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span> 中，前 <span class="math notranslate nohighlight">\(m\)</span> 个元素 <span class="math notranslate nohighlight">\(A[0:m]\)</span> 是已经有序的子序列，此后的部分为无序子序列。那么下一次构建有序子序列的过程即是将 <span class="math notranslate nohighlight">\(A[m]\)</span> 插入到有序子序列中去，使得有序子序列的范围扩展到 <span class="math notranslate nohighlight">\(A[0:m+1]\)</span>。</p>
+<p>为了完成 <span class="math notranslate nohighlight">\(A[m]\)</span> 的插入，我们可以先用一个临时变量 <span class="math notranslate nohighlight">\(t\)</span> 保存下 <span class="math notranslate nohighlight">\(A[m]\)</span> 的值，然后在有序子序列中从后向前扫描每一个元素，如果元素值大于 <span class="math notranslate nohighlight">\(t\)</span> 就把它向后搬一个位置，直到遇到第一个小于等于 <span class="math notranslate nohighlight">\(t\)</span> 的元素，将 <span class="math notranslate nohighlight">\(t\)</span> 的值写入它后面那个位置。这样就完成了一次插入。可以形象地把这个过程理解为“逐个拉开那些比自己大的元素，在插入位置拉出一条缝然后把自己塞进去”。让我们看一个示例，假设有序列 [1, 3, 5, 2, 4]，前3个元素为已经构建好的有序子序列，现在要插入第4个元素2，过程如下：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1: 初始状态，m = 3, 令 t = a[3], 令 j = m - 1 = 2
 
    a = [1, 3, 5, 2, 4], t = 2
@@ -141,14 +141,14 @@
 </div></blockquote>
 </div>
 <p>和冒泡、选择排序一样，插入排序只需要使用一个额外的变量，用来临时存放要插入的值。所以算法的空间复杂度也是 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
-<p>接下来让我们分析一下算法的时间复杂度。要对一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span> 完成插入排序，需要先后进行 <span class="math notranslate nohighlight">\(n-1\)</span> 轮元素插入，从 <span class="math notranslate nohighlight">\(A[1]\)</span> 到 <span class="math notranslate nohighlight">\(A[n-1]\)</span>。要完成元素 <span class="math notranslate nohighlight">\(A[m]\)</span> 的插入需要在其前面的 <span class="math notranslate nohighlight">\(m\)</span> 个位置中找到它的插入点，最少要进行一次元素比较，最多要进行 <span class="math notranslate nohighlight">\(m\)</span> 次。我们分最好、最差和平均三种情况分别计算插入排序的工作量。</p>
-<p>最好情况下，每一个元素的插入都只需要进行一次元素比较就能找到其插入位置。这意味着对于任何一个元素 <span class="math notranslate nohighlight">\(A[m],(m=1,2,\dots,n-1)\)</span>，都满足 <span class="math notranslate nohighlight">\(A[m-1]\le A[m]\)</span>。换句话说，原序列 <span class="math notranslate nohighlight">\(A\)</span> 本身就是有序的。这时候整个插入排序总共要进行的元素比较次数（即总工作量）为：</p>
+<p>接下来让我们分析一下算法的时间复杂度。要对一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span> 完成插入排序，需要先后进行 <span class="math notranslate nohighlight">\(n-1\)</span> 轮元素插入。要完成元素 <span class="math notranslate nohighlight">\(A[m]\)</span> 的插入需要在其前面的 <span class="math notranslate nohighlight">\(m\)</span> 个位置中找到它的插入点，最少要进行一次元素比较，最多要进行 <span class="math notranslate nohighlight">\(m\)</span> 次。我们分最好、最差和平均三种情况分别计算插入排序的工作量。</p>
+<p>最好情况下，每一个元素都只需要和它前面的那一个元素进行一次比较就能找到插入位置。这意味着每一个元素 <span class="math notranslate nohighlight">\(A[m],m\ge1\)</span> 都满足 <span class="math notranslate nohighlight">\(A[m-1]\le A[m]\)</span>。换句话说，原序列 <span class="math notranslate nohighlight">\(A\)</span> 本身就是有序的。这时候整个插入排序总共要进行的元素比较次数（即总工作量）为：</p>
 <div class="math notranslate nohighlight">
 \[W_{best}(n)=\underbrace{1+1+\cdots+1}_{n-1\text{ 个 }1}=n-1=O(n)\]</div>
-<p>最坏情况下，每一个元素的插入都需要和它前面的每一个元素进行比较才能确定插入位置。这意味着对于任何一个元素 <span class="math notranslate nohighlight">\(A[m],(m=1,2,\dots,n-1)\)</span>，它前面的有序子序列中的每一个元素都比它大。大家可以试着用反证法证明一下，这种情况只有在原序列 <span class="math notranslate nohighlight">\(A\)</span> 本身是完全逆序的时候才会出现。这时候的总工作量为：</p>
+<p>最坏情况下，每一个元素都需要和它前面的每一个元素进行比较后才能确定插入位置。这意味着对于每一个元素 <span class="math notranslate nohighlight">\(A[m],m\ge1\)</span> 都有 <span class="math notranslate nohighlight">\(A[0]\gt A[m]\)</span>。这种情况只有在原序列 <span class="math notranslate nohighlight">\(A\)</span> 本身是完全逆序的时候才会出现。这时候的总工作量为：</p>
 <div class="math notranslate nohighlight">
 \[W_{worst}(n)=1+2+\cdots+(n-1)=\frac{n(n-1)}{2}=O(n^2)\]</div>
-<p>平均情况，我们要借用概率论的知识才能计算，不过实际上理解和计算都还是很简单的。所谓平均情况，就是指对于任何一个元素 <span class="math notranslate nohighlight">\(A[m],(m=1,2,\dots,n-1)\)</span>，它的实际插入位置是前面 <span class="math notranslate nohighlight">\(m\)</span> 个可能位置中的哪一个的可能性是一样的。即实际插入位置在 <span class="math notranslate nohighlight">\(m\)</span> 个候选位置中等概率地分布着，可能是 <span class="math notranslate nohighlight">\(A[0]\)</span>，可能是 <span class="math notranslate nohighlight">\(A[1]\)</span>，……，可能是 <span class="math notranslate nohighlight">\(A[m-1]\)</span>，大家都有可能，而且可能性相等。因为在这 <span class="math notranslate nohighlight">\(m\)</span> 个候选位置中必有而且仅有一个真正的位置，所以如果把这 <span class="math notranslate nohighlight">\(m\)</span> 个位置的可能性（概率）加起来一定等于1，<span class="math notranslate nohighlight">\(m\)</span> 个相等的数相加等于1，那么这个数一定等于 <span class="math notranslate nohighlight">\(1\over m\)</span>。</p>
+<p>平均情况，我们要借用概率论的知识才能计算，不过实际上理解和计算都还是很简单的。所谓平均情况，就是指对于任何一个元素 <span class="math notranslate nohighlight">\(A[m],m\ge1\)</span>，它的实际插入位置是前面 <span class="math notranslate nohighlight">\(m\)</span> 个可能位置中任何一个的可能性都一样。即实际插入位置在 <span class="math notranslate nohighlight">\(m\)</span> 个候选位置中等概率地分布着，可能是 <span class="math notranslate nohighlight">\(A[0]\)</span>，可能是 <span class="math notranslate nohighlight">\(A[1]\)</span>，……，可能是 <span class="math notranslate nohighlight">\(A[m-1]\)</span>，大家都有可能，而且可能性相等。因为在这 <span class="math notranslate nohighlight">\(m\)</span> 个候选位置中必有而且仅有一个真正的位置，所以如果把这 <span class="math notranslate nohighlight">\(m\)</span> 个位置的可能性（概率）加起来一定等于1，<span class="math notranslate nohighlight">\(m\)</span> 个相等的数相加等于1，那么这个数一定等于 <span class="math notranslate nohighlight">\(1\over m\)</span>。</p>
 <p>在插入元素 <span class="math notranslate nohighlight">\(A[m]\)</span> 的时候，假如其实际插入位置是 <span class="math notranslate nohighlight">\(A[m-1]\)</span>，则需要进行1次元素比较，这种可能性是 <span class="math notranslate nohighlight">\(1\over m\)</span>。假如其实际插入位置是 <span class="math notranslate nohighlight">\(A[m-2]\)</span>，则需要进行2次元素比较，这种可能性同样是 <span class="math notranslate nohighlight">\(1\over m\)</span>。依此类推，假如其实际插入位置是 <span class="math notranslate nohighlight">\(A[1]\)</span> 则需要进行 <span class="math notranslate nohighlight">\(m-1\)</span> 次元素比较，这种可能性也是 <span class="math notranslate nohighlight">\(1\over m\)</span>。假如其实际插入位置是 <span class="math notranslate nohighlight">\(A[0]\)</span>，则需要进行 <span class="math notranslate nohighlight">\(m\)</span> 次元素比较，这种可能性依然是 <span class="math notranslate nohighlight">\(1\over m\)</span>。因此，插入元素 <span class="math notranslate nohighlight">\(A[m]\)</span> 时需要进行的元素比较的平均次数（数学期望）就是：</p>
 <div class="math notranslate nohighlight">
 \[E(m)=1\times{1\over m}+2\times{1\over m}+\cdots+m\times{1\over m}={1\over m}(1+2+\cdots+m)={1\over m}\frac{m(m+1)}{2}=\frac{m+1}{2}\]</div>
@@ -158,7 +158,7 @@
 W_{avg}(n)&amp;=E(1)+E(2)+\cdots+E(n-1)=\frac{1+1}{2}+\frac{2+1}{2}+\cdots+\frac{n-1+1}{2}\\
           &amp;={1\over2}(2+3+\cdots+n)={1\over2}\cdot\frac{(n+2)(n-1)}{2}=\frac{(n+2)(n-1)}{4}=O(n^2)
 \end{align}\end{split}\]</div>
-<p>综上所述，可以得出结论：插入排序在最坏和最差情况下的时间复杂度都是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>，最好情况下时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>，最好情况是指原序列本身完全有序，最坏情况是指原序列本身完全逆序。</p>
+<p>综上所述，可以得出结论：插入排序在最坏和最差情况下的时间复杂度都是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>，最好情况下时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>，最好情况是指原序列本身有序，最坏情况是指原序列本身完全逆序。</p>
 <p>上述结论听起来好像插入排序和冒泡、选择排序在时间复杂度上没什么明显区别，但是实际上插入排序要比选择排序快不少，冒泡排序更是无法与之相比。这从总工作量的准确表达式上可以很明显地看出来，平均情况下的工作量差不多是冒泡、选择排序平均情况下工作量的一半。</p>
 <p>另外，插入排序是一种稳定的排序算法，这并不难看出来，请大家自行思考分析。</p>
 <div class="admonition hint">
@@ -200,7 +200,7 @@ W_{avg}(n)&amp;=E(1)+E(2)+\cdots+E(n-1)=\frac{1+1}{2}+\frac{2+1}{2}+\cdots+\frac
 <p>但是，如果我们愿意付出一点点代码编写上的麻烦，插入排序还能更优秀，它可以优化为一种实际运行性能相当接近 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间的稳定排序算法！</p>
 <div class="section" id="id2">
 <h2><span class="section-number">3.5.2.1. </span>插入排序的华丽转身：二分插入排序<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p>分析一下插入排序的过程，耗费的主要工作量就是插入每一个元素之前在原序列前部的有序子序列中寻找插入位置。但是既然是在有序子序列中查找插入位置，不是可以用二分法来更快地查找吗？回过头去看看原先的查找规则可以发现，为了保持排序的稳定性，我们使用的插入位置其实就是元素值在有序子序列中的右边界。所以我们用二分查找来找到右边界作为插入点：</p>
+<p>分析一下插入排序的过程，耗费的主要工作量就是插入每一个元素之前在原序列前部的有序子序列中寻找插入位置。但是既然是在有序子序列中查找插入位置，不是可以用二分法来更快地查找吗？回过头去看看查找规则可以发现，为了保持排序的稳定性，我们使用的插入位置其实就是元素值在有序子序列中的右边界。所以我们用二分查找来找到右边界作为插入点：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">二分插入排序算法</p>
 <p><span class="math notranslate nohighlight">\(\text{InsertionSort}(A, n):\)</span></p>
@@ -228,23 +228,23 @@ W_{avg}(n)&amp;=E(1)+E(2)+\cdots+E(n-1)=\frac{1+1}{2}+\frac{2+1}{2}+\cdots+\frac
 <p>一、为什么用元素比较来作为衡量排序算法时间复杂度的基本运算。</p>
 <blockquote>
 <div><p>正规的算法理论，对基于比较的排序算法分析时间复杂度时，采用的基本运算都是元素之间的大小比较。有时候我们查阅网上的资料，有些人会把元素赋值、交换、移动这些也作为基本运算，其实这是不准确的。</p>
-<p>确实，在排序算法中，元素赋值、交换、搬移这些运算也非常之多，而且也往往是循环出现的。但是在计算机内部，进行一次元素比较要比进行元素的赋值、交换、搬移这些操作慢得多。这里我们要了解一些计算机机器语言的特征。C++语言里的上述这些元素操作，翻译成CPU可直接执行的机器语言，会用到这么几种指令：读内存单元、写内存单元、二进制加减法运算、二进制数是否为0的判断、指令之间的跳转。这些指令各自的执行所需时间也不尽相同，但是基本上对于绝大多数计算机系统，读内存快于写内存，写快于0值判断，0值判断快于指令跳转，指令跳转快于加减运算。</p>
-<p>读一个元素的值，比如一个int型元素的值，CPU需要做的是连续读取4个内存单元（字节）的二进制数码，对于32位、64位架构的计算机系统，这就是一条读内存指令。写一个元素的值，以一个int型元素为例，CPU需要做的是连续向4个内存单元（字节）写入二进制数码，也就是一条写内存指令。</p>
+<p>确实，在排序算法中，元素赋值、交换、搬移这些运算也非常之多，而且也往往是循环出现的。但是计算机进行一次元素比较要比进行元素的赋值、交换、搬移这些操作慢得多。这里我们要了解一些计算机机器语言的特征。C++语言里的上述这些元素操作，翻译成CPU可直接执行的机器语言，会用到这么几种指令：读内存单元、写内存单元、二进制加减法运算、二进制数是否为0的判断、指令之间的跳转。这些指令各自的执行所需时间也不尽相同，但是基本上对于绝大多数计算机系统，读内存快于写内存，写快于0值判断，0值判断快于指令跳转，指令跳转快于加减运算。</p>
+<p>读一个元素的值，比如一个 <code class="docutils literal notranslate"><span class="pre">int型</span></code> 元素的值，CPU需要做的是连续读取4个内存单元（字节）的二进制数码，对于32位和64位架构的计算机系统，这就是一条读内存指令。写一个元素的值，以一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型元素为例，CPU需要做的是连续向4个内存单元（字节）写入二进制数码，也就是一条写内存指令。</p>
 <p>所以一次元素赋值，只需要用1条写内存指令即可；一次元素交换，需要3条读3条写总共6条读写内存指令；一次元素搬移，需要1条读1条写总共2条读写指令（另注：冒泡排序使用大量元素交换、选择排序每轮只交换一次、插入排序使用大量元素搬移，这里三者的差别也是很明显的）。</p>
 <p>而一次元素比较，CPU要执行的机器指令序列如下：读元素（1条读指令）、读另一个元素（1条读指令）、二者相减（1条减法指令）、判断差是否为0（1条0值判断指令）、分支跳转（至少1条跳转指令）。可见完成一次元素比较，所要执行的机器指令和所需时间远大于元素的赋值、交换或者搬移。</p>
 <p>那么算法理论中用元素比较来作为基本运算，忽略元素的赋值、交换、搬移操作到底行不行呢？</p>
-<p>以插入排序为例，如果同时考虑元素比较和元素搬移，按照插入排序的规则，在完成任一个元素 <span class="math notranslate nohighlight">\(A[m]\)</span> 的插入任务时，算法首先要进行若干次元素比较，假设为 <span class="math notranslate nohighlight">\(k\)</span> 次，然后还要进行同样多次的元素搬移。令一次元素比较运算所需时间为 <span class="math notranslate nohighlight">\(1\)</span> 个单位时间，那么一次元素搬移的耗费时间可以令其为 <span class="math notranslate nohighlight">\(\lambda\)</span> 个时间单位，一般来说 <span class="math notranslate nohighlight">\(0\lt\lambda\lt1\)</span>，事实上它就算大于1也没有关系，只要它是一个常数即可。前面已经计算过以元素比较为基本运算的工作量了，不失一般性，以平均情况为例，工作量为：</p>
+<p>以插入排序为例，如果同时考虑元素比较和元素搬移，按照插入排序的规则，在进行元素 <span class="math notranslate nohighlight">\(A[m]\)</span> 的插入时，算法首先要进行若干次元素比较，假设为 <span class="math notranslate nohighlight">\(k\)</span> 次，然后还要进行同样多次的元素搬移。令一次元素比较所需的时间为 <span class="math notranslate nohighlight">\(1\)</span> 个单位时间，一次元素搬移所需的时间为 <span class="math notranslate nohighlight">\(\lambda\)</span> 个时间单位，一般来说 <span class="math notranslate nohighlight">\(0\lt\lambda\lt1\)</span>，事实上它就算大于1也没有关系，只要它是一个常数即可。前面已经计算过以元素比较为基本运算的工作量了，不失一般性，以平均情况为例，工作量为：</p>
 <div class="math notranslate nohighlight">
 \[W_{avg}(n)=\frac{(n+2)(n-1)}{4}\]</div>
 <p>现在再加上同样多次的元素搬移，一次搬移的工作量为 <span class="math notranslate nohighlight">\(\lambda\)</span>，那么总共的工作量为：</p>
 <div class="math notranslate nohighlight">
 \[W_{avg}^\prime(n)=\frac{(n+2)(n-1)}{4}+\lambda\cdot\frac{(n+2)(n-1)}{4}=(1+\lambda)\frac{(n+2)(n-1)}{4}=(1+\lambda)W_{avg}(n)\]</div>
-<p>可见，加上元素搬移产生的工作量之后，总的插入排序工作量只不过是在原工作量基础上乘了一个常数系数，这并不会对时间复杂度的阶产生影响，仍然是 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 时间。所以分析时就可以仅以元素比较这个比较耗时的运算来作为基本操作，这就好像在许多有乘法有加法的数值运算算法中，往往就以重量级的乘法为基本运算而忽略轻量级的加法一样。</p>
+<p>可见，加上元素搬移产生的工作量之后，总的插入排序工作量只不过是在原工作量基础上乘了一个常数系数，这并不会对时间复杂度的阶产生影响，仍然是 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 时间。所以分析时就可以仅以元素比较这个更加耗时的运算来作为基本操作，这就好像在许多有乘法有加法的数值运算算法中往往就以重量级的乘法为基本运算而忽略轻量级的加法一样。</p>
 <p>上述分析也完全适用于对冒泡、选择排序的分析，也适用于今后要学习的快速排序、归并排序等基于元素比较的经典排序算法的分析。但是对于二分插入排序这种复合了其他算法来实现优化的情况却不适用了。在进一步分析之前，我们先来学习几个基本的对数运算规则。</p>
 </div></blockquote>
 <p>二、对数的基本运算规则（以2为底）</p>
 <blockquote>
-<div><p>以前我们简单地学习过对数的概念，在计算机软件领域里通常使用的都是以2为底的对数，<span class="math notranslate nohighlight">\(\log a\)</span> 一般就默认为表示 <span class="math notranslate nohighlight">\(\log_2 a\)</span>，它表示这样一个数 <span class="math notranslate nohighlight">\(x\)</span>，满足 <span class="math notranslate nohighlight">\(2^x=a\)</span>，这个关系一般就写作 <span class="math notranslate nohighlight">\(x=\log a\)</span>（记住，在数学里面，对数符号的下标2不可以省略）。</p>
+<div><p>以前我们简单地学习过对数的概念，在计算机领域通常使用的都是以2为底的对数，<span class="math notranslate nohighlight">\(\log a\)</span> 一般就默认为表示 <span class="math notranslate nohighlight">\(\log_2 a\)</span>，它表示这样一个数 <span class="math notranslate nohighlight">\(x\)</span>，满足 <span class="math notranslate nohighlight">\(2^x=a\)</span>，这个关系一般就写作 <span class="math notranslate nohighlight">\(x=\log a\)</span>（记住，在数学里面，对数符号的下标2不可以省略）。</p>
 <p>对数的第一条重要运算规则是 <span class="math notranslate nohighlight">\(\log{ab}=\log a + \log b\)</span>。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">证明</p>
@@ -255,27 +255,27 @@ W_{avg}(n)&amp;=E(1)+E(2)+\cdots+E(n-1)=\frac{1+1}{2}+\frac{2+1}{2}+\cdots+\frac
 <div class="admonition- admonition">
 <p class="admonition-title">证明</p>
 <p>如果 <span class="math notranslate nohighlight">\(a\)</span> 是一个正整数，那么这条运算规则可以看作是上一条规则的推论。因为 <span class="math notranslate nohighlight">\(a\)</span> 乘以 <span class="math notranslate nohighlight">\(\log b\)</span> 就是 <span class="math notranslate nohighlight">\(a\)</span> 个 <span class="math notranslate nohighlight">\(\log b\)</span> 相加，应用上一条规则逐个加起来就可以得到 <span class="math notranslate nohighlight">\(a\log b = \log{b^a}\)</span>。</p>
-<p>如果 <span class="math notranslate nohighlight">\(a\)</span> 不是正整数，我们可以这样推导：假设 <span class="math notranslate nohighlight">\(a\log b=x\)</span>，对等号两边同时取2的指数可得 <span class="math notranslate nohighlight">\(2^{a\log b}=2^x\)</span>，这个式子的左边又可以根据指数的运算规则 <span class="math notranslate nohighlight">\(a^{mn}=(a^n)^m\)</span> 进行化简：<span class="math notranslate nohighlight">\(2^{a\log b}=(2^{\log b})^a=b^a\)</span>，所以就有 <span class="math notranslate nohighlight">\(b^a=2^x\)</span>，再两边同时取对数即可得到：<span class="math notranslate nohighlight">\(\log{b^a}=x=a\log b\)</span>。</p>
+<p>如果 <span class="math notranslate nohighlight">\(a\)</span> 不是正整数，我们可以这样推导：假设 <span class="math notranslate nohighlight">\(a\log b=x\)</span>，对等号两边同时取2的指数可得 <span class="math notranslate nohighlight">\(2^{a\log b}=2^x\)</span>，这个式子的左边又可以根据指数的运算规则 <span class="math notranslate nohighlight">\(a^{mn}=\left(a^n\right)^m\)</span> 进行化简：<span class="math notranslate nohighlight">\(2^{a\log b}=\left(2^{\log b}\right)^a=b^a\)</span>，所以就有 <span class="math notranslate nohighlight">\(b^a=2^x\)</span>，再两边同时取对数即可得到：<span class="math notranslate nohighlight">\(\log{b^a}=x=a\log b\)</span>。</p>
 </div>
 </div></blockquote>
 <p>三、二分插入排序的时间复杂度分析</p>
 <blockquote>
 <div><p>有了上面的知识打底，我们就可以来详细分析二分插入排序的时间复杂度了。前面我们已经以插入排序为例分析过为什么标准排序算法的时间复杂度可以忽略元素的赋值、交换、搬移这些操作，仅以元素比较为基本操作进行衡量。其实根本原因并不在于元素的这些操作耗费的时间比元素比较要少，而是在这些经典的标准排序算法中，元素的赋值、交换、搬移操作总是以元素比较的结果为因，是因为有了元素比较才可能导致元素的赋值、交换或者搬移，因此这些元素操作的次数不会超过元素比较的次数。正因为如此，在统计工作量时，它们的操作次数不会对总工作量的阶数造成影响，在耗时上只不过是对总工作量添加了一个常数系数而已，所以可以忽略。</p>
-<p>但是二分插入排序的情况就不同了。我们通过二分边界查找来寻找元素的插入位置，把一次元素比较的次数从 <span class="math notranslate nohighlight">\(O(m)\)</span> 级别直接降到了 <span class="math notranslate nohighlight">\(O(\log m)\)</span> 级别。这时候如果仍然仅以元素比较次数为基本运算，以平均情况为例，总工作量便降低为：</p>
+<p>但是二分插入排序的情况就不同了。我们通过二分边界查找来寻找元素的插入位置，把一次插入所需元素比较的次数从 <span class="math notranslate nohighlight">\(O(m)\)</span> 级别直接降到了 <span class="math notranslate nohighlight">\(O(\log m)\)</span> 级别。这时候如果仍然仅以元素比较次数为基本运算，以平均情况为例，总工作量便降低为：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 W_{avg}^{(C)}(n)&amp;=\log1+\log2+\cdots+\log(n-1)=\log[1\times2\times\cdots\times(n-1)]=\log{(n-1)!}\\
                  &amp;=O(\log{n!})
 \end{align}\end{split}\]</div>
 <p>这可不得了，这是突破了人类认知极限了呀。因为计算机科学家早就证明过，所有基于元素比较的排序算法，其时间复杂度的下限为 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>，不可能再小了。而我们现在得到了 <span class="math notranslate nohighlight">\(O(\log{n!})\)</span> 的结果，要知道 <span class="math notranslate nohighlight">\(n\log n=\log{n^n}\)</span>，当 <span class="math notranslate nohighlight">\(n\gt1\)</span> 的时候，<span class="math notranslate nohighlight">\(n^n = n\cdot n\cdot\cdots\cdot n\gt 1\cdot2\cdot\cdots\cdot n=n!\)</span>，所以 <span class="math notranslate nohighlight">\(O(\log{n!})\)</span> 要比 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 更小。这可是了不起的“大发现”啊，足以获得图灵奖了。</p>
-<p>当然没有这么美的事情，事实上我们上面的计算是不完整的。在二分插入排序中，虽然我们通过二分法把查找插入位置的元素比较工作量降到了对数级别，可是找到插入位置之后，元素的搬移量仍然是和标准的插入排序时一样的。我们知道元素搬移量和标准插入排序时的元素比较量相同，对每一个元素的插入，都是线性级别，对整个插入排序过程是二次方级别。以平均情况为例，也就是我们前面计算过的：</p>
+<p>当然没有这么美的事情，事实上我们上面的计算是不完整的。在二分插入排序中，虽然我们通过二分查找把每一次元素插入所需的元素比较工作量降到了对数级别，可是找到插入位置之后，元素搬移的工作量仍然是和标准插入排序时一样，还是线性级别的。对于整个插入排序过程，元素搬移的工作量还是是二次方级别。以平均情况为例，也就是我们前面计算过的：</p>
 <div class="math notranslate nohighlight">
 \[W_{avg}^{(M)}(n)=\lambda\cdot\frac{(n+2)(n-1)}{4}=O(n^2)\]</div>
-<p>这时候，虽然一般情况下一次元素搬移所花费的CPU时间要比一次元素比较要少得多，但是它的执行次数达到了2阶级别，常系数 <span class="math notranslate nohighlight">\(\lambda\)</span> 再小也不能改变阶更大的事实，只要数据规模 <span class="math notranslate nohighlight">\(n\)</span> 足够大，决定整个二分插入排序运行时间的主要因素就一定是取决于元素搬移次数的。这就是二分插入排序的总工作量的正确计算方式：</p>
+<p>这时候，虽然一般情况下一次元素搬移所花费的CPU时间要比一次元素比较少，但是它的执行次数达到了2阶级别，常系数 <span class="math notranslate nohighlight">\(\lambda\)</span> 再小也不能改变阶更大的事实，只要数据规模 <span class="math notranslate nohighlight">\(n\)</span> 足够大，决定整个二分插入排序运行时间的主要因素就一定是元素搬移次数。这就是二分插入排序的总工作量的正确计算方式：</p>
 <div class="math notranslate nohighlight">
 \[W_{avg}(n)=W_{avg}^{(C)}+W_{avg}^{(M)}=\log{(n-1)!}+\lambda\cdot\frac{(n+2)(n-1)}{4}=O(n^2)\]</div>
 </div></blockquote>
-<p>综上所述，二分插入排序的时间复杂度仍然为 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。但是它确确实实地优化了标准插入排序算法，在实践中它能达到接近于 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间级别。其主要原因是元素搬移是比元素比较轻量级得多的一种运算，我们大幅降低了元素比较次数的数量级之后，虽然总的数量级仍然由元素搬移次数决定为2阶，但是实际执行时的运行速度会得到大幅度降低。</p>
+<p>综上所述，二分插入排序的时间复杂度仍然为 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。但是它确确实实地优化了标准插入排序算法，在实践中，只要数据量不是特别巨大，它能达到接近于 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 的时间级别。其主要原因便是元素搬移相比元素比较要轻量级得多，我们大幅降低了元素比较次数的量级之后，虽然总的数量级仍然由元素搬移次数决定为2阶，但是实际执行时的运行速度会得到大幅提升。</p>
 <p>对于不同的计算机系统，它读写内存的速度越快，比例系数 <span class="math notranslate nohighlight">\(\lambda\)</span> 就越小，二分插入排序的实际优化效果就越强。所以在CPU芯片等计算机硬件系统设计中，读写速度永远是最关键的技术指标。</p>
 </div>
 </div>

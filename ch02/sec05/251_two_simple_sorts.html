@@ -85,14 +85,14 @@
 <div class="admonition note">
 <p class="admonition-title">注解</p>
 <p>要知道，时间复杂度表示的是一个变化趋势，而不是绝对的速度函数。同样是 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 的算法，可能速度上也会有不小的差距。而 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 和 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 的两个算法，在数据规模比较小的时候往往还是 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 时间的算法跑得更快。这里有数学理论上的和编程技术上的两方面的原因：</p>
-<p>从数学理论上来看，时间复杂度的函数表达式隐藏了常数系数，这是因为当 <span class="math notranslate nohighlight">\(n\)</span> 越来越大之后，常数系数的影响可以忽略不计，函数的阶就决定了谁快谁慢。但是在数据规模比较小的时候，常数系数的大小就会产生影响。例如一个 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 的算法，它实际工作量为 <span class="math notranslate nohighlight">\(n^2\over4\)</span>，另外还有一个 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间的算法，实际工作量为 <span class="math notranslate nohighlight">\(4n\log(n)\)</span>，那么在 <span class="math notranslate nohighlight">\(n\le108\)</span> 的时候，还是那个 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 算法速度快。</p>
-<p>从编程技术上来看，要实现 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间的排序算法，就必须用到递归的技术，但是递归本身是有时间开销的。调用函数需要有一系列背后的操作，传值、跳转、返回、复制返回值等，这些都是时间开销。所以当数据量很小的时候，递归的算法并不一定更快。</p>
+<p>从数学理论上来看，时间复杂度的函数表达式隐藏了常数系数，这是因为当 <span class="math notranslate nohighlight">\(n\)</span> 越来越大之后，常数系数的影响可以忽略不计，函数的阶就决定了谁快谁慢。但是在数据规模比较小的时候，常数系数的大小就会产生影响。例如一个 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 的算法，它实际工作量为 <span class="math notranslate nohighlight">\({1\over4}n^2\)</span>，另外还有一个 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间的算法，实际工作量为 <span class="math notranslate nohighlight">\(4n\log{n}\)</span>，那么在 <span class="math notranslate nohighlight">\(n\le108\)</span> 的时候，还是那个 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 算法速度快。</p>
+<p>从编程技术上来看，要实现 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 时间的排序算法，就必须用到递归的技术，但是递归调用是有时间开销的。调用函数需要有一系列背后的操作，传值、跳转、返回、复制返回值等，这些都是时间开销。所以当数据量很小的时候，递归的算法并不一定更快。</p>
 </div>
 <div class="section" id="id2">
 <h2><span class="section-number">3.5.1.1. </span>冒泡排序<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
 <p><strong>冒泡排序</strong>通过一系列的“冒泡”过程实现排序。</p>
-<p>所谓冒泡过程，就是对一个无序序列中的所有相邻元素对从前向后进行比较，发现逆序的就交换它们的位置，使得较大的元素排在后面。这样一轮冒泡结束后，序列中最大的那个元素就会被推到序列的最后面。</p>
-<p>例如对序列 [3, 2, 5, 4, 1] 进行一轮冒泡的过程如下所示（圆括号中是该步要比较的相邻元素对）：</p>
+<p>所谓冒泡过程，就是对一个无序序列中的所有相邻元素对从前向后进行比较，发现逆序对就交换它们的位置，使得较大的元素排在后面。这样一轮冒泡结束后，序列中最大的那个元素就会被推到序列的最后面。</p>
+<p>例如对序列 [3, 2, 5, 4, 1] 进行一轮冒泡的过程如下所示（圆括号中是每一步要进行比较的相邻元素对）：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1: [(3, 2), 5, 4, 1] ，(3, 2) 是逆序对，交换为 (2, 3)
 
 2: [2, (3, 5), 4, 1] ，(3, 5) 不是逆序对，不用交换
@@ -106,8 +106,8 @@
 </div>
 <p>这样，一轮冒泡结束后，原序列中最大的元素5就被移到了序列末尾。这个过程类似于水沸腾时的气泡上浮，最大的元素就是最大的那个气泡，它总是先浮出水面，所以叫做冒泡过程。</p>
 <p>从这个示例也可以看出，一轮冒泡并不能完成排序，它只能把最大的元素推到序列末尾，但其他元素是不能保证有序的。为了完成整个序列的排序，就需要对序列进行多次冒泡，直到整个序列都是有序的为止，这就是冒泡排序的思路。</p>
-<p>对于一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的无序序列 <span class="math notranslate nohighlight">\(S\)</span>，对其进行进行一轮冒泡后，由于最大的元素已经被放置到了最后的 <span class="math notranslate nohighlight">\(S[n-1]\)</span> 位置，所以我们可以认为现在序列由两个子序列构成，其中前 <span class="math notranslate nohighlight">\(n-1\)</span> 个元素构成的子序列 <span class="math notranslate nohighlight">\(\{S[0],\dots,S[n-2]\}\)</span> 是无序的，最后一个元素构成的子序列 <span class="math notranslate nohighlight">\(\{S[n-1]\}\)</span> 是已经有序的了。</p>
-<p>接下来我们对仍然无序的子序列 <span class="math notranslate nohighlight">\(\{S[0],\dots,S[n-2]\}\)</span> 再进行一轮冒泡，其中最大的元素，也就是整个序列中第2大的元素就会被推到这个子序列的最后一个位置 <span class="math notranslate nohighlight">\(S[n-2]\)</span>。于是现在原序列中，前 <span class="math notranslate nohighlight">\(n-2\)</span> 个元素构成的子序列 <span class="math notranslate nohighlight">\(\{S[0],\dots,S[n-3]\}\)</span> 是无序的，而最后2个元素构成的子序列 <span class="math notranslate nohighlight">\(\{S[n-2],S[n-1]\}\)</span> 已经有序了。</p>
+<p>对一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的无序序列 <span class="math notranslate nohighlight">\(S\)</span> 进行一轮冒泡后，由于最大的元素已经被放置到了最后的 <span class="math notranslate nohighlight">\(S[n-1]\)</span> 位置，所以我们可以认为现在序列由两个子序列构成，其中前 <span class="math notranslate nohighlight">\(n-1\)</span> 个元素构成的子序列 <span class="math notranslate nohighlight">\(S[0:n-1]\)</span> 是无序的，最后一个元素单独构成一个已经有序的子序列 <span class="math notranslate nohighlight">\(S[n-1:n]\)</span>。</p>
+<p>接下来我们对仍然无序的子序列 <span class="math notranslate nohighlight">\(S[0:n-1]\)</span> 再进行一轮冒泡，其中最大的元素，也就是整个序列中第2大的元素就会被推到这个子序列的最后一个位置 <span class="math notranslate nohighlight">\(S[n-2]\)</span>。于是现在原序列中，前 <span class="math notranslate nohighlight">\(n-2\)</span> 个元素构成的子序列 <span class="math notranslate nohighlight">\(S[0:n-2]\)</span> 是无序的，而最后2个元素构成的子序列 <span class="math notranslate nohighlight">\(S[n-2:n]\)</span> 已经有序了。</p>
 <p>每进行一轮这样的冒泡，序列后部的有序子序列就会增加1个元素，而前部的无序子序列就会缩短1个元素。因此我们可以循环进行 <span class="math notranslate nohighlight">\(n-1\)</span> 轮这样的冒泡，整个序列就排序完成了。</p>
 <p>例如对序列 [3, 2, 5, 4, 1] 进行冒泡排序，可以看到下面这样的一个过程（方括号中为尚未完成排序的无序部分，圆括号中为已经有序的部分）：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   [3, 2, 5, 4, 1]
@@ -122,10 +122,10 @@
 </pre></div>
 </div>
 <p>到第4轮过后，无序子序列的长度已经变为1，无泡可冒了，整个冒泡排序过程结束。</p>
-<p>根据上面的描述，可以计算冒泡排序的工作量。以元素比较运算为基本运算进行衡量，对一个长度为 <span class="math notranslate nohighlight">\(k\)</span> 的序列进行一轮冒泡，需要进行 <span class="math notranslate nohighlight">\(k-1\)</span> 次元素比较。对一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列进行一次冒泡排序，一共需要进行 <span class="math notranslate nohighlight">\(n-1\)</span> 轮冒泡。各轮冒泡所处理的子序列长度分别为 <span class="math notranslate nohighlight">\(n,n-1,\dots,2\)</span>。故整个冒泡排序要进行的元素比较次数，即工作量为：</p>
+<p>以元素比较为基本运算计算冒泡排序的工作量。对一个长度为 <span class="math notranslate nohighlight">\(k\)</span> 的序列进行一轮冒泡，需要进行 <span class="math notranslate nohighlight">\(k-1\)</span> 次元素比较。对一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列进行一次冒泡排序，一共需要进行 <span class="math notranslate nohighlight">\(n-1\)</span> 轮冒泡。各轮冒泡所处理的子序列长度分别为 <span class="math notranslate nohighlight">\(n,n-1,\dots,2\)</span>。故整个冒泡排序要进行的元素比较次数，即工作量为：</p>
 <div class="math notranslate nohighlight">
 \[W(n)=(n-1)+(n-2)+\cdots+1=\frac{n(n-1)}{2}\]</div>
-<p>这个工作量无论原序列中的元素有序度如何，都是不增不减，恰好这么多次。所以冒泡排序无论是最好情况、最差情况还是平均情况，其时间复杂度都是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。</p>
+<p>这个工作量无论原序列中的元素有序度如何，都是不增不减，恰好这么多次。所以冒泡排序最好情况、最差情况、平均情况的时间复杂度都是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。</p>
 <p>冒泡排序在工作过程中，只需要有一个临时变量用来进行元素交换，因此它的空间复杂度为常数级 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
 <p>另外，冒泡排序是稳定排序，为什么？请大家自己思考。</p>
 <p><strong>冒泡排序的改进</strong></p>
@@ -183,8 +183,8 @@
 <p class="admonition-title">思考</p>
 <p>再请思考一下两个问题：</p>
 <ol class="arabic simple">
-<li><p>如果我们要按从大到小的排逆序，当然也要保持稳定性，应该怎么写冒泡排逆序的程序。</p></li>
-<li><p>如果每一轮冒泡不是从前向后对比元素对，而是反过来从最后一个元素对逐对向前比较直到第一个元素对，会出现什么情况？（提示：在水里，气泡会上浮，那么石头呢？）</p></li>
+<li><p>如果我们要从大到小的排逆序，当然也要保持稳定性，应该怎么写冒泡排逆序的程序。</p></li>
+<li><p>如果每一轮冒泡不是从前向后进行，而是反过来从后向前进行，会出现什么情况？（提示：在水里，气泡会上浮，那么石头呢？）</p></li>
 </ol>
 </div>
 <p>冒泡排序经过一些改变可以构造一些简单的应用，在数据量不大的情况下，由于思路直观、编程简单，也很有一些应用价值。</p>
@@ -192,24 +192,24 @@
 <p>利用冒泡过程，我们可以很简单地实现在一个无序序列中寻找k位数，即第k小的那个数。事实上，在一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列中，第k小的数就是第 <span class="math notranslate nohighlight">\(n-k\)</span> 大的那个数。所以最简单粗暴的方法，进行 <span class="math notranslate nohighlight">\(n-k\)</span> 轮冒泡就可以得到k位数。但是实际上还是有一些可以优化的余地的，比如上面所述的那个冒泡排序的优化就可以用上。又比如说，假如元素数 <span class="math notranslate nohighlight">\(n\)</span> 很大而 <span class="math notranslate nohighlight">\(k\)</span> 很小，那么要进行的冒泡轮数 <span class="math notranslate nohighlight">\(n-k\)</span> 就会很大，这就有点舍近求远的问题了，请大家思考一下，这种情况要怎么进行优化。请完成下面的编程练习：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>编写一个利用冒泡寻找k位数的程序，输入有两行，第一行为两个整数 <span class="math notranslate nohighlight">\(n, k\)</span>，其中 <span class="math notranslate nohighlight">\(1\lt n\le10^6,1\le k\le n\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个整数，都在int型范围内。</p>
+<p>编写一个利用冒泡寻找k位数的程序，输入有两行，第一行为两个整数 <span class="math notranslate nohighlight">\(n, k\)</span>，其中 <span class="math notranslate nohighlight">\(1\lt n\le10^3;1\le k\le n\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个整数，取值都在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型范围内。</p>
 <p>要求利用冒泡过程求解，并尽量进行优化。</p>
 <p>输出：一行，一个整数，即输入的 <span class="math notranslate nohighlight">\(n\)</span> 个整数序列中的k位数。</p>
 </div>
 <p><strong>部分排序</strong></p>
-<p>有时候我们对一个序列只想对它进行部分排序，也就是说只想对其中最小（或最大）的一部分元素完成排序，不需要全部完成排序。比如说有一所名牌大学面向全球招生，全世界有数百万学生报考，最后学校决定总成绩前1000名的学生可以直接录取。这时我们只需要从几百万个分数中挑出最大的1000个。当然我们可以对所有分数进行排序然后取最大的1000个，但是如果我们能部分排序，只排出前1000名就结束，岂不更好？这就是部分排序。</p>
+<p>有时候我们对一个序列只想对它进行部分排序，也就是说只想对其中最小（或最大）的一部分元素完成排序，不需要对所有元素进行排序。比如说有一所名牌大学面向全球招生，全世界有数百万学生报考，最后学校决定总成绩前1000名的学生可以直接录取。这时我们只需要从几百万个分数中挑出最大的1000个。当然我们可以对所有分数进行排序然后取最大的1000个，但是如果我们能部分排序，只排出前1000名就结束，岂不更好？这就是部分排序。</p>
 <p>用冒泡排序的思路，可以方便地完成部分排序，请思考一下完成下面的编程练习：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>编写一个部分冒泡排序程序，输入有两行，第一行为三个整数 <span class="math notranslate nohighlight">\(n, m\)</span>，其中 <span class="math notranslate nohighlight">\(1\lt n\le100,0\le m\le n\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个整数，都在int型范围内。</p>
+<p>编写一个部分冒泡排序程序，输入有两行，第一行为两个整数 <span class="math notranslate nohighlight">\(n, m\)</span>，其中 <span class="math notranslate nohighlight">\(1\lt n\le10^3;1\le m\le n\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个整数，取值都在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型范围内。</p>
 <p>要求对输入的 <span class="math notranslate nohighlight">\(n\)</span> 个整数的序列进行长度为 <span class="math notranslate nohighlight">\(m\)</span> 的部分排序，即只排出从最小到第 <span class="math notranslate nohighlight">\(m\)</span> 小的 <span class="math notranslate nohighlight">\(m\)</span> 个元素，将它们依序放在最前面的 <span class="math notranslate nohighlight">\(m\)</span> 个位置上，其余元素无关顺序地罗列在后面即可。</p>
 <p>输出：完成部分排序的序列，数和数之间用一个空格间隔，第一个数的前面和最后一个数的后面不允许出现空格。</p>
-<p>例如：输入 <span class="math notranslate nohighlight">\(n=5,m=2\)</span>，输入为 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">2</span> <span class="pre">5</span> <span class="pre">4</span> <span class="pre">1</span></code>，则输出 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span> <span class="pre">x</span> <span class="pre">x</span> <span class="pre">x</span></code>，三个 <code class="docutils literal notranslate"><span class="pre">x</span></code> 表示另外3个数，其顺序无所谓。</p>
+<p>例如：输入 <span class="math notranslate nohighlight">\(n=5,m=2\)</span>，输入数据为 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">2</span> <span class="pre">5</span> <span class="pre">4</span> <span class="pre">1</span></code>，则输出 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span> <span class="pre">x</span> <span class="pre">x</span> <span class="pre">x</span></code>，三个 <code class="docutils literal notranslate"><span class="pre">x</span></code> 表示另外3个数，其顺序无所谓。</p>
 </div>
 </div>
 <div class="section" id="id3">
 <h2><span class="section-number">3.5.1.2. </span>选择排序<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
-<p><strong>选择排序</strong>也是一种基于元素比较的简单排序算法，它的思路甚至比冒泡排序更加简单粗暴，通过多次选出最大者（或最小者）并将其放至序列尾部（或头部）的操作完成排序。有点类似给一群人按身高排队，每次都从人群中找出最高的那个人，将其排到队伍尾部，然后不断重复这个过程直到所有人都已经被选进队伍里。</p>
+<p><strong>选择排序</strong>也是一种基于元素比较的简单排序算法，它的思路甚至比冒泡排序更加简单粗暴，就是通过多轮挑选，每次从未排序子序列中选出最大者（或最小者）并将其放至尾部（或头部）的操作完成排序。刚开始的时候整个序列都是未排序子序列，随着一轮一轮的选择，未排序子序列越来越短，直到只剩最后一个元素，整个选择排序就完成了。</p>
 <p>对于长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span>，选择排序的算法如下：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">选择排序算法</p>
@@ -239,7 +239,7 @@
 <p class="admonition-title">练习</p>
 <p>模仿冒泡排序示例程序的样子，编写输入一个整数序列并进行选择排序的程序。</p>
 </div>
-<p>为了从 <span class="math notranslate nohighlight">\(k\)</span> 个元素中找出最大的那个元素，我们知道必须进行 <span class="math notranslate nohighlight">\(k-1\)</span> 次元素比较。为了完成选择排序，必须依次在 <span class="math notranslate nohighlight">\(n\)</span> 个元素、<span class="math notranslate nohighlight">\(n-1\)</span> 个元素，……，直到2个元素的序列中选择最大者。所以和冒泡排序一样，选择排序的工作量为：</p>
+<p>为了从 <span class="math notranslate nohighlight">\(k\)</span> 个元素中找出最大的那个元素，我们知道必须进行 <span class="math notranslate nohighlight">\(k-1\)</span> 次元素比较。为了完成选择排序，必须依次在 <span class="math notranslate nohighlight">\(n\)</span> 个元素、<span class="math notranslate nohighlight">\(n-1\)</span> 个元素，……，直到2个元素的子序列中选择最大者。所以和冒泡排序一样，选择排序的工作量为：</p>
 <div class="math notranslate nohighlight">
 \[W(n) = (n-1)+(n-2)+\cdots+1=\frac{n(n-1)}{2}\]</div>
 <p>和冒泡排序一样，无论原序列中的元素排列情况如何，都是这么多次元素比较，不多不少，所以无论何种情况，选择排序的时间复杂度都是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。</p>
