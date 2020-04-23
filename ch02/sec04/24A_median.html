@@ -42,7 +42,7 @@
   <h3><a href="../../index.html">目录</a></h3>
   <ul>
 <li><a class="reference internal" href="#">3.4.10. 中位数问题</a><ul>
-<li><a class="reference internal" href="#id2">3.4.10.1. 归并法求两个有序数组的中位数</a></li>
+<li><a class="reference internal" href="#a1-merge-ref">3.4.10.1. 归并法求两个有序数组的中位数</a></li>
 <li><a class="reference internal" href="#id3">3.4.10.2. 二分法求两个有序数组的中位数</a></li>
 </ul>
 </li>
@@ -122,8 +122,8 @@
 </div>
 <p>这个程序看懂了吗？看懂了我们就继续讨论一个更加复杂的问题。</p>
 <p>现在有两个有序数组 <span class="math notranslate nohighlight">\(A\)</span> 和 <span class="math notranslate nohighlight">\(B\)</span>，各有 <span class="math notranslate nohighlight">\(m\)</span> 和 <span class="math notranslate nohighlight">\(n\)</span> 个元素，两个数组都已经完成升序排序，即元素从小到大排列。现在要求快速求出这两个数组中所有元素的中位数，时间复杂度不高于 <span class="math notranslate nohighlight">\(O\bigl(\log(m+n)\bigr)\)</span>。其中 <span class="math notranslate nohighlight">\(0\le m,n \le 10^6\)</span>，保证两个数组不会同时为空。</p>
-<div class="section" id="id2">
-<h2><span class="section-number">3.4.10.1. </span>归并法求两个有序数组的中位数<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="a1-merge-ref">
+<span id="id2"></span><h2><span class="section-number">3.4.10.1. </span>归并法求两个有序数组的中位数<a class="headerlink" href="#a1-merge-ref" title="永久链接至标题">¶</a></h2>
 <p>如果两个数组都是乱序的，为了求出它们所有元素的中位数，我们可以把两个数组的元素都合到一个大数组里，然后对大数组进行排序来求出中位数。但排序算法最快的时间复杂度为 <span class="math notranslate nohighlight">\(O\bigl((n+m)\log(n+m)\bigr)\)</span>，远大于问题所要求的上限 <span class="math notranslate nohighlight">\(O\bigl(\log(n+m)\bigr)\)</span>。这个方法的主要问题出在没有利用两个原始数组都已经有序这个条件。</p>
 <p>那么即然两个数组都已经排好序了，我们可以用一种叫做<strong>归并</strong>的操作把两个数组中的元素保持有序地合到另一个大数组里去，时间复杂度为线性的 <span class="math notranslate nohighlight">\(O(n+m)\)</span>。归并操作非常重要，在大量的算法问题中会用到，基本排序算法中最重要的<strong>归并排序</strong>也是基于归并来完成的，大家一定要熟练掌握。</p>
 <p>归并的思路来源于整队。比如有两列队伍，都是按照身高从矮到高排列好的，现在要把两列队伍合并为一列，并且保持身高从矮到高排列。这个整队过程非常简单，从两列队伍各自排在队头的人开始，每次挑出两个队头中比较矮的那个人出列，排进新的队伍的尾部，如果队头两个人身高一样就任选其中一人即可。不断循环这一过程，直到某个队伍的人全部挑完，把另一个队伍中剩余的人按原顺序排到新队伍的后面就完成了。下面举个简单的例子来说明这个过程：</p>
