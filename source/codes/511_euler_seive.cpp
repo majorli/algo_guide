@@ -12,11 +12,11 @@ int euler_seive(int max)
 	is_prime[1] = false;
 	int n = 0;
 	for (int i = 2; i <= max; i++) {
-		if (is_prime[i])
+		if (is_prime[i])	// 关键点一：收集质数
 			primes[n++] = i;
 		for (int j = 0; j < n && i * primes[j] <= max; j++) {
 			is_prime[i * primes[j]] = false;
-			if (i % primes[j] == 0)
+			if (i % primes[j] == 0)	// 关键点二：实现线性
 				break;
 		}
 	}
