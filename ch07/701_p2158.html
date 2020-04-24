@@ -83,13 +83,13 @@
 </div>
 <p><strong>说明/提示</strong></p>
 <p>【数据规模和约定】</p>
-<p>对于 <span class="math notranslate nohighlight">\(100%\)</span> 的数据，<span class="math notranslate nohighlight">\(1 \le N \le 40000\)</span></p>
+<p>对于 <span class="math notranslate nohighlight">\(100\%\)</span> 的数据，<span class="math notranslate nohighlight">\(1 \le N \le 40000\)</span></p>
 <p><strong>题意分析</strong></p>
-<p>对示例图中建立坐标系，以C君所在位置为坐标原点 <span class="math notranslate nohighlight">\((0,0)\)</span>，其余每位学生所在位置的横纵坐标值都用自然数 <span class="math notranslate nohighlight">\(0,1,\dots,n-1\)</span> 依次表示，即所谓的格点位置。除C君以外，一共有 <span class="math notranslate nohighlight">\(N^2-1\)</span> 位同学。</p>
-<p>第一步一定要先分析有没有需要特判的数据。题目给出的数据范围说明 <span class="math notranslate nohighlight">\(N\)</span> 有可能为1，这种情况下方阵只有C君一个人，所以可以特判掉，直接输出0，结束。</p>
-<p>正常情况下，<span class="math notranslate nohighlight">\(N\gt1\)</span>。先排除一些特殊的视线。从原点出发的水平线和垂直线是最特殊的，显然在这两条直线上，C君只能看到两位同学 <span class="math notranslate nohighlight">\((1,0)\)</span> 和 <span class="math notranslate nohighlight">\((0,1)\)</span>，其他的都可以排除掉。这样就知道了C君应看到的人数至少有2人。要考虑的方阵缩小为从 <span class="math notranslate nohighlight">\((1,1)\)</span> 到 <span class="math notranslate nohighlight">\((n-1,n-1)\)</span> 的范围。</p>
-<p>然后是左起第二列和倒数第二行，不难发现，这两条直线上的所有学生，C君都是看得见的，他们不会被任何人遮挡。所以C君应看到的人数右增加了 <span class="math notranslate nohighlight">\(2(n-1)-1=2n-3\)</span> 人，加上前面的2人就有了 <span class="math notranslate nohighlight">\(2n-1\)</span> 个确定一定以及肯定可以看到的人了。要考虑的方阵进一步缩小为从 <span class="math notranslate nohighlight">\((2,2)\)</span> 到 <span class="math notranslate nohighlight">\((n-1,n-1)\)</span> 的范围，共有 <span class="math notranslate nohighlight">\((n-2)^2\)</span> 个人。</p>
-<p>下面的示意图用一个 <span class="math notranslate nohighlight">\(N=9\)</span> 的方阵展示了到目前为止的状态。红色的点为C君，绿色的点为已经确定可以看到的学生，浅灰色的点是已经确定不会被看到的学生，深灰色的点表示还需要进一步分析的部分。</p>
+<p>对示例图中建立坐标系，以C君所在位置为坐标原点(0,0)，其余每位学生所在位置的横纵坐标值都用自然数0,1,…,N-1依次表示。直角坐标系中这样的坐标值都是整数的点数学上也称之为<strong>格点</strong>。除C君以外，一共有N<sup>2</sup>-1位同学。</p>
+<p>第一步一定要先分析有没有需要特判的数据。题目给出的数据范围说明N有可能为1，这种情况下方阵只有C君一个人，所以可以特判掉，直接输出0，结束。</p>
+<p>正常情况下N&gt;1。先排除一些特殊的视线。从原点出发的水平线和垂直线是最特殊的，显然在这两条直线上，C君只能看到两位同学(1,0)和(0,1)，其他的都可以排除掉。这样就知道了C君应看到的人数至少有2人。要考虑的方阵缩小为从(1,1)到(N-1,N-1)的区域。</p>
+<p>然后是左起第二列和倒数第二行，不难发现，这两条直线上的所有学生，C君都是看得见的，他们不会被任何人遮挡。所以C君应看到的人数右增加了2(N-1)-1=2N-3人，加上前面的2人就有了2N-1个确定一定以及肯定可以看到的人了。要考虑的方阵进一步缩小为从(2,2)到(N-1,N-1)的区域，共有(N-2)<sup>2</sup>个人。</p>
+<p>下面的示意图用一个N=9的方阵展示了到目前为止的状态。红色的点为C君，绿色的点为已经确定可以看到的学生，浅灰色的点是已经确定不会被看到的学生，深灰色的点表示还需要进一步分析的部分。</p>
 <img alt="../_images/701_p2158.001.png" src="../_images/701_p2158.001.png" />
 <p>下面我们来分析一下剩余的学生怎样判断其是否可被C君看见。</p>
 <p>从C君所在位置看去，在同一条视线上的学生只能看到第一个。视线是一条直线，从原点出发的直线可以用方程 <span class="math notranslate nohighlight">\(y=kx\)</span> 来表示，这里 <span class="math notranslate nohighlight">\(x\)</span> 和 <span class="math notranslate nohighlight">\(y\)</span> 都必须是整数。如果 <span class="math notranslate nohighlight">\(x\)</span> 和 <span class="math notranslate nohighlight">\(y\)</span> 有大于1的公因数 <span class="math notranslate nohighlight">\(q\)</span>，即 <span class="math notranslate nohighlight">\(x=qx^\prime,y=qy^\prime\)</span>，那么 <span class="math notranslate nohighlight">\(y=kx\implies y^\prime=kx^\prime\)</span>，意味着位置 <span class="math notranslate nohighlight">\((x^\prime,y^\prime)\)</span> 上的学生一定和 <span class="math notranslate nohighlight">\((x,y)\)</span> 上的学生共线并且位置离C君更近，所以 <span class="math notranslate nohighlight">\((x,y)\)</span> 上的学生一定会被挡。</p>
@@ -97,22 +97,25 @@
 <p class="admonition-title">结论</p>
 <p>位置 <span class="math notranslate nohighlight">\((x,y)\)</span> 上的学生会被C君看到的条件是 <span class="math notranslate nohighlight">\(x\)</span> 和 <span class="math notranslate nohighlight">\(y\)</span> 互质。</p>
 </div>
-<p>事实上，左起第二列和倒数第二行上的所有学生之所以都不会被遮挡，都能被C君看到的原因也就是因为它们的位置坐标里至少有一个为1，而1和任何正整数互质。</p>
-<p>现在问题变为求出 <span class="math notranslate nohighlight">\((2\le x \le N-1,2\le y \le N-1)\)</span> 范围内所有整数对 <span class="math notranslate nohighlight">\((x,y)\)</span> 中互质对的个数。如果你已经学过了欧拉 <span class="math notranslate nohighlight">\(\varphi\)</span> 函数那么你肯定会想到用它来解决问题，但是直接用简单的欧拉函数求解速度会比较慢，估计会TLE（我没有试过），最好用欧拉线性筛或者埃筛来打欧拉函数表，时间复杂度可以达到接近 <span class="math notranslate nohighlight">\(O(n)\)</span> （其实我也没有试过，这只是理论上的结论）。</p>
-<p>不过可能许多人还不会欧拉函数，或许学过但是不熟练。而且如果是在考场上，要正确无误地编出欧拉函数题解还是有困难的。所以这里我们不打算介绍使用欧拉函数的方法（本质原因还是因为我并没有试过），而是用一种比较容易理解也比较容易编程的动态规划方法，这种方法同样能达到接近 <span class="math notranslate nohighlight">\(O(n)\)</span> 的时间复杂度，效率非常之高。</p>
-<p>既然决定不用欧拉函数，那么正面求解互质对数量就不太可能了，我们采用迂回策略。我们可以求出不互质的数对数量，然后从总量 <span class="math notranslate nohighlight">\((N-2)^2\)</span> 中减去它不就是互质对的数量了吗？这就很类似于数学里的反证法，有时候是一种非常行之有效的方法。</p>
-<p>在整数区间 <span class="math notranslate nohighlight">\([2,N-1]\)</span> 中的所有整数，他们可能有的大于1的因数 <span class="math notranslate nohighlight">\(m\)</span> 当然也只能是在这个范围里，<span class="math notranslate nohighlight">\(m\in\{2,3,\dots,N-1\}\)</span>。所以我们可以枚举所有可能的因数 <span class="math notranslate nohighlight">\(m\)</span>，计算含有公因数 <span class="math notranslate nohighlight">\(m\)</span> 的不互质数对的数量（注意：可不是最大公因数哦，是指单纯的公因数）。比如具有公因数2的不互质数对就有 <span class="math notranslate nohighlight">\((2,2)\)</span>、<span class="math notranslate nohighlight">\((2,4)\)</span>、<span class="math notranslate nohighlight">\((4,2)\)</span>、<span class="math notranslate nohighlight">\((4,4)\)</span>、<span class="math notranslate nohighlight">\((2,6)\)</span>……它们的共同点就是两个坐标值都是2的倍数。因此我们可以用 <span class="math notranslate nohighlight">\((pm,qm)\)</span> 来表示具有公因数 <span class="math notranslate nohighlight">\(m\)</span> 的不互质数对，其中 <span class="math notranslate nohighlight">\((p,q\in\Bbb{Z}^+,pm \lt N, qm \lt N)\)</span>。当这些数对用来表示格点坐标时，我们也称它们为 <span class="math notranslate nohighlight">\(m\)</span> 的<strong>格点</strong>。</p>
+<p>事实上，左起第二列和倒数第二行上的所有学生之所以都不会被遮挡，都能被C君看到的原因也就是因为它们的位置坐标里至少有一个为1，而1和任何正整数互质。于是问题变成了求整数区间[2,N-1]内的数一共能组成多少个有序互质对。</p>
+<p>这个问题直接的解法是使用欧拉 <span class="math notranslate nohighlight">\(\varphi\)</span> 函数。对于任意正整数 <span class="math notranslate nohighlight">\(z\)</span>，<span class="math notranslate nohighlight">\(\varphi(z)\)</span> 的值等于整数区间 <span class="math notranslate nohighlight">\([1,z]\)</span> 内和 <span class="math notranslate nohighlight">\(z\)</span> 互质的数的个数。只要会算这个函数值，求有序互质对数量就不难了。对于任意的 <span class="math notranslate nohighlight">\(z\gt1\)</span>，一定恰好有 <span class="math notranslate nohighlight">\(2\varphi(z)\)</span> 个与它有关的有序互质对；<span class="math notranslate nohighlight">\(z=1\)</span> 则比较特殊，因为和1互质的数只有1自己，所以只有一个互质对(1, 1)。别忘了还有两位最特殊的同学(0, 1)和(1, 0)。最终问题的解可以归纳为公式：</p>
+<div class="math notranslate nohighlight">
+\[\varphi(2)+\cdots+\varphi(N-1)+1+2\]</div>
+<p>单个单个地去计算所有欧拉函数值估计要TLE，我们应该用欧拉线性筛来打出函数值表，时间复杂度可以达到接近 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<p>不过可能许多人还不会欧拉函数，或许学过但是不熟练，说实话还是挺难的。所以这里我们介绍一种比较容易理解也比较容易编程的动态规划方法，这种方法同样能达到接近 <span class="math notranslate nohighlight">\(O(n)\)</span> 的时间复杂度，效率非常之高。</p>
+<p>既然决定不用欧拉函数，那么正面求解互质对数量就不太可能了，我们采用迂回策略。我们可以求出从(2,2)到(N-1,N-1)的区域中“不互质对”的数量，然后从总量(N-2)<sup>2</sup>中减去它不就是互质对的数量了吗？</p>
+<p>整数区间[2,N-1]中的任一整数，它的所有大于1的因数当然也只能都在这个区间里。所以我们可以枚举所有可能的因数 <span class="math notranslate nohighlight">\(m\)</span>，计算含有公因数 <span class="math notranslate nohighlight">\(m\)</span> 的不互质对的数量。比如具有公因数2的不互质对有(2, 2)、(2, 4)、(4, 2)、(4, 4)、(2, 6)、……它们的共同点就是两个坐标值都是2的倍数。因此我们可以用 <span class="math notranslate nohighlight">\((pm,qm)\)</span> 来表示具有公因数 <span class="math notranslate nohighlight">\(m\)</span> 的不互质数对，其中 <span class="math notranslate nohighlight">\((p,q\in\Bbb{Z}^+,pm \lt N, qm \lt N)\)</span>。当这些数对用来表示格点坐标时，我们也称它们为 <span class="math notranslate nohighlight">\(m\)</span> 的<strong>格点</strong>。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">结论</p>
-<p>在整数区间 <span class="math notranslate nohighlight">\([2,N-1]\)</span> 范围内，对于任意整数 <span class="math notranslate nohighlight">\(2\le m\le N-1\)</span>，它的格点数量为 <span class="math notranslate nohighlight">\(\left(\lfloor\frac{N-1}{m}\rfloor\right)^2\)</span>。</p>
+<p>整数区间 <span class="math notranslate nohighlight">\([2,N-1]\)</span> 内，任一整数 <span class="math notranslate nohighlight">\(m\)</span> 的格点数量为 <span class="math notranslate nohighlight">\(\left\lfloor\frac{N-1}{m}\right\rfloor^2\)</span>。</p>
 </div>
-<p>这是因为我们要求格点的坐标值 <span class="math notranslate nohighlight">\(m,2m,\dots,pm\)</span> 也都必须要在这个范围内，即要满足 <span class="math notranslate nohighlight">\(pm\le N-1\implies p=\lfloor\frac{N-1}{m}\rfloor\)</span>。</p>
+<p>这是因为我们要求格点的坐标值 <span class="math notranslate nohighlight">\(m,2m,\dots,pm\)</span> 也都必须要在这个范围内，即要满足 <span class="math notranslate nohighlight">\(pm\le N-1\implies p=\left\lfloor\frac{N-1}{m}\right\rfloor\)</span>。</p>
 <p>下面继续用前面那个例子来看一看在 <span class="math notranslate nohighlight">\(N=9\)</span> 时的格点分布情况，橙色的点表示从2到8的格点，一共7张图：</p>
 <img alt="../_images/701_p2158.002.png" src="../_images/701_p2158.002.png" />
-<p>但是如果我们把这些图叠起来一看就容易发现，有不少数的格点之间是有重叠的。例如在4个4的格点中，<span class="math notranslate nohighlight">\((8,8)\)</span> 又是8的格点，在4个3的格点中，<span class="math notranslate nohighlight">\((6,6)\)</span> 又是6的格点。</p>
+<p>但是如果我们把这些图叠起来一看就容易发现，有不少数的格点之间是有重叠的。例如在4个4的格点中，(8, 8)又是8的格点，在4个3的格点中，(6, 6)又是6的格点。</p>
 <img alt="../_images/701_p2158.003.png" src="../_images/701_p2158.003.png" />
-<p>所以我们在从总人数中减去从2到 <span class="math notranslate nohighlight">\(N-1\)</span> 的格点数时，势必要先做一道去除重复的工作，否则就减多了。去除的方法也很简单，我们用动态规划法从 <span class="math notranslate nohighlight">\(N-1\)</span> 到 <span class="math notranslate nohighlight">\(2\)</span> 的倒数顺序来陆续计算它们各自的格点数量。每计算好一个 <span class="math notranslate nohighlight">\(m\)</span> 的格点，我们就从 <span class="math notranslate nohighlight">\(2m\)</span> 开始在范围 <span class="math notranslate nohighlight">\([2m, N-1]\)</span> 之内去寻找并减掉 <span class="math notranslate nohighlight">\(m\)</span> 的倍数的格点数。因为这些倍数都更大，所以肯定已经在我们的动态规划过程中先行计算好了，动态规划过程一定会成功。</p>
-<p>让我们仍以 <span class="math notranslate nohighlight">\(N=9\)</span> 为例，看看这个动态规划的过程是怎样的。我们用数组 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">x[9]</span></code> 来表示动态规划表，用变量 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">m</span></code> 从8到2的循环来计算 <code class="docutils literal notranslate"><span class="pre">x[m]</span></code> 的值，即m的格点中经过去重处理后的非互质对的数量，是最终要从总人数中减去的人数。</p>
+<p>所以我们在从总人数中减去从2到N-1的格点数时，势必要先做一道去除重复的工作，否则就减多了。去重的方法也很简单，我们用动态规划法从N-1到2逆序地来计算它们的格点数量。每计算好一个m的格点数，我们就从2m开始在范围[2m, N-1]之内去寻找并减掉m的倍数的格点数。因为这些倍数都更大，所以肯定已经在我们的动态规划过程中先行计算好了，动态规划过程一定会成功。</p>
+<p>让我们仍以N=9为例，看看这个动态规划的过程是怎样的。我们用数组 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">x[9]</span></code> 来表示动态规划表，用变量 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">m</span></code> 从8到2的循环来计算 <code class="docutils literal notranslate"><span class="pre">x[m]</span></code> 的值，即m的格点中经过去重处理后的非互质对的数量，是最终要从总人数中减去的人数。</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>
 <col style="width: 5%" />
@@ -137,49 +140,49 @@
 <td><p>无</p></td>
 <td><p>无</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[?,?,?,?,?,?,1]</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">7</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(8/7)*(8/7)=1</span></code></p></td>
 <td><p>无</p></td>
 <td><p>无</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">1,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[?,?,?,?,?,1,1]</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(8/6)*(8/6)=1</span></code></p></td>
 <td><p>无</p></td>
 <td><p>无</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[?,?,?,?,1,1,1]</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(8/5)*(8/5)=1</span></code></p></td>
 <td><p>无</p></td>
 <td><p>无</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[?,</span> <span class="pre">?,</span> <span class="pre">?,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[?,?,?,1,1,1,1]</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(8/4)*(8/4)=4</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">x[8]=1</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">4-1=3</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[?,</span> <span class="pre">?,</span> <span class="pre">3,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[?,?,3,1,1,1,1]</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(8/3)*(8/3)=4</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">x[6]=1</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">4-1=3</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[?,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[?,3,3,1,1,1,1]</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(8/2)*(8/2)=16</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">4,</span> <span class="pre">6,</span> <span class="pre">8</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">x[4]=3,</span> <span class="pre">x[6]=1,</span> <span class="pre">x[8]=1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4,6,8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">x[4]=3,x[6]=1,x[8]=1</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">16-3-1-1=11</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">[11,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[11,3,3,1,1,1,1]</span></code></p></td>
 </tr>
 </tbody>
 </table>
