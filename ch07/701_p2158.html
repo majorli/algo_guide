@@ -100,7 +100,7 @@
 <p>事实上，左起第二列和倒数第二行上的所有学生之所以都不会被遮挡，都能被C君看到的原因也就是因为它们的位置坐标里至少有一个为1，而1和任何正整数互质。于是问题变成了求整数区间[2,N-1]内的数一共能组成多少个有序互质对。</p>
 <p>这个问题直接的解法是使用欧拉 <span class="math notranslate nohighlight">\(\varphi\)</span> 函数。对于任意正整数 <span class="math notranslate nohighlight">\(z\)</span>，<span class="math notranslate nohighlight">\(\varphi(z)\)</span> 的值等于整数区间 <span class="math notranslate nohighlight">\([1,z]\)</span> 内和 <span class="math notranslate nohighlight">\(z\)</span> 互质的数的个数。只要会算这个函数值，求有序互质对数量就不难了。对于任意的 <span class="math notranslate nohighlight">\(z\gt1\)</span>，一定恰好有 <span class="math notranslate nohighlight">\(2\varphi(z)\)</span> 个与它有关的有序互质对；<span class="math notranslate nohighlight">\(z=1\)</span> 则比较特殊，因为和1互质的数只有1自己，所以只有一个互质对(1, 1)。别忘了还有两位最特殊的同学(0, 1)和(1, 0)。最终问题的解可以归纳为公式：</p>
 <div class="math notranslate nohighlight">
-\[\varphi(2)+\cdots+\varphi(N-1)+1+2\]</div>
+\[2[\varphi(2)+\cdots+\varphi(N-1)]+1+2\]</div>
 <p>单个单个地去计算所有欧拉函数值估计要TLE，我们应该用欧拉线性筛来打出函数值表，时间复杂度可以达到接近 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
 <p>不过可能许多人还不会欧拉函数，或许学过但是不熟练，说实话还是挺难的。所以这里我们介绍一种比较容易理解也比较容易编程的动态规划方法，这种方法同样能达到接近 <span class="math notranslate nohighlight">\(O(n)\)</span> 的时间复杂度，效率非常之高。</p>
 <p>既然决定不用欧拉函数，那么正面求解互质对数量就不太可能了，我们采用迂回策略。我们可以求出从(2,2)到(N-1,N-1)的区域中“不互质对”的数量，然后从总量(N-2)<sup>2</sup>中减去它不就是互质对的数量了吗？</p>

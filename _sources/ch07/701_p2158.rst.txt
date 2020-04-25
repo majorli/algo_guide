@@ -70,7 +70,7 @@
 
 .. math::
 
-   \varphi(2)+\cdots+\varphi(N-1)+1+2
+   2[\varphi(2)+\cdots+\varphi(N-1)]+1+2
 
 单个单个地去计算所有欧拉函数值估计要TLE，我们应该用欧拉线性筛来打出函数值表，时间复杂度可以达到接近 :math:`O(n)`\ 。
 
