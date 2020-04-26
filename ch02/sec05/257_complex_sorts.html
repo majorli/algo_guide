@@ -82,11 +82,11 @@
             
   <div class="section" id="id1">
 <h1><span class="section-number">3.5.7. </span>复杂规则的排序技巧<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<p>在实际应用和复杂的算法问题中，排序往往是作为一种基本操作出现的，排序的元素经常是复杂的结构类型，而且排序的规则往往会比较复杂。本节将针对一些复杂排序规则介绍几种常用的排序技巧。在本节中将继续使用上一节虚构的学生成绩结构类型 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 来进行示例。</p>
+<p>在实际应用和复杂的算法问题中，排序往往是作为一种基本操作出现的，排序的元素经常是复杂的结构类型，而且排序的规则往往会比较复杂。本节将针对一些复杂排序规则介绍几种常用的排序技巧，我们将继续使用上一节中的学生成绩结构 <code class="docutils literal notranslate"><span class="pre">Student</span></code>。</p>
 <div class="section" id="id2">
 <h2><span class="section-number">3.5.7.1. </span>多种排序规则<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p>有时候我们不得不对一种数据类型的元素进行多种不同规则的排序。比如对上节的 <code class="docutils literal notranslate"><span class="pre">Student</span> <span class="pre">stu[100]</span></code> 数组，我们现在不仅要按照学号进行排序，还要按照姓名的字典序、按照语文数学两门课的总成绩由高到低进行排序，总共需要进行三种类型的排序。那么像上一节学习的给 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 结构重载一个 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算符就不够用了。</p>
-<p>另外，对于int、char这样的基本数据类型，虽然它们天生支持比较运算，但是万一我们非要用一种特殊的方式来进行排序呢？比如我们要对整数排逆序，那么我们当然希望排序函数能够用大于比较来进行排序，这时候又该怎么办？</p>
+<p>有时候我们不得不对一种数据类型的元素进行多种不同规则的排序。比如对上节的 <code class="docutils literal notranslate"><span class="pre">Student</span> <span class="pre">stu[100]</span></code> 数组，我们现在不仅要按照学号进行排序，还要按照姓名的字典序、按照语文数学两门课的总成绩由高到低进行排序，总共需要进行三种类型的排序。那么像上一节那样给 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 结构重载一个 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算符就不够用了。</p>
+<p>另外，对于 <code class="docutils literal notranslate"><span class="pre">int,</span> <span class="pre">char</span></code> 这样的基本数据类型，虽然它们天生支持比较运算，但是万一我们非要用一种特殊的方式来进行排序呢？比如我们要对整数排逆序，那么我们当然希望排序函数能够用大于比较来进行排序，这时候又该怎么办？</p>
 <p>这时候就要用到算法库排序类函数的第二种用法，提供一个特定的比较函数。这第二种用法就是在上一节所介绍的第一种用法基础上，在参数表最后再新增一个参数，那是一个用于元素比较的函数。这里有一个新的知识点，在C++语言中，函数也是可以作为别的函数的参数的。对于有这样的参数要求的函数，我们在调用的时候可以把另一个函数的函数名作为参数传递给它，然后在它的函数体代码中就可以调用我们传给它的那个函数了。</p>
 <div class="admonition note">
 <p class="admonition-title">注解</p>
@@ -132,14 +132,14 @@
 <div class="section" id="id3">
 <h2><span class="section-number">3.5.7.2. </span>多关键字排序<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
 <p>更加复杂的规则是多关键字排序，这种情况就比较多，技巧也比较多。</p>
-<p>先从简单的看起，例如我们现在要对学生成绩单进行这样的排序，首先按语文成绩由高到低排序，语文成绩相同的按照数学成绩由高到低排，数学成绩也一样的按学号从小到大排。这时比较简单的多关键字情况，语文关键字称作主关键字，数学成绩称作第二关键字，学号当然就叫第三关键字了。总是一般的情况下关键字可以有任意多个，只要他们相互不交叉复合就是简单的情况。这种简单情况的处理方法有许多种，下面一一介绍。</p>
+<p>先从简单的看起，例如我们现在要对学生成绩单进行这样的排序，首先按语文成绩由高到低排序，语文成绩相同的按照数学成绩由高到低排，数学成绩也一样的按学号从小到大排。这是比较简单的多关键字情况，语文关键字称作主关键字，数学成绩称作第二关键字，学号当然就叫第三关键字了。关键字可以有任意多个，只要他们相互不交叉复合就是简单的情况。这种简单情况的处理方法有许多种，下面一一介绍。</p>
 <p><strong>依次排序法</strong></p>
 <p>第一种方法可以叫做“依次排序法”。也就是进行多次单关键字排序，顺序是从最后一个关键字开始，倒着向前直到最后一轮进行按主关键字的排序，之后整个多关键字排序就完成了。</p>
-<p>进行依次排序法，要对每一种关键字提供单独的比较函数，并且要使用稳定排序，代码如下所示：</p>
+<p>依次排序法需要使用稳定排序，代码如下所示：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// 按语文成绩比较，逆序</span>
 <span class="kt">bool</span> <span class="nf">comp_by_chn</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">chn</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">chn</span><span class="p">;</span> <span class="p">}</span>
 <span class="c1">// 按数学成绩比较，逆序</span>
-<span class="kt">bool</span> <span class="nf">comp_by_chn</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">chn</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">chn</span><span class="p">;</span> <span class="p">}</span>
+<span class="kt">bool</span> <span class="nf">comp_by_math</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Student</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s1</span><span class="p">.</span><span class="n">math</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">math</span><span class="p">;</span> <span class="p">}</span>
 <span class="c1">// 按学号比较已经通过重载小于运算符实现</span>
 <span class="c1">// 下面进行依次排序</span>
 <span class="n">stable_sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">);</span>                <span class="c1">// 先按第三关键字学号进行排序</span>
@@ -175,10 +175,10 @@
   4       David    90    90
 </pre></div>
 </div>
-<p>可以看出，由于采用稳定排序，第三轮按语文成绩排序时，数学成绩100的Alice不会被放到本身就在她前面的Carol前面去，这就继续保持了已经排好的数学成绩逆序和学号顺序。至此整个排序过程正确结束。</p>
+<p>可以看出，由于采用稳定排序，第三轮按语文成绩排序时，数学成绩100的Alice不会被放到原本在她前面的Carol前面去，这就继续保持了已经排好的数学成绩逆序和学号顺序。至此整个排序过程正确结束。</p>
 <div class="admonition hint">
 <p class="admonition-title">提示</p>
-<p>有没有一点似曾相识的感觉？对了，上一节讲的基数排序，其实就是把整数各个数位上的数看成多个关键字，最高位为主关键字，个位为最后一个关键字的多关键字排序！</p>
+<p>有没有一点似曾相识的感觉？对了，前面讲过的基数排序，其实就是把整数各个数位上的数看成多个关键字，最高位为主关键字，个位为最后一个关键字的多关键字排序！</p>
 </div>
 <p><strong>比较运算合并</strong></p>
 <p>上面这种多次排序法虽然管用，但是代码显得很笨拙，而且要多轮调用速度较慢的不稳定排序。哪怕实际问题可能并不需要排序的稳定性，也必须使用稳定排序。可见多次排序法并不是非常好，下面我们介绍的方法可以叫做“比较运算合并”法。</p>
@@ -194,10 +194,10 @@
 <span class="n">sort</span><span class="p">(</span><span class="n">stu</span><span class="p">,</span> <span class="n">stu</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="n">new_comp</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>这样，用一次不稳定排序就能搞定了，除非三个关键字都出现一样的情况，否则虽然用不稳定排序，结果还是和依次排序法一样的。而且事实上大多数问题的排序都并不需要稳定，所以这个方法显然比依次排序法更胜一筹。</p>
+<p>这样，用一次不稳定排序就能搞定了。除非三个关键字都一样，否则虽然用不稳定排序，结果还是和依次排序法一样的。而且事实上大多数问题的排序都并不需要稳定，所以这个方法显然比依次排序法更胜一筹。</p>
 <p>要注意的是，采用依次排序法，要从最后的关键字先开始排，依次向前直到最后再排主关键字。采用比较运算合并的方法，则顺序颠倒过来，先比较主关键字，然后依次比较第二、第三、直到最后一个关键字。</p>
 <p>另外，还有一种多关键字排序的场景是依次排序法难以胜任的，那就是多个关键字之间有交叉关联的复合关系。例如我们现在要这样对成绩单排序：先按语文数学两门课的总分进行由高到低排序，如果有学生总分相同，那么语文分数较高的排在前面，如果语文分数也一样则说明数学分数也一样，这时候按照学号排，学号小的在前。</p>
-<p>这时候，主关键字“总分”是由第二关键字和第三关键字相加复合而成的。出现这种情况，有时候可以用依次排序法，有时候不可以，往往很难一下子进行判断，在考场上遇到这样的情况可不是一件好事情。但是用比较运算合并的方法就一定可以轻松搞定的。</p>
+<p>现在，主关键字“总分”是由第二关键字和第三关键字相加复合而成的。这种情况下有时候可以用依次排序法，有时候不可以，往往很难一下子进行判断，在考场上遇到这样的情况可不是一件好事情。但是用比较运算合并的方法就一定可以轻松搞定的。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
 <p>请编写一个自定义的比较函数，实现 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 对象之间的上述比较规则，并用上面的五个学生的数据进行排序测试。</p>
@@ -207,23 +207,23 @@
 <h2><span class="section-number">3.5.7.3. </span>其他元素比较技巧<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
 <p>除了上面提到的几个复杂排序规则下的元素比较技巧外，还有一些常见的特殊场景，有一些特殊的元素比较技巧。</p>
 <p><strong>第一种，有时候虽然是多关键字比较，但是这些关键字可以合并。</strong></p>
-<p>在算法编程题里经常会遇到对一个整数对进行排序的情况，例如对一些平面格点坐标 <span class="math notranslate nohighlight">\((x, y)\)</span> 进行排序，其中 <span class="math notranslate nohighlight">\(0\le x,y \lt 10^4\)</span>，要求先按横坐标 <span class="math notranslate nohighlight">\(x\)</span> 从小到大排序，横坐标相等的时候按总坐标 <span class="math notranslate nohighlight">\(y\)</span> 的值进行排序。对于这样的整数对，通常的做法是定义一个结构来保存两个坐标值，然后排序的时候就要用到多关键字排序。这样代码写起来就比较麻烦，也影响排序速度。</p>
-<p>其实遇到的绝大多数这种整数对排序的场景，两个整数的取值范围都有不会出现负数、最大值不是太大、两个数的排序方向相同的特点，这种时候我们可以换一种方法来处理。我们把两个整数拼接成一个较大的整数，把结构变量多关键排序变成简单的整数排序。例如我们刚才所说的平面格点坐标排序，我们可以用把横纵两个坐标值按照主关键字在前副关键字在后的方式拼接起来，因为它们都小于10000，所以我们可以这样拼：<code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">10000</span> <span class="pre">*</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>，满足 <span class="math notranslate nohighlight">\(0\le z\lt 10^8\)</span>，可以用int型表示。根据 <code class="docutils literal notranslate"><span class="pre">z</span></code> 的值可以还原出 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">z</span> <span class="pre">/</span> <span class="pre">10000,</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">z</span> <span class="pre">%</span> <span class="pre">10000</span></code>。在读入数据的时候，我们就直接拼接并保存 <code class="docutils literal notranslate"><span class="pre">z</span></code> 的值到一个int型数组里，要使用坐标值的时候再还原出来就可以。可以编写三个简单的内联函数：</p>
+<p>在算法编程题里经常会遇到对一个整数对进行排序的情况，例如对一些平面格点坐标 <span class="math notranslate nohighlight">\((x, y)\)</span> 进行排序，其中 <span class="math notranslate nohighlight">\(0\lt x,y \lt 10^4\)</span>，要求先按横坐标 <span class="math notranslate nohighlight">\(x\)</span> 从小到大排序，横坐标相等的时候按纵坐标 <span class="math notranslate nohighlight">\(y\)</span> 的值进行排序。对于这样的整数对，通常的做法是定义一个结构来保存两个坐标值，然后排序的时候就要用到多关键字排序。这样代码写起来就比较麻烦，也影响排序速度。</p>
+<p>遇到这种整数对排序的场景，两个整数都为正数、最大值不是太大、两个数的排序方向相同，我们可以把两个整数拼接成一个大整数，从而简化为普通的整数排序。例如我们刚才所说的平面格点坐标排序，我们可以用把横纵两个坐标值按照主关键字在前副关键字在后的方式拼接起来，因为它们都小于10000，所以我们可以这样拼：<span class="math notranslate nohighlight">\(z = 10000 x + y\)</span>，满足 <span class="math notranslate nohighlight">\(0\lt z\lt 10^8\)</span>，在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型的数值范围内。根据 <span class="math notranslate nohighlight">\(z\)</span> 的值可以还原出 <span class="math notranslate nohighlight">\(x = z / 10000, y = z \bmod 10000\)</span>。在读入数据的时候，我们就直接拼接并保存 <span class="math notranslate nohighlight">\(z\)</span> 的值到一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数组里，要使用坐标值的时候再还原出来即可。可以编写三个简单的内联函数：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kr">inline</span> <span class="kt">int</span> <span class="nf">get_z</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
 <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">get_x</span><span class="p">(</span><span class="kt">int</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">z</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">;</span> <span class="p">}</span>
 <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">get_y</span><span class="p">(</span><span class="kt">int</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">z</span> <span class="o">%</span> <span class="mi">10000</span><span class="p">;</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>这样就可以让程序变得易读易写，简洁清晰。排序也就变成了最为普通的整数排序。如果坐标值的最大值变大使得拼接出来的整数超过int范围，那么就拼接成long long，如果更大使得long long也不够用那就不适合用这个方法了，为了这个写高精度是不划算的，还是回到定义结构吧。</p>
+<p>这样就可以让程序变得易读易写，简洁清晰。排序也就变成了最为普通的整数排序。如果坐标值的最大值变大使得拼接出来的整数超过 <code class="docutils literal notranslate"><span class="pre">int</span></code> 范围，那么就拼接成 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code>，如果大到 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 也不够用那就不适合用这个方法了，为了这个去写高精度是不划算的，还是回到定义结构吧。</p>
 <p>这种方法在数据取值范围许可的情况下当然也适用于更多个整数关键字的情形。事实上对于多个字符串关键字也是可行的，拼接字符串的时候做到每一个关键字占用固定的一块区域，不够长的右对齐左边填满空格，但是实际上遇到字符串多关键字我们不会用这种方法，因为字符串拼接拆分填充的工作开销太大，不划算。</p>
 <p><strong>第二种，有一些场景会用到分数比较大小，或者比例比较大小。</strong></p>
-<p>这时候怎么办？通分比分子？计算成double型进行小数比较？这些办法都不好，通分比大小很麻烦，要找最小公倍数还要做乘法，计算成小数会带来double型浮点数精度误差。这时候其实很简单，利用一点数学规律就好，当两个分数都是正数或0的时候：</p>
+<p>这时候怎么办？通分比分子？计算成 <code class="docutils literal notranslate"><span class="pre">double</span></code> 型进行小数比较？这些办法都不好，通分比大小很麻烦，要找最小公倍数还要做乘法，计算成小数会带来 <code class="docutils literal notranslate"><span class="pre">double</span></code> 型浮点数精度误差。这时候其实很简单，利用一点数学规律就好，当两个分数都非负的时候：</p>
 <div class="math notranslate nohighlight">
 \[{a \over b}\lt{c \over d}\iff a\cdot d \lt b \cdot c\]</div>
 <p>所以我们的比较函数或者小于运算重载函数里只要按照上面这个公式来比较交叉相乘的积就可以了。</p>
 <p><strong>最后再介绍一种，数值的逆序排序。</strong></p>
-<p>这里的数值可以是整数也可以是浮点小数，只要是基本数据类型的就可以。我们前面说过，可以提供一个特殊的比较函数来实现逆序排序。但是某些场景下我们也可以这么干，读进来的数直接保存成它们的相反数。这样就直接用普通的方法调用排序函数，就相当于实现了逆序排序。当我们要使用这些数据的时候，用它们的相反数就好了。</p>
-<p>其实特殊场景下的特殊比较技巧还有很多，这些都是一些编程的小技巧，一些特殊情况下的方便法门。随着大家编程练习量的增加，编程经验逐渐积累，只要大家肯多动脑子，一定能积累出许多新的小技巧来。</p>
+<p>这里的数值可以是整数也可以是浮点小数，只要是基本数据类型的就可以。我们前面说过，可以提供一个特殊的比较函数来实现逆序排序。但是某些场景下我们也可以这么干，读进来的数保存成它们的相反数。这样直接用普通的方法排序就相当于进行了逆序排序。当我们要使用这些数据的时候，用它们的相反数就好了。</p>
+<p>其实特殊场景下的特殊比较技巧还有很多，这些都是一些编程的小技巧，一些特殊情况下的方便法门。随着编程练习量的增加，编程经验逐渐积累，只要大家肯多动脑子，一定能积累出许多新的小技巧来。</p>
 </div>
 </div>
 
