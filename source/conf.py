@@ -58,11 +58,17 @@ html_theme = 'sphinxdoc'
 
 html_favicon = 'favicon.ico'
 
+html_search_language = 'zh'
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# html_css_files = ['font.css']
+
 master_doc = 'index'
+
+# mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML'
 
 mathjax_path = 'https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML'
