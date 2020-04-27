@@ -187,9 +187,12 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>看上去很好用，对不对？在过去的好时光里，<code class="docutils literal notranslate"><span class="pre">gets()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">puts()</span></code> 是非常好用深受程序员欢迎的一对按行读写字符串的函数。然而现在我们却要强烈建议大家不要使用这一对函数，为什么呢？如果我们去编译上面这个简单的小程序，十有八九会得到这样一句警告：<code class="docutils literal notranslate"><span class="pre">warning:</span> <span class="pre">this</span> <span class="pre">program</span> <span class="pre">uses</span> <span class="pre">gets(),</span> <span class="pre">which</span> <span class="pre">is</span> <span class="pre">unsafe.</span></code>。意思是：这个程序使用了不安全的 <code class="docutils literal notranslate"><span class="pre">gets()</span></code> 函数。</p>
-<p>更有甚者，有些环境（例如苹果的MacOS）下编译时可能不会发出这条警告，而是在运行程序的时候才会出现。这样搞程序就不可能通过测试了。而且，虽然现在算法竞赛使用的C++98标准还可以使用这一对函数，但从C++11开始干脆就已经从 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库中删除了这一对函数。</p>
-<p>为什么会这样呢？如果你对C-string处理非常熟悉，或者对编程时的常见bug非常熟悉的话，可能已经猜到了原因：<code class="docutils literal notranslate"><span class="pre">gets()</span></code> 函数对读入的字符串长度没有限制！它会傻傻地一直读直到遇见第一个换行符为止，并把所有读入的字符都存放到参数 <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*str</span></code> 所指向的内存里，不管是不是超限。这个漏洞已经多次被黑客利用来植入病毒、蠕虫等有害代码。所以，我们不要使用这对函数，这里对它们进行介绍只是为了让大家认识它们，毕竟还有不少算法书里会用它们，遇到的时候能看懂就可以了。</p>
+<p>看上去很好用，对不对？在过去的好时光里，<code class="docutils literal notranslate"><span class="pre">gets()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">puts()</span></code> 是非常好用深受程序员欢迎的一对按行读写字符串的函数。然而现在C++却强烈建议不要使用这一对函数，如果编译上面这个小程序，会得到这样一句警告：</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">warning:</span> <span class="pre">this</span> <span class="pre">program</span> <span class="pre">uses</span> <span class="pre">gets(),</span> <span class="pre">which</span> <span class="pre">is</span> <span class="pre">unsafe.</span></code>。</p>
+</div></blockquote>
+<p>意思是：这个程序使用了不安全的 <code class="docutils literal notranslate"><span class="pre">gets()</span></code> 函数。更有甚者，有些环境（例如苹果的MacOS）下编译时不会发出这条警告，而是在运行程序的时候才会出现。这样搞程序就不可能通过测试了。而且，虽然现在算法竞赛使用的C++98标准还可以使用这一对函数，但从C++11开始干脆就已经从 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库中删除了这一对函数。</p>
+<p>为什么会这样呢？如果你对C-string处理非常熟悉，或者对编程时的常见bug非常熟悉的话，可能已经猜到了原因：<code class="docutils literal notranslate"><span class="pre">gets()</span></code> 函数对读入的字符串长度没有限制！它会傻傻地一直读直到遇见第一个换行符为止，并把所有读入的字符都存放到参数 <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*str</span></code> 所指向的内存里，不管是不是超限。这个漏洞已经多次被黑客利用来植入病毒、蠕虫等有害代码。所以，我们不要使用这对函数，这里对它们进行介绍只是为了认识一下它们，毕竟还有不少地方会遇到它们，见面能看懂就可以了。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
 <p>任何时候不要在你的程序中使用 <code class="docutils literal notranslate"><span class="pre">gets()</span></code> 和与之配套的 <code class="docutils literal notranslate"><span class="pre">puts()</span></code> 函数。如果程序需要按行读写字符串，那么使用下面介绍的这一对 <code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fputs()</span></code> 函数。</p>

@@ -93,12 +93,12 @@
 <div class="section" id="id2">
 <h2><span class="section-number">3.5.4.1. </span>序列分区方法<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
 <p>可见快速排序的关键步骤是对一段序列进行分区。由于分区时那些等于基准值的元素到底放哪一边是无所谓的，所有在现实中存在很多种不同版本的分区方法。这些方法实际效果都是一样的，只要在分区之后，序列以某一个位置为界，此元素的值等于基准值，它之前的所有元素都小于等于基准值，它之后的元素都大于等于基准值就可以了。</p>
-<p>网上介绍最多的一个版本是以序列的首元素为基准，从两头开始向中间逐个比较元素，先从后向前找第一个小于基准值的元素将其放到前面，然后从前向后找第一个比基准值大的元素将其放到后面，不断循环这个过程直到前后两个查找位置相遇或交错而过后，把基准值插到中间就完成了。这是网上流传最广的分区方法，有许多详解教程，许多算法教材也用这种方法，大家可以自己去搜索相关资料学习。</p>
+<p>网上介绍最多的一个版本是以序列的首元素为基准，从两头开始向中间逐个比较元素，先从后向前找第一个小于基准值的元素将其放到前面，然后从前向后找第一个比基准值大的元素将其放到后面，不断循环这个过程直到前后两个查找位置相遇或交错而过后，把基准值插到中间就完成了。这是网上流传最广的分区方法，有许多详解教程，许多算法教材也用这种方法，请自行搜索相关资料进行学习。</p>
 <p>这种分区方法虽然不是很难但也不算简单，要理解它的原理不难，要准确地写出正确代码来却不容易，它对于两个哨兵位置的控制很精细，不容易一下子完全写对。其代码需要在一个大循环内部嵌套两个小循环，小循环之外还可能要进行一些判断。两个哨兵在查找的时候判断条件也可以多种，可以进行大于小于的判断，也可以进行大于等于或小于等于的判断。由于这些原因，这种方法的代码写法很多，在网上搜索，四篇文章里可能会出现四种不同的写法，给初学者造成很大困扰。</p>
 <p>我们这里介绍另一种分区方法，来自被奉为经典的《算法导论》一书。这种方法画风就完全不同了，它只用一个从头到尾遍历每一个元素的循环来进行分区，没有前后的哨兵，没有嵌套的循环，思路和代码都相对简单，容易理解和记忆。</p>
 <div class="admonition attention">
 <p class="admonition-title">注意</p>
-<p>如果大家试着去看过《算法导论》，或者在网站上看过对该书中快速排序算法的解读，会发现在《算法导论》中所有的序列都是从1开始计数的。这是因为该书是脱离具体的编程语言而纯粹讲解算法的，书中没有任何具体的程序，都是高度抽象的伪代码。但是我们现在使用C++语言学习算法，所以改成符合C++习惯的从0开始计数，序列范围用含头不含尾规则来表示。</p>
+<p>《算法导论》一书中所有的序列都是从1开始计数的。这是因为该书是脱离具体的编程语言而纯粹讲解算法的，书中没有任何具体的程序，都是高度抽象的伪代码。但是我们现在使用C++语言学习算法，所以改成符合C++习惯的从0开始计数，序列范围用含头不含尾规则来表示。</p>
 </div>
 <p>若要对子序列 <span class="math notranslate nohighlight">\(A[l:r]\)</span> 进行分区，我们使用子序列的最后一个元素 <span class="math notranslate nohighlight">\(A[r-1]\)</span> 为基准值，令 <span class="math notranslate nohighlight">\(pivot\leftarrow A[r-1]\)</span>。然后我们把区间 <span class="math notranslate nohighlight">\([l,r-1)\)</span> 划分为三段，第一段为 <span class="math notranslate nohighlight">\([l, i)\)</span>，里面的元素都是小于基准值的，第二段为 <span class="math notranslate nohighlight">\([i, j)\)</span>，里面的元素都是大于基准值的，第三段为 <span class="math notranslate nohighlight">\([j, r-1)\)</span>，里面是还没有完成分区的元素。</p>
 <p>初始的时候，区间 <span class="math notranslate nohighlight">\([l, r-1)\)</span> 内的所有元素都属于第三段，因此我们初始化 <span class="math notranslate nohighlight">\(i=j=l\)</span>，这样第一段 <span class="math notranslate nohighlight">\([l, i)=[l, l)\)</span> 中一个元素都没有，第二段 <span class="math notranslate nohighlight">\([i, j)=[l, l)\)</span> 同样也是空的，而第三段 <span class="math notranslate nohighlight">\([j, r-1)=[l, r-1)\)</span> 就是所有待分区的元素。初始的状态如下图：</p>
@@ -220,8 +220,8 @@
 <p class="admonition-title">练习</p>
 <p>请完成快速排序算法的程序，输入输出和前一节归并排序程序的要求相同，利用前一节实验环节提供的随机整数序列生成工具来测试运行，并和归并排序进行速度比较。</p>
 </div>
-<p>快速排序算法是一种不稳定的排序算法，这一点还是留给大家自己去思考。</p>
-<p>在空间方面，大家记住快排的空间复杂度为 <span class="math notranslate nohighlight">\(O(\log n)\)</span> 即可。这是因为虽然快速排序的每一层递归都只用了常数个额外的变量，但是在递归的下层还没有返回之前，上层使用的额外变量不会被释放掉，所以要把整个递归深度中每一层额外使用的变量空间累加起来。</p>
+<p>快速排序算法是一种不稳定的排序算法，这一点还是请自行思考。</p>
+<p>快速排序的空间复杂度为 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。这是因为虽然快速排序的每一层递归都只用了常数个额外的变量，但是在递归的下层还没有返回之前，上层使用的额外变量不会被释放掉，所以要把整个递归深度中每一层额外使用的变量空间累加起来。</p>
 <p>下面我们来看看快速排序的时间复杂度。快速排序的时间复杂度分析比较复杂，和每一次分区所分成的左右两个子序列长度有关。</p>
 <p>最好的情况，每一次分区都把原序列均匀地划分成长度相等（或相差1个元素）的左右两个子序列。根据算法的描述，我们可以写出总工作量的递推公式如下：</p>
 <div class="math notranslate nohighlight">
@@ -232,7 +232,7 @@
 \[p^\prime = \frac{p-l}{r-l-1}\]</div>
 <p>当 <span class="math notranslate nohighlight">\(p=l\)</span>，即分区后基准元素落在了序列头部时，相对位置 <span class="math notranslate nohighlight">\(p^\prime=0\)</span>，此时左半区为空，除基准元素外所有其他元素都在右半区；当 <span class="math notranslate nohighlight">\(p=r-1\)</span> 即分区后基准元素落在了序列尾部时，相对位置 <span class="math notranslate nohighlight">\(p^\prime=1\)</span>，此时右半区为空，除基准元素外所有其他元素都在左半区；其余情况则会产生一个在0和1之间的相对基准位置。</p>
 <p>在一次分区之后，<span class="math notranslate nohighlight">\(p^\prime\)</span> 的值决定了接下来两次递归调用的工作量，其中左半区的递归调用工作量为 <span class="math notranslate nohighlight">\(p^\prime\cdot n\)</span>，右半区为 <span class="math notranslate nohighlight">\((1-p^\prime)\cdot n\)</span>。整个快排过程的工作量是每一次这样的工作量分配的综合，每一次分区产生的这个相对基准位置的平均值（数学期望）<span class="math notranslate nohighlight">\(E[p^\prime]\)</span> 就决定了递归的时候工作量怎么分配。</p>
-<p>假设原序列中元素的无序程度是随机的而且均匀的，即每一个元素出现在任何一个位置的概率都是相等的，那么经过一系列数学运算可以得到 <span class="math notranslate nohighlight">\(E[p^\prime]=0.5\)</span>。这个计算过程大家现在不需要太在意，记住结论就好。或者直观的想一想，应该是这样的吧，对吧？总之在这种情况下，快速排序的总工作量在每次分区此起彼伏地共同影响之下，平均下来的期望值仍然是：</p>
+<p>假设原序列中元素的无序程度是随机的而且均匀的，即每一个元素出现在任何一个位置的概率都是相等的，那么经过一系列数学运算可以得到 <span class="math notranslate nohighlight">\(E[p^\prime]=0.5\)</span>。这个计算过程不需要太在意，现在记住结论就好。或者直观的想一想，应该是这样的吧，对吧？总之在这种情况下，快速排序的总工作量在每次分区此起彼伏地共同影响之下，平均下来的期望值仍然是：</p>
 <div class="math notranslate nohighlight">
 \[W_{avg}(n)=W\bigl(E[p^\prime]\cdot n \bigr)+W\bigl((1-E[p^\prime])\cdot n \bigr)+O(n)=2W({n\over2})+O(n)=O(n\log n)\]</div>
 <p>平均情况下，快速排序的时间复杂度也是 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>。</p>

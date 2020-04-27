@@ -283,11 +283,11 @@ T(n)&amp;=T(2^k)=2T({n\over2})+n=2T(2^{k-1})+n\\
     &amp;=2^kT(1)+kn=kn\\
 \therefore T(n)&amp;=O(n\log n)
 \end{align}\end{split}\]</div>
-<p>作为练习，大家可以试着用画递归树的方法来解一解这个递推方程。</p>
-<p>最后要说明的是，归并排序是稳定的排序算法。为什么？还是请大家自己去思考。</p>
+<p>作为练习，请用画递归树的方法解出这个递推方程。</p>
+<p>最后要说明的是，归并排序是稳定的排序算法。为什么？还是请自行思考。</p>
 <p><strong>归并排序算法的优化</strong></p>
 <p>归并排序的理论时间复杂度已经达到了最低限 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>，在实际应用中，它会略微地比快速排序慢一些。那么在实践中能不能对它再进行一些改进呢？</p>
-<p>前面我们说过，二分插入排序在数据量比较小的时候，实际运行速度会比利用递归的 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 算法还略快一些，原因是它没有递归调用带来的额外开销。那么我们能不能对归并排序做这样的优化，当待排序的子序列中元素少于一定的数量时，就不要再进一步递归下去了，直接用二分插入算法完成这个子序列的排序就可以了。这样是不是能够让归并排序变得更加快一些呢？这个问题留给大家作为一次实验练习，请大家按照下面的要求完成实验。</p>
+<p>前面我们说过，二分插入排序在数据量比较小的时候，实际运行速度会比利用递归的 <span class="math notranslate nohighlight">\(O(n\log n)\)</span> 算法还略快一些，原因是它没有递归调用带来的额外开销。那么我们能不能对归并排序做这样的优化，当待排序的子序列中元素少于一定的数量时，就不要再进一步递归下去了，直接用二分插入算法完成这个子序列的排序就可以了。这样是不是能够让归并排序变得更加快一些呢？这个问题留作一次实验练习，请按照下面的要求完成实验。</p>
 <p>实验目的：测试二分插入排序和归并排序的实际运行速度比较，并按照比较结果对二分归并排序进行优化尝试，评估优化效果。</p>
 <p>实验步骤：</p>
 <p>1、编写标准的归并排序和二分插入排序程序，输入格式为第一行一个整数 <span class="math notranslate nohighlight">\(n\)</span>，<span class="math notranslate nohighlight">\(0\lt n \lt 10^5\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型范围内的整数，数和数之间用一个空格隔开。程序的输出均为一行，即已经排好序的 <span class="math notranslate nohighlight">\(n\)</span> 个输入整数，数和数之间以一个空格隔开。完成上述两个程序的编写并进行正确性测试。</p>

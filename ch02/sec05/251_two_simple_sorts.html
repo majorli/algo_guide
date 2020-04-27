@@ -127,11 +127,11 @@
 \[W(n)=(n-1)+(n-2)+\cdots+1=\frac{n(n-1)}{2}\]</div>
 <p>这个工作量无论原序列中的元素有序度如何，都是不增不减，恰好这么多次。所以冒泡排序最好情况、最差情况、平均情况的时间复杂度都是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。</p>
 <p>冒泡排序在工作过程中，只需要有一个临时变量用来进行元素交换，因此它的空间复杂度为常数级 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
-<p>另外，冒泡排序是稳定排序，为什么？请大家自己思考。</p>
+<p>另外，冒泡排序是稳定排序，为什么？请思考。</p>
 <p><strong>冒泡排序的改进</strong></p>
 <p>对冒泡排序还可以进行一些小小的改进。我们知道，如果一个序列本身已经有序了，那么对它进行一轮冒泡过程就不会发生元素交换。反之亦然，如果在一轮冒泡过程中没有发生元素交换，说明每一对相邻元素都是顺序正确的，这就意味着这个序列已经全部有序了。所以我们可以在每一轮冒泡的过程中对元素交换进行计数，一轮结束后如果没有发生交换，我们可以直接终止排序过程，因为这时候排序已经完成了。</p>
 <p>经过这样的改进，对于那些原本就基本有序的序列，能节约很多时间。最好的情况下，如果原序列就是一个有序序列，那么一轮冒泡之后排序就完成了，所以最好情况的时间复杂度就优化为 <span class="math notranslate nohighlight">\(O(n)\)</span> 线性时间了。</p>
-<p>下面是一个优化过的冒泡算法C++程序，并且添加了显示排序过程的调试语句，请大家对照学习。</p>
+<p>下面是一个优化过的冒泡算法C++程序，并且添加了显示排序过程的调试语句。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
 <span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>     <span class="c1">// 输出数组 d[] 的前 n 个元素，用于调试</span>
@@ -189,7 +189,7 @@
 </div>
 <p>冒泡排序经过一些改变可以构造一些简单的应用，在数据量不大的情况下，由于思路直观、编程简单，也很有一些应用价值。</p>
 <p><strong>寻找k位数</strong></p>
-<p>利用冒泡过程，我们可以很简单地实现在一个无序序列中寻找k位数，即第k小的那个数。事实上，在一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列中，第k小的数就是第 <span class="math notranslate nohighlight">\(n-k\)</span> 大的那个数。所以最简单粗暴的方法，进行 <span class="math notranslate nohighlight">\(n-k\)</span> 轮冒泡就可以得到k位数。但是实际上还是有一些可以优化的余地的，比如上面所述的那个冒泡排序的优化就可以用上。又比如说，假如元素数 <span class="math notranslate nohighlight">\(n\)</span> 很大而 <span class="math notranslate nohighlight">\(k\)</span> 很小，那么要进行的冒泡轮数 <span class="math notranslate nohighlight">\(n-k\)</span> 就会很大，这就有点舍近求远的问题了，请大家思考一下，这种情况要怎么进行优化。请完成下面的编程练习：</p>
+<p>利用冒泡过程，我们可以很简单地实现在一个无序序列中寻找k位数，即第k小的那个数。事实上，在一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列中，第k小的数就是第 <span class="math notranslate nohighlight">\(n-k\)</span> 大的那个数。所以最简单粗暴的方法，进行 <span class="math notranslate nohighlight">\(n-k\)</span> 轮冒泡就可以得到k位数。但是实际上还是有一些可以优化的余地的，比如上面所述的那个冒泡排序的优化就可以用上。又比如说，假如元素数 <span class="math notranslate nohighlight">\(n\)</span> 很大而 <span class="math notranslate nohighlight">\(k\)</span> 很小，那么要进行的冒泡轮数 <span class="math notranslate nohighlight">\(n-k\)</span> 就会很大，这就有点舍近求远的问题了，请思考一下这种情况要怎么进行优化，并完成下面的编程练习：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
 <p>编写一个利用冒泡寻找k位数的程序，输入有两行，第一行为两个整数 <span class="math notranslate nohighlight">\(n, k\)</span>，其中 <span class="math notranslate nohighlight">\(1\lt n\le10^3;1\le k\le n\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个整数，取值都在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型范围内。</p>
@@ -234,7 +234,7 @@
 4: [1](2, 3, 4, 5)   选出最大值2和末尾的1交换
 </pre></div>
 </div>
-<p>经过4轮选最大并交换到末尾的操作之后，未排序部分长度减为1，已经无最大数可选，排序结束。相信大家不难写出这样一个程序吧，请自己编程练习一下。</p>
+<p>经过4轮选最大并交换到末尾的操作之后，未排序部分长度减为1，已经无最大数可选，排序结束。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
 <p>模仿冒泡排序示例程序的样子，编写输入一个整数序列并进行选择排序的程序。</p>

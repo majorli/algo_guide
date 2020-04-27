@@ -144,8 +144,8 @@
 <p>可见，正则表达式是非常灵活和强大的。但是也比较难掌握，还有许许多多其他运算符和匹配规则，目前我们只学这些就可以了，这些是最为常用的规则，而且已经能够满足大多数需要了。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>作为练习，请大家试一试编写这些文本模式的正则表达式：正小数、非负小数、负小数、小数、C++变量名、一段长度任意的空白。</p>
-<p>大家可以在这个网站上测试自己编写的正则表达式：<a class="reference external" href="https://tool.lu/regex/">https://tool.lu/regex/</a></p>
+<p>编写这些文本模式的正则表达式：正小数、非负小数、负小数、小数、C++变量名、一段长度任意的空白。</p>
+<p>这个网站可以用来测试正则表达式：<a class="reference external" href="https://tool.lu/regex/">https://tool.lu/regex/</a></p>
 </div>
 </div>
 <div class="section" id="id3">
@@ -161,7 +161,7 @@
 <p>既然名叫“有限状态”自动机，那么机器的状态数量一定要是有限的，不能有无穷多的状态。另外，机器需要有一个<strong>初始状态</strong>，表示机器在等待运行时的最初状态。机器还可以有<strong>终止状态</strong>，或者叫<strong>停机状态</strong>，表示一次运行结束后的状态。有些机器可能没有终止状态，有些简单的机器可能只有一个终止状态，有时候终止状态可能就是初始状态，表示机器一旦停机立刻进入初始状态等待下一次运行。也有一些比较复杂的机器会有多个终止状态，最常见的比如有一个正常停机状态和一个出错停机状态。</p>
 <p>状态机虽然被叫做“机器”，但实际上它是一种高度抽象的数学模型，所以它是可以用来表示任何带有状态的事物的，不仅仅局限于机器设备。来看两个简单的例子吧。</p>
 <p>家里的电灯就可以描述成一个非常简单的状态机。它只有两个状态：熄灯状态和亮灯状态。熄灯状态既是电灯的初始状态也是它的终止状态。当处于熄灯状态时，它接收打开电源开关的信号，然后就转移到亮灯状态。在亮灯状态下，它接收断开电源开关的信号，就会转移为熄灯状态。</p>
-<p>第二个略微复杂的例子，是大家在电视剧里常见的马车（当然我们要进行适当的简化）。我们的马车有四种状态：停车、慢走、快跑、翻车。其中停车既是初始状态，也是正常终止状态；慢走和快跑是正常运行时的两种状态；翻车是出错终止状态。车夫可以给出四种信号：抖缰绳（让马开始走）、甩马鞭（让慢走的马开始跑）、拉缰绳（让快跑的马减速）、喊口令“吁”（让慢走的马停下来）。如果在快跑的时候再甩马鞭抽打马，就会导致翻车。这样一架马车就可以抽象为一个状态机，我们可以用列表的方式列出它的状态转移规则，也就是它的运行规则表：</p>
+<p>第二个略微复杂的例子，是电视剧里常见的马车（当然我们要进行适当的简化）。我们的马车有四种状态：停车、慢走、快跑、翻车。其中停车既是初始状态，也是正常终止状态；慢走和快跑是正常运行时的两种状态；翻车是出错终止状态。车夫可以给出四种信号：抖缰绳（让马开始走）、甩马鞭（让慢走的马开始跑）、拉缰绳（让快跑的马减速）、喊口令“吁”（让慢走的马停下来）。如果在快跑的时候再甩马鞭抽打马，就会导致翻车。这样一架马车就可以抽象为一个状态机，我们可以用列表的方式列出它的状态转移规则，也就是它的运行规则表：</p>
 <table class="colwidths-given docutils align-default" id="id4">
 <caption><span class="caption-text">马车的状态机描述表</span><a class="headerlink" href="#id4" title="永久链接至表格">¶</a></caption>
 <colgroup>
@@ -234,7 +234,7 @@
 <p>atoi问题的状态机会比前面的两个例子略微复杂一些，它还需要引入一些数据并且在状态转移的时候对这些数据进行操作，以便到达终止状态的时候机器的数据就是想要转换的那个正确的整数。为了准确表示一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型整数，我们需要在机器里加入两项数据：正负符号和值。可以用一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型变量 <code class="docutils literal notranslate"><span class="pre">neg</span></code> 来表示这个数是不是负数，初始值为false，如果字符串中第一个字符是负号 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 就把它改成true。另外用一个 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 型变量 <code class="docutils literal notranslate"><span class="pre">value</span></code> 存放值，初始值为0。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">问题</p>
-<p>刚才描述的两项数据，有两个问题需要大家思考。</p>
+<p>刚才描述的两项数据，有两个问题需要思考。</p>
 <p>1、为什么要有一个单独的表示正负的变量？</p>
 <p>2、值为什么要用 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 类型？</p>
 </div>
@@ -245,7 +245,7 @@
 <div class="admonition tip">
 <p class="admonition-title">小技巧</p>
 <p>其实像atoi这样的简单问题，通过正则表达式再翻译成状态机往往反而把简单问题复杂化。这种难度的我们通常直接构造状态机！只要想清楚一个合法的整数串中字符的先后顺序规则和重复规则，把串分成正负符号和数本身两段，就可以很容易地直接构造出上面这个状态机。</p>
-<p>再比如小数，我们把它分成整数部分、一个小数点和小数部分三段，整数部分我们已经完成了，无非在后面再接上两段而已。请大家尝试一下直接构造表示小数的状态机。</p>
+<p>再比如小数，我们把它分成整数部分、一个小数点和小数部分三段，整数部分我们已经完成了，无非在后面再接上两段而已。请尝试一下直接构造表示小数的状态机。</p>
 </div>
 <p>接下来我们就要对上面这个最终形态的atoi状态机进行编程实现了。状态机的编程其实很简单，一般采用以下几点技巧：</p>
 <ol class="arabic">

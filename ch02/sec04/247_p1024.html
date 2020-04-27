@@ -148,7 +148,11 @@ P(x)   &amp;= P_n
 <p>另一种不太友好的情况就是，某些根 <span class="math notranslate nohighlight">\(x_j\)</span>，在其任何一个邻域内函数 <span class="math notranslate nohighlight">\(y=P(x)\)</span> 都不单调，此时函数图像在这个根处和 <span class="math notranslate nohighlight">\(x\)</span> 轴相切，而不是穿过，如下图：</p>
 <img alt="../../_images/247_p1024.png" src="../../_images/247_p1024.png" />
 <p>例如 <span class="math notranslate nohighlight">\(y=x^2\)</span> 的图像就在 <span class="math notranslate nohighlight">\(x=0\)</span> 处和 <span class="math notranslate nohighlight">\(x\)</span> 轴相切。这种根就没法用二分迭代法来求解。</p>
-<p>那么怎么判断一个根是穿过 <span class="math notranslate nohighlight">\(x\)</span> 轴的那种呢还是与之相切的那种？经过一些现在可以忽略不谈的玄学分析，我们有以下结论：凡是重数为偶数的重根都是和 <span class="math notranslate nohighlight">\(x\)</span> 轴相切的根，单根和重数为奇数的根则都是穿 <span class="math notranslate nohighlight">\(x\)</span> 轴而过的那种根。这在高中数学里是一个必备知识，有一个很好记的别名，叫做<strong>“奇穿偶不穿”</strong>。大家记住就好。</p>
+<p>那么怎么判断一个根是穿过 <span class="math notranslate nohighlight">\(x\)</span> 轴的那种呢还是与之相切的那种？经过一些现在可以忽略不谈的玄学分析，我们有以下结论：凡是重数为偶数的重根都是和 <span class="math notranslate nohighlight">\(x\)</span> 轴相切的根，单根和重数为奇数的根则都是穿 <span class="math notranslate nohighlight">\(x\)</span> 轴而过的那种根。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>这在高中数学里是一个必备知识，有一个很好记的别名，叫做<strong>“奇穿偶不穿”</strong>。</p>
+</div>
 <p>另外，从上面这个结论我们又可以得到一个重要的推论：<em>如果一元n次方程恰有n个不同的实根，那么所有这些实根在其邻域内多项式函数都是单调的，可以用二分迭代法求解。</em></p>
 <p>接下来，我们就可以开始做题了。</p>
 </div>

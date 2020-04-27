@@ -109,7 +109,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">strncpy()</span></code> 函数在复制完指定数量的字符后并不会自动在目标末尾添加空字符 <code class="docutils literal notranslate"><span class="pre">'\0'</span></code>，这也是编程人员的责任。</p></li>
 </ol>
 </div>
-<p>实际上，自己写一个根据起始位置和长度提取子串的工具函数也很简单，请大家务必尝试一下。</p>
+<p>实际上，自己写一个根据起始位置和长度提取子串的工具函数也很简单，请务必尝试一下。</p>
 <p><code class="docutils literal notranslate"><span class="pre">cstring</span></code> 库当然也提供了用于子串搜索的库函数，<code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strcasestr()</span></code>，后者和前者唯一的区别是搜索时忽略大小写，所以我们仅对 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 的用法进行简单的介绍。</p>
 <div class="admonition hint">
 <p class="admonition-title">提示</p>
@@ -119,7 +119,7 @@
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="o">*</span><span class="nf">strstr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">haystack</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">needle</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>看来英语里并没有“大海捞针”这个成语，但一定有“干草堆里找针”这种说法，而早期C语言标准库的设计者们显然认为子串搜索就是一件类似“干草堆里找针”的麻烦事情。想必大家一定猜到哪个参数是源字符串，哪个参数是要去找的那个子串了吧？对的，这个函数的功能就是从干草堆字符串 <code class="docutils literal notranslate"><span class="pre">haystack</span></code> 中去搜索第一个和针字符串 <code class="docutils literal notranslate"><span class="pre">needle</span></code> 内容一致的子串，返回的是子串的起始位置指针。如果找不到这根针，那么返回的是空指针 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。特殊地，如果针是空字符串，那么返回的就是干草堆的指针。</p>
+<p>看来英语里并没有“大海捞针”这个成语，但一定有“干草堆里找针”这种说法，而早期C语言标准库的设计者们显然认为子串搜索就是一件类似“干草堆里找针”的麻烦事情。这个函数的功能就是从干草堆字符串 <code class="docutils literal notranslate"><span class="pre">haystack</span></code> 中去搜索第一个和针字符串 <code class="docutils literal notranslate"><span class="pre">needle</span></code> 内容一致的子串，返回的是子串的起始位置指针。如果找不到这根针，那么返回的是空指针 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。特殊地，如果针是空字符串，那么返回的就是干草堆的指针。</p>
 <p>例如：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">s1</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;hello world&quot;</span><span class="p">,</span> <span class="n">s2</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;or&quot;</span><span class="p">;</span>
 
@@ -130,7 +130,7 @@
 </div>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>请大家思考一下，假如在干草堆中不止有一根针，如何利用 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 函数把所有这些针的位置都依次找出来？</p>
+<p>请思考一下，假如在干草堆中不止有一根针，如何利用 <code class="docutils literal notranslate"><span class="pre">strstr()</span></code> 函数把所有这些针的位置都依次找出来？</p>
 <p>例如，从 <code class="docutils literal notranslate"><span class="pre">&quot;this</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">Mississippi&quot;</span></code> 中搜索 <code class="docutils literal notranslate"><span class="pre">&quot;is&quot;</span></code>，一共会有4个，请编写一个程序把它们从前往后一个个地都找出来，并依次输出每一个子串 <code class="docutils literal notranslate"><span class="pre">&quot;is&quot;</span></code> 的起始位置。</p>
 </div>
 <p>相比之下，C++ string的子串处理功能就强大多了，使用起来也更加方便。但是现在先不做介绍，留待以后遇到时再说。接下来先学习两个字符串处理的基础题：最长无重复字符子串和Z字形变换。这两个题目来自著名的力扣（LeetCode）网站，它们在处理技巧上比上一节的两题略有提升。</p>
@@ -204,7 +204,7 @@
 </div>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>这个题目还有另一种 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间的算法，它不记录每一个字符上一次出现的位置，而是记录它出现的次数。当某个字符第一次出现重复的时候，根据一定的规则去调整 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">j</span></code> 的值。这个算法在思路上和我们用的算法是一致的，都是滑动窗口的思路，只是在实现方式上略有改变。请大家动脑筋想一想，自己设计出这种算法并编程验证。</p>
+<p>这个题目还有另一种 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间的算法，它不记录每一个字符上一次出现的位置，而是记录它出现的次数。当某个字符第一次出现重复的时候，根据一定的规则去调整 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">j</span></code> 的值。这个算法在思路上和我们用的算法是一致的，都是滑动窗口的思路，只是在实现方式上略有改变。请设计出这种算法并编程验证。</p>
 </div>
 </div>
 <div class="section" id="z-leetcode-6">

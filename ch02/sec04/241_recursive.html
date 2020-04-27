@@ -87,11 +87,11 @@
 <p>学习递归算法，主要涉及三个基本概念：<strong>递归</strong>、<strong>递归法</strong>、<strong>递归调用</strong>。它们是三个相互关联但互不相同的概念。</p>
 <p>递归，是一个数学上的概念，在描述概念之前先来看两幅图。</p>
 <img alt="../../_images/241_recursive_1.png" src="../../_images/241_recursive_1.png" />
-<p>这是大家都很熟悉的一组俄罗斯套娃玩具，一个大的娃娃里面套着一个一模一样但是尺寸略小的娃娃，这个略小的娃娃里面还套着一个更小一点的娃娃。这样一层一层的套下去，每次都是一模一样的娃娃，只是尺寸略小，直到最小的一个为止。</p>
+<p>这是一组俄罗斯套娃玩具，一个大的娃娃里面套着一个一模一样但是尺寸略小的娃娃，这个略小的娃娃里面还套着一个更小一点的娃娃。这样一层一层的套下去，每次都是一模一样的娃娃，只是尺寸略小，直到最小的一个为止。</p>
 <img alt="../../_images/241_recursive_2.png" src="../../_images/241_recursive_2.png" />
 <p>这个图就更经典了，这是1900年一位瑞士画家为Droste牌可可粉设计的包装盒。在这个盒子上画着一名护士，手上的托盘里放着一盒同样的Droste可可粉和一杯美味的热巧克力。神奇的是托盘上的那一盒<strong>同样的</strong>Droste可可粉。因为同样，所以在图中这个盒子上自然也画着同样的内容：一名护士，手上的托盘里放着一盒同样的Droste可可粉和一杯热巧克力……你可以想象这个过程还会如此继续下去，非常神奇。</p>
 <p>这就是艺术史上非常著名的第一幅展现了递归效果的画，后来这一类的画作乃至电影电视作品呈现的递归效果，就被称为“Droste效应”，成为一种艺术流派。</p>
-<p>上面这两幅图展示了现实生活中的递归现象，类似这样的现象还有许多许多，几乎遍及所有场合。比如雪花边缘的分形结构、比如大家耳熟能详的鬼畜故事“从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：……”</p>
+<p>上面这两幅图展示了现实生活中的递归现象，类似这样的现象还有许多许多，几乎遍及所有场合。比如雪花边缘的分形结构、比如著名的鬼畜故事<em>从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：从前有座山，山上有座庙，庙里的老和尚对小和尚说：……</em></p>
 <p>后来数学家对递归现象进行了深入研究，得到了许多重要的结论和发现，他们对递归下了这样的定义：<em>递归是一种现象，当一物体由和它自身相同或同类型的组成部分构成的时候，就称该物体通过递归进行定义。</em></p>
 <p>数学上的定义总是很抽象，计算机科学家们则利用递归现象归纳出了一套用于设计算法的方法，称为递归法。递归法把大型的复杂问题层层转化为一个或数个与原问题具有相同结构的小问题来求解，层层递归下去直到规模缩小到可以直接求解的程度，得出最小规模问题的解，然后再层层原路返回，用已经得到的小问题的解来反过来构造出大问题的解，直至得到原问题的解。</p>
 <p>使用递归法设计的算法就称为<strong>递归算法</strong>，是最为重要的一类算法。根据前面对递归法的描述可知，一个递归算法由<strong>终止条件</strong>、<strong>递归过程</strong>和<strong>返回过程</strong>三部分组成。</p>
@@ -136,7 +136,7 @@
 <div class="section" id="id3">
 <h2><span class="section-number">3.4.1.2. </span>计算阶乘<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
 <p>数学中重要的运算<strong>阶乘</strong>是这样定义的：一个正整数的阶乘（factorial）是所有小于及等于该数的正整数的积，并且0的阶乘为1。自然数 <span class="math notranslate nohighlight">\(n\)</span> 的阶乘写作 <span class="math notranslate nohighlight">\(n!\)</span>。</p>
-<p>如果要编写一个计算自然数阶乘的函数，想必大家一定能轻松地手到擒来。一个单循环就足够了：</p>
+<p>如果要编写一个计算自然数阶乘的函数，事实上一个极其普通的单循环就足够了：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">factorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
@@ -164,7 +164,7 @@
 </pre></div>
 </div>
 <p>可以看出，这个函数的代码和阶乘的递归定义公式几乎是一一对应的“对译”，代码的可读性非常强。实际上，有许多比阶乘复杂得多的问题，如果能找到它们的解的递归求解形式，就可以利用C++函数的递归调用来直观地实现成程序代码，往往这个过程就是一个“对译”的过程。</p>
-<p>初学的时候，看懂这样的一个例子，就足以对递归算法和递归调用这些概念有一个直观认识了。再经过一些练习，就可以自己编程解决很多不太难的递归问题了。但是这时候如果深入思考下去，递归调用的深层运行机制到底是怎样的？往往会让人反而越来越陷入迷惑。为了说明递归调用到底是怎样在运作的，许多教材都画了图解进行解释，大家可以上网查询。这里我们采用另一种类似调试的方法，在 <code class="docutils literal notranslate"><span class="pre">fact()</span></code> 函数进入和返回的时候输出一些说明文字，然后运行起来看看递归调用的整个过程是如何进行的。</p>
+<p>初学的时候，看懂这样的一个例子，就足以对递归算法和递归调用这些概念有一个直观认识了。再经过一些练习，就可以自己编程解决很多不太难的递归问题了。但是这时候如果深入思考下去，递归调用的深层运行机制到底是怎样的？往往会让人反而越来越陷入迷惑。为了说明递归调用到底是怎样在运作的，许多教材都画了图解进行解释，网上可以查到很多。这里我们采用另一种类似调试的方法，在 <code class="docutils literal notranslate"><span class="pre">fact()</span></code> 函数进入和返回的时候输出一些说明文字，然后运行起来看看递归调用的整个过程是如何进行的。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
 <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ull</span><span class="p">;</span>
@@ -217,7 +217,7 @@ return fact(5) = 120
 <p class="admonition-title">提示</p>
 <p>阶乘的递归版并不比普通版更快，占用空间也更大，实用价值几乎没有。但它是最好的递归入门实例，代码清晰易读，使人一目了然，码风从没人爱的循环蝶变成为了简洁优雅的数学公式“对译”。</p>
 </div>
-<p>这就是最简单也最典型的一个递归算法的例子，请大家一定不要嫌弃它的简单，认真地去理解并亲手尝试一下。</p>
+<p>这就是最简单也最典型的一个递归算法的例子，千万不要嫌弃它简单，请认真地去理解并亲手尝试一下。</p>
 </div>
 <div class="section" id="id4">
 <h2><span class="section-number">3.4.1.3. </span>寻找最大数<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>

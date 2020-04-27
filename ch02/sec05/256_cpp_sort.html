@@ -83,7 +83,7 @@
             
   <div class="section" id="c">
 <h1><span class="section-number">3.5.6. </span>C++算法库排序函数<a class="headerlink" href="#c" title="永久链接至标题">¶</a></h1>
-<p>前面学习了八种常用的经典排序算法，这些排序算法中蕴藏着许多算法思维的精髓，需要认真学习的领会。但是在实际编程时，如果每次遇到排序需求的时候都要手工写排序的代码就太累人了。计算机界有一句格言：“不要重复造轮子”。C++语言在它的算法库 <code class="docutils literal notranslate"><span class="pre">algorithm</span></code> 中已经提供了五个非常好用的排序函数，这些就是已经造好的轮子，大家在实际编程中拿来用就可以了，不用自己动手做编写排序函数这样的重复造轮子的工作了。</p>
+<p>前面学习了八种常用的经典排序算法，这些排序算法中蕴藏着许多算法思维的精髓，需要认真学习的领会。但是在实际编程时，如果每次遇到排序需求的时候都要手工写排序的代码就太累人了。计算机界有一句格言：“不要重复造轮子”。C++语言在它的算法库 <code class="docutils literal notranslate"><span class="pre">algorithm</span></code> 中已经提供了五个非常好用的排序函数，这些就是已经造好的轮子，在实际编程中拿来用就可以了，不用自己动手做编写排序函数这样的重复造轮子的工作。</p>
 <p>本节我们将介绍怎样使用C++算法库中的三个排序函数，以及怎样让自己定义的复杂数据结构支持大小比较运算。首先让我们来了解一下C++的算法库。</p>
 <div class="section" id="c-algorithm">
 <h2><span class="section-number">3.5.6.1. </span>C++算法库（algorithm）简介<a class="headerlink" href="#c-algorithm" title="永久链接至标题">¶</a></h2>
@@ -116,7 +116,7 @@
 <p>算法库函数都是比较灵活的，比如用 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 对一个数组进行排序，它不是简单地对数组里所有元素排序，而是要提供一头一尾两个位置参数，对这个头尾范围内的元素进行排序。算法函数通过这种方式实现对容器中任意指定的一段元素进行操作。这就引出了一个新的概念：迭代器。</p>
 <p><strong>迭代器</strong>（iterator）是STL三大核心组件之三，它其实是一个包装过的指针，可以用来指示容器中元素的位置，前后两个迭代器组合起来就可以组成表示容器中一段连续元素的<strong>范围</strong>（range）。我们知道，指针是有数据类型的，比如有指向 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的指针，也有指向 <code class="docutils literal notranslate"><span class="pre">char</span></code> 的指针，它们是不同的类型。STL则把简单的指针包装起来，加了一件名为迭代器的外衣，于是指向不同数据类型元素的迭代器就都具有了相同的类型：<code class="docutils literal notranslate"><span class="pre">iterator</span></code> 型。对于最简单的数组容器，就直接使用传统的指针，C++会自动在需要的时候给这个指针加上迭代器的外衣包装起来。通过这种方式，就使得算法库中的算法函数可以对任意容器对象中任意数据类型的元素进行操作了。</p>
 <p>最后简单说明一下<strong>范围</strong>（range）这个概念。用一头一尾两个迭代器（或数组元素指针）就可以组成一个范围，范围总是遵守“含头不含尾”的左闭右开原则。</p>
-<p>下面以数组为例说明迭代器和范围的用法。假设有一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数组 <code class="docutils literal notranslate"><span class="pre">d[]</span></code>，里面已经读入了 <code class="docutils literal notranslate"><span class="pre">n</span></code> 个数，从头开始存放。这是算法题中非常常见的一种输入数据的保存形式，大家应该已经非常熟悉了。通常，我们会使用一个大于等于0的整数来指示数组中某个特定的位置，称为数组元素的下标位置。那么用迭代器，对数组来说就是指针，怎么表示位置和范围呢？</p>
+<p>下面以数组为例说明迭代器和范围的用法。假设有一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数组 <code class="docutils literal notranslate"><span class="pre">d[]</span></code>，里面已经读入了n个数，从头开始存放。通常，我们会使用一个整数来指示数组中某个特定的位置，称为下标。那么用迭代器，对数组来说就是指针，怎么表示位置和范围呢？</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">d</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
 <span class="c1">// 定义指针 begin，它指向 d[0] 这个元素，相当于 &amp;d[0]，这就是数组 d 的头迭代器</span>
 <span class="kt">int</span> <span class="o">*</span><span class="n">begin</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>

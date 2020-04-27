@@ -117,7 +117,7 @@
 <p>果然，所有11的倍数都已经被筛掉了。算法到此结束，看看剩下还留着的数有哪些？</p>
 <img alt="../../_images/212_erato.jpg" src="../../_images/212_erato.jpg" />
 <p>剩下的确实就是100以内所有的质数了！</p>
-<p>这个算法实现起来也很简单，需要提供一个足够大的 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型数组作为质数表。先把0号和1号元素初始化为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，2号到n号的所有元素初始化为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。然后从2开始进行筛选，将表中所有的2的倍数号的元素赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，表中剩下的最小的数字就是3，它不能被更小的数整除，所以3是质数。再将表中所有的3的倍数号元素赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>……依此类推，如果表中剩余的最小的数是m，那么m就是质数，接下来就将表中所有m的倍数号元素赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>。像这样反复操作，直到那个其平方值大于n的数为止，因为从它开始，所有的合数肯定已经都被筛选掉了。（希望大家能去想一想为什么？）</p>
+<p>这个算法实现起来也很简单，需要提供一个足够大的 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型数组作为质数表。先把0号和1号元素初始化为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，2号到n号的所有元素初始化为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。然后从2开始进行筛选，将表中所有的2的倍数号的元素赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，表中剩下的最小的数字就是3，它不能被更小的数整除，所以3是质数。再将表中所有的3的倍数号元素赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>……依此类推，如果表中剩余的最小的数是m，那么m就是质数，接下来就将表中所有m的倍数号元素赋值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>。像这样反复操作，直到那个其平方值大于n的数为止，因为从它开始，所有的合数肯定已经都被筛选掉了。（想一想为什么？）</p>
 <div class="admonition tip">
 <p class="admonition-title">小技巧</p>
 <p>一般来说一个程序里只要打一张质数表就够了，我们可以把这张表定义为一个全局的数组。但是相对于通常的做法，我更喜欢在这张表里用 <code class="docutils literal notranslate"><span class="pre">true</span></code> 表示合数，用 <code class="docutils literal notranslate"><span class="pre">false</span></code> 表示质数，因为全局变量会自动初始化为全0，也就是全 <code class="docutils literal notranslate"><span class="pre">false</span></code>，这样的话，我们的埃筛打表函数里就不需要手动把数组所有元素初始化为 <code class="docutils literal notranslate"><span class="pre">true</span></code> 了，要知道这个步骤需要一个大循环来完成，如果表很大还是挺费时间的。</p>
@@ -192,7 +192,7 @@ x\equiv a_n\pmod {m_n}
 <div class="math notranslate nohighlight">
 \[x=kM+\sum_{i=1}^n{a_it_iM_i}=kM+a_1t_1M_1+a_2t_2M_2+\cdots+a_nt_nM_n,(k\in\Bbb{Z})\]</div>
 <p>如果把解限制在模 <span class="math notranslate nohighlight">\(M\)</span> 运算的意义下，那么就只有一个确定的解，<span class="math notranslate nohighlight">\(x=\sum_{i=1}^n{a_it_iM_i} \pmod M\)</span>。</p>
-<p>这么说肯定太抽象了，下面来看一个简单的具体例子大家就明白这一大堆数学符号是在做什么了。这是最经典的一类题，最常见的一组数据，小学奥数的时候就做过这组数据的题。</p>
+<p>这么说肯定太抽象了，下面来看一个简单的具体例子。这是最经典的一类题，最常见的一组数据，小学奥数的时候就做过这组数据的题。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">例题</p>
 <p>某学校每个班的学生人数为40到60人不等，有一个班的学生分组做实验，如果每组三人就多两人，每组五人就多三人，每组七人就多四人，问这个班有多少学生?</p>

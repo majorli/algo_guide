@@ -113,7 +113,7 @@
 <p class="admonition-title">补充</p>
 <p>实际上，只有小于关系是必要的，其他关系都是补充性质的。使用大于、等于这些关系只是为了便利起见，因为所有其他关系都可以用小于关系表示出来。</p>
 <p>在C++语言中允许对任何自定义数据类型，通常是结构（struct），定义它们的关系运算，以便程序可以对自定义类型的数据进行大小比较。比如我们已经见过的C++ string，就可以直接用 <code class="docutils literal notranslate"><span class="pre">==,!=,&lt;,&gt;,&lt;=,&gt;=</span></code> 这六种关系运算来比较它们的字典序。而C++语言的规则规定，最少仅需要为自定义类型定义 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算就够了，这是因为其他五种运算都可以用小于运算来实现。例如 <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> 运算只要对 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算的结果取反就可以了，大于等于就是不小于。</p>
-<p>请大家思考一下，怎样仅用小于运算就能实现所有六种关系运算。</p>
+<p>请思考一下，怎样仅用小于运算就能实现所有六种关系运算。</p>
 </div>
 </li>
 <li><p>给出解空间中的任意一个候选解 <span class="math notranslate nohighlight">\(s_j\)</span>，我们有办法判断它是不是问题的解 <span class="math notranslate nohighlight">\(s\)</span>，如果不是，那么我们还能进一步判断它比解大还是小。换句话说，我们可以对 <span class="math notranslate nohighlight">\(s_j\)</span> 和 <span class="math notranslate nohighlight">\(s\)</span> 进行序的比较。</p></li>
@@ -224,7 +224,7 @@
 <p>程序中使用了一个预定义宏 <code class="docutils literal notranslate"><span class="pre">LEN(a)</span></code> 来获取一个数组的长度，这是来自C语言的一个数组处理常用技巧，有时候很管用，值得记住。</p>
 <p><code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数在查找值 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的时候，用一个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 语句来判断查找是否成功，利用了“赋值表达式的值为被赋予的值”这个特点，在判断表达式里同时实现了二分查找函数的调用、保存查找函数返回值和判断返回值是否为-1这样三个功能，这也是C++语言常用的一种模式，需要记住。</p>
 </div>
-<p>这样一来，程序的结构就显得优雅多了，个中妙处大家慢慢在今后越来越复杂的程序编写时自然会体会得到。</p>
+<p>这样一来，程序的结构就显得优雅多了。</p>
 </div>
 <div class="section" id="id3">
 <h2><span class="section-number">3.4.5.2. </span>二分查表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
@@ -246,7 +246,7 @@
 </pre></div>
 </div>
 <p>如果表的内容就如上面所示的8个考生的成绩信息，可见是已经按照姓名的字典序有序排列了的。通常我们按照某个字段的值进行查表时，这个字段就叫做这次查找的<strong>关键字</strong>。那么如果我们以姓名为关键字进行查找，就可以使用二分查找来实现快速查表。</p>
-<p>这个问题作为一个练习题留给大家自行完成，下面是输入格式：</p>
+<p>这个问题留作练习，下面是输入格式：</p>
 <blockquote>
 <div><p>第1行，一个整数n，表示共有n个考生。</p>
 <p>第2到n+1行，共n行，每行依次为一个字符串name和三个整数test_no、score、rank，分别表示一个考生的名字（最多16个字符，中间没有空格）、考试号、分数和名次。</p>
@@ -292,7 +292,7 @@ name: Alice, No.43, score = 98, rank = 3
 <p>所以边界查找一定会找到 <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">&gt;</span> <span class="pre">right</span></code> 循环结束为止。根据二分查找的特征，查找范围总是在折半折半的缩小，最终如果查找失败，循环结束时，一定是 <code class="docutils literal notranslate"><span class="pre">left</span></code> 在 <code class="docutils literal notranslate"><span class="pre">right</span></code> 右边一个位置。而我们要找的边界就是最终的 <code class="docutils literal notranslate"><span class="pre">left</span></code> 位置。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">思考</p>
-<p>为什么边界一定是最终的 <code class="docutils literal notranslate"><span class="pre">left</span></code> 位置？这个问题留给大家去认真思考。这个问题一定要能够想通，非常重要。提示一下：假如我们可以把边界位置定在两个相邻元素中间的空挡，那么边界一定是在循环结束之后的 <code class="docutils literal notranslate"><span class="pre">right</span></code> 之后 <code class="docutils literal notranslate"><span class="pre">left</span></code> 之前这个空挡里。</p>
+<p>为什么边界一定是最终的 <code class="docutils literal notranslate"><span class="pre">left</span></code> 位置？这个问题请认真思考，一定要能够想通，非常重要。提示一下：假如我们可以把边界位置定在两个相邻元素中间的空挡，那么边界一定是在循环结束之后的 <code class="docutils literal notranslate"><span class="pre">right</span></code> 之后 <code class="docutils literal notranslate"><span class="pre">left</span></code> 之前这个空挡里。</p>
 </div>
 <p>下面是怎样用二分查找来找到上图中那个3的右端位置的过程示意图：</p>
 <img alt="../../_images/245_edge_2.png" src="../../_images/245_edge_2.png" />
@@ -329,7 +329,7 @@ name: Alice, No.43, score = 98, rank = 3
 </div>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>请大家在理解右端边界查找之后，自行编写二分查找左端边界的程序，数组就用示例程序中的数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 即可。</p>
+<p>请在理解右端边界查找之后，自行编写二分查找左端边界的程序，数组就用示例程序中的数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 即可。</p>
 </div>
 </div>
 </div>

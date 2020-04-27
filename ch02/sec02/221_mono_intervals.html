@@ -99,12 +99,12 @@
 <p>在数学里，数列 <span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 就是一组n个用正整数连续编号的数：<span class="math notranslate nohighlight">\(a_1,a_2,\dots,a_n\)</span>，每一个具体的数称为数列的一个<strong>项</strong>，编号表示项在数列中的位置，称作<strong>下标</strong>。数学的习惯一般是从1开始编号，第一项为1号项，最后一项为n号项。有时候也可以把数列视作一类特殊的函数，即把下标值视作自变量，把项视作函数值，而自变量的取值范围即为整数区间 <span class="math notranslate nohighlight">\([1,n]\)</span>，这时候往往把项 <span class="math notranslate nohighlight">\(a_i\)</span> 写成 <span class="math notranslate nohighlight">\(A(i)\)</span> 这样的形式。</p>
 <p>在计算机编程语言里，数列一般是用数组或者顺序容器（比如C++的vector容器）来实现的，并且在概念上对数学里单纯的“数”列进行了一般化的推广，成为了一般性的元素序列。一个<strong>序列</strong>由一系列顺序存放的同类型对象构成，这些对象称为序列的<strong>元素</strong>，类似于数列的项，但是其类型不局限于普通的数，任何计算机能够表示和运算的对象，比如字符、字符串、结构等都可以是序列的元素类型。另外，元素的下标和绝大多数编程语言的设定一致，一般从0开始编号，长度为n的序列中第一个元素是0号元素，最后一个元素是n-1号元素。</p>
 <p>自从C语言诞生以来，几乎所有的编程语言都采用了“方括号+下标”的序列元素访问语法，这已经成为了业界标准。所以在探讨算法编程的时候，习惯使用 <span class="math notranslate nohighlight">\(A[i]\)</span> 这种方式表示序列的元素。另外，C语言还确立了另一个业界标准，即采用左闭右开的方式来表示序列中的一段范围，也就是通常所说的含头不含尾原则。所以通常用 <span class="math notranslate nohighlight">\([i,j)\)</span> 表示从 <span class="math notranslate nohighlight">\(i\)</span> 到 <span class="math notranslate nohighlight">\(j-1\)</span> 的一段下标范围。近几年随着Python语言的兴起，也开始用 <span class="math notranslate nohighlight">\(A[i:j]\)</span> 这种方式来表示从 <span class="math notranslate nohighlight">\(A[i]\)</span> 到 <span class="math notranslate nohighlight">\(A[j-1]\)</span> 的子序列。可见，哪怕不是C-like语言的Python，也采用含头不含尾的规则来表示范围。</p>
-<p>今后我们会视上下文的情形来选择使用数学中的数列符号，或算法编程惯用的符号，请大家熟悉这两类表示方式。</p>
+<p>今后我们会视上下文的情形来使用下列符号。</p>
 <ul class="simple">
-<li><p>数学语言的表示方式：<span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 表示由n个元素构成的数列 <span class="math notranslate nohighlight">\(A\)</span>，数列名使用大写字母，元素用 <span class="math notranslate nohighlight">\(a_i\)</span> 表示，用 <span class="math notranslate nohighlight">\(\{a_i,\dots,a_j\}\)</span> 表示数列中从第 <span class="math notranslate nohighlight">\(i\)</span> 项到第 <span class="math notranslate nohighlight">\(j\)</span> 项的一段，或者表示成区间 <span class="math notranslate nohighlight">\([i,j]\)</span>，使用这种表示法的时候，下标从1开始编号。</p></li>
-<li><p>编程语言的表示方式：大写字母 <span class="math notranslate nohighlight">\(A\)</span> 表示一个名为 <span class="math notranslate nohighlight">\(A\)</span> 的序列，可以是一个数组或者其他顺序型容器，其中的元素用 <span class="math notranslate nohighlight">\(A[i]\)</span> 表示，用 <span class="math notranslate nohighlight">\(A[i:j]\)</span> 表示从 <span class="math notranslate nohighlight">\(A[i]\)</span> 到 <span class="math notranslate nohighlight">\(A[j-1]\)</span> 的子序列，或者表示成区间 <span class="math notranslate nohighlight">\([i,j)\)</span>，此时下标从0开始编号。</p></li>
+<li><p>用 <span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 表示由 <span class="math notranslate nohighlight">\(n\)</span> 个元素构成的数列 <span class="math notranslate nohighlight">\(A\)</span>，数列名使用大写字母，元素用 <span class="math notranslate nohighlight">\(a_i\)</span> 表示，用 <span class="math notranslate nohighlight">\(\{a_i,\dots,a_j\}\)</span> 表示数列中从第 <span class="math notranslate nohighlight">\(i\)</span> 项到第 <span class="math notranslate nohighlight">\(j\)</span> 项的一段，或者表示成区间 <span class="math notranslate nohighlight">\([i,j]\)</span>。</p></li>
+<li><p>用大写字母 <span class="math notranslate nohighlight">\(A\)</span> 表示一个名为 <span class="math notranslate nohighlight">\(A\)</span> 的序列，其中的元素用 <span class="math notranslate nohighlight">\(A[i]\)</span> 表示，用 <span class="math notranslate nohighlight">\(A[i:j]\)</span> 表示从 <span class="math notranslate nohighlight">\(A[i]\)</span> 到 <span class="math notranslate nohighlight">\(A[j-1]\)</span> 的子序列，或者表示成左闭右开区间 <span class="math notranslate nohighlight">\([i,j)\)</span>；用 <span class="math notranslate nohighlight">\(A[i..j]\)</span> 表示从 <span class="math notranslate nohighlight">\(A[i]\)</span> 到 <span class="math notranslate nohighlight">\(A[j]\)</span> 的子序列，或者表示成闭区间 <span class="math notranslate nohighlight">\([i,j]\)</span>；上述几种表示法可以在一个下标方括号内出现多次，用逗号分隔，例如 <span class="math notranslate nohighlight">\(A[0:2,5,7..9]\)</span> 表示0,1,5,7,8,9六个元素。采用此种表示方式时下标总是从0开始。</p></li>
 </ul>
-<p>在数学中，如果数列 <span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 中的 <span class="math notranslate nohighlight">\(\{a_i,\dots,a_j\}\)</span> 这一段满足每一个项都比它前面的项更大，即对于任意的 <span class="math notranslate nohighlight">\(k\in\Bbb{Z},i\lt k \le j\)</span>，都有 <span class="math notranslate nohighlight">\(a_k \gt a_{k-1}\)</span> 成立，那么就把这一段称为数列的一个单调递增区间，长度为 <span class="math notranslate nohighlight">\(j-i+1\)</span>；反之如果这一段里的所有项都比它前面的项更小，它就是数列的一个单调递减区间，长度当然也是 <span class="math notranslate nohighlight">\(j-i+1\)</span>。</p>
+<p>如果数列 <span class="math notranslate nohighlight">\(A\)</span> 的一段 <span class="math notranslate nohighlight">\(\{a_i,\dots,a_j\}\)</span> 中每一项都比它前面的项更大，即对于任意的整数 <span class="math notranslate nohighlight">\(i\lt k \le j\)</span>，都有 <span class="math notranslate nohighlight">\(a_k \gt a_{k-1}\)</span> 成立，那么数学上就把这一段称为数列的一个单调递增区间，长度为 <span class="math notranslate nohighlight">\(j-i+1\)</span>；反之如果这一段里的所有项都比它前面的项更小，它就是数列的一个单调递减区间，长度当然也是 <span class="math notranslate nohighlight">\(j-i+1\)</span>。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">补充</p>
 <p>和函数类似，数列也可以有常数区间、普通的递增区间和递减区间。</p>
@@ -123,7 +123,7 @@
 <p>因此算法的重点是怎样随着读取找出每一个单调递增区间。</p>
 <p>根据定义可知：每一个单调递增区间 <span class="math notranslate nohighlight">\([i,j)\)</span> 一定开始于这样一个元素，它不大于前面的那个元素，即 <span class="math notranslate nohighlight">\(A[i]\le A[i-1]\)</span>。因此在读取过程中一旦遇到这样一个元素，就说明从它开始将有一个新的单调递增区间了，这时候就应该把 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code> 的值设为1。请注意：哪怕这个单调递增区间只有这一个元素，它也是一个长度为1的单调递增区间，所以这一步操作不会有任何问题。</p>
 <p>根据定义又可知：在一个单调递增区间之内，任何一个元素必大于其前一个元素，因此在读取过程中，如果当前读到的元素 <span class="math notranslate nohighlight">\(A[k]\)</span> 满足 <span class="math notranslate nohighlight">\(A[k]\gt A[k-1]\)</span>，那么说明当前这个单调递增区间还没有结束，新读到的元素只是延长了它的长度，所以这时候应该让 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code> 增加1。</p>
-<p>最后还是根据定义可知：每一个单调递增区间 <span class="math notranslate nohighlight">\([i,j)\)</span> 一定结束于这样一个元素，它的后一个元素不比它大，即 <span class="math notranslate nohighlight">\(A[j]\le A[j-1]\)</span>。所以当读到一个元素 <span class="math notranslate nohighlight">\(A[j]\)</span> 满足 <span class="math notranslate nohighlight">\(A[j]\le A[j-1]\)</span> 时，同时说明两件事情：首先，当前的单调递增区间结束了，这个区间的长度就是 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code>；第二，不知道大家有没有注意到，这个“一个单调递增区间结束了”的判断依据和前面说过的“一个新的单调递增区间开始了”的判断依据是一样的，即一个单调递增区间的结束必定伴随着一个新的单调递增区间的开始。因此这种情况下要做两件事情，先根据 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code> 的值更新 <code class="docutils literal notranslate"><span class="pre">max_len</span></code>，然后让 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code> 的值变成1。</p>
+<p>最后还是根据定义可知：每一个单调递增区间 <span class="math notranslate nohighlight">\([i,j)\)</span> 一定结束于这样一个元素，它的后一个元素不比它大，即 <span class="math notranslate nohighlight">\(A[j]\le A[j-1]\)</span>。所以每当读到这样一个元素 <span class="math notranslate nohighlight">\(A[j]\)</span> 时，同时说明两件事情：首先，当前的单调递增区间结束了，这个区间的长度就是 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code>；第二，<strong>一个单调递增区间结束了</strong>的判断依据和<strong>一个新的单调递增区间开始了</strong>的判断依据是一样的，即一个单调递增区间的结束必定伴随着一个新的单调递增区间的开始。因此这种情况下要做两件事情，先根据 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code> 的值更新 <code class="docutils literal notranslate"><span class="pre">max_len</span></code>，然后让 <code class="docutils literal notranslate"><span class="pre">cur_len</span></code> 的值变成1。</p>
 <p>在整个读取过程中，每一次都只需要将当前读到的元素和它的上一个元素做比较，因此并不需要把所有读到的元素都保存下来，我们只需要用一个临时变量 <code class="docutils literal notranslate"><span class="pre">last</span></code> 保存好每一次读入的元素，当下一次读入的时候和它做比较就可以了。</p>
 <p>现在可以把上面的分析结论整理成算法的框架如下：</p>
 <div class="admonition- admonition">
@@ -208,7 +208,7 @@
 </div>
 <p>提交后判题结果：</p>
 <img alt="../../_images/221_p1567.png" src="../../_images/221_p1567.png" />
-<p>此题应该没有多少难度，但是有几个问题值得大家思考和动手尝试一下：</p>
+<p>此题应该没有多少难度，但是有几个问题值得思考和尝试一下：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">思考</p>
 <ol class="arabic simple">
@@ -232,7 +232,7 @@ Amp(i,j)
 =&amp;(a_{i+1}-a_i)+(a_{i+2}-a_{i+1})+\cdots+(a_{j-1}-a_{j-2})+(a_j-a_{j-1})=a_j-a_i
 \end{align}\end{split}\]</div>
 <p>这就意味着我们可以随着元素的读入，逐步地累积计算出一整个单调递增区间的增幅。我们可以继续沿用前面求最长单调递增区间长度的算法思路，用两个变量 <code class="docutils literal notranslate"><span class="pre">max_amp</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cur_amp</span></code> 分别表示已经读到过的最大单调递增区间增幅和当前新读到的单调递增区间增幅。每读入一个元素，先判断它是否处于一个单调递增区间里，如果是那么相应增加当前单调递增区间的增幅；若不是则说明上一个单调递增区间结束了，那就根据 <code class="docutils literal notranslate"><span class="pre">cur_amp</span></code> 的大小修正 <code class="docutils literal notranslate"><span class="pre">max_amp</span></code>，再把 <code class="docutils literal notranslate"><span class="pre">cur_amp</span></code> 重置为0，表示一个新的单调递增区间即将开始。注意，现在 <code class="docutils literal notranslate"><span class="pre">cur_amp</span></code> 是重置为0而不是1。</p>
-<p>另外，在求最大振幅的时候，用于保存上一个元素的变量 <code class="docutils literal notranslate"><span class="pre">last</span></code> 是必须要正确初始化的。事实上，正确初始化这个变量并不简单。如果是统计单调递增区间的，那么这个变量的初始值必须确保一定大于等于序列的第一个元素；如果要统计的是单调递减区间，那么它的初始值必须确保小于等于序列的第一个元素。这是为什么？这个规则的原理请大家一定要自己想出来。</p>
+<p>另外，在求最大振幅的时候，用于保存上一个元素的变量 <code class="docutils literal notranslate"><span class="pre">last</span></code> 是必须要正确初始化的。事实上，正确初始化这个变量并不简单。如果是统计单调递增区间的，那么这个变量的初始值必须确保一定大于等于序列的第一个元素；如果要统计的是单调递减区间，那么它的初始值必须确保小于等于序列的第一个元素。这是为什么？这个规则的原理请一定要想明白。</p>
 <p>但真正的麻烦是这个规则有时候难以实现，因为并不是任何时候我们都能实现知道序列中元素的取值范围，怎么办？办法很简单，这个变量的初始值的作用无非是虚拟一个 <span class="math notranslate nohighlight">\(A[0]\)</span> 之前的元素出来，供真正的第一个元素 <span class="math notranslate nohighlight">\(A[0]\)</span> 进行增减性判断，那么我们何不直接把这个变量直接初始化为 <span class="math notranslate nohighlight">\(A[0]\)</span>，然后从 <span class="math notranslate nohighlight">\(A[1]\)</span> 开始读取元素呢？</p>
 <p>下面是求最大单调递增区间增幅的代码，请对照算法说明读懂代码，并和前面的最长单调递增区间长度算法做一对比。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
@@ -264,7 +264,6 @@ Amp(i,j)
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>最后还是请大家思考几个问题，并尝试动手试验。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">思考</p>
 <ol class="arabic simple">

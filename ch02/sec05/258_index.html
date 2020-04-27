@@ -148,7 +148,7 @@
 <li><p>元素17，在原序列中下标为2，在它之前没有元素比它大，在它之后有1个元素小于它，说明元素17如果排序，它应该向后移动1个位置，以便把它后面那1个比它小的元素放到它前面去，所以元素17的索引为 <span class="math notranslate nohighlight">\(2+1=3\)</span>。</p></li>
 <li><p>元素8，在原序列中下标为3，在它之前有1个元素比它大，因此如果排序，它首先要向前移动1个位置，以便把它前面的那个逆序数放到它后面去，在它后面没有元素了，所以元素1的索引为 <span class="math notranslate nohighlight">\(3-1=2\)</span>。</p></li>
 </ol>
-<p>概括来说，元素的索引可以由其原有位置根据其前后与之构成逆序的其他元素数量来确定。对于原序列中位于位置 <span class="math notranslate nohighlight">\(i\)</span> 的元素，设在它之前有 <span class="math notranslate nohighlight">\(s\)</span> 个元素比它大，那么首先要把它向前移动 <span class="math notranslate nohighlight">\(s\)</span> 个位置，以便把那 <span class="math notranslate nohighlight">\(s\)</span> 个比它大的元素搬到它后面去，消除逆序，如此一来在它的新位置 <span class="math notranslate nohighlight">\(i-s\)</span> 之前所有元素都不大于它了。再看它的后面，设有 <span class="math notranslate nohighlight">\(t\)</span> 个元素比它小，所以接下来又要把它向后移动 <span class="math notranslate nohighlight">\(t\)</span> 个位置以便把这些元素搬到它前面去，于是它最终应该处于的位置，也就是其索引值应为 <span class="math notranslate nohighlight">\(i-s+t\)</span>。而且这样一个算法建立的索引，如果对应到排序之后的顺序，是具有稳定性的，请大家思考一下为什么它是稳定的。</p>
+<p>概括来说，元素的索引可以由其原有位置根据其前后与之构成逆序的其他元素数量来确定。对于原序列中位于位置 <span class="math notranslate nohighlight">\(i\)</span> 的元素，设在它之前有 <span class="math notranslate nohighlight">\(s\)</span> 个元素比它大，那么首先要把它向前移动 <span class="math notranslate nohighlight">\(s\)</span> 个位置，以便把那 <span class="math notranslate nohighlight">\(s\)</span> 个比它大的元素搬到它后面去，消除逆序，如此一来在它的新位置 <span class="math notranslate nohighlight">\(i-s\)</span> 之前所有元素都不大于它了。再看它的后面，设有 <span class="math notranslate nohighlight">\(t\)</span> 个元素比它小，所以接下来又要把它向后移动 <span class="math notranslate nohighlight">\(t\)</span> 个位置以便把这些元素搬到它前面去，于是它最终应该处于的位置，也就是其索引值应为 <span class="math notranslate nohighlight">\(i-s+t\)</span>。而且这样一个算法建立的索引，如果对应到排序之后的顺序，是具有稳定性的，请思考一下为什么。</p>
 <p>实际编程的时候，上面这个过程还可以优化一下。我们首先建立一张初始的索引表，初始索引就用元素在原序列中的位置下标。然后从第一个元素开始，对每一个元素检查在它后面而且值更小的元素，每发现一个就把元素的索引值加1，同时把那个比它小的元素的索引值减1。这样我们就不再需要寻找元素之前比它大的元素了，因为对于任何一个元素，它之前如果有比它大的元素，那么在前面的循环中已经检查到过而且已经相应地把自己的索引值减下去过了。</p>
 <p>例如前面所举的那个例子，序列 [3, 1, 17, 8]，按照我们的算法它的建立索引表过程如下：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>初始状态：
@@ -264,7 +264,7 @@
 <p>最后再考虑一种特殊情况。前面三种都是通常意义上的建索引，而且都具有稳定性。比如对整数序列 [98, 95, 100, 95, 90] 建立逆序的索引表，得到的索引表会是 [1, 2, 0, 3, 4]，其中前后两个元素95在索引表中还是保持原来的前后相对位置。但是还有一种应用场景非常类似于建索引，但在处理同值元素时规则不同，那就是排名次。</p>
 <p>比如在按照考试成绩排名次的时候，如果所有学生的分数各不相同，那么排名次就等价于建索引。但是如果有同分的情况，那就要使用并列名次的规则。比如上面这个整数序列 [98, 95, 100, 95, 90]，假如它是五名学生的语文考试成绩，那么它们的名次应该是 [2, 3, 1, 3, 5]。它和索引有两个区别：</p>
 <p>一是索引从0开始计数，名次从1开始计数。这个区别无关紧要，不过是把索引值每一个都加了1而已，我们可以有无数种方法来处理这点区别。</p>
-<p>重要的区别在于并列名次的处理。现在两个同为95的元素的索引不再一前一后了，而是同为3，表示并列第三名，而它后面的90则不能算作第四名，有两个并列第三，就会吃掉第四名，接下来就应该是第五名了。这个根据考试成绩排名次的规则大家应该非常熟悉了吧。那么该怎么办呢？带下标排序法、逆序统计法、计数排序法三种方法哪一种最适合改造成排名次算法？要怎么改造？这留作本节的第二个练习题。</p>
+<p>重要的区别在于并列名次的处理。现在两个同为95的元素的索引不再一前一后了，而是同为3，表示并列第三名，而它后面的90则不能算作第四名，有两个并列第三，就会吃掉第四名，接下来就应该是第五名了。那么现在该怎么办呢？带下标排序法、逆序统计法、计数排序法三种方法哪一种最适合改造成排名次算法？要怎么改造？这留作本节的第二个练习题。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
 <p>编写一个程序实现对 <span class="math notranslate nohighlight">\(n\)</span> 名学生按考试成绩排名次。每名学生有一个学号，从1号开始一直到 <span class="math notranslate nohighlight">\(n\)</span> 号，考试成绩表按学号排序。考试成绩最高分为120分，最低0分，均为整数。现要求按成绩进行排名，分数最高的为第1名，排名不得改变原有的考试成绩表。</p>

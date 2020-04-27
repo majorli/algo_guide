@@ -476,7 +476,7 @@ olleH
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>大家可以想一想怎么写一个文件流版本的鹦鹉学舌，试试看。</p>
+<p>作为编程练习，请写一个文件流版本的鹦鹉学舌。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
 <p>事实上 <code class="docutils literal notranslate"><span class="pre">cin.get()</span></code> 函数还有好几种别的用法，甚至可以用来按行读取C-string形式的字符串。但是要记得，C-string归 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库管，无论是 <code class="docutils literal notranslate"><span class="pre">cin.get()</span></code> 还是前面提到过的 <code class="docutils literal notranslate"><span class="pre">cin.getline()</span></code> 都不如直接用 <code class="docutils literal notranslate"><span class="pre">cstdio</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">fgets()</span></code> 更好。C++在其输入流对象中实现对应C-string的功能，只是为了其自身的功能完善性，事实上它们在使用时都或多或少的有一些问题，不太好用。</p>
@@ -544,7 +544,7 @@ olleH
 </pre></div>
 </div>
 <p>上面这个代码片段，就利用了字符串输入流实现了把C++ string <code class="docutils literal notranslate"><span class="pre">s1</span></code> 的内容转换为整数 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a</span></code>，<code class="docutils literal notranslate"><span class="pre">s2</span></code> 的内容转换为 <code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">pi</span></code>，而表达式 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">pi</span></code> 的值，<code class="docutils literal notranslate"><span class="pre">double</span></code> 型的126.14则利用字符串输出流转换为了一个C++ string，即 <code class="docutils literal notranslate"><span class="pre">strout.str()</span></code> 的返回值。</p>
-<p>另外，字符串流还可以用来方便地实现一些原本比较麻烦的操作，比如字符串的分割与合并等。但是这些操作在算法编程中遇到的确实不多，而且C++字符串流的速度也确实太慢了一点。所以我们就不细说了，也不需要大家掌握更多，有兴趣的可以自己上网查询相关资料。</p>
+<p>另外，字符串流还可以用来方便地实现一些原本比较麻烦的操作，比如字符串的分割与合并等。但是这些操作在算法编程中遇到的确实不多，而且C++字符串流的速度也确实太慢了一点。所以我们就不细说了，有兴趣的可以自己查阅相关资料。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
 <p>这一节的内容比较多，不通过多次编程实践也很难一下子记住那么多string的用法。所以关键还是要动手练习。</p>

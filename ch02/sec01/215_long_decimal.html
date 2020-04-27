@@ -127,7 +127,7 @@
 <p>再如 <span class="math notranslate nohighlight">\(2018\div2019\approx 0.99950\cdots\)</span>，如果我们要保留最多3位小数，那么四舍五入引发的向前进位会一直传播到整数部分，最终结果为1。</p>
 <p>这是我们算法里在四舍五入时要考虑到的情况。舍入首先肯定是发生在当前最后一位，也就是第d位上的。舍入后要判断其是否等于10，如果是则说明要向前进位，这就需要把当前最后位改为0，然后把前面一位变成新的最后位，然后新的最后位加1，再判断是否需要继续向前进位……如此不断重复这一过程直至某次舍入之后不需要向前进位或一直推进到了整数部分。这和小学算术所学的四舍五入过程完全一致。</p>
 <p><strong>代码及其改进</strong></p>
-<p>经过上面的分析，应该不难写出实际的C++代码了。编写输出语句时要注意两处容易引起错误的地方。一是结果的正负不要忘记；二是如果结果是整数则不需要输出小数点。代码里没有加注释，请大家务必自己把它读懂。</p>
+<p>经过上面的分析，应该不难写出实际的C++代码了。编写输出语句时要注意两处容易引起错误的地方。一是结果的正负不要忘记；二是如果结果是整数则不需要输出小数点。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -230,7 +230,7 @@
 <p>无论保留多少位小数，如果遇到循环小数，那它总还是不精确的。如果要得到任何一个有理小数的精确表示形式，就必须用循环节来表示它。</p>
 <p>我们现在要编写这样一个程序：输入两个整数，被除数 <span class="math notranslate nohighlight">\(a\)</span> 和除数 <span class="math notranslate nohighlight">\(b\neq 0\)</span>，输出 <span class="math notranslate nohighlight">\(a/b\)</span> 的循环小数形式，循环节用一对小括号标识，在循环小数后面紧跟一个整数 <span class="math notranslate nohighlight">\(n\)</span>，为循环节的长度。如果 <span class="math notranslate nohighlight">\(a/b\)</span> 不是循环小数，那么在小数结尾后添加一个为0的循环节。</p>
 <p>例如：<span class="math notranslate nohighlight">\(a=5,b=43\)</span>，则输出 <span class="math notranslate nohighlight">\(0.(116279069767441860465)21\)</span>；<span class="math notranslate nohighlight">\(a=-1,b=25\)</span>，则输出 <span class="math notranslate nohighlight">\(-0.04(0)1\)</span>。</p>
-<p>经过前面的超高精度小数计算，相信大家马上就可以想到这个循环小数问题仍然可以用模拟竖式除法运算来实现。我们只需知道循环节开始于哪一位，又结束于哪一位就可以了。为此需要另外用一个数组来记录每一位上得到的余数，每做完一次除法得到一个非零的余数时我们就去查一下这个余数是不是已经出现过了，如果已经出现过了就说明找到循环节了。</p>
+<p>经过前面的超高精度小数计算，马上可以想到这个循环小数问题仍然可以用模拟竖式除法运算来实现。我们只需知道循环节开始于哪一位，又结束于哪一位就可以了。为此需要另外用一个数组来记录每一位上得到的余数，每做完一次除法得到一个非零的余数时我们就去查一下这个余数是不是已经出现过了，如果已经出现过了就说明找到循环节了。</p>
 <p>余数 <span class="math notranslate nohighlight">\(r\)</span> 的取值范围为 <span class="math notranslate nohighlight">\([0,b-1]\)</span>，可以用一个长度为 <span class="math notranslate nohighlight">\(b\)</span> 的数组来保存每一个余数值首次出现的位置，0表示这个余数值还没出现过, 1表示在进行第1次除法的时候得到了这个余数值，说明这个余数值和小数点后第1位小数对应。依此类推，数组元素的下标表示余数值，元素值表示该余数值第一次出现时对应小数点后第几位。在运算过程中，每除出一个非零余数，就把当前位置记录在对应的数组元素里。如果对应的元素已经非零，那就说明这个余数值重复出现了，前一次保存下来的元素值就是循环节起始位置，现在的位置就是循环节结束位置的后一位。</p>
 <p>例1：<span class="math notranslate nohighlight">\(a=5, b=7\)</span>，数组 <code class="docutils literal notranslate"><span class="pre">quo[]</span></code> 存放每次除法运算的商，数组 <code class="docutils literal notranslate"><span class="pre">rem_pos[]</span></code> 存放每个余数值第一次出现时的小数位数。计算过程和结果可以用下面这张图来表示：</p>
 <img alt="../../_images/215_cycle.png" src="../../_images/215_cycle.png" />

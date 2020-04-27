@@ -76,7 +76,7 @@
 <p>顾名思义，尺取法就是像尺子一样一段一段进行测量。尺取法使用一对下标表示所测量的区间的左右端点，根据测量结果不断地单向推进区间端点以找到答案。尺取法比直接暴力枚举区间效率高很多，是一种高效的区间枚举技巧，一般用于求取有特定区间和的所有子区间或最短的子区间等等。</p>
 <div class="admonition attention">
 <p class="admonition-title">注意</p>
-<p>使用尺取法的时候，区间端点可以采用编程习惯的左闭右开原则，也可以采用数学习惯的闭区间，这可以根据个人习惯和题目情况来选择。本节中的示例和讲解都使用闭区间来表示尺的测量范围，作为编程训练大家可以尝试用含头不含尾原则改写本节的示例程序。</p>
+<p>使用尺取法的时候，区间端点可以采用编程习惯的左闭右开原则，也可以采用数学习惯的闭区间，这可以根据个人习惯和题目情况来选择。本节中的示例和讲解都使用闭区间来表示尺的测量范围。</p>
 </div>
 <p>要在数列 <span class="math notranslate nohighlight">\(A=\{a_n\}\)</span> 中寻找所有区间和等于 <span class="math notranslate nohighlight">\(s\)</span> 的子区间，如果数列保存在数组 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a[]</span></code> 中，那么用一个双层嵌套循环可以暴力枚举所有子区间。内外两层循环分别枚举所有子区间的左右端点，最内层还需要用一个单循环来计算出区间和：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">l</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>

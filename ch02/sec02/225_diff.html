@@ -130,7 +130,7 @@
 <p>处理完所有区间修改之后，我们得到了差分表 <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">-3}</span></code>。乍看上去好像很难理解这样一张差分表有什么用处。确实，它还不能马上应用，后面还有一步重要的操作要做，那就是对它做前缀和处理。这个例子的数据很简单，我们手工计算一下就可以很简单地得到它的前缀和 <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">-1}</span></code>。</p>
 <div class="admonition hint">
 <p class="admonition-title">提示</p>
-<p>到这里为止，请大家暂停一下先不要继续往下阅读。先对照例子中的原数列和最终结果数列，再对照一下我们得到的差分前缀和，想一想它的每一项代表了什么意思？然后对照差分的数学意义想一想差分表里的每一项又代表什么意思？再想一想为什么能得到这张神奇的差分表？如果能想明白这三个问题，那么线性差分的原理就彻底搞懂了，以后也不会再忘了这个算法技巧了。</p>
+<p>请对照例子中的原数列和最终结果数列，再对照得到的差分前缀和，想一想它的每一项都代表了什么意思？然后对照差分的数学意义想一想差分表里的每一项又代表什么意思？再想一想为什么能得到这张神奇的差分表？如果能想明白这三个问题，那么线性差分的原理就彻底搞懂了，以后也不会再忘了这个算法技巧了。</p>
 </div>
 <p>是的，现在差分表里每个位置上的数，就表示原数列相应位置的数的最终改变量。现在只需要简单得把差分数组里的每一个数 <code class="docutils literal notranslate"><span class="pre">diff[i]</span></code> 一一加到原数组相应位置 <code class="docutils literal notranslate"><span class="pre">data[i]</span></code> 上去就完成了整个多次区间修改操作。在这个例子里最后一步的操作是这样的：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   data: { 1, 2, 3, 4  }
