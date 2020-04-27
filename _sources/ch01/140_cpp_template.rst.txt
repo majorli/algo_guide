@@ -16,7 +16,7 @@ C++语言提供了一种叫做\ :strong:`模板`\ （template）的技术，用�
            return a > b ? a : b;
    }
 
-调用这个函数，两个参数必须是 ``int`` 型或者可以隐式转换为 ``int`` 型的数据类型，比如 ``short`` 和 ``char``\ 。如果是 ``long long int`` 或者 ``double``\ ，虽然也可以强制转换为 ``int``\ ，但是不安全，有可能造成错误。如果为每一种数据类型都写一个这样的函数，分别叫做 ``max_int()``、``max_long_long()``、``max_double()`` 等等等等，是不是很傻？用模板技术就可以轻松解决这个问题，先看代码。
+调用这个函数，两个参数必须是 ``int`` 型或者可以隐式转换为 ``int`` 型的数据类型，比如 ``short`` 和 ``char``\ 。如果是 ``long long`` 或者 ``double``\ ，虽然也可以强制转换为 ``int``\ ，但是不安全，有可能造成错误。如果为每一种数据类型都写一个这样的函数，分别叫做 ``max_int()``、``max_long_long()``、``max_double()`` 等等等等，是不是很傻？用模板技术就可以轻松解决这个问题，先看代码。
 
 .. literalinclude:: ../codes/140_template_1.cpp
    :language: c++

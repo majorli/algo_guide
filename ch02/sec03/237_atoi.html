@@ -231,7 +231,7 @@
 <li><p>画完之后一般要进行合并简化。</p></li>
 </ol>
 <p>下面我们来看看atoi状态机的具体构造过程。</p>
-<p>atoi问题的状态机会比前面的两个例子略微复杂一些，它还需要引入一些数据并且在状态转移的时候对这些数据进行操作，以便到达终止状态的时候机器的数据就是想要转换的那个正确的整数。为了准确表示一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型整数，我们需要在机器里加入两项数据：正负符号和值。可以用一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型变量 <code class="docutils literal notranslate"><span class="pre">neg</span></code> 来表示这个数是不是负数，初始值为false，如果字符串中第一个字符是负号 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 就把它改成true。另外用一个 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 型变量 <code class="docutils literal notranslate"><span class="pre">value</span></code> 存放值，初始值为0。</p>
+<p>atoi问题的状态机会比前面的两个例子略微复杂一些，它还需要引入一些数据并且在状态转移的时候对这些数据进行操作，以便到达终止状态的时候机器的数据就是想要转换的那个正确的整数。为了准确表示一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型整数，我们需要在机器里加入两项数据：正负符号和值。可以用一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 型变量 <code class="docutils literal notranslate"><span class="pre">neg</span></code> 来表示这个数是不是负数，初始值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，如果字符串中第一个字符是负号 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 就把它改成 <code class="docutils literal notranslate"><span class="pre">true</span></code>。另外用一个 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 型变量 <code class="docutils literal notranslate"><span class="pre">value</span></code> 存放值，初始值为0。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">问题</p>
 <p>刚才描述的两项数据，有两个问题需要思考。</p>

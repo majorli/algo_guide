@@ -146,7 +146,7 @@
 <h2><span class="section-number">3.2.4.2. </span>二维前缀和<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
 <p>在数学里，把一个 <span class="math notranslate nohighlight">\(m\)</span> 行 <span class="math notranslate nohighlight">\(n\)</span> 列的矩形数阵称为<strong>矩阵</strong>，通常用大写字母表示。例如 <span class="math notranslate nohighlight">\(A=\begin{bmatrix}1&amp;2&amp;3\\4&amp;5&amp;6\end{bmatrix}\)</span> 就是一个矩阵，由于它有2行3列，所以也叫做2×3矩阵，也记作 <span class="math notranslate nohighlight">\(A_{2\times3}\)</span>。矩阵中的数称为元素，用和矩阵名对应的小写字母加上所在行列号的下标来表示，例如 <span class="math notranslate nohighlight">\(a_{1,2}\)</span> 表示矩阵 <span class="math notranslate nohighlight">\(A\)</span> 中第1行第2列的那个元素。最小的矩阵是1×1矩阵，它实际上也就是一个数，有一个数学名词叫做<strong>标量</strong>，就是指一个单独的数。</p>
 <p>C++语言里很自然的就可以用二维数组来表示矩阵，而且元素的类型也不再局限于数，而是任何基本或派生数据类型。但还是要注意编号问题，在数学里矩阵的行和列都是从1开始编号的，最上面一行是第1行，最左边的列是第1列，但是C++语言的数组无论是行还是列都是从0开始编号的。</p>
-<p>一个 <span class="math notranslate nohighlight">\(m\times n\)</span> 矩阵 <span class="math notranslate nohighlight">\(A\)</span> 内部的任意一个 <span class="math notranslate nohighlight">\(k\)</span> 行 <span class="math notranslate nohighlight">\(l\)</span> 列 <span class="math notranslate nohighlight">\((1\le k \le m,1\le l \le n)\)</span> 的矩形区域叫做 <span class="math notranslate nohighlight">\(A\)</span> 的一个子矩阵。例如 <span class="math notranslate nohighlight">\(B=\begin{bmatrix}1&amp;2\\4&amp;5\end{bmatrix}\)</span> 就是矩阵 <span class="math notranslate nohighlight">\(A=\begin{bmatrix}1&amp;2&amp;3\\4&amp;5&amp;6\end{bmatrix}\)</span> 的一个子矩阵。用子矩阵左上和右下两个角在原矩阵中的位置坐标就可以唯一地确定这个子矩阵，例如在刚才那个例子里，子矩阵 <span class="math notranslate nohighlight">\(B\)</span> 的左上角坐标是(1,1)，右下角则是(2,2)。一个矩阵最大的子矩阵就是它自己，最小的子矩阵是由单个元素构成的1×1矩阵，其实也就是元素本身。</p>
+<p>矩阵 <span class="math notranslate nohighlight">\(A_{m\times n}\)</span> 内部的任意一个 <span class="math notranslate nohighlight">\(k\)</span> 行 <span class="math notranslate nohighlight">\(l\)</span> 列 <span class="math notranslate nohighlight">\((1\le k \le m,1\le l \le n)\)</span> 的矩形区域叫做 <span class="math notranslate nohighlight">\(A\)</span> 的一个子矩阵。例如 <span class="math notranslate nohighlight">\(B=\begin{bmatrix}1&amp;2\\4&amp;5\end{bmatrix}\)</span> 就是矩阵 <span class="math notranslate nohighlight">\(A=\begin{bmatrix}1&amp;2&amp;3\\4&amp;5&amp;6\end{bmatrix}\)</span> 的一个子矩阵。用子矩阵左上和右下两个角在原矩阵中的位置坐标就可以唯一地确定这个子矩阵，例如在刚才那个例子里，子矩阵 <span class="math notranslate nohighlight">\(B\)</span> 的左上角坐标是(1,1)，右下角则是(2,2)。一个矩阵最大的子矩阵就是它自己，最小的子矩阵是由单个元素构成的1×1矩阵，其实也就是元素本身。</p>
 <p>在编程时，通常用四个变量 <code class="docutils literal notranslate"><span class="pre">left,</span> <span class="pre">top,</span> <span class="pre">right,</span> <span class="pre">bottom</span></code> 分别表示子矩阵所在区域的左、上、右、下四个位置的行号或列号，有时在不会有歧义的情况下也直接使用它们的首字母 <code class="docutils literal notranslate"><span class="pre">l,</span> <span class="pre">t,</span> <span class="pre">r,</span> <span class="pre">b</span></code>。给出这样四个变量的值，就可以在一个二维数组中确定地标识出一个子区域。注意，这里还是采用全闭的区域，不流行什么含头不含尾原则。</p>
 <p>很多算法需要随时查询一个数据矩阵中指定区域的子矩阵中所有元素的和。如果不做任何预处理，那么每查询一个 <span class="math notranslate nohighlight">\(k\times l\)</span> 区域的子矩阵和就需要进行 <span class="math notranslate nohighlight">\(k\times l\)</span> 次加法。如果算法中子矩阵和的查询量极大，那么算法的时间效率就会很低，接近 <span class="math notranslate nohighlight">\(O(n^3)\)</span>。在这种情况下，使用二维前缀和对矩阵进行预处理会把单次计算子矩阵和的时间复杂度直接降到 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
 <p>理解了一维前缀和之后再理解二维前缀和就不难了。位置 <span class="math notranslate nohighlight">\(k\)</span> 上的一维前缀和就是指从数列的首项 <span class="math notranslate nohighlight">\(a_1\)</span> 开始累加到第 <span class="math notranslate nohighlight">\(k\)</span> 项 <span class="math notranslate nohighlight">\(a_k\)</span> 的和。类似地，位置 <span class="math notranslate nohighlight">\(b\)</span> 行 <span class="math notranslate nohighlight">\(r\)</span> 列上的二维前缀和就是指以整个矩阵的第1行第1列那个元素 <span class="math notranslate nohighlight">\(a_{1,1}\)</span> 为左上角，以 <span class="math notranslate nohighlight">\(a_{b,r}\)</span> 为右下角的子矩阵的元素和：<span class="math notranslate nohighlight">\(\sum_{i=1}^b\sum_{j=1}^ra_{i,j}\)</span>。</p>
@@ -169,10 +169,18 @@
 <li><p>“左上方那个”，也就是第1行第2列上的前缀和 <span class="math notranslate nohighlight">\(s_{1,2}=3\)</span>，它代表子矩阵 <span class="math notranslate nohighlight">\(\begin{bmatrix}1 &amp; 2\end{bmatrix}\)</span> 的元素之和。</p></li>
 </ol>
 <p>我们发现，如果我们把“上面那个”和“左边那个”加起来，再减去二者重叠的“左上方那个”的部分，得到的和就应该是恰好缺了右下角元素的那个部分 <span class="math notranslate nohighlight">\(\begin{bmatrix}1 &amp; 2 &amp; 3\\2 &amp; 3\end{bmatrix}\)</span> 的元素之和，把缺了的那个右下角元素 <span class="math notranslate nohighlight">\(a_{2,3}=4\)</span> 加上去就得到了第2行第3列上的前缀和 <span class="math notranslate nohighlight">\(s_{2,3}\)</span>，它等于15。</p>
-<p>所以我们在编程时，就随着逐行逐列的顺序，从第1行第1列开始按照上面这个递推公式逐个位置的进行 <em>(“读入的数”+“上面那个”前缀和+“左边那个”前缀和-“左上方那个”前缀和)</em> 的简单运算就可以完成二维前缀和的预处理。这里和一维前缀和时类似，一种比较好的实现是空出C++数组的第0行和第0列，把它们全部初始化为0，数据也好前缀和也好按照数学习惯从第1行第1列开始存放。虽然浪费了一点空间，但是在处理行号或者列号为1的位置时不需要关心出现负数坐标值的问题，而且也更加符合日常习惯。</p>
-<p>利用二维前缀和来计算出任意的子矩阵和同样只进行三次加减运算就可以了，只不过和预处理时前缀和的计算方法刚好相反。现在对于任意给定了左上右下四个位置的子矩阵，我们要计算的是 <em>(“右下角”的前缀和-“上面那个”前缀和-“左边那个”前缀和+“左上方那个”前缀和)</em>。在这里，全零的0号行和0号列又发挥了神奇的作用，使得程序代码可以大大简化。</p>
+<p>所以我们在编程时，就随着逐行逐列的顺序，从第1行第1列开始按照上面这个递推公式逐个位置的计算：</p>
+<blockquote>
+<div><p><em>“读入的数”+“上面那个”前缀和+“左边那个”前缀和-“左上方那个”前缀和</em></p>
+</div></blockquote>
+<p>这样的简单运算就可以完成二维前缀和的预处理。和一维前缀和类似，一种比较好的做法是空出C++数组的第0行和第0列，把它们全部初始化为0，数据也好前缀和也好按照数学习惯从第1行第1列开始存放。虽然浪费了一点空间，但是在处理行号或者列号为1的位置时不需要关心出现负数坐标值的问题，而且也更加符合日常习惯。</p>
+<p>利用二维前缀和来计算出任意的子矩阵和同样只进行三次加减运算就可以了，只不过和前缀和的计算方法刚好相反。现在对于任意给定了左上右下四个位置的子矩阵，我们要计算的是：</p>
+<blockquote>
+<div><p><em>“右下角”的前缀和-“上面那个”前缀和-“左边那个”前缀和+“左上方那个”前缀和</em></p>
+</div></blockquote>
+<p>在这里，全零的0号行和0号列又发挥了神奇的作用，使得程序代码可以大大简化。</p>
 <img alt="../../_images/224_prefix_sum.002.png" src="../../_images/224_prefix_sum.002.png" />
-<p>另外，和一维前缀和的情形一样，如果为了节约内存，我们也可以不保存原矩阵。从二维前缀和中恢复出 <span class="math notranslate nohighlight">\(k\)</span> 行 <span class="math notranslate nohighlight">\(l\)</span> 列上的原矩阵元素，其实就是计算仅含这一个元素的子矩阵的元素和，所以这时候无非就是上下两个行号都是 <span class="math notranslate nohighlight">\(k\)</span>，左右两个列号都是 <span class="math notranslate nohighlight">\(l\)</span> 而已。</p>
+<p>和一维前缀和的情形一样，如果需要节约内存，我们也可以不保存原矩阵。从二维前缀和中恢复出 <span class="math notranslate nohighlight">\(k\)</span> 行 <span class="math notranslate nohighlight">\(l\)</span> 列上的原矩阵元素，其实就是计算仅含这一个元素的子矩阵的元素和，所以这时候无非就是上下两个行号都是 <span class="math notranslate nohighlight">\(k\)</span>，左右两个列号都是 <span class="math notranslate nohighlight">\(l\)</span> 而已。</p>
 <p>下面是和前面一维前缀和演示程序类似的一个小演示程序，用来说明怎样用C++语言实现常规的二维前缀和预处理以及怎样计算一个给定了左上右下四个坐标的子矩阵和，请务必试着运行一下看看效果。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 
@@ -274,7 +282,7 @@
 </div></blockquote>
 <p>6、求模m的最大子区间和（子区域和）</p>
 <blockquote>
-<div><p>给定一个数列（矩阵）和一个模m，求所有模m的子区间和（子区域和）中的最大值。</p>
+<div><p>给定一个数列（矩阵）和一个模 <span class="math notranslate nohighlight">\(m\)</span>，求所有模m的子区间和（子区域和）中的最大值。</p>
 </div></blockquote>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>

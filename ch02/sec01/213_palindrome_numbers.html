@@ -104,7 +104,7 @@
 <p>一般来说回文数是指自然数，即0和正整数。负数由于前面有一个负号，所以绝不能是回文数。但是有些算法题里特别说明，对于负数，如果其绝对值是回文数那么就算它也是回文数。像这样的特殊说明可能并没有用文字说出来，而是在样例中给了一个例子来说明，审题一定要仔细！还有一些题目会特别认定若去除小数点后剩余的数字成为回文数则也认为这个小数是回文数，例如 12.21。这些特殊情况只是拓宽了回文数的认定范围，回文数本身的规则并没有什么不同，用于处理自然数回文数的算法稍加修改就可以适应这些负数或小数回文数，所以这里我们不打算对它们做专门介绍，我们的讨论范围仍然是自然数。</p>
 <p>回文数有两个特点非常有用。</p>
 <ol class="arabic simple">
-<li><p>不证自明，所有的一位数必然是回文数：0,1,2,3,4,5,6,7,8,9。</p></li>
+<li><p>不证自明，所有的一位数必然是回文数：0, 1, 2, 3, 4, 5, 6, 7, 8, 9。</p></li>
 <li><p>偶数位的回文数，除了11以外全部是合数，它们都有因数11。</p></li>
 </ol>
 <p>第二个性质的证明并不难，把一个回文数按十进制数的占位表示法在各位上展开即可证明，用数学归纳法来证明比较简单。</p>
@@ -121,9 +121,9 @@
 <div class="section" id="id2">
 <h2><span class="section-number">3.1.3.1. </span>整数取位<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
 <p>取一个十进制整数中指定位上的数是最基本的整数算法，不光是回文数算法的基础，也是所有数值算法的基础。</p>
-<p>整数取位的原理非常简单。数学里，一个十进制整数从右到左各位一般依次称作“个位、十位、百位、千位、万位、十万位……”，或者用序号叫做“小数点左边第1位、第2位、第3位……”。计算机编程时一般采用序号的方式。每一个位的序号和这个位上的基的幂次是对应的，第 <span class="math notranslate nohighlight">\(i\)</span> 位的十进制基就是 <span class="math notranslate nohighlight">\(10^{i-1}\)</span>。例如个位就是第1位，个位的十进制基就是 <span class="math notranslate nohighlight">\(10^0=1\)</span>，千位是第4位，所以它的基就是 <span class="math notranslate nohighlight">\(10^3=1000\)</span>。</p>
-<p>对于n位的十进制整数，要取它的个位数很简单，除10取余就是它的个位数。如果要取其第 <span class="math notranslate nohighlight">\(i\)</span> 上的数，只要将它从第 <span class="math notranslate nohighlight">\(i\)</span> 位和第 <span class="math notranslate nohighlight">\(i-1\)</span>的中间断开，舍去右边部分，取左边那个整数的个位数就可以了。例如取整数1234的个位数，只要除10取余就可以得到个位数4，如果要取百位数，百位是第3位，所以先除以10<sup>2</sup>=100，得到的商就是从百位和十位中间断开后的左边部分那个整数12，对其除10取余得个位数2，它就是1234的百位数。</p>
-<p>所以取整数第任意位数的算法是：将原数除以 <span class="math notranslate nohighlight">\(10^{i-1}\)</span> 取商，然后对商除10取余，就得到了原数的第 <span class="math notranslate nohighlight">\(i\)</span> 位数。这个算法对任意 <span class="math notranslate nohighlight">\(i\ge1\)</span> 都是正确可用的。对于负数，C++取余运算的规则将使得取到的数也是负数（或0），例如取-876的十位数将得到-7。有时候这个特点非常有用。</p>
+<p>整数取位的原理非常简单。一个十进制整数从右到左各位一般依次称作“个位、十位、百位……”，或者用序号叫做“第1位、第2位、第3位……”。每一个位的序号和这个位上的<strong>基</strong>是对应的，第 <span class="math notranslate nohighlight">\(k\)</span> 位的基就是 <span class="math notranslate nohighlight">\(10^{k-1}\)</span>。例如个位是第1位，个位的基就是10<sup>0</sup>=1，千位是第4位，它的基是10<sup>3</sup>=1000。</p>
+<p>对于 <span class="math notranslate nohighlight">\(n\)</span> 位的十进制整数，要取它的个位数很简单，除10取余就是。如果要取其第 <span class="math notranslate nohighlight">\(k\)</span> 位上的数，只要将它从第 <span class="math notranslate nohighlight">\(k\)</span> 位和第 <span class="math notranslate nohighlight">\(k-1\)</span>的中间断开，舍去右边部分，取左边那个整数的个位数就可以了。例如取整数1234的个位数，只要除10取余就可以得到个位数4，如果要取百位数，百位是第3位，所以先除以10<sup>2</sup>=100，得到的商就是从百位和十位中间断开后的左边部分那个整数12，对其除10取余得个位数2，它就是1234的百位数。</p>
+<p>所以取整数第 <span class="math notranslate nohighlight">\(k\)</span> 位数的算法是：将原数除以 <span class="math notranslate nohighlight">\(10^{k-1}\)</span> 取商，然后对商除10取余，就得到了原数的第 <span class="math notranslate nohighlight">\(k\)</span> 位数。对于负数，C++取余运算的规则将使得取到的数也是负数（或0），例如取-876的十位数将得到-7。有时候这个特点非常有用。</p>
 <p>使用上述数学方法，很容易编写出整数取位的C++函数。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">digit_at</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span>
 <span class="p">{</span>
@@ -150,7 +150,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">注解</p>
-<p>这段代码的循环条件值得关注，它使用了一个自除10表达式 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">/=</span> <span class="pre">10</span></code>，这个表达式的值是n除以10之后得到的商。这样做使得程序不需要在循环体内去完成n的自除，所以循环体内只需要一条修正结果的语句就够了。之所以可以这么做是因为我们把结果的初始值设为了原数的个位数，而不是很多整数反转算法里采用的初始值0。请想一想如果我们把结果的初始值设为0，这个算法和代码要怎么改变？</p>
+<p>这段代码的循环条件值得关注，它使用了一个自除10表达式 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">/=</span> <span class="pre">10</span></code>，这个表达式的值是 <code class="docutils literal notranslate"><span class="pre">n</span></code> 除以10之后得到的商。这样做使得程序不需要在循环体内去完成 <code class="docutils literal notranslate"><span class="pre">n</span></code> 的自除，所以循环体内只需要一条修正结果的语句就够了。之所以可以这么做是因为我们把结果的初始值设为了原数的个位数，而不是很多整数反转算法里采用的初始值0。请想一想如果我们把结果的初始值设为0，这个算法和代码要怎么改变？</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>

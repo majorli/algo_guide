@@ -88,7 +88,7 @@
 <div class="admonition- admonition">
 <p class="admonition-title">数学</p>
 <p>差分本身是一个数学概念，它应用在离散函数，也就是通常所说的数列上，用来表示每一对前后项之间的差。最常用的叫做<strong>前向差分</strong>，也就是通常所说的差分。数列 <span class="math notranslate nohighlight">\(\{a_n\}\)</span> 中第 <span class="math notranslate nohighlight">\(i\)</span> 项上的差分等于它的后一项减去它自己的差，记作 <span class="math notranslate nohighlight">\(\Delta a_i=a_{i+1}-a_i\)</span>，可以理解为从当前项前进到后一项时数值的改变量。对于数列的尾项，由于它没有后项了，所以尾项没有差分。</p>
-<p>这样的话，一个项数为n的数列，它的差分数列项数为n-1。例如数列 [2,5,3,4]，它的差分数列就是 [3,-2,1]。</p>
+<p>这样的话，一个项数为 <span class="math notranslate nohighlight">\(n\)</span> 的数列，它的差分数列项数为 <span class="math notranslate nohighlight">\(n-1\)</span>。例如数列 [2,5,3,4]，它的差分数列就是 [3,-2,1]。</p>
 <p>可以看到，差分数列反映了原数列中数值的变化波动过程，但是由于前向差分数列并不知道原数列的首项是什么，所以不能从它倒推出原数列，只能得出波动情况。在实际应用中，有时候为了让差分数列能完整再现原数列，会在原数列首项之前虚拟一个等于零的项 <span class="math notranslate nohighlight">\(a_0=0\)</span>，这样差分数列就会从 <span class="math notranslate nohighlight">\(\Delta a_0=a_1-a_0=a_1\)</span> 开始。这样数列和它的差分就有了一致的项数，而差分的首项就是数列的首项，从差分可以逐步还原整个原数列。</p>
 <p>例如上面举的那个例子，加上虚拟的 <span class="math notranslate nohighlight">\(a_0=0\)</span> 之后它的差分就变成了 [2,3,-2,1]。</p>
 </div>
@@ -191,7 +191,7 @@
 </div>
 <div class="section" id="id2">
 <h2><span class="section-number">3.2.5.2. </span>二维差分（洛谷P3397）<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p>学会了一维线性差分后，要把这种技巧推广到二维区域的差分上就很方便了。我们只需要把m×n的二维区域视为由m个长度为n的一维区域由上至下铺设而成的就可以了。在它的一个左上角为 <span class="math notranslate nohighlight">\((r_1,c_1)\)</span>，右下角为 <span class="math notranslate nohighlight">\((r_2,c_2)\)</span> 的长方形子区域内做整体增减处理，增减量为 <span class="math notranslate nohighlight">\(d\)</span>。这只不过是在从第 <span class="math notranslate nohighlight">\(r_1\)</span> 行到第 <span class="math notranslate nohighlight">\(r_2\)</span> 行这几个一维数列上做相同的一维线性差分而已，差分区间为 <span class="math notranslate nohighlight">\([c_1,c_2]\)</span>，差值为 <span class="math notranslate nohighlight">\(d\)</span>。</p>
+<p>学会了一维线性差分后，要把这种技巧推广到二维区域的差分上就很方便了。我们只需要把 <span class="math notranslate nohighlight">\(m\times n\)</span> 的二维区域视为由 <span class="math notranslate nohighlight">\(m\)</span> 个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的一维区域由上至下铺设而成的就可以了。要在它的左上角为 <span class="math notranslate nohighlight">\((r_1,c_1)\)</span>、右下角为 <span class="math notranslate nohighlight">\((r_2,c_2)\)</span> 的长方形子区域内做整体增减处理，增减量为 <span class="math notranslate nohighlight">\(d\)</span>，不过是在从第 <span class="math notranslate nohighlight">\(r_1\)</span> 行到第 <span class="math notranslate nohighlight">\(r_2\)</span> 行这几个一维数列上做相同的一维线性差分而已，差分区间为 <span class="math notranslate nohighlight">\([c_1,c_2]\)</span>，差值为 <span class="math notranslate nohighlight">\(d\)</span>。</p>
 <p>例如我们有一块5×5的区域要做连续数次二维差分，它的差分表初始状态当然还是为全零：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0  0  0  0  0
 0  0  0  0  0

@@ -97,7 +97,7 @@
 </pre></div>
 </div>
 <p>除了数据类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 有点偏小以外，上面这段代码的正确性无懈可击，因为我们知道指数是一种增长速度快得可怕的运算，<code class="docutils literal notranslate"><span class="pre">int</span></code> 类型整数的绝对值最大也不过2<sup>31</sup>-1，大约21亿多，用来计算整数幂很可能一不留神就爆掉了。但是就算改成 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 类型情况也好不到哪里去，如果换成 <code class="docutils literal notranslate"><span class="pre">double</span></code> 类型那么数据的精度又成了大问题。所以上面这个算法的一个小问题就是它很可能需要有<strong>高精度整数运算</strong>算法的加持。</p>
-<p>但是这不是最重要的，最重要的是上面这种朴素的算法在效率上非常堪忧。它需要着着实实地进行n次乘法计算，所以它的时间复杂度是 <span class="math notranslate nohighlight">\(O(n)\)</span>。鉴于计算机进行乘法运算本身就很费时，所以这样的运行效率并不能令人满意。假设用上了高精度乘法，那么这个朴素的算法就很费力了。这是它最大的问题所在，我们需要一种更优秀的算法，这就是经典的整数快速幂算法，效率高达 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。</p>
+<p>但是这不是最重要的，最重要的是上面这种朴素的算法在效率上非常堪忧。它需要着着实实地进行 <span class="math notranslate nohighlight">\(n\)</span> 次乘法计算，所以它的时间复杂度是 <span class="math notranslate nohighlight">\(O(n)\)</span>。鉴于计算机进行乘法运算本身就很费时，所以这样的运行效率并不能令人满意。假设用上了高精度乘法，那么这个朴素的算法就很费力了。这是它最大的问题所在，我们需要一种更优秀的算法，这就是经典的整数快速幂算法，效率高达 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。</p>
 <p>快速幂有两种不同的实现，一种基于对指数的二进制分解，另一种基于对指数的二分降幂。但二者只是实现技巧上的不同，本质上是完全相同的算法。</p>
 <div class="section" id="id1">
 <h2><span class="section-number">3.1.6.1. </span>指数拆分法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
@@ -107,7 +107,7 @@
 <p>如此，以13为指数的幂可以改写成：<span class="math notranslate nohighlight">\(a^{13}=a^{1\times8} \cdot a^{1\times4} \cdot a^{0\times2} \cdot a^{1\times1}\)</span>，为了看得更清楚，我们把指数写成二进制：</p>
 <div class="math notranslate nohighlight">
 \[a^{13}=a^{(1101)_2}=a^{1\times8} \cdot a^{1\times4} \cdot a^{0\times2} \cdot a^{1\times1}=a^{1\times(1000)_2}\cdot a^{1\times(100)_2}\cdot a^{0\times(10)_2}\cdot a^{1\times(1)_2}\]</div>
-<p>现在可以看出一点端倪来了，只要把指数写成它的二进制形式，那么它的每一位都会对应一个基数。第m位的基数等于 <span class="math notranslate nohighlight">\(a^{2^{m-1}}\)</span>，第1位是最低位，它的基是底数 <span class="math notranslate nohighlight">\(a\)</span> 本身，后一位上的基是前一位上的基的平方。指数的二进制形式一共有几位，就有几个这样的基数。例如，指数的二进制形式一共有4位的话，那么从最低位（第1位）到最高位（第4位）对应的基数分别为：<span class="math notranslate nohighlight">\(a^1,a^2,a^4,a^8\)</span>。这些基数是不是要成为整个幂运算的因数，取决于二进制指数对应的位上是0还是1。</p>
+<p>现在可以看出一点端倪来了，只要把指数写成它的二进制形式，那么它的每一位都会对应一个基数。第 <span class="math notranslate nohighlight">\(m\)</span> 位的基数等于 <span class="math notranslate nohighlight">\(a^{2^{m-1}}\)</span>，第1位是最低位，它的基数是底数 <span class="math notranslate nohighlight">\(a\)</span> 本身，后一位上的基数是前一位上基数的平方。指数的二进制形式一共有几位，就有几个这样的基数。例如，指数的二进制形式一共有4位的话，那么从最低位（第1位）到最高位（第4位）对应的基数分别为：<span class="math notranslate nohighlight">\(a^1,a^2,a^4,a^8\)</span>。这些基数是不是要成为整个幂运算的因数，取决于二进制指数对应的位上是0还是1。</p>
 <p>于是我们可以这样操作：从二进制指数的最低位开始到最高位逐位循环，初始时让结果等于1，对应0次方的情况，让基数等于底数本身，即最低位的基 <span class="math notranslate nohighlight">\(a^1\)</span>。每轮循环检查二进制指数的当前位上是不是1，如果是1就在结果上乘上基数，然后无论该位是0还是1，都把基数进行平方，让它成为下一轮循环的基数。这就是快速幂的基本思路，一共需要循环 <span class="math notranslate nohighlight">\(\log n\)</span> 轮，最差的情况下每轮循环进行两次整数乘法，工作量为 <span class="math notranslate nohighlight">\(T(n)=2\log n\)</span>，时间复杂度 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。</p>
 <p>在具体实现这个循环的时候，通常的做法是利用位运算来控制循环和取位：在每一次循环之后，把指数右移一位，这样下一轮循环要检查的位就移动到了最低位上，每一次循环只要固定地检查最低位就可以了。这样做同时带来一个便利，那就是循环结束条件可以设置为指数为0，当不断右移最终使得指数变成0的时候，说明最高位也已经检查掉了，循环可以结束了。</p>
 <p>还有一个值得一提的地方，这样一个循环足以让所有零次幂得到正确的结果1，为什么？请思考原因。</p>
@@ -199,7 +199,7 @@
 <p class="admonition-title">提示</p>
 <p>这个算法非常优雅而且高效，上面是它最常见的一种C++语言实现，实际上它还可以有很多其他实现形式。例如对于不熟悉二进制位操作的人可能会习惯于用 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">\=</span> <span class="pre">2</span></code> 来代替右移，用 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(n</span> <span class="pre">%</span> <span class="pre">2)</span></code> 来代替 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(n</span> <span class="pre">&amp;</span> <span class="pre">1)</span></code> 检查最低位。循环也可以用 <code class="docutils literal notranslate"><span class="pre">for</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">do</span> <span class="pre">...</span> <span class="pre">while</span></code> 来实现。但是算法是不变的，要习惯于理解和记忆算法而不是具体的代码，因为代码是表象，它总是可以千变万化，而算法是精髓，它永远不变。作为对语言本身的练习，请至少用一种别的方式来实现一遍这个算法。</p>
 </div>
-<p>main函数中测试了几组幂运算，运行后得到的结果如下：</p>
+<p><code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数中测试了几组幂运算，运行后得到的结果如下：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0^0 = 1
 3^0 = 1
 3^13 = 1594323
@@ -209,7 +209,7 @@
 2^63 = -9223372036854775808
 </pre></div>
 </div>
-<p>可以看到，2<sup>63</sup>的计算结果错误，这是因为它超过了 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 数据类型的最大表示范围。普通的整数快速幂算法最大的问题就是很容易爆数据类型，因为指数运算的增长速度实在太过恐怖。所以在实际应用中，往往使用一种叫做<strong>模m的整数幂</strong>的运算，也就是说要求的结果并不是 <span class="math notranslate nohighlight">\(a^n\)</span>，而是它除以模m之后的余数 <span class="math notranslate nohighlight">\(a^n \pmod m\)</span>，其中 <span class="math notranslate nohighlight">\(m\ge2\)</span>。这种运算就将结果限制在了0到m-1的范围之内，后面我们会详细讲解。</p>
+<p>可以看到，2<sup>63</sup>的计算结果错误，这是因为它超过了 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 数据类型的最大表示范围。普通的整数快速幂算法最大的问题就是很容易爆数据类型，因为指数运算的增长速度实在太过恐怖。所以在实际应用中，往往使用一种叫做<strong>模m的整数幂</strong>的运算，也就是说要求的结果并不是 <span class="math notranslate nohighlight">\(a^n\)</span>，而是它除以模 <span class="math notranslate nohighlight">\(m\)</span> 之后的余数 <span class="math notranslate nohighlight">\(a^n \pmod m\)</span>，其中 <span class="math notranslate nohighlight">\(m\ge2\)</span>。这就将结果限制在了整数区间 <span class="math notranslate nohighlight">\([0,m)\)</span> 的范围之内，后面我们会详细讲解。</p>
 </div>
 <div class="section" id="id2">
 <h2><span class="section-number">3.1.6.2. </span>二分降幂法<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
@@ -240,7 +240,7 @@ a\cdot\left(a^2\right)^{\frac{n-1}{2}}&amp;,n=1,3,5,7,\dots
 </div>
 <p>仍以计算3<sup>13</sup>为例，现在我们的计算过程这样的：</p>
 <ol class="arabic simple">
-<li><p>第1轮循环，指数13是奇数，所以在第一轮循环的时候我们拆出一个底数3来乘到结果变量ans上去，使得ans=3，然后指数除2变为6，底数平方变为9。</p></li>
+<li><p>第1轮循环，指数13是奇数，所以在第一轮循环的时候我们拆出一个底数3来乘到结果ans上去，使得ans=3，然后指数除2变为6，底数平方变为9。</p></li>
 <li><p>第2轮循环，指数6是偶数，所以ans不变，指数除2变成3，底数平方变成81。</p></li>
 <li><p>第3轮循环，指数3是奇数，所以拆出一个底数81乘到ans上去，使得ans=243，然后指数除2变成1，底数平方变成6561。</p></li>
 <li><p>第4轮循环，指数1是奇数，所以拆除一个底数6561乘到ans上去，使得ans=1594323，然后指数除2变成0，底数变成6561的平方。</p></li>
@@ -359,7 +359,7 @@ a\cdot\left(a^2\right)^{\frac{n-1}{2}}&amp;,n=1,3,5,7,\dots
 <ol class="arabic simple">
 <li><p>考场算法编程，建议对特殊情况尽量用特判先处理掉，原因有三：首先能加快速度，其次能排除干扰让算法更简洁清晰，最重要的一点是安全，尽管算法本身可能可以正确处理特例，但在考场上花费时间去证明太麻烦了，如果特判掉可以节省不少时间而且保证算法主体的安全。此处我们先后特判了四种特例：</p>
 <ul class="simple">
-<li><p><strong>模为1</strong>：虽然在数学意义上模至少为2，但这里是算法竞赛，题目给出的数据范围并没有说k&gt;1。为了防止某些测试点故意给出k=1的坑数据，我们先把这种情况特判掉，如果遇到k=1，那么余数只能为0，所以直接返回0。另外，不需要考虑k可能为0的情况，因为C++本身的运算规则就不允许0作为取余的模。</p></li>
+<li><p><strong>模为1</strong>：虽然在数学意义上模至少为2，但这里是算法竞赛，题目给出的数据范围并没有说 <span class="math notranslate nohighlight">\(k\neq1\)</span>。为了防止某些测试点故意给出 <span class="math notranslate nohighlight">\(k=1\)</span> 的坑数据，我们先把这种情况特判掉，如果 <span class="math notranslate nohighlight">\(k=1\)</span>，那么余数只能为0，所以直接返回0。不过我们并不需要考虑 <span class="math notranslate nohighlight">\(k=0\)</span> 的情况，因为C++本身的运算规则就不允许0作为取余的模。</p></li>
 <li><p><strong>指数为0，或底数为1</strong>：这两种特例，结果一定都是1，所以特判，直接返回1。</p></li>
 <li><p><strong>底数为0</strong>：底数为0时，除非指数也为0，其他情况结果都一定是0，而指数为0的情况已经在前面特判排除了，所以再遇到底数为0直接特判返回0即可。</p></li>
 </ul>

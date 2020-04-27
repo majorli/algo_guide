@@ -155,7 +155,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>和最大公因数的情况一样，多个数的最小公倍数也可以拆分成两两链式求解：<span class="math notranslate nohighlight">\(\text{lcm}(a,b,c)=\text{lcm}(\text{lcm}(a,b),c)\)</span>。也可以先求出所有数的最大公因数，然后利用数学规律“n个数的最小公倍数等于它们的乘积除以它们的最大公因数的n-1次方”来求解。</p>
+<p>和最大公因数的情况一样，多个数的最小公倍数也可以拆分成两两链式求解：<span class="math notranslate nohighlight">\(\text{lcm}(a,b,c)=\text{lcm}(\text{lcm}(a,b),c)\)</span>。也可以先求出所有数的最大公因数，然后利用数学规律“<span class="math notranslate nohighlight">\(n\)</span> 个数的最小公倍数等于它们的乘积除以它们的最大公因数的 <span class="math notranslate nohighlight">\(n-1\)</span> 次方”来求解。</p>
 <div class="math notranslate nohighlight">
 \[\text{lcm}(a_1,a_2,\dots,a_n)=\frac{a_1\cdot a_2\cdot\cdots\cdot a_n}{[\gcd(a_1,a_2,\dots,a_n)]^{n-1}}\]</div>
 <p>第二种方法的编程实现技巧性比较强，并不是简单的相乘相除就可以的。</p>
