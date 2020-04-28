@@ -86,7 +86,7 @@
 <p>遇到这种问题，最好的办法是先计算好所需范围内所有的排列数或组合数，存放在一张表格中，需要使用的时候直接从表中读取。当然了，打表的过程要最优化，即用最少的运算次数来进行打表，这就需要一些数学上的技巧。</p>
 <div class="section" id="id2">
 <h2><span class="section-number">3.6.2.1. </span>排列数打表<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p>经过上一节的练习，我们已经知道使用 unsigned long long 类型可以容纳所有 <span class="math notranslate nohighlight">\(n\le20\)</span> 的排列数，对于更大的 <span class="math notranslate nohighlight">\(n\)</span>，也可以容纳一部分 <span class="math notranslate nohighlight">\(m\)</span> 比较小的排列数。这里我们设法用最快的速度打出一张 <span class="math notranslate nohighlight">\(n\le20\)</span> 的排列数表来，存放在一张二维数组中，行号表示 <span class="math notranslate nohighlight">\(n\)</span>， 列号表示 <span class="math notranslate nohighlight">\(m\)</span>。由于 <span class="math notranslate nohighlight">\(0\le m\le n\)</span>，所以这张表只占据二维数组主对角线下方的三角形区域，如下所示：</p>
+<p>经过上一节的练习，我们已经知道使用 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 类型可以容纳所有 <span class="math notranslate nohighlight">\(n\le20\)</span> 的排列数，对于更大的 <span class="math notranslate nohighlight">\(n\)</span>，也可以容纳一部分 <span class="math notranslate nohighlight">\(m\)</span> 比较小的排列数。这里我们设法用最快的速度打出一张 <span class="math notranslate nohighlight">\(n\le20\)</span> 的排列数表来，存放在一张二维数组中，行号表示 <span class="math notranslate nohighlight">\(n\)</span>， 列号表示 <span class="math notranslate nohighlight">\(m\)</span>。由于 <span class="math notranslate nohighlight">\(0\le m\le n\)</span>，所以这张表只占据二维数组主对角线下方的三角形区域，如下所示：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{matrix}
 P_0^0&amp;-&amp;-&amp;-&amp;\cdots&amp;-\\
@@ -127,7 +127,7 @@ P_{20}^0&amp;P_{20}^1&amp;P_{20}^2&amp;P_{20}^3&amp;\cdots&amp;P_{20}^{20}\\
 </div>
 <div class="section" id="id3">
 <h2><span class="section-number">3.6.2.2. </span>组合数打表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
-<p>如果对一定范围内的组合数进行打表，表的形式和排列数表是一样的。使用二维数组来存放组合数表，以行号为 <span class="math notranslate nohighlight">\(n\)</span>、列号为 <span class="math notranslate nohighlight">\(m\)</span>，所有组合数 <span class="math notranslate nohighlight">\(C_n^m\)</span> 都存在于主对角线的下方三角形区域内。假如我们要打表的范围为 <span class="math notranslate nohighlight">\(0\le n\le62\)</span>，我们现在已经知道在这个范围内的所有组合数都是 unsigned long long 所能容纳的，则如下表：</p>
+<p>如果对一定范围内的组合数进行打表，表的形式和排列数表是一样的。使用二维数组来存放组合数表，以行号为 <span class="math notranslate nohighlight">\(n\)</span>、列号为 <span class="math notranslate nohighlight">\(m\)</span>，所有组合数 <span class="math notranslate nohighlight">\(C_n^m\)</span> 都存在于主对角线的下方三角形区域内。假如我们要打表的范围为 <span class="math notranslate nohighlight">\(0\le n\le62\)</span>，我们现在已经知道在这个范围内的所有组合数都是 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 所能容纳的，则如下表：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{matrix}
 C_0^0&amp;-&amp;-&amp;-&amp;\cdots&amp;-\\
@@ -237,7 +237,7 @@ C_{62}^0&amp;C_{62}^1&amp;C_{62}^2&amp;C_{62}^3&amp;\cdots&amp;C_{62}^{62}\\
 </div></blockquote>
 <p><strong>5、冰球棍模式</strong></p>
 <blockquote>
-<div><p>从任意一行的第一个数字 <span class="math notranslate nohighlight">\(C[i][0]\)</span> 开始，沿着右下方向走，直到任一个数 <span class="math notranslate nohighlight">\(C[i+k][k]\)</span>：</p>
+<div><p>从任意一行的第一个数字 <span class="math notranslate nohighlight">\(C[i][0]\)</span> 开始，沿着右下方向走，直到任一个数 <span class="math notranslate nohighlight">\(C[i+k][k]\)</span> 为止，这条路径上经过的所有数之和等于最后那个数正下方的数 <span class="math notranslate nohighlight">\(C[i+k+1][k]\)</span>：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{matrix}
  1 &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    &amp;    \\
@@ -249,7 +249,7 @@ C_{62}^0&amp;C_{62}^1&amp;C_{62}^2&amp;C_{62}^3&amp;\cdots&amp;C_{62}^{62}\\
  1 &amp;  6 &amp;(15)&amp; 20 &amp; 15 &amp;  6 &amp;  1 &amp;    \\
  1 &amp;  7 &amp;(21)&amp; 35 &amp; 35 &amp; 21 &amp;  7 &amp;  1
 \end{matrix}\end{split}\]</div>
-<p>上图中，用方括号括起来的路径显示了 <span class="math notranslate nohighlight">\(1+2+3+4=10\)</span>，用小括号括起来的路径则为 <span class="math notranslate nohighlight">\(1+5+15=21\)</span>。这样的路径形状像一根冰球棍，所以就有了这个模式。</p>
+<p>上图中，用方括号括起来的路径显示了 <span class="math notranslate nohighlight">\(1+2+3+4=10\)</span>，用小括号括起来的路径则为 <span class="math notranslate nohighlight">\(1+5+15=21\)</span>。这样的路径形状像一根冰球棍，所以就有了这个模式名称。</p>
 <p>冰球棍也可以是立着的。从任意行的最后一个数字开始，沿着竖直向下的方向走，随意走到任一行，所有途径的数字相加，等于最后一个数字的右下方那个数，如下图所示：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{matrix}
@@ -262,7 +262,7 @@ C_{62}^0&amp;C_{62}^1&amp;C_{62}^2&amp;C_{62}^3&amp;\cdots&amp;C_{62}^{62}\\
 1 &amp;  6 &amp;[15]&amp;(20)&amp; 15 &amp;  6 &amp;  1 &amp;    \\
 1 &amp;  7 &amp; 21 &amp; 35 &amp;(35)&amp; 21 &amp;  7 &amp;  1
 \end{matrix}\end{split}\]</div>
-<p>当杨辉三角形按照数学习惯书写成等腰三角形时，这两种冰球棍又是什么形状模式呢？大家可以去自己找找看。</p>
+<p>请想一想，当杨辉三角形按照数学习惯书写成等腰三角形时，这两种冰球棍又是什么形状模式呢？</p>
 </div></blockquote>
 <p>杨辉三角形还有许多有趣的性质和数阵图形模式，有些模式比如花瓣模式只有在书写成等腰三角形时才能看得出来，而有些模式在写成三角矩阵形式时比较容易看清，比如Fibonacci数列的副对角线模式。同时，它在算法编程中也常有应用，所以学会怎样打表组合数构造杨辉三角形是一件重要的事情。对杨辉三角形感兴趣的可以去查阅相关资料，相信一定会对今后的算法编程和数学学习都有所助益。</p>
 </div>

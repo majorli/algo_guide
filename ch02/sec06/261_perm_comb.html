@@ -96,7 +96,7 @@
 </pre></div>
 </div>
 <p>在数学里，<strong>排列</strong>是指将相异对象或符号根据确定的顺序重排的操作，重排得到的每一个序列都称作一个排列。或者用集合的语言来形容，将一个集合中的元素重排成序列（我们知道，集合中的元素是各不相同且没有相互顺序的，而序列里的元素是有相互顺序关系的）。</p>
-<p>从 <span class="math notranslate nohighlight">\(n\)</span> 个相异对象中任意取 <span class="math notranslate nohighlight">\(m\)</span> 个进行排列，其中 <span class="math notranslate nohighlight">\(0\le m\le n\)</span> 且均为整数，可以得到的不同排列的数量，就叫做 <span class="math notranslate nohighlight">\(m\)</span> 取 <span class="math notranslate nohighlight">\(n\)</span> 的<strong>排列数</strong>，记作 <span class="math notranslate nohighlight">\(P_n^m\)</span> 或 <span class="math notranslate nohighlight">\(A_n^m\)</span>，有时候为了书写方便也简单地写成 <span class="math notranslate nohighlight">\(P(n,m)\)</span> 或 <span class="math notranslate nohighlight">\(A(n,m)\)</span>。现在中国的中学数学教材上一般采用 <span class="math notranslate nohighlight">\(A_n^m\)</span> 这种写法，而计算机教材和大学数学教材上通常使用 <span class="math notranslate nohighlight">\(P_n^m\)</span> 这种写法，我们使用后一种。如果 <span class="math notranslate nohighlight">\(m=n\)</span>，即排列所有 <span class="math notranslate nohighlight">\(n\)</span> 个相异对象的，称作<strong>全排列</strong>，<span class="math notranslate nohighlight">\(P_n^n\)</span> 也称作 <span class="math notranslate nohighlight">\(n\)</span> 的<strong>全排列数</strong>。</p>
+<p>从 <span class="math notranslate nohighlight">\(n\)</span> 个相异对象中任意取 <span class="math notranslate nohighlight">\(m\)</span> 个进行排列，其中 <span class="math notranslate nohighlight">\(0\le m\le n\)</span> 且均为整数，可以得到的不同排列的数量，就叫做 <span class="math notranslate nohighlight">\(n\)</span> 取 <span class="math notranslate nohighlight">\(m\)</span> 的<strong>排列数</strong>，记作 <span class="math notranslate nohighlight">\(P_n^m\)</span> 或 <span class="math notranslate nohighlight">\(A_n^m\)</span>，有时候为了书写方便也简单地写成 <span class="math notranslate nohighlight">\(P(n,m)\)</span> 或 <span class="math notranslate nohighlight">\(A(n,m)\)</span>。现在中国的中学数学教材上一般采用 <span class="math notranslate nohighlight">\(A_n^m\)</span> 这种写法，而计算机教材和大学数学教材上通常使用 <span class="math notranslate nohighlight">\(P_n^m\)</span> 这种写法，我们使用后一种。如果 <span class="math notranslate nohighlight">\(m=n\)</span>，即排列所有 <span class="math notranslate nohighlight">\(n\)</span> 个相异对象的，称作<strong>全排列</strong>，<span class="math notranslate nohighlight">\(P_n^n\)</span> 也称作 <span class="math notranslate nohighlight">\(n\)</span> 的<strong>全排列数</strong>。</p>
 <p>从前面两个简单的例子可以看出，随着 <span class="math notranslate nohighlight">\(n,m\)</span> 这两个参数的增大，排列数会迅速增大，而且变得难以手工罗列。事实上，对于任意固定的 <span class="math notranslate nohighlight">\(m\gt0\)</span>，排列数 <span class="math notranslate nohighlight">\(P_n^m\)</span> 随着 <span class="math notranslate nohighlight">\(n\)</span> 增长的阶是阶乘级的，比指数级还高。关于怎样遍历所有排列的算法将在后面介绍，这一节我们先介绍怎样计算排列数。</p>
 <p>乍看起来有点奇怪的是，<span class="math notranslate nohighlight">\(n\)</span> 和 <span class="math notranslate nohighlight">\(m\)</span> 都是可以等于零的。实际上这也没什么奇怪的，虽然很多人觉得“取0个对象进行排列”，甚至“从0个对象中取出0个进行排列”这种操作很有点神操作的感觉，但在实际上和在数学上都是有意义的，而且毕竟要考虑到空集的情况。当然了，不管对象的总数 <span class="math notranslate nohighlight">\(n\)</span> 是多少，从中一个对象都不取并进行排列显然只能有一种结果，那就是得到的结果也只能是一个空排列，而这个世界上只有一种空排列。因此我们可以得到排列数的第一条计算规则：</p>
 <div class="math notranslate nohighlight">
@@ -124,7 +124,7 @@
 <div class="admonition-permutations-with-repetition admonition">
 <p class="admonition-title">练习：重复排列（Permutations with repetition）</p>
 <p>另外还有一种特殊的排列称为<strong>重复排列</strong>。普通的排列，每一个对象最多只能取一次，而重复排列则允许一个对象被多次取出。有点类似于一个对象被取出之后还可以复制一份放回去以便下次再取，所以有些书上也称之为“可放回的排列”。</p>
-<p><span class="math notranslate nohighlight">\(n\)</span> 取 <span class="math notranslate nohighlight">\(m\)</span> 的重复排列数记作 <span class="math notranslate nohighlight">\(U_n^m\)</span>。请大家思考一下它的计算公式，以及应该用什么算法来编程实现计算。</p>
+<p><span class="math notranslate nohighlight">\(n\)</span> 取 <span class="math notranslate nohighlight">\(m\)</span> 的重复排列数记作 <span class="math notranslate nohighlight">\(U_n^m\)</span>。请推导它的计算公式，并编程实现。</p>
 </div>
 <p>所以现在有 <span class="math notranslate nohighlight">\((1)\)</span> 和 <span class="math notranslate nohighlight">\((2)\)</span> 两个公式用于计算排列数，数学推导、证明等常会用到后者，前者多用于计算。计算机程序计算排列数也使用公式 <span class="math notranslate nohighlight">\((1)\)</span>，只需用一个循环进行 <span class="math notranslate nohighlight">\(m-1\)</span> 次乘法即可完成计算，如果用公式 <span class="math notranslate nohighlight">\((2)\)</span> 就要计算两次阶乘再相除，会浪费许多工作量。</p>
 <div class="admonition- admonition">
@@ -142,15 +142,15 @@
 </div>
 <div class="admonition tip">
 <p class="admonition-title">小技巧</p>
-<p>unsigned long long 这个数据类型名称写起来太长，可以在程序最开始的地方写上语句 <code class="docutils literal notranslate"><span class="pre">typedef</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">ull;</span></code>，以后就可以用 <code class="docutils literal notranslate"><span class="pre">ull</span></code> 来代替 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 作为数据类型使用了。</p>
+<p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 这个数据类型名称写起来太长，可以在程序最开始的地方写上语句 <code class="docutils literal notranslate"><span class="pre">typedef</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">ull;</span></code>，以后就可以用 <code class="docutils literal notranslate"><span class="pre">ull</span></code> 来代替 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 作为数据类型使用了。</p>
 </div>
-<p>经测试，随着 <span class="math notranslate nohighlight">\(n\)</span> 和 <span class="math notranslate nohighlight">\(m\)</span> 的逐步增长，C++的 unsigned long long 在 <span class="math notranslate nohighlight">\(P_{21}^{19}\)</span> 时第一次出现超限，可见排列数的增长速度有多快。</p>
+<p>经测试，随着 <span class="math notranslate nohighlight">\(n\)</span> 和 <span class="math notranslate nohighlight">\(m\)</span> 的逐步增长，<code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 在 <span class="math notranslate nohighlight">\(P_{21}^{19}\)</span> 时第一次出现超限，可见排列数的增长速度有多快。</p>
 </div>
 <div class="section" id="id3">
 <h2><span class="section-number">3.6.1.2. </span>组合和组合数的计算<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
 <p>数学里，<strong>组合</strong>是指一种选取操作，和排列不同，组合操作是从一个集合中任意取出指定数量的对象，每一种取法称为一种组合。组合里的对象并不存在相互之间的顺序关系，它们只是单纯地取出来放在一起。例如，从1号到3号三个小球中任取两个的组合一共有三种：{1,2}, {2,3} 和 {1,3}，现在 {1,2} 和 {2,1} 被视为同一种组合，1号球和2号球的相互顺序是无所谓的。</p>
 <p>从 <span class="math notranslate nohighlight">\(n\)</span> 个相异的对象中取 <span class="math notranslate nohighlight">\(m\)</span> 个总共可以取得的组合种数称为<strong>组合数</strong>，在中国和俄罗斯写为 <span class="math notranslate nohighlight">\(C_n^m\)</span>，在欧美国家写为 <span class="math notranslate nohighlight">\(n \choose m\)</span>，我们按照中国习惯用 <span class="math notranslate nohighlight">\(C_n^m\)</span> 表示 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(m\)</span> 的组合数，有时候为了书写方便也写作 <span class="math notranslate nohighlight">\(C(n,m)\)</span>。同样的，如何生成所有组合留到后面介绍，这里先了解组合数怎么计算。</p>
-<p>不难发现，组合和排列是非常相似的两种操作，二者唯一的区别是取排列的时候取出的对象相互之间是有位置顺序关系的，可以理解为它们被排成一列队伍，而取组合的时候取出的对象相互之间没有位置顺序关系，可以视为它们只是被凑成了一堆。那么我们可以做下面这样的两步操作：先完成 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(m\)</span> 的取组合操作，得到所有 <span class="math notranslate nohighlight">\(C_n^m\)</span> 种组合，其中每一种组合都包含 <span class="math notranslate nohighlight">\(m\)</span> 个相异的对象。然后我们一一对这些组合中的相异对象做全排列，这样每一种组合都会产生 <span class="math notranslate nohighlight">\(P_m^m\)</span> 个排列，总共能产生 <span class="math notranslate nohighlight">\(C_n^mP_m^m\)</span> 个排列，而这正是 <span class="math notranslate nohighlight">\(m\)</span> 取 <span class="math notranslate nohighlight">\(n\)</span> 的排列数 <span class="math notranslate nohighlight">\(P_n^m\)</span>，所以有 <span class="math notranslate nohighlight">\(P_n^m=C_n^mP_m^m=m!\cdot C_n^m\)</span>。因此就能得出下面的组合数计算公式：</p>
+<p>不难发现，组合和排列是非常相似的两种操作，二者唯一的区别是取排列的时候取出的对象相互之间是有位置顺序关系的，可以理解为它们被排成一列队伍，而取组合的时候取出的对象相互之间没有位置顺序关系，可以视为它们只是被凑成了一堆。那么我们可以做下面这样的两步操作：先完成 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(m\)</span> 的取组合操作，得到所有 <span class="math notranslate nohighlight">\(C_n^m\)</span> 种组合，其中每一种组合都包含 <span class="math notranslate nohighlight">\(m\)</span> 个相异的对象。然后我们对所有这些组合做全排列，这样每一种组合都会产生 <span class="math notranslate nohighlight">\(P_m^m\)</span> 个排列，总共能产生 <span class="math notranslate nohighlight">\(C_n^mP_m^m\)</span> 个排列，而这正是 <span class="math notranslate nohighlight">\(n\)</span> 取 <span class="math notranslate nohighlight">\(m\)</span> 的排列数 <span class="math notranslate nohighlight">\(P_n^m\)</span>，所以有 <span class="math notranslate nohighlight">\(P_n^m=C_n^mP_m^m=m!\cdot C_n^m\)</span>。因此就能得出下面的组合数计算公式：</p>
 <div class="math notranslate nohighlight">
 \[C_n^m=\frac{P_n^m}{m!}=\frac{n!}{(n-m)!\cdot m!},(0\le m\le n)\tag{3}\]</div>
 <p>这是数学里组合数的标准计算公式。通过这个公式，对几个特殊的 <span class="math notranslate nohighlight">\(m\)</span> 可以得出一些比较好记而且便利的快捷公式：</p>
@@ -172,7 +172,7 @@
 <p>反过来观察从 <span class="math notranslate nohighlight">\(n\)</span> 个对象中任选 <span class="math notranslate nohighlight">\(m\)</span> 个构成组合的操作，其实也就是从 <span class="math notranslate nohighlight">\(n\)</span> 个对象中任选 <span class="math notranslate nohighlight">\(n-m\)</span> 个不用来构成组合，把选剩下的 <span class="math notranslate nohighlight">\(m\)</span> 个拿来构成组合。比如从苹果、香蕉和西瓜三样水果中选两个要吃的，不就是从它们中间选一个不要吃的嘛。所以 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(m\)</span> 的取组合和 <span class="math notranslate nohighlight">\(n\)</span> 选 <span class="math notranslate nohighlight">\(n-m\)</span> 的取组合其实是没有差别的，相应的，二者的组合数也是没有差别的，这就是组合数的对称性：</p>
 <div class="math notranslate nohighlight">
 \[C_n^m = C_n^{n-m}\tag{5}\]</div>
-<p>从组合数计算公式 <span class="math notranslate nohighlight">\((3)\)</span> 也可以轻松地发现这个规律，因为二者的计算公式是一模一样的。下面罗列了 <span class="math notranslate nohighlight">\(n&lt;=4\)</span> 的所有组合数，可以直观地看到其对称性：</p>
+<p>从组合数计算公式 <span class="math notranslate nohighlight">\((3)\)</span> 也可以轻松地发现这个规律，因为二者的计算公式是一模一样的。下面罗列了 <span class="math notranslate nohighlight">\(n\le4\)</span> 的所有组合数，可以直观地看到其对称性：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span> n | m=0  m=1  m=2  m=3  m=4
 ---+------------------------
  0 |  1
@@ -186,7 +186,7 @@
 <p>用递推的思路分解从 <span class="math notranslate nohighlight">\(n\)</span> 个对象中任选 <span class="math notranslate nohighlight">\(m\)</span> 个构成组合的操作，可以分成两步。首先在 <span class="math notranslate nohighlight">\(n\)</span> 个候选对象中任意取出其中一个，剩下另外的 <span class="math notranslate nohighlight">\(n-1\)</span> 个。第二步要分成两种情况，一种是前一步取出的那个对象要被选入组合，那么接下来只要在另外的 <span class="math notranslate nohighlight">\(n-1\)</span> 个对象中选 <span class="math notranslate nohighlight">\(m-1\)</span> 个就可以了，一共有 <span class="math notranslate nohighlight">\(C_{n-1}^{m-1}\)</span> 种选法；另一种是前一步取出的那个对象不要被选入组合，那么接下来需要在另外的 <span class="math notranslate nohighlight">\(n-1\)</span> 个对象中选 <span class="math notranslate nohighlight">\(m\)</span> 个，一共有 <span class="math notranslate nohighlight">\(C_{n-1}^m\)</span> 种选法。以上两种就覆盖了所有选法，没有别的了，于是又有了下面的组合数递推公式：</p>
 <div class="math notranslate nohighlight">
 \[C_n^m=C_{n-1}^{m-1}+C_{n-1}^m\tag{6}\]</div>
-<p>当然了，上面的公式完全可以由公式 <span class="math notranslate nohighlight">\((3)\)</span> 经数学演算推导得到，请大家自己尝试一下。</p>
+<p>当然了，上面的公式完全可以由公式 <span class="math notranslate nohighlight">\((3)\)</span> 经数学演算推导得到，请自己尝试一下。</p>
 <p><strong>分组分堆问题</strong></p>
 <p>分组分堆问题在数学和算法领域都是常见问题，比如这样一个问题：有6颗不同口味的巧克力要分给甲乙丙三位小朋友吃，每人2颗，共有多少种分法？我们可以先从6颗巧克力中任选2颗给甲，再从剩下的4颗中任选2颗给乙，剩下的2颗给丙，这样就完成了，一共有 <span class="math notranslate nohighlight">\(C_6^2C_4^2C_2^2=15\times6\times1=90\)</span> 种分法。</p>
 <p>这叫分组问题，即把 <span class="math notranslate nohighlight">\(n\)</span> 个相异的对象分成 <span class="math notranslate nohighlight">\(k\)</span> 组，各组分别有 <span class="math notranslate nohighlight">\(n_1,n_2,\dots,n_k\)</span> 个对象，满足 <span class="math notranslate nohighlight">\(n_1+n_2+\cdots+n_k=n\)</span>，共有多少种分法？按照依次取组合的方法很容易得到共有 <span class="math notranslate nohighlight">\(C_n^{n_1}C_n^{n_2}\cdots C_n^{n_k}\)</span> 种，这个数通常记作：</p>
@@ -234,21 +234,25 @@ C_n^{n_1,n_2,\dots,n_k}&amp;=C_n^{n_1}C_{n-n_1}^{n_2}\cdots C_{n_k}^{n_k}\\
 <p>那么到底用公式 <span class="math notranslate nohighlight">\((4)\)</span> 来直接计算还是用公式 <span class="math notranslate nohighlight">\((6)\)</span> 来递归计算呢？我们要分析一下它们的时间复杂度。</p>
 <p>用公式 <span class="math notranslate nohighlight">\((4)\)</span> 计算，肯定要用整数乘除法作为基本运算，分子分母均为 <span class="math notranslate nohighlight">\(m-1\)</span> 次乘法，时间复杂度为 <span class="math notranslate nohighlight">\(O(m)\)</span>。</p>
 <p>用公式 <span class="math notranslate nohighlight">\((6)\)</span> 递归，终止条件为 <span class="math notranslate nohighlight">\(m=0\)</span> 或 <span class="math notranslate nohighlight">\(n=1\)</span>，达到终止条件时可以直接返回结果，数据规模和 <span class="math notranslate nohighlight">\(m,n\)</span> 都相关。设计算 <span class="math notranslate nohighlight">\(C_n^m\)</span> 的总工作量为 <span class="math notranslate nohighlight">\(T(n,m)\)</span>，可以得到递推公式 <span class="math notranslate nohighlight">\(T(n,m)=T(n-1,m-1)+T(n-1,m)+1\)</span>，<span class="math notranslate nohighlight">\(T(1,m)=T(n,0)=0\)</span>，这个递推公式是一个二元函数，它的计算比较复杂，我们不做要求。有兴趣可以用迭代的方法去试一试，会发现它和二项式定理发生了不可思议的联系，而最终的结果，由于公式 <span class="math notranslate nohighlight">\((8)\)</span> 在中间起了一些难以描述的作用，时间复杂度居然是指数级。</p>
-<p>所以一般来说计算组合数还是用公式 <span class="math notranslate nohighlight">\((4)\)</span> 直接计算好一些。当然了，unsigned long long 的取值范围只能容纳很小规模的组合数，用哪一种都没有太大区别。</p>
-<p>用公式 <span class="math notranslate nohighlight">\((4)\)</span> 计算时要尽可能地用足 unsigned long long 的取值范围，这并不是想象的那么简单，需要注意以下两个问题：</p>
+<p>所以一般来说计算组合数还是用公式 <span class="math notranslate nohighlight">\((4)\)</span> 直接计算好一些。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>虽然组合数比排列数要小规模得多，但也是一类很大的数，<code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 的取值范围只能容纳小规模的组合数。</p>
+</div>
+<p>用公式 <span class="math notranslate nohighlight">\((4)\)</span> 计算时要尽可能地用足 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 的取值范围，这并不是想象的那么简单，需要注意以下两个问题：</p>
 <ol class="arabic">
-<li><p>先计算好分母行不行？对于小的组合数是没有问题，但是不够好，因为计算分母的时候有可能提前造成整型数溢出，使得明明在 unsigned long long 取值范围内的组合数由于分母计算时提前溢出了而导致结果错误；</p></li>
+<li><p>先计算好分母行不行？对于小的组合数是没有问题，但是不够好，因为计算分母的时候有可能提前造成整型数溢出，使得明明在 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 取值范围内的组合数由于分母计算时提前溢出了而导致结果错误；</p></li>
 <li><p>如果把计算过程改成一乘一除一乘一除地循环行不行？这是解决提前溢出问题的好办法，而且由于公式 <span class="math notranslate nohighlight">\((4)\)</span> 中分子分母的连乘次数相同，所以可以用一个循环完成计算。但是这里有陷阱，计算顺序没有安排对的话，可能造成错误。</p>
 <p>如果把计算过程做下面的调整：</p>
 <div class="math notranslate nohighlight">
 \[C_n^m=\frac{n\cdot(n-1)\cdot\cdots\cdot(n-m+1)}{m\cdot(m-1)\cdot\cdots\cdot1}=\left({n\over m}\right)\cdot\left({n-1\over m-1}\right)\cdot\cdots\cdot\left({n-m+1\over 1}\right)\]</div>
 <p>那么不能保证每一次乘一个数再除一个数的时候能够整除。比如计算 <span class="math notranslate nohighlight">\(C_5^2\)</span>，按照上面的方法，第一轮循环计算 <span class="math notranslate nohighlight">\(5\over2\)</span> 就发生了不能整除的问题，计算结果势必错误。</p>
-<p>这时候怎么办？提示一下，大家应该知道或者能理解这个规律，2个连续的正整数里一定有一个2的倍数、3个连续正整数里一定有一个3的倍数，……，依此规律，<span class="math notranslate nohighlight">\(k\)</span> 个连续正整数里一定有一个 <span class="math notranslate nohighlight">\(k\)</span> 的倍数。所以知道应该怎样调整计算顺序了吧？</p>
+<p>这时候怎么办？提示一下，2个连续的正整数里一定有一个2的倍数、3个连续正整数里一定有一个3的倍数，……，依此规律，<span class="math notranslate nohighlight">\(k\)</span> 个连续正整数里一定有一个 <span class="math notranslate nohighlight">\(k\)</span> 的倍数。所以知道应该怎样调整计算顺序了吧？</p>
 </li>
 </ol>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>按照上面所述的要求和讲解，编写一个完美的在 unsigned long long 范围内的组合数计算工具函数。自行编写主函数来进行正确性测试，并对 unsigned long long 这种数据类型最多能计算到多大的组合数进行试验。</p>
+<p>按照上面所述的要求和讲解，编写一个完美的在 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 范围内的组合数计算工具函数。自行编写主函数来进行正确性测试，并对 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 这种数据类型最多能计算到多大的组合数进行试验。</p>
 </div>
 </div>
 </div>

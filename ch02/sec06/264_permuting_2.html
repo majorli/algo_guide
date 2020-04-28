@@ -82,8 +82,8 @@
             
   <div class="section" id="ii">
 <h1><span class="section-number">3.6.4. </span>排列的生成算法(II)<a class="headerlink" href="#ii" title="永久链接至标题">¶</a></h1>
-<p>在算法问题中，如果需要生成排列，大多数是需要用到某一个序列的全排列。我们知道，全排列的排列数是一个量级很大的阶乘，当序列的元素数量达到21时，<span class="math notranslate nohighlight">\(P_{21}^{21}=21!\)</span> 就已经超过了 unsigned long long 的取值范围，也就是说超过了 <span class="math notranslate nohighlight">\(2^{64}\)</span>。这里又见到了我们熟悉的魔鬼数字 <span class="math notranslate nohighlight">\(2^{64}\)</span>，大家应该很清楚它到底有多巨大了吧。而实际的算法问题，要排列的元素个数还常常要超过21个，所以用上一节介绍的循环型的算法批量生成所有排列已经变得很不现实，我们需要使用迭代型算法来逐个迭代生成排列，一旦找到题目所需要的解就不需要再继续迭代了。</p>
-<p>全排列的迭代算法为所有可能的排列设定一种顺序规则，称为<strong>迭代顺序</strong>，把某一个排列作为参数交给迭代器，迭代器就会将其改为迭代顺序下的下一个或上一个排列，如此下去直到抵达迭代顺序下的最后一个或最前一个排列。每次迭代得到下一个排列的迭代器叫做<strong>顺序迭代器</strong>，反之称为<strong>逆序迭代器</strong>。本质上来说，顺序迭代和逆序迭代无非是一对反向操作，只要了解了其中一种的原理，归纳出另一种也就不成问题了。本节我们将仅对顺序迭代器的原理和实现进行讲解，下文说到迭代，若无特殊指明便是指顺序迭代。逆序迭代将留作本节的练习。</p>
+<p>在算法问题中，如果需要生成排列，大多数是需要用到某一个序列的全排列。我们知道，全排列的排列数是一个量级很大的阶乘，当序列的元素数量达到21时，<span class="math notranslate nohighlight">\(P_{21}^{21}=21!\)</span> 就已经超过了 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 的取值范围，也就是说超过了 <span class="math notranslate nohighlight">\(2^{64}\)</span>。这里又见到了我们熟悉的那个巨大无比的魔鬼数字 <span class="math notranslate nohighlight">\(2^{64}\)</span>。而实际的算法问题，要排列的元素个数还常常要超过21个，所以用上一节介绍的循环型的算法批量生成所有排列已经变得很不现实，我们需要使用迭代型算法来逐个迭代生成排列，一旦找到题目所需要的解就不需要再继续迭代了。</p>
+<p>全排列的迭代算法为所有排列设定一个顺序规则，称为<strong>迭代顺序</strong>，把某一个排列作为参数交给迭代器，迭代器就会将其改为迭代顺序下的下一个或上一个排列，如此下去直到抵达最后一个或最前一个排列。每次迭代得到下一个排列的迭代器叫做<strong>顺序迭代器</strong>，反之称为<strong>逆序迭代器</strong>。本质上来说，顺序迭代和逆序迭代无非是一对反向操作，学会其中一种，自行设计出另一种也就不成问题了。本节我们将仅介绍顺序迭代器，下文说到迭代，若无特殊指明便是指顺序迭代。逆序迭代将留作本节的练习。</p>
 <p>从上面的描述来看，迭代器进行的是原地排列，但是也很容易做到索引排列，因为对于全排列来说，索引排列就是把所有的索引值作为元素进行全排列而已。如果我们不希望破坏原有的数据，那么另外生成 [0,1,2,…n-1] 这样一个索引值序列并对它进行迭代即可，迭代结果即是每一种排列的索引表。</p>
 <div class="section" id="id1">
 <h2><span class="section-number">3.6.4.1. </span>字典序全排列迭代算法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
@@ -114,7 +114,7 @@
 [4, 3, 2, 1]
 </pre></div>
 </div>
-<p>可以看到，字典序最小的 [1,2,3,4] 中任何两个相邻的元素之间都是顺序的，即前一个小于后一个。字典序最大的 [4,3,2,1] 则刚好相反，所有相邻元素之间都是逆序。可以想象字典序的排列和相邻元素之间逆序对的数量和位置是有关的，从一个排列出发去生成它的下一个排列，一定和调整排列中的逆序对有关。为了看清楚这个规律，下面我们给这些排列的元素之间添加大于号来标注出逆序对：</p>
+<p>可以看到，字典序最小的 [1,2,3,4] 中任何两个相邻的元素之间都是顺序的，即前一个小于后一个。字典序最大的 [4,3,2,1] 则刚好相反，所有相邻元素之间都是逆序。不难猜到排列的字典序和相邻元素之间的逆序对相关，从一个排列生成其下一个排列，一定和调整排列中的逆序对有关。为了看清楚这个规律，下面我们给这些排列的元素之间添加大于号来标注出逆序对：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[1   2   3   4]
 [1   2   4 &gt; 3]
 [1   3 &gt; 2   4]
@@ -147,16 +147,16 @@
 <p>所以第一步：找到排列中最后一个顺序对 <span class="math notranslate nohighlight">\((a_i \lt a_{i+1})\)</span>。</p>
 </li>
 <li><p>再观察每一次迭代后，原排列中最后一个顺序对变成逆序的规律，可以发现并不总是简单地互换两个相邻元素，而是要确保原顺序对中前面位置那个较小的元素不会一下子增加得过大，导致跳过一部分排列。换句话说，要把原排列中最后一个顺序对里比较小的那个元素尽量少地增加，只要让它足以成为逆序对即可。</p>
-<p>例如迭代 [1,4,3,2] 这个排列的时候，最后一个顺序对为 (1,4)，但是不能将其简单地改成 (4,1)，否则会导致直接跳过所有以 2 和 3 开头的排列。因此这种情况下应该把它变成仅比它大 1 的元素，即 2。</p>
+<p>例如迭代 [1,4,3,2] 这个排列的时候，最后一个顺序对为 (1,4)，但是不能将其简单地改成 (4,1)，否则会导致直接跳过所有以2和3开头的排列。因此这种情况下应该把它变成仅比它大1的元素，即2。</p>
 <p>所以第二步：在 <span class="math notranslate nohighlight">\(a_i\)</span> 后面的所有元素 <span class="math notranslate nohighlight">\(a_{i+1},\dots,a_{n-1}\)</span> 中找到所有大于 <span class="math notranslate nohighlight">\(a_i\)</span> 的元素中的最小者 <span class="math notranslate nohighlight">\(a_k\)</span>，然后交换 <span class="math notranslate nohighlight">\(a_i\)</span> 和 <span class="math notranslate nohighlight">\(a_k\)</span>。</p>
 <p>查找的方法其实很简单，由于 <span class="math notranslate nohighlight">\((a_i,a_{i+1})\)</span> 是原排列中的最后一个顺序对，所以从 <span class="math notranslate nohighlight">\(a_{i+1}\)</span> 开始到末尾的所有元素都是逆序排放的，只需要从末尾元素开始逐个向前找到第一个比 <span class="math notranslate nohighlight">\(a_i\)</span> 大的元素，就是要找的那个所有大于 <span class="math notranslate nohighlight">\(a_i\)</span> 的元素中的最小者。但是我们会发现一个严重的问题：我们无法保证找到的那个 <span class="math notranslate nohighlight">\(a_k\)</span> 一定大于 <span class="math notranslate nohighlight">\(a_{i+1}\)</span>，即交换之后的新的 <span class="math notranslate nohighlight">\((a_k,a_{i+1})\)</span> 不一定是逆序。比如前面所举例的排列 [1,4,3,2]，做完第二步之后会得到 [2,4,3,1]，这显然不是正确的结果。因此事情到这里还没有结束。</p>
 </li>
 <li><p>进一步仔细观察，我们发现原排列中最后一个顺序对 <span class="math notranslate nohighlight">\((a_i,a_{i+1})\)</span> 不仅变成了新排列中的一个逆序对 <span class="math notranslate nohighlight">\((a_i^\prime,a_{i+1}^\prime)\)</span>，而且总是变成了新排列中的<strong>最后一个</strong>逆序对！也就是说，新排列中从 <span class="math notranslate nohighlight">\(a_{i+1}^\prime\)</span> 开始到末尾的所有元素是递增有序的。这样就直接搞定了第二步操作中引来的那个问题，因为原来的 <span class="math notranslate nohighlight">\(a_i\)</span> 已经被交换到了后面部分，所以后面部分中至少有一个元素比新的 <span class="math notranslate nohighlight">\(a_i^\prime\)</span> 小，我们只要在做完第二步的交换之后，对从 <span class="math notranslate nohighlight">\(a_{i+1}\)</span> 开始到末尾的这一段进行排序，就自然确保了新的 <span class="math notranslate nohighlight">\((a_i^\prime,a_{i+1}^\prime)\)</span> 一定逆序。</p>
-<p>继续前面的例子，我们已经交换了 [1,4,3,2] 中的 1 和 2，变成了 [2,4,3,1]，接下来对 [4,3,1] 这个部分进行排序，得到 [2,1,3,4]，这就是所要的正确迭代结果。</p>
+<p>继续前面的例子，我们已经交换了 [1,4,3,2] 中的1和2，变成了 [2,4,3,1]，接下来对 [4,3,1] 这个部分进行排序，就得到了正确的迭代结果 [2,1,3,4]。</p>
 <p>所以第三步：对从 <span class="math notranslate nohighlight">\(a_{i+1}\)</span> 开始到排列末尾的部分进行升序排序。</p>
 </li>
 </ol>
-<p>以上三步就是字典序顺序迭代的过程，整个过程并不是太好理解，建议大家对上面的 [1,2,3,4] 全排列过程进行手工迭代演算，务必搞清楚这个算法过程。</p>
+<p>以上三步就是字典序顺序迭代的过程，整个过程并不是太好理解，请对上面的 [1,2,3,4] 全排列过程进行手工迭代演算，务必搞清楚这个算法过程。</p>
 <p>实际编程的时候，由于排列元素不重复，所以最后一步排序可以使用任意的排序算法，建议直接使用C++算法库的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数进行排序。下面这个程序，仍然以前十个大写字母为限，输入一个不大于10的整数 <span class="math notranslate nohighlight">\(n\)</span>，迭代输出前 <span class="math notranslate nohighlight">\(n\)</span> 个大写字母的全排列，并且为了说明怎样使用迭代算法来实现索引排列，我们使用了索引迭代的模式：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
@@ -217,9 +217,9 @@
 </div>
 <div class="section" id="c">
 <h2><span class="section-number">3.6.4.2. </span>C++算法库的全排列生成函数<a class="headerlink" href="#c" title="永久链接至标题">¶</a></h2>
-<p>在C++的algorithm库中也提供了一对迭代生成全排列的函数 <code class="docutils literal notranslate"><span class="pre">next_permutation()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code>，前者为顺序迭代，后者为逆序迭代，它们使用的也是字典序规则。</p>
-<p>这两个函数接收一对指向同一个容器中前后元素位置的迭代器（对于数组就是指针） <code class="docutils literal notranslate"><span class="pre">first</span></code> 和 <code class="docutils literal notranslate"><span class="pre">last</span></code>，对范围 <code class="docutils literal notranslate"><span class="pre">[first,</span> <span class="pre">last)</span></code> 中的元素进行迭代，每调用一次就原地迭代为下一个或上一个全排列。和算法库中的其他函数一样，如果容器中元素的数据类型支持小于比较运算，那么就使用这种小于比较来进行迭代，否则就使用提供比较函数的版本，即在两个迭代器之后再传入一个逻辑型返回值的比较函数。这些用法和算法库排序函数是一模一样的。</p>
-<p>这两个函数的返回值为逻辑型。如果迭代已经结束，即如果调用 <code class="docutils literal notranslate"><span class="pre">next_permutation()</span></code> 时，原排列已经是字典序的最大排列，或调用 <code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code> 时原排列已经是字典序的最小排列，那么将会返回false，并且不会改变原排列。如果迭代还能继续，那么原排列会被原地改变为下一个或上一个排列，并且函数返回true。</p>
+<p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code> 库提供了一对迭代生成全排列的函数 <code class="docutils literal notranslate"><span class="pre">next_permutation()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code>，前者为顺序迭代，后者为逆序迭代，它们使用的也是字典序规则。</p>
+<p>这两个函数接收一对指向同一个容器中前后元素位置的迭代器 <code class="docutils literal notranslate"><span class="pre">first</span></code> 和 <code class="docutils literal notranslate"><span class="pre">last</span></code>，对范围 <code class="docutils literal notranslate"><span class="pre">[first,</span> <span class="pre">last)</span></code> 中的元素进行迭代，每调用一次就原地迭代为下一个或上一个全排列。和算法库中的其他函数一样，如果容器中元素的数据类型支持小于比较运算，那么就使用这种小于比较来进行迭代，否则就使用提供比较函数的版本，即在两个迭代器之后再传入一个逻辑型返回值的比较函数。这些用法和算法库排序函数是一模一样的。</p>
+<p>这两个函数的返回值为逻辑型。如果迭代已经结束，即如果调用 <code class="docutils literal notranslate"><span class="pre">next_permutation()</span></code> 时，原排列已经是字典序的最大排列，或调用 <code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code> 时原排列已经是字典序的最小排列，那么将会返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>，并且不会改变原排列。如果迭代还能继续，那么原排列会被原地改变为下一个或上一个排列，并且函数返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。</p>
 <p>下面是 <code class="docutils literal notranslate"><span class="pre">next_permutation()</span></code> 函数用法的一个简单示例，<code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code> 的用法也是一样的，只是初始的时候应该把序列置为完全逆序的最后一个排列，这通过逆序排序就可以做到。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
@@ -246,7 +246,7 @@
 </div>
 <div class="admonition- admonition">
 <p class="admonition-title">练习</p>
-<p>尝试一下如果再开始循环之间不进行排序会怎样。然后编写一个使用 <code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code> 函数进行逆序迭代的类似程序。</p>
+<p>尝试一下如果在开始循环之间不进行排序会怎样。然后编写一个使用 <code class="docutils literal notranslate"><span class="pre">prev_permutation()</span></code> 函数进行逆序迭代的类似程序。</p>
 </div>
 </div>
 <div class="section" id="knuth">
@@ -254,8 +254,8 @@
 <p>虽然在普及组阶段不会遇到，甚至在提高组阶段也极少遇到随机算法问题，但是很多高级别的算法问题确实需要用到随机算法。而随机算法中大量需要使用一类叫做<strong>随机乱序生成</strong>的基本操作，通常用于把一个序列中的元素随机打乱为乱序，或生成一份顺序随机混乱的索引表。这种操作通常也被形象地称为<strong>洗牌</strong>（shuffle）。</p>
 <p>这个世界上最经典最简单实用的洗牌算法当属算法圣经《计算机程序设计艺术》的作者，大神Knuth教授发明的Knuth洗牌算法。这个算法对一个长度为 <span class="math notranslate nohighlight">\(n\)</span> 的序列 <span class="math notranslate nohighlight">\(A\)</span> 进行原地随机洗牌，洗完之后每一个位置上出现任一元素的概率都是 <span class="math notranslate nohighlight">\(1\over n\)</span>，即所有元素均匀分布在每一个位置之上，不会出现某些元素偏爱出现在某几个特定位置的情况。用洗牌的话说，叫做洗得很均匀。</p>
 <p>学习这个算法之前要先知道一些概率论里的基本知识。这里所说的概率都是指基于频度统计的古典概型，或者叫频度概型。</p>
-<p>在概率论里，概率值表示某个事件发生的频度，其值 <span class="math notranslate nohighlight">\(p\)</span> 的取值范围为 <span class="math notranslate nohighlight">\([0,1]\)</span>。<span class="math notranslate nohighlight">\(p=0\)</span> 表示这是一个“不可能事件”，<span class="math notranslate nohighlight">\(p=1\)</span> 表示这是个“确定事件”，其余值表示事件发生的可能性。举例来说，<span class="math notranslate nohighlight">\(p=0.5\)</span> 表示这个事件发生不发生的可能性各半。<span class="math notranslate nohighlight">\(p=0.9\)</span> 就是所谓的大概率会发生，用频度的语言通俗地说就是十次里可能会发生九次，一万次里基本上会发生九千次左右，一亿次的话就会非常接近发生九千万次。比如我们试着扔骰子，正常的骰子扔出任何一个数字的概率都应该是 <span class="math notranslate nohighlight">\(1\over6\)</span>，如果扔上很多很多次，例如六万次，基本上可以肯定从 1 到 6 的六个数字各自出现的次数都是一万次左右，不会相差很多。假如某一个骰子扔了六万次之后发现数字 6 出现了三万次，那么足以证明这是一个被做过手脚的作弊用的骰子。</p>
-<p>那么如果两个随机事件和先后发生呢？比如抛硬币（当然也是正常的硬币），抛一次抛出正面的概率当然是 <span class="math notranslate nohighlight">\(0.5\)</span>，但如果先后抛两次，两次都抛得正面的概率是多少呢？这时候应该把先后两次的概率相乘起来，得到的积就是总体的概率，这叫连续事件概率的乘法原则。所以连续抛两次硬币，每次抛得正面的概率都是 <span class="math notranslate nohighlight">\(0.5\)</span>，那么连续两次抛得正面的概率就是 <span class="math notranslate nohighlight">\(0.5\times0.5=0.25\)</span>。又比如说四个人玩飞行棋，其中有一个人扔骰子连续三次扔到 6 点，这个概率有多大？应该是 <span class="math notranslate nohighlight">\({1\over6}\times{1\over6}\times{1\over6}={1\over216}\)</span>，这是一个非常小概率的事件。所以如果哪天你和别人玩飞行棋的时候发现这种情况，你有足够的理由怀疑他在作弊。</p>
+<p>在概率论里，概率值表示某个事件发生的频度，其值 <span class="math notranslate nohighlight">\(p\)</span> 的取值范围为 <span class="math notranslate nohighlight">\([0,1]\)</span>。<span class="math notranslate nohighlight">\(p=0\)</span> 表示这是一个“不可能事件”，<span class="math notranslate nohighlight">\(p=1\)</span> 表示这是个“确定事件”，其余值表示事件发生的可能性。举例来说，<span class="math notranslate nohighlight">\(p=0.5\)</span> 表示这个事件发生不发生的可能性各半。<span class="math notranslate nohighlight">\(p=0.9\)</span> 就是所谓的大概率会发生，用频度的语言通俗地说就是十次里可能会发生九次，一万次里基本上会发生九千次左右，一亿次的话就会非常接近发生九千万次。比如我们试着扔骰子，正常的骰子扔出任何一个数字的概率都应该是 <span class="math notranslate nohighlight">\(1\over6\)</span>，如果扔上很多很多次，例如六万次，基本上可以肯定从1到6的六个数字各自出现的次数都是一万次左右，不会相差很多。假如某一个骰子扔了六万次之后发现数字6出现了三万次，那么足以证明这是一个被做过手脚的作弊用的骰子。</p>
+<p>那么如果两个随机事件先后发生呢？比如抛硬币（当然也是正常的硬币），抛一次抛出正面的概率当然是 <span class="math notranslate nohighlight">\(0.5\)</span>，如果先后抛两次，两次都抛得正面的概率是多少呢？这时候应该把先后两次的概率相乘起来，得到的积就是总体的概率，这叫连续事件概率的乘法原则。所以连续抛两次硬币，每次抛得正面的概率都是 <span class="math notranslate nohighlight">\(0.5\)</span>，那么连续两次抛得正面的概率就是 <span class="math notranslate nohighlight">\(0.5\times0.5=0.25\)</span>。又比如说四个人玩飞行棋，其中有一个人扔骰子连续三次扔到 6 点，这个概率有多大？应该是 <span class="math notranslate nohighlight">\({1\over6}\times{1\over6}\times{1\over6}={1\over216}\)</span>，这是一个非常小概率的事件。所以如果哪天你和别人玩飞行棋的时候发现这种情况，你有足够的理由怀疑他在作弊。</p>
 <p>好了，言归正传，我们开始讲Knuth洗牌算法。假设我们要洗牌的序列为 [1,2,3,4,5]，长度为5，那么Knuth洗牌的过程如下：</p>
 <ol class="arabic">
 <li><p>从序列的五个位置中均匀的随机选择一个位置，即每一个位置被选中的概率都是 <span class="math notranslate nohighlight">\(1\over5\)</span>，所以没被选中的概率都是 <span class="math notranslate nohighlight">\(4\over5\)</span>。接下来用被选中的位置和序列最后一个位置进行元素交换。这个操作相当于把被选中位置上的元素单独取出来放在另一个序列里去，使得原序列长度缩短为4。</p>
@@ -279,7 +279,7 @@
 </div>
 <p>现在倒数第三个位置上以 <span class="math notranslate nohighlight">\(1\over5\)</span> 的概率填上了元素5。</p>
 </li>
-<li><p>继续继续……大家可以自己想一想算一算，现在每一个位置被选中的总体概率是多少？我知道你知道当然还是 <span class="math notranslate nohighlight">\(1\over5\)</span>，但还是请练习一下。</p>
+<li><p>继续继续……请想一想算一算，现在每一个位置被选中的总体概率是多少？我知道你知道当然还是 <span class="math notranslate nohighlight">\(1\over5\)</span>，但还是请练习一下。</p>
 <p>假设这次选中的是第1个位置，那么操作之后序列变为：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[4, 1, 5, 3, 2] 还是可以看作是两个序列连在一起：[4] [1, 5, 3, 2]
 </pre></div>

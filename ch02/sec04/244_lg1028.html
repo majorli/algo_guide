@@ -145,7 +145,7 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
-<p>编写这样的程序虽然简单，但有一点必须小心，那就是结果的数据类型是否足够大。这里我们用了 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型，是经过测试的。根据题目所给出的范围n≤1000，我们先用最为保险的 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 来作为 <code class="docutils literal notranslate"><span class="pre">count()</span></code> 函数的返回类型，然后测试了一下至少可以用哪一种数据类型。测试过程如下：</p>
+<p>编写这样的程序虽然简单，但有一点必须小心，那就是结果的数据类型是否足够大。这里我们用了 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型，是经过测试的。根据题目所给出的范围 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&lt;=</span> <span class="pre">1000</span></code>，我们先用最为保险的 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 来作为 <code class="docutils literal notranslate"><span class="pre">count()</span></code> 函数的返回类型，然后测试了一下至少可以用哪一种数据类型。测试过程如下：</p>
 <p>首先测试四个输入，500、998、999和1000，如果数据没有溢出，那么输入998和999得到的结果应该一样的，并且加上输入500得到的结果应该等于输入1000得到的结果。</p>
 <p>如果这一步测试就发现数值溢出了（结果各种乱七八糟毫无规律），那么说明连 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 都hold不住，那就只能自己编写高精度算法了。本题还好，很完美地通过了这一步测试，如果不想进一步优化了也行。如果想进一步优化那么就根据数据大小去选择一种最合适的数据类型。</p>
 <p>按照第一步测试得到的结果，<span class="math notranslate nohighlight">\(C(1000)=1981471878\)</span>，恰好在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 数据类型能表示的范围之内，所以当然就用 <code class="docutils literal notranslate"><span class="pre">int</span></code> 了，它的运算速度最快。</p>

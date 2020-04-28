@@ -112,18 +112,18 @@ a-d-d
 <p><em>NOIP 2007 提高第二题</em></p>
 <p><strong>题解</strong></p>
 <p>这是一个典型的字符串处理的模拟题，解决这类问题最重要的就是<strong>仔细！仔细！再仔细！</strong>。按照题目给出的处理规则，一条一条地去实现即可。</p>
-<p>本题给出的五条处理规则，首先当然要解决规则(1)，它决定了是否要进行处理。根据这条规则，只有在字符串中间出现了减号字符 <code class="docutils literal notranslate"><span class="pre">-</span></code> 才有可能需要进行扩展，而且如果减号出现的位置是在字符串的首字符或尾字符，也是不需要进行扩展的。由此就可以得到算法的主框架步骤如下：</p>
+<p>本题给出的五条处理规则，首先当然要解决规则(1)，它决定了是否要进行处理。根据这条规则，只有在字符串中间出现了减号字符 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 才有可能需要进行扩展，而且如果减号出现的位置是在字符串的首字符或尾字符，也是不需要进行扩展的。由此就可以得到算法的主框架步骤如下：</p>
 <ol class="arabic">
 <li><p>读入字符串 <code class="docutils literal notranslate"><span class="pre">str</span></code>，并建立一个新的空字符串 <code class="docutils literal notranslate"><span class="pre">res</span></code> 用于存放扩展后的字符串，即问题的解。</p></li>
 <li><p>复制 <code class="docutils literal notranslate"><span class="pre">str</span></code> 的第一个字符到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 尾部。</p></li>
-<li><p>从 <code class="docutils literal notranslate"><span class="pre">str</span></code> 的第2个字符到倒数第二个字符进行循环，判断是否为减号字符 <code class="docutils literal notranslate"><span class="pre">-</span></code>：</p>
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">str</span></code> 的第2个字符到倒数第二个字符进行循环，判断是否为减号字符 <code class="docutils literal notranslate"><span class="pre">'-'</span></code>：</p>
 <ul>
 <li><p>若不是，则复制到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 的尾部并继续循环；</p></li>
 <li><p>若是，则根据规则(1)判断该处是否需要扩展：</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>若是则按照规则(2)-(5)进行扩展，扩展的内容复制到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 尾部，扩展完毕后继续循环；</p></li>
-<li><p>若不是则复制该 <code class="docutils literal notranslate"><span class="pre">-</span></code> 字符到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 尾部并继续循环。</p></li>
+<li><p>若不是则复制该 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 字符到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 尾部并继续循环。</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -131,10 +131,10 @@ a-d-d
 </li>
 <li><p>复制 <code class="docutils literal notranslate"><span class="pre">str</span></code> 的最后一个字符到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 尾部。</p></li>
 </ol>
-<p>第3步的处理分成判断和处理两个部分，判断部分比较简单，根据 <code class="docutils literal notranslate"><span class="pre">-</span></code> 前后两个字符的类型和大小进行判断即可。这里适合使用 cctype 标准库提供的两个工具函数：</p>
-<p><code class="docutils literal notranslate"><span class="pre">isalpha()</span></code> 函数接收一个字符作为参数，判断其是不是英语字母，如果是则返回1，不是返回0，可以当作逻辑值true和false使用。由于题目规定了原字符串仅由数字、小写字母和减号字符构成，所以只要判断是不是英语字母即可。</p>
+<p>第3步的处理分成判断和处理两个部分，判断部分比较简单，根据 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 前后两个字符的类型和大小进行判断即可。这里推荐 <code class="docutils literal notranslate"><span class="pre">cctype</span></code> 标准库提供的两个工具函数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">isalpha()</span></code> 函数接收一个字符作为参数，判断其是不是英语字母，如果是则返回1，不是返回0，可以当作逻辑值 <code class="docutils literal notranslate"><span class="pre">true</span></code> 和 <code class="docutils literal notranslate"><span class="pre">false</span></code> 使用。由于题目规定了原字符串仅由数字、小写字母和减号字符构成，所以只要判断是不是英语字母即可。</p>
 <p><code class="docutils literal notranslate"><span class="pre">isdigit()</span></code> 函数以同样的方式判断一个字符是不是数字。</p>
-<p>一旦在第3步的循环中发现了一个减号字符，那么对其前后两个字符按照规则(1)进行判断就可以确定是不是需要对这个减号进行扩展。我们可以写一个内联函数来进行这个判断：</p>
+<p>一旦在第3步的循环中发现了一个 <code class="docutils literal notranslate"><span class="pre">'-'</span></code> 字符，那么对其前后两个字符按照规则(1)进行判断就可以确定是不是需要对这个减号进行扩展。我们可以写一个内联函数来进行这个判断：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cctype&gt;</span><span class="cp"></span>
 
 <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">to_expand</span><span class="p">(</span><span class="kt">char</span> <span class="n">prev</span><span class="p">,</span> <span class="kt">char</span> <span class="n">next</span><span class="p">)</span>
@@ -144,14 +144,14 @@ a-d-d
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>接下来的第二部分处理是当 <code class="docutils literal notranslate"><span class="pre">to_expand()</span></code> 函数返回true时，按照规则(2)-(5)进行扩展。第一步是要确定扩展的字符范围，即从左边字符的后继字符开始，到右边字符的前驱字符为止，这个可以通过一个循环来进行遍历，循环变量为要扩展出来的字符，循环起点为左边字符的后一个字符，循环条件为循环变量小于右边字符，循环方式为每次加1。</p>
-<p>上述循环首先要对循环变量，即要扩展出来的字符应用规则(2)，可能会统一变成星号 <code class="docutils literal notranslate"><span class="pre">*</span></code>，也可能需要将英语字母改成大写（因为原字符串中只有小写字母，所以循环变量也一定是小写的）。这里可以调用 cctype 库的 <code class="docutils literal notranslate"><span class="pre">toupper()</span></code> 函数来进行大写化，这个函数非常方便，而且不需要事先判断字符是不是英语字母，它不会对非英语字母的字符进行任何改变。</p>
+<p>接下来的第二部分处理是当 <code class="docutils literal notranslate"><span class="pre">to_expand()</span></code> 函数返回 <code class="docutils literal notranslate"><span class="pre">true</span></code> 时，按照规则(2)-(5)进行扩展。第一步是要确定扩展的字符范围，即从左边字符的后继字符开始，到右边字符的前驱字符为止，这个可以通过一个循环来进行遍历，循环变量为要扩展出来的字符，循环起点为左边字符的后一个字符，循环条件为循环变量小于右边字符，循环方式为每次加1。</p>
+<p>上述循环首先要对循环变量，即要扩展出来的字符应用规则(2)，可能会统一变成星号 <code class="docutils literal notranslate"><span class="pre">'*'</span></code>，也可能需要将英语字母改成大写（因为原字符串中只有小写字母，所以循环变量也一定是小写的）。这里可以调用 <code class="docutils literal notranslate"><span class="pre">cctype</span></code> 库的 <code class="docutils literal notranslate"><span class="pre">toupper()</span></code> 函数来进行大写化，这个函数非常方便，而且不需要事先判断字符是不是英语字母，它不会对非英语字母的字符进行任何改变。</p>
 <p>真正要扩展出来的字符确定了之后，根据规则(3)，再用一次循环逐个地把这些字符添加到 <code class="docutils literal notranslate"><span class="pre">res</span></code> 尾部即可。但是在添加之前要记得用一个临时变量保存下开始添加的位置，这是为了接下来应用规则(4)。</p>
 <p>在添加完所有扩展出来的字符之后，根据规则(4)，如果要逆序扩展的，把刚才扩展出来的这一段子串做一下颠倒就可以了。</p>
-<p>最后看一下规则(5)，它的第2个子规则（减号左边的字符大于右边的字符时不予处理）其实已经蕴含在算法对规则(1)的判断过程中了，可以不去管它。它的第1个子规则规定了当减号右边的字符恰好是左边字符的后继时的扩展方式，这条子规则其实也不用管它。为什么？这个问题留给大家自己思考。</p>
+<p>最后看一下规则(5)，它的第2个子规则（减号左边的字符大于右边的字符时不予处理）其实已经蕴含在算法对规则(1)的判断过程中了，可以不去管它。它的第1个子规则规定了当减号右边的字符恰好是左边字符的后继时的扩展方式，这条子规则其实也不用管它。为什么？这个问题留作思考题。</p>
 <p>接下来就需要进行仔细的编程了。凡是字符串处理问题的编程，首先都要选择一种字符串表示方式，要么用传统的C-string，要么用C++ string类。通常情况下，总是选择C++ string类比较好，因为它提供的功能灵活而且强大，尤其是当需要进行子串替换和需要用到字符串数组的时候。选择传统的C-string一般有两个原因，一个是字符串数据量极大或处理工作极其复杂和大量，因而需要极高的运行速度，另一个原因是不会用C++ string类。</p>
 <p>这里我们用传统C-string来编制示例程序。如果选择了使用C-string，那么在处理时还有一个选择，是用数组方式来访问字符串中的字符，还是用指针的方式？示例程序是使用指针的方式的，但是在实际编程中，我们强烈建议用数组元素访问的方式，不要轻易尝试用指针，很容易写错。</p>
-<p>下面是选用了最麻烦的C-string加指针的方式写的示例程序，这是老式的纯C程序员喜欢的方式，并不建议在C++语言尤其是竞赛编程中使用。示例程序采用这种方式，是希望能够帮助大家了解并学会读懂这样的程序，有时候在笔试题中会出现这样的写法，看不懂就麻烦了。</p>
+<p>下面是选用了最麻烦的C-string加指针的方式写的示例程序，这是老式的纯C程序员喜欢的方式，并不建议在C++语言尤其是竞赛编程中使用。但有时候在笔试题中会出现这样的写法，看不懂就麻烦了。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;cctype&gt;</span><span class="cp"></span>
 
