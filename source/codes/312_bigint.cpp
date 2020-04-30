@@ -52,7 +52,7 @@ struct BigInt {
 ostream &operator<<(ostream &os, const BigInt &bi);
 istream &operator>>(istream &is, BigInt &bi);
 
-// 以下为函数定义。算法编程中通常函数定义放在main()函数的后面，工程编程中函数定义往往写在另一个单独的程序文件里
+// 以下为函数定义。算法编程中通常函数定义放在main()函数的后面，工程编程中则往往写在另一个单独的程序文件里
 ostream &operator<<(ostream &os, const BigInt &bi)
 {
 	int i = bi._s.size();
