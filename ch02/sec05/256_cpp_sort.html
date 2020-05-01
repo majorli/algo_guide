@@ -43,7 +43,7 @@
   <ul>
 <li><a class="reference internal" href="#">3.5.6. C++算法库排序函数</a><ul>
 <li><a class="reference internal" href="#c-algorithm">3.5.6.1. C++算法库（algorithm）简介</a></li>
-<li><a class="reference internal" href="#id1">3.5.6.2. 容器、迭代器和范围</a></li>
+<li><a class="reference internal" href="#ref-2562">3.5.6.2. 容器、迭代器和范围</a></li>
 <li><a class="reference internal" href="#id2">3.5.6.3. C++结构类型的大小比较</a></li>
 <li><a class="reference internal" href="#id3">3.5.6.4. C++排序函数的使用</a></li>
 </ul>
@@ -109,8 +109,8 @@
 <p>上面这些函数都是在算法编程中经常要使用的基本算法功能，可以说都是复杂算法的基石，都很实用也很重要。一般情况下我们都建议尽量使用这些函数，有三大好处：一是能让代码变得简洁清晰易读，比如用 <code class="docutils literal notranslate"><span class="pre">max(a,</span> <span class="pre">b)</span></code> 来代替 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">b</span> <span class="pre">?</span> <span class="pre">a</span> <span class="pre">:</span> <span class="pre">b</span></code>；二是这些库函数久经考验，可以担保没有bug存在；三是它们的运行速度都非常快，比如不稳定排序函数 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 是优化的快速排序，实际运行速度快于手写的标准快排。</p>
 <p>但是有得必有失，要熟练掌握所有这些函数是有点难的，它们往往还都有不止一种用法，所以要分步骤地去逐渐学习掌握。有些功能自己手写很麻烦，比如堆操作、排序等，这些就首先去学习掌握；有些函数自己写一下也很简单，比如最大最小值函数等，这些就慢慢来，有机会的时候试试看，多试几次可能就自然记住了；有些功能自己写一下不算太麻烦，要记住对应的函数反而麻烦，比如一些查找替换类的操作，这些可以根据自己的情况选择不学或者以后再学。</p>
 </div>
-<div class="section" id="id1">
-<h2><span class="section-number">3.5.6.2. </span>容器、迭代器和范围<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<div class="section" id="ref-2562">
+<span id="id1"></span><h2><span class="section-number">3.5.6.2. </span>容器、迭代器和范围<a class="headerlink" href="#ref-2562" title="永久链接至标题">¶</a></h2>
 <p>C++语言中有一个叫做<strong>容器</strong>（container）的概念，指可以用来容纳多个同类型数据的数据结构类型。前面我们说过，C++的STL库有三大核心组件，一个是算法库，第二个就是容器库。STL的容器库提供了很多已经实现好的常用数据结构，比如顺序表、链表、集合等等。同一种容器类的不同容器对象（类相当于传统的数据类型，对象类似于传统的变量）可以用来存放不同类型的元素，比如我们可以定义一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型的集合对象，集合元素都是 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型的整数，也可以再定义一个 <code class="docutils literal notranslate"><span class="pre">char</span></code> 型的集合对象，里面的集合元素都是 <code class="docutils literal notranslate"><span class="pre">char</span></code> 型的字符。这些知识在下一章数据结构中会详细讲解，现在只要对容器的概念有个了解即可。</p>
 <p>算法库中的所有算法函数都是针对容器中的元素进行操作的，好消息是这里所说的容器，不仅仅是指STL容器库提供的高级容器类，也包括传统的数组。数组是最简单的一种容器！</p>
 <p>算法库函数都是比较灵活的，比如用 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 对一个数组进行排序，它不是简单地对数组里所有元素排序，而是要提供一头一尾两个位置参数，对这个头尾范围内的元素进行排序。算法函数通过这种方式实现对容器中任意指定的一段元素进行操作。这就引出了一个新的概念：迭代器。</p>
@@ -161,7 +161,7 @@
 </div>
 <p>这样的自定义结构类型，C++天生不知道应该怎么比较大小，所以算法库中的排序函数不能直接对数组 <code class="docutils literal notranslate"><span class="pre">stu[]</span></code> 中的元素进行排序。我们需要让C++知道怎么对 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 结构类型的变量进行相互比较，至少要会“小于”比较。这个其实很好办，我们可以利用C++结构体的两个特技，成员函数和运算符重载。听起来很高大上的样子，其实做起来并不难。</p>
 <p>以前学习基本的C语言结构类型的时候我们说过，一个结构类型就是把多个不同数据类型的变量组合起来形成一个复杂数据类型，定义在结构类型里的各种变量就叫做这个结构的<strong>成员变量</strong>。<code class="docutils literal notranslate"><span class="pre">stu_no,</span> <span class="pre">name,</span> <span class="pre">chn,</span> <span class="pre">math</span></code> 就是 <code class="docutils literal notranslate"><span class="pre">Student</span></code> 结构的四个成员变量。我们用 <code class="docutils literal notranslate"><span class="pre">.</span></code> 符号来访问一个具体的结构变量中的成员变量，比如 <code class="docutils literal notranslate"><span class="pre">stu[0].name</span></code> 就是结构变量 <code class="docutils literal notranslate"><span class="pre">stu[0]</span></code> 的成员变量 <code class="docutils literal notranslate"><span class="pre">name</span></code>；用 <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 符号来访问一个指针所指向的结构变量里的成员变量，比如 <code class="docutils literal notranslate"><span class="pre">stu-&gt;stu_no</span></code> 就是 <code class="docutils literal notranslate"><span class="pre">stu[0]</span></code> 的成员变量 <code class="docutils literal notranslate"><span class="pre">stu_no</span></code>，<code class="docutils literal notranslate"><span class="pre">(stu+10)-&gt;chn</span></code> 就是学生 <code class="docutils literal notranslate"><span class="pre">stu[10]</span></code> 的语文成绩。</p>
-<p>C++不但完全继承了C语言的结构语法，而且为其增加了一个新技能，C++结构类型不仅可以有自己的成员变量用来保存数据，而且可以为它定义<strong>成员函数</strong>用来定义操作。比如我们的学生结构中，目前只存放了语文成绩和数学成绩，但是我们有时候想看总分或者平均分怎么办？在以往传统的C语言里，我们只能另外定义两个函数用来计算总分和平均分，像下面这样：</p>
+<p id="ref-2563">C++不但完全继承了C语言的结构语法，而且为其增加了一个新技能，C++结构类型不仅可以有自己的成员变量用来保存数据，而且可以为它定义<strong>成员函数</strong>用来定义操作。比如我们的学生结构中，目前只存放了语文成绩和数学成绩，但是我们有时候想看总分或者平均分怎么办？在以往传统的C语言里，我们只能另外定义两个函数用来计算总分和平均分，像下面这样：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// 在传统C语言里，为了减少传递参数的开销，向函数传递结构建议使用指针方式</span>
 <span class="c1">// 对于不改变成员变量值的函数，用常数型指针</span>
 <span class="kt">int</span> <span class="nf">total_score</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">chn</span> <span class="o">+</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">math</span><span class="p">;</span> <span class="p">}</span>

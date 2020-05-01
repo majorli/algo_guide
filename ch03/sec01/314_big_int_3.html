@@ -91,11 +91,11 @@
         9998|8890
 </pre></div>
 </div>
-<p>减数和被减数低位对齐，然后从低到高对应的各节做部分减，最终得到两者之差。当对应的节上减数大于被减数时，被减节要向更高的节借一个1，也就是被减节的数值加上一个基（加一万）。被借的节数值则相应减一，如果被借的节本身是0，那么它进一步向它的更高一节借1，于是它变成一万，减1后变成9999。如此循环直至借到一个1为止。</p>
+<p>减数和被减数低位对齐，然后从低到高对应的各节做部分减，最终得到两者之差。当对应的节上减数大于被减数时，被减节要向更高的节借一个1，也就是被减节的数值加上一个基（一万）。被借的节数值则相应减一，如果被借的节本身是0，那么它进一步向它的更高一节借1，于是它变成一万，减1后变成9999。如此循环直至借到一个1为止。</p>
 <p>这是通常的正整数竖式相减的规则。但是存在一个严重的问题，即如果是小数减大数怎么办？按照数学的规则，小数减大数的差为负数，其绝对值等于大数减小数的差。例如1-9=-8。但是如果我们尝试用竖式减法去计算小数减大数，就会发现这种算术运算方法行不通，原因是一定会出现借位而且确实借不到！这就是正整数减法要解决的最大的问题。</p>
 <p>在实际应用中，根据解决问题的需要，常见两种方式来处理正整数减法中小数减大数的问题。</p>
 <ol class="arabic simple">
-<li><p>有些问题实际上要求的是两个数之间的差异值，也就是说它不关心谁大谁小，之关心二者差多少。这种情况常见于求距离一类的问题，它们很容易处理，在计算之前判断一下两个数的大小，然后用大的那个去减小的那个就可以了。这种解决方法由于太简单，我们不打算占用篇幅，请大家在学会高精度大减小的方法后自己去实现。</p></li>
+<li><p>有些问题实际上要求的是两个数之间的差异值，也就是说它不关心谁大谁小，只关心二者差多少。这种情况常见于求距离一类的问题，它们很容易处理，在计算之前判断一下两个数的大小，然后用大的那个去减小的那个就可以了。这种解决方法其实不需要在减法运算中去实现，算法程序在进行减法之前先进行大小判断即可。</p></li>
 <li><p>另一种常见处理方法是采用类似C++对内置无符号整型数小减大的处理，计算出一种类似补码的差，我叫它“类补码”的差。下面我们将详细讲解这种方法。</p></li>
 </ol>
 <p>先请试一下这样一段简单的程序：</p>
@@ -110,16 +110,16 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>运行后得到的结果是4294967206！什么鬼？其实这个差就是真正的差-90，但是用计算机常用的所谓二进制补码（简称补码）来表示的，-32的32位补码如果视为正数就是2<sup>32</sup>-90=4294967206。关于补码的详细知识在学习算法编程的初期可以不用深究，如果有兴趣可以去学习计算机原理的相关知识。现在我们要了解的是补码是怎样产生出来的，高精度减法怎样模仿它，以及模仿得到的“类补码”的差可以怎样用。</p>
-<p>我们先来看计算机的二进制补码是怎样产生的。在计算机内部，每一种整数都是有规定的位数的，<code class="docutils literal notranslate"><span class="pre">char</span></code> 是8位的，<code class="docutils literal notranslate"><span class="pre">short</span></code> 是16位的，目前常见的64位操作系统下 <code class="docutils literal notranslate"><span class="pre">int</span></code> 是32位的、<code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 是64位的。在小数减大数的时候，必然会发生借位借不到的情况，即一直向高位不断去借，但直到超过位数限制还是借不到。这时计算机会做一件看上去相当不负责任的事情：假装借到了！或者说，它在超过自己长度限制之外的地方“凭空”借到一个1！让我们来看看前面这个例子在计算机内部是怎样计算的：</p>
+<p>运行后得到的结果是4294967206！什么鬼？其实这个差就是真正的差-90，不过是用所谓二进制补码来表示的。-90的32位补码如果视为正数就是2<sup>32</sup>-90=4294967206。关于补码的详细知识在学习算法编程的初期可以不用深究，有兴趣可以去查阅计算机原理的相关资料。现在我们要了解的是补码是怎样产生出来的，高精度减法怎样模仿它，以及得到的“类补码”的差可以怎样用。</p>
+<p>我们先来看计算机的二进制补码是怎样产生的。在计算机内部，每一种整数都有规定的位数，<code class="docutils literal notranslate"><span class="pre">char</span></code> 占8位、<code class="docutils literal notranslate"><span class="pre">short</span></code> 是16位，目前常见的64位操作系统下 <code class="docutils literal notranslate"><span class="pre">int</span></code> 占据32位、<code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 则是64位。在小数减大数的时候，必然会发生借位借不到的情况，即一直向高位不断去借，但直到超过位数限制还是借不到。这时计算机会做一件看上去相当不负责任的事情：假装借到了！它会在超过自己长度限制之外的地方凭空借到一个1！让我们来看看前面这个例子在计算机内部是怎样计算的：</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   00000000|00000000|00000000|00001010       ( 10的32位二进制码，即a在内存中的实际样子)
 -) 00000000|00000000|00000000|01100100       (100的32位二进制码，即b在内存中的实际样子)
 --------------------------------------
    11111111|11111111|11111111|10100110       (-90的32位二进制补码，如果看成正数，就是4294967206)
   ^                             ^  ^
-  |                             |  |这次借位在第4位上借到了1，第4位变成0
-  |&lt;----------------------------|这次借位会一直不断向高位延伸，但实际上所有高位全为0，根本借不到
-  |最后借位一直持续到第32位还是借不到，于是假装从第33位借到了，尽管实际上根本没有第33位！
+  |                             |  | 这次借位在第4位上借到了1，第4位变成0
+  |&lt;----------------------------| 这次借位会一直不断向高位延伸，但实际上所有高位全为0，根本借不到
+  | 最后借位一直持续到第32位还是借不到，于是假装从第33位借到了，尽管实际上根本没有第33位！
 </pre></div>
 </div>
 <p>那么这样的一种补码有什么用呢？其实在计算机内部所有数都有规定位数的情况下，这个奇怪的差和它对应的负数在进行加法运算时效果是一样的。比如刚才这个例子，我们本来应该得到的差是-90，但是计算机给了我们一个4294967206=2<sup>32</sup>-90，虽然看起来差异非常大，但是可以看出它们是有联系的。假设我们要计算的是10-100+200，那我们能不能用得到的这个超级大的正数继续运算下去呢？在现实世界里当然是不行的，但是在计算机世界里却是可行的，不信来看：</p>
@@ -128,38 +128,48 @@
 --------------------------------------
  1 00000000|00000000|00000000|01101110       (110，受int长度限制，只能保留32位，结果得到110)
  ^                            ^
- |&lt;---------------------------|这里发生的进位，会一直向前推进直到第33位
- |这次进位抵达第33位，超出了int的32位限制，所以被抛弃，计算结束
+ |&lt;---------------------------| 这里发生的进位，会一直向前推进直到第33位
+ | 这次进位抵达第33位，超出了int的32位限制，所以被抛弃，计算结束
 </pre></div>
 </div>
 <p>大家可以去修改一下上面这个小程序试一试，是不是很神奇？我们把减90变成了加4294967206，而且用无符号数完成了带负号的运算。这就是现代计算机都采用补码来表示整数的原因，它可以把减法变成加法，把CPU的基本运算统一为二进制加法。</p>
-<p>接下来我们来模拟一下没有长度限制的十进制数怎么来模拟这种操作。假如我们还是要计算10-100，但现在改用不受长度限制的十进制整数运算，也要得到一个可以代替-90的正数“类补码”差。我们的方法是给被减数加上一个特殊的补数再进行计算。参考二进制的情形，计算机其实是假装在最高位之前又补了一位1。所以我们现在也假装给被减数在更高位上补一个1。具体要补在哪一位上呢？因为我们现在没有特定的总位数限制，所以我们就以减数的位数为依据，把被减数补到恰好比减数多一位，最高位为1，其余位补0。在我们这个例子里面，减数100是一个三位数，所以我们把被减数补成四位数，按照规则，就是加上补数1000，把被减数变成1010。计算变成1010-100=910，得到的结果910恰等于补数1000加上真正的差-90。</p>
-<p>这个结果假如要用于进一步的计算，那么在后续运算时减去那个补数1000就可以当成-90使用，例如910+200-1000=110，得到的结果就是10-100+200=110的正确结果。因此这种“类补码”有和真正的二进制补码类似的性质和功能，但是还是存在不同之处的。作为一种思维训练，请大家去想一想，类似点有哪些？不同点有哪些？</p>
-<p>关于这种“类补码”的减法运算，在纯算术方面还有最后一个问题：运算完成之后，能不能通过得到的结果来判断是不是发生了小数减大数？这个问题看上去很弱智，但如果把这种算法编程应用的话是有实际意义的。在算法程序中，往往是用两个变量来进行运算，变量的值是从输入数据中读入的，或是经过了一系列前期操作后计算得到的。我们的程序在进行减法运算的时候往往并不知道两个数谁大谁小，那么我们就很需要根据结果来判断减数和被减数的大小关系。比如有符号的 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型变量，就可以这样来判断 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(a</span> <span class="pre">-</span> <span class="pre">b</span> <span class="pre">&gt;</span> <span class="pre">0)</span></code>，那么无符号数怎么判断？</p>
-<p>其实很简单，假设我们计算了 <span class="math notranslate nohighlight">\(a-b\)</span>。如果 <span class="math notranslate nohighlight">\(a\ge b\ge 0\)</span>，那么 <span class="math notranslate nohighlight">\(-b\le0\implies a-b\le a\)</span>，得到的结果一定小于或等于被减数；否则，我们实际进行的计算是 <span class="math notranslate nohighlight">\(a+M-b\)</span>，其中 <span class="math notranslate nohighlight">\(M\)</span> 是一个比 <span class="math notranslate nohighlight">\(b\)</span> 大的补数，所以 <span class="math notranslate nohighlight">\(M-b\gt0\implies a+M-b\gt a\)</span>，得到的结果会比被减数大。这就是判断被减数和减数大小关系的方法。</p>
+<p>如果使用没有长度限制的十进制数，比如还是计算10-100，也要得到一个可以代替-90的正数“类补码”差。我们的方法是给被减数加上一个特殊的补数再进行计算。参考二进制的情形，计算机其实是假装在最高位之前又补了一位1。所以我们现在也假装给被减数在更高位上补一个1。具体要补在哪一位上呢？因为我们现在没有特定的总位数限制，所以我们就以减数的位数为依据，把被减数补到恰好比减数多一位，最高位为1，其余位补0。在我们这个例子里，减数100是一个三位数，所以我们把被减数补成四位数。按照规则，就是给被减数加上补数1000变成1010。计算变成1010-100=910，得到的结果910恰等于补数1000加上真正的差-90。</p>
+<p>这个结果假如要用于进一步的计算，那么在后续运算时减去那个补数1000就可以当成-90使用，例如910+200-1000=110，得到的结果就是10-100+200=110的正确结果。因此这种“类补码”有和真正的二进制补码类似的性质和功能，但还是有不同之处。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<ol class="arabic simple">
+<li><p>计算机内部采用二进制补码进行减法运算，和我们设计的针对无长度限制十进制数的类补码减法运算有什么不同之处？</p></li>
+<li><p>如果在计算“类补码”减法 <span class="math notranslate nohighlight">\(a-b\)</span> 之前没有判断 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span> 的大小，有没有办法在做完减法之后根据差判断是否发生了小数减大数？</p></li>
+<li><p>如果发生了小数减大数，怎样得到减法过程中加进去的补数。</p></li>
+</ol>
+</div>
 <p>接下来我们就要把上面描述的“类补码”减法扩展到万进制的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 来实现我们的高精度减法了。</p>
 </div>
 <div class="section" id="bigint">
 <h2><span class="section-number">4.1.4.2. </span>BigInt减法运算<a class="headerlink" href="#bigint" title="永久链接至标题">¶</a></h2>
-<p>BigInt实现上面所说的“类补码”减法运算，只不过是把十进制扩展到万进制，范围为0-9的十进制位变成范围为0-9999的万进制节而已，其他的运算规则都是完全一样的。但是要编成简洁高效的程序，还需要一些小小的技巧。</p>
-<p>首先我们来看小数减大数的情况，例如要计算9-99999999，真正的结果应该是-99999990。“类补码”的减法则这样计算：减数长度为2节，被减数1节，所以先把被减数按规则满2节，再添上数值为1的更高一节，然后再进行计算：</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      1|0000|0009    (加上去的补数为1|0000|0000)
+<p><code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 实现上面所说的“类补码”减法运算，只不过是把十进制扩展到万进制，范围为0-9的十进制位变成范围为0-9999的万进制节而已，其他的运算规则都是完全一样的。但是要编成简洁高效的程序，还需要一些小小的技巧。</p>
+<p>首先我们来看小数减大数的情况，例如要计算9-99999999，真正的结果应该是-99999990。“类补码”的减法则这样计算：减数长度为2节，被减数1节，所以先把被减数补为2节，再添上数值为1的更高一节，然后进行计算：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      1|0000|0009    (加上去的补数为100000000)
 -)      9999|9999
 -----------------
-      0|0000|0010    (结果为10，即补数加上真正的差：1|0000|0000-9999|9990=10)
+      0|0000|0010    (结果为10，即补数加上真正的差：100000000-99999990=10)
 </pre></div>
 </div>
-<p>加上补数之后，被减数一定大于减数，不可能出现借位借不到的情况。程序使用 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 容器存放各个节，容器不会因为最高节的值变成0而自动删除它的，所以计算结束后要手动删除添上去的最后那个节。另外，在删去补上去的最高节之后，剩余的得数中可能还存在最高节为0的情况，比如本例中就有一个。接下来要把得数中为0的最高节都删除掉，就能得到“伪补码”的差值了。</p>
+<p>加上补数之后，被减数一定大于减数，不可能出现借位借不到的情况。程序使用 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 容器存放各个节，容器不会因为最高节的值变成0而自动删除它的，所以计算结束后要手动删除添上去的最后那个节。另外，在删去添上去的最高节之后，剩余的得数中可能还存在最高节为0的情况，比如本例中就有一个。接下来要把得数中为0的最高节都删除掉，就能得到“伪补码”的差值了。</p>
 <p>然后是一个编程技巧上的处理。按照我们目前的算法，在进行减法之前先要判断减数和被减数的大小，如果减数更大那么要对被减数进行补数的预处理，得到结果之后要对结果进行去除多余节的后续处理。所以我们的程序结果可能是这样的：</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 对a进行补数预处理 }</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 对a进行补数预处理</span>
+<span class="p">}</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">;</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 对c进行去除多余节的后续处理 }</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 对c进行去除多余节的后续处理</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>怎么看怎么别扭，对不对？噢！何况我们现在还不会比较 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 型数据的大小呢！怎么办？</p>
+<p>怎么看怎么别扭，对不对？何况我们现在还不会比较 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 型数据的大小呢！怎么办？</p>
 <p>其实我们可以不管三七二十一，对所有被减数进行补数处理的。如果被减数大于等于减数，那么被减数的节数至少和减数相同，但我们不管，我们也给它补上一个更高节，数值为1。由于被减数本身就不比减数小，所以补上去的这个节反正也是白补，最终也不会用到它。计算结束，补上去的那个节一定是原封不动地还保留在那里，所以我们依旧参照小减大的情形，对结果进行多余节的删除就可以了。</p>
 <p>例如99999-99990，先把被减数补成100099999，然后计算：</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      1|0009|9999    (加上去的补数为1|0000|0000)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      1|0009|9999    (加上去的补数为100000000)
 -)         9|9990
 -----------------
       1|0000|0009    (对这个结果做后续处理就可以得到真正的结果9)
@@ -177,7 +187,7 @@
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>出于和加法时相同的原因，我们先实现 <code class="docutils literal notranslate"><span class="pre">-=</span></code> 运算，因为减法可以一次循环做完，所以可以直接修改被减数来进行计算的，这种方式可以减少数据复制的次数。实现的代码很直观，预处理和后续处理是类似操作的典型写法，中间的减法运算是直观模拟竖式减法。由于进行了补数，所以不用担心会出现借位借不到，只需要循环向高处去寻找第一个能借到的节就可以了。至于其他三种运算的代码和加法的情形完全一致。请认真阅读和理解这些代码。</p>
+<p>出于和加法时相同的原因，我们先实现 <code class="docutils literal notranslate"><span class="pre">-=</span></code> 运算，因为减法可以一次循环做完，所以可以直接修改被减数来进行计算，这种方式可以减少数据复制的次数。实现的代码很直观，预处理和后续处理是类似操作的典型写法，中间的减法运算是直观模拟竖式减法。由于进行了补数，所以不用担心会出现借位借不到，只需要循环向高处去寻找第一个能借到的节就可以了。至于其他三种运算的代码和加法的情形完全一致。请认真阅读和理解这些代码。</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">-=</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">zero</span><span class="p">())</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>	<span class="c1">// 特判，减数为0的情况</span>
@@ -222,17 +232,12 @@
 </div>
 <div class="section" id="id2">
 <h2><span class="section-number">4.1.4.3. </span>BigInt比较运算<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
-<p>比较大小的逻辑运算，对于任何数据类型来说都是极其重要的。如果不能进行大小比较，这种数据类型就会有很多功能无法使用。比如我们现在就可以说，如果 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 类型不支持比较大小，那么对于刚刚实现的“伪补码”减法，我们就无法判断是不是发生了小数减大数，因为这需要把得到的结果和被减数进行大小比较。假如我们不用“伪补码”减法，而是简单的取绝对值呢？那就更加不可能了，因为要取绝对值就必须实现比较减数和被减数的大小。所有哪怕就是为了完善其减法运算，我们也必须实现 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的比较运算。</p>
+<p>比较大小的逻辑运算，对于任何数据类型来说都是极其重要的。如果不能进行大小比较，这种数据类型就会有很多功能无法使用。比如我们现在就可以说，如果 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 类型不支持比较大小，那么对于刚刚实现的“伪补码”减法，我们就无法判断是不是发生了小数减大数，因为这需要比较计算结果和被减数的大小。假如我们不用“伪补码”减法，而是简单的取绝对值呢？那就更加不可能了，因为要取绝对值就必须事先比较减数和被减数的大小。</p>
 <p>另外，比较运算还有以下一些必不可缺的理由：</p>
 <ol class="arabic simple">
-<li><p>通常来说只有实现了比较运算，这个数据类型才能用于循环控制变量，例如最最常见的 <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(i</span> <span class="pre">=</span> <span class="pre">0;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">100;</span> <span class="pre">++i)</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(i</span> <span class="pre">!=</span> <span class="pre">0)</span></code> 这样的循环控制，都需要用到比较运算。</p></li>
-<li><p>C++最大的福利，algorithm基本算法库中提供的排序函数 <code class="docutils literal notranslate"><span class="pre">sort()</span></code>，要求被排序的数据类型必须支持 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 比较运算。</p></li>
+<li><p>通常来说只有实现了比较运算，这个数据类型才能用做循环控制变量，例如最常见的 <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(i</span> <span class="pre">=</span> <span class="pre">0;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">100;</span> <span class="pre">++i)</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(i</span> <span class="pre">!=</span> <span class="pre">0)</span></code> 这样的循环控制，都需要用到比较运算。</p></li>
+<li><p>C++最大的福利，<code class="docutils literal notranslate"><span class="pre">algorithm</span></code> 库中提供的排序函数 <code class="docutils literal notranslate"><span class="pre">sort()</span></code>，要求被排序的数据类型必须支持 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 比较运算。</p></li>
 </ol>
-<div class="admonition hint">
-<p class="admonition-title">提示</p>
-<p><code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数，包含在C++的algorithm库中，是一个极其便利、极其快速的内排序函数。它的运行效率甚至超过了标准的快速排序算法，它支持所有C++列表型容器（普通的数组、vector等），可以对它们中指定的一段数据完成排序。由于它速度极快而且没有什么已知的bug报告，所以在算法编程中是首推使用的，除非是某种排序算法的模板题，否则我们总是建议在需要排序时使用 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数。</p>
-<p>另外，algorithm库还提供了其他一些有用的排序函数，比如稳定排序 <code class="docutils literal notranslate"><span class="pre">stable_sort()</span></code>，部分排序 <code class="docutils literal notranslate"><span class="pre">partial_sort()</span></code>。它还提供了大量常用的通用算法函数，比如二分搜索、归并、查找等等。所有这些函数都需要被操作元素支持某些特定的比较运算。比如查找函数 <code class="docutils literal notranslate"><span class="pre">find()</span></code> 就需要 <code class="docutils literal notranslate"><span class="pre">==</span></code> 运算。</p>
-</div>
 <p>可见为一个自定义数据类型实现大小比较运算有多么重要，接下来我们就来完成这一步骤。我们很快就可以发现，比起加减乘除，实现比较运算是多么的轻松愉快。</p>
 <p>C++共有六种比较运算：<code class="docutils literal notranslate"><span class="pre">&lt;,</span> <span class="pre">&gt;,</span> <span class="pre">&lt;=,</span> <span class="pre">&gt;=,</span> <span class="pre">==,</span> <span class="pre">!=</span></code>。以成员函数形式重载它们的函数原型如下：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
@@ -247,7 +252,7 @@
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>根据比较运算相互之间的关系，理论上我们只需要实现其中一种，就可以利用它来完成其余五种。事实上C++算法库中的排序函数只需要元素支持小于运算就是这个道理。具体的方法是这样的，假设我们会判断是否 <span class="math notranslate nohighlight">\(a \lt b\)</span>，那么：</p>
+<p>根据比较运算相互之间的关系，理论上我们只需要实现其中一种，就可以利用它来完成其余五种。具体的方法是这样的，假设我们会判断是否 <span class="math notranslate nohighlight">\(a \lt b\)</span>，那么：</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(a \gt b \iff b \lt a\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(a \le b \iff a \not\gt b \iff b \not\lt a\)</span></p></li>
@@ -255,9 +260,9 @@
 <li><p><span class="math notranslate nohighlight">\(a = b \iff (a \ge b)\text{ and }(b \ge a) \iff (a \not\lt b)\text{ and }(b \not\lt a)\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(a \neq b \iff (a \lt b)\text{ or }(b \lt a)\)</span></p></li>
 </ul>
-<p>事实上，只需要实现 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 比较也是目前大多数其他程序设计语言对于自定义数据类型的惯例要求。要实现 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的小于比较也很是简单，就像通常的两个正整数比较大小一样。先看两个数的长度是否相同，如果不同那么大小已分；如果相同那么从高位到低位逐位进行比较，找到第一个不同的位，这一位谁小，谁就是小，如果一直找到最低一位都没有分出大小，那么二者相等。<code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 只不过是把位变成了节而已。</p>
-<p>但是在这里我们建议除了实现 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 之外，我们再实现 <code class="docutils literal notranslate"><span class="pre">==</span></code> 运算，然后 <code class="docutils literal notranslate"><span class="pre">!=</span></code> 就可以很简单地利用 <code class="docutils literal notranslate"><span class="pre">==</span></code> 来实现。因为如果要依赖 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 来构造 <code class="docutils literal notranslate"><span class="pre">==</span></code> 和 <code class="docutils literal notranslate"><span class="pre">!=</span></code> 的话，需要进行两次的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算，而这两次比较本质上是重复的。</p>
-<p>更何况我们的 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 是用 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 来构建的，而 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 天生就支持用 <code class="docutils literal notranslate"><span class="pre">==</span></code> 和 <code class="docutils literal notranslate"><span class="pre">!=</span></code> 来检查两个向量的内容是否完全一致。所以 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的这两个比较运算我们就干脆直接比较 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span> <span class="pre">_s</span></code> 了，简单到难以置信并且速度更快。</p>
+<p>要实现 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的小于比较是很简单的，其方法和通常的两个正整数比较大小完全一样：先看两个数的长度是否相同，如果不同那么大小已分；如果相同那么从高位到低位逐位进行比较，找到第一个不同的位，这一位谁小，谁就是小，如果一直找到最低一位都没有分出大小，那么二者相等。<code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 只不过是把位变成了节而已。</p>
+<p>但是在这里我们建议除了实现 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 之外，最低限度应该再实现 <code class="docutils literal notranslate"><span class="pre">==</span></code> 运算，然后 <code class="docutils literal notranslate"><span class="pre">!=</span></code> 就可以很简单地利用 <code class="docutils literal notranslate"><span class="pre">==</span></code> 来实现。因为如果要依赖 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 来构造 <code class="docutils literal notranslate"><span class="pre">==</span></code> 和 <code class="docutils literal notranslate"><span class="pre">!=</span></code> 的话，需要进行两次 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 运算，这就非常浪费了。</p>
+<p>更何况 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 是用 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 来构建的，而 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span></code> 天生就支持用 <code class="docutils literal notranslate"><span class="pre">==</span></code> 和 <code class="docutils literal notranslate"><span class="pre">!=</span></code> 来检查两个向量的内容是否完全一致。所以 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的这两个比较运算我们就干脆直接比较 <code class="docutils literal notranslate"><span class="pre">vector&lt;int&gt;</span> <span class="pre">_s</span></code> 了，简单到难以置信并且速度更快。</p>
 <p>下面是所有六个比较运算的实现代码：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span>
 <span class="p">{</span>

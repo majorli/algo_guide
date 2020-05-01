@@ -79,7 +79,7 @@
 <p>贪心法使用的分解求解过程的方法叫做<strong>贪心策略</strong>。如果使用的贪心策略具有最优子结构的特点，也就是说它具备<strong>无后效性</strong>，即每一步局部最优解的求解都只和问题的当前状态有关，而不会受到后续求解过程的影响，那么最终就可以得到全局最优解。如果所使用的贪心策略具有后效性，那么算法就可能得不到最优解，而只能得到一个近似最优的解。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
-<p><strong>贪心法不保证一定能获得最优解！</strong></p>
+<p>贪心法不保证一定能获得最优解！</p>
 </div>
 <p>所以对所采用的贪心策略一定要仔细分析其是否满足无后效性，换句话说，一定要证明其正确性。但这不是一件容易的事情，并没有一种固定的证明方法，需要具体问题具体分析。而且实际上，<strong>适用贪心法的情况很少</strong>。一般来说，要分析一个问题是否适用贪心法，一靠经验、二靠尝试举反例、三才是形式化的证明。</p>
 <p><strong>单机任务调度问题</strong></p>
@@ -95,7 +95,7 @@ T=&amp;(t_1)+(t_1+t_3)+(t_1+t_3+t_2)+(t_1+t_3+t_2+t_5)+(t_1+t_3+t_2+t_5+t_4)\\
  =&amp;5\times3+4\times5+3\times8+2\times10+1\times15\\
  =&amp;94
 \end{align}\end{split}\]</div>
-<p>这是所有任务完成时间之和的最小值。要证明这个结论也很简单，因为排在前面的任务在计算总时间的时候它的运行时长被加的次数总是比排在后面的任务多。假设在调度中存在一个逆序对 <span class="math notranslate nohighlight">\(t_i\gt t_{i+1}\)</span>，那么 <span class="math notranslate nohighlight">\(t_i\)</span> 会在计算总时间时被加 <span class="math notranslate nohighlight">\(n-i+1\)</span> 次，<span class="math notranslate nohighlight">\(t_{i+1}\)</span> 则会被加 <span class="math notranslate nohighlight">\(n-i\)</span> 次，因此这个逆序对给总时长带来的时间量是 <span class="math notranslate nohighlight">\((n-i+1)t_i+(n-i)t_{i+1}=(n-i)(t_i+t_{i+1})+t_i\)</span>。而如果把这个逆序对转成顺序对，那么它们给总时长带来的时间量会是 <span class="math notranslate nohighlight">\((n-i)(t_i+t_{i+1})+t_{i+1}\)</span>。显然，由于 <span class="math notranslate nohighlight">\(t_i\gt t_{i+1}\)</span>，所以逆序对带来的时间量一定比顺序对带来的时间量要小。按照我们的贪心策略得到的调度，是完全不存在逆序对的，所以这个调度一定是最优的。</p>
+<p>这是所有任务完成时间之和的最小值。要证明这个结论也很简单，因为排在前面的任务在计算总时间的时候它的运行时长被加的次数总是比排在后面的任务多。假设在调度中存在一个逆序对 <span class="math notranslate nohighlight">\(t_i\gt t_{i+1}\)</span>，那么 <span class="math notranslate nohighlight">\(t_i\)</span> 会在计算总时间时被加 <span class="math notranslate nohighlight">\(n-i+1\)</span> 次，<span class="math notranslate nohighlight">\(t_{i+1}\)</span> 则会被加 <span class="math notranslate nohighlight">\(n-i\)</span> 次，因此这个逆序对给总时长带来的时间量是 <span class="math notranslate nohighlight">\((n-i+1)t_i+(n-i)t_{i+1}=(n-i)\cdot(t_i+t_{i+1})+t_i\)</span>。而如果把这个逆序对转成顺序对，那么它们给总时长带来的时间量会是 <span class="math notranslate nohighlight">\((n-i)\cdot(t_i+t_{i+1})+t_{i+1}\)</span>。显然，由于 <span class="math notranslate nohighlight">\(t_i\gt t_{i+1}\)</span>，所以逆序对带来的时间量一定比顺序对带来的时间量要长。按照我们的贪心策略得到的调度，是完全不存在逆序对的，所以这个调度一定是最优的。</p>
 <p>上面是一个最简单的贪心法的例子，也很好理解。尽管贪心法的实际应用场景并不多，但它是一种重要的算法设计思路，在初期的算法竞赛中是常考题型，在一些高级算法中也常会存在部分采用贪心法的情况。另外，贪心法还常会作为一种比较简单实用的较优解近似算法用于某些NP难题。因此对贪心法做一个比较全面的了解，包括它的常见用例、常见反例和一些实际考题是很有必要的。下面就让我们来看一些经典的贪心法例子，最后用两个实际题目来巩固一下贪心法的应用。</p>
 <div class="toctree-wrapper compound">
 <ul>

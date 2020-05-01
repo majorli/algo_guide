@@ -82,12 +82,12 @@
             
   <div class="section" id="iv">
 <h1><span class="section-number">4.1.5. </span>高精度整数算法(IV) 除法及取余<a class="headerlink" href="#iv" title="永久链接至标题">¶</a></h1>
-<p>除法和取余是两个姐妹运算，二者的运算过程完全一样，不同的只是取哪一个结果而已。它们俩也都是高精度整数算法中常用的运算，也是编程实现难度相比最高的运算。</p>
+<p>除法和取余是两个姐妹运算，二者的运算过程完全一样，不同的只是取哪一个结果而已。它们俩是高精度整数算法中编程难度最高的运算。</p>
 <div class="section" id="bigint">
 <h2><span class="section-number">4.1.5.1. </span>BigInt除法运算<a class="headerlink" href="#bigint" title="永久链接至标题">¶</a></h2>
-<p>我们先看看十进制整数除法的竖式运算是怎样的。例如我们要计算54321/33=1646…3，那么我们首先从被除数54321的最高位5开始寻找第一段比33大的部分，我们可以找到(54)就比33大，所以就从54开始逐位向后进行部分除法，最终得到结果。这个过程想必是大家已经非常熟练的了。</p>
-<p>我们的算法要模拟这样一个过程，有一个地方需要按照计算机的习惯来稍微改造一下。就是在第一次部分除法的时候，人眼可以快速地找到第一个大于除数33的部分，即54，但计算机软件则没有这么聪明，它必须从最高位5开始和33比较大小，如果小了那就再添一位再比大小，这个过程有点小麻烦。对这个步骤有两种改造方法。由于第一段比除数大的部分肯定至少和除数位数相同，至多比除数多一位，所以我们可以根据除数的长度，先取相同长度的一段进行比较，如果不行就再添一位，这样就可以了。第二种方法是我们干脆不要找了，直接从被除数的最高位单独一位开始做部分除法，这样最多就是商会多出若干个前导的零来，我们最后把它们去除就可以了。</p>
-<p>看上去第二种方法有可能多做好几次比较运算，最后还要去除最高位上的若干个零。但是第二种方法可以让代码变得统一和简洁，而比较运算我们已经知道了，其实运行速度很快的，去除商最高位的前导零采用 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 的 <code class="docutils literal notranslate"><span class="pre">pop_back()</span></code> 函数，速度也是极快的。所以在实际应用中第二种方法的速度比第一种并不会明显的降低，所以这里我们选择第二种方法。在把算法和程序代码理解清楚后，请自行尝试第一种方法。</p>
+<p>我们先看看十进制整数除法的竖式运算是怎样的。例如我们要计算54321÷33=1646…3，那么我们首先从被除数54321的最高位5开始寻找第一段比33大的部分，可以找到(54)就比33大，所以就从54开始逐位向后进行部分除法，最终得到结果。</p>
+<p>我们的算法要模拟这样一个过程，有一个地方需要按照计算机的习惯来稍微改造一下。就是在第一次部分除法的时候，人眼可以快速地找到第一个大于除数的部分。但计算机可没有这么聪明，这是个小麻烦，对此有两种解决方法。第一种，由于第一段比除数大的部分肯定至少和除数位数相同，至多比除数多一位，所以我们可以根据除数的长度，先取相同长度的一段进行比较，如果不行就再添一位，这样就可以了。第二种方法是我们干脆不要找了，直接从被除数的最高位开始做部分除法，这样无非就是商会多出若干个前导的零来，我们最后把它们去掉就行了。</p>
+<p>看上去第二种方法有可能多做好几次比较运算，最后还要去除最高位上的若干个零。但是第二种方法可以让代码变得统一和简洁，而比较运算我们已经知道了，其实运行速度很快的，去除商最高位的前导零采用 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 的 <code class="docutils literal notranslate"><span class="pre">pop_back()</span></code> 函数，速度也是极快的，所以在实际应用中第二种方法并不比第一种慢多少。这里我们选择第二种方法，在把算法和程序代码理解清楚后，请自行尝试第一种方法。</p>
 <p>然后我们把十进制的按位运算扩展为万进制的按节运算就可以了，方法上是完全一致的。请看一下图示的例子：</p>
 <img alt="../../_images/315_bigint_div.png" src="../../_images/315_bigint_div.png" />
 <p>接下来我们来实现 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 的除法运算，和乘法一样，一共两种，重载函数的原型分别如下：</p>
@@ -99,13 +99,13 @@
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>因为除法和乘法一样，也是不能直接在被除数本身上进行运算的，所以我们也是采用先实现普通的 <code class="docutils literal notranslate"><span class="pre">/</span></code> 运算，然后利用它来实现 <code class="docutils literal notranslate"><span class="pre">/=</span></code> 运算。</p>
-<p>除法的过程相对复杂，容易引起思维混乱和引入bug，我们在开始编码之前先还是理一理思路。先看看我们需要哪些变量：</p>
+<p>因为除法和乘法一样，也是不能直接在被除数本身上进行运算的，所以我们也先实现普通的 <code class="docutils literal notranslate"><span class="pre">/</span></code> 运算，然后利用它来实现 <code class="docutils literal notranslate"><span class="pre">/=</span></code> 运算。</p>
+<p>除法的过程相对复杂，特别容易混乱，我们在开始编码之前先还是理一理思路。首先来看看要用到哪些变量：</p>
 <ul class="simple">
-<li><p>被除数是 <code class="docutils literal notranslate"><span class="pre">*this</span></code>，它可以直接访问内部成员变量 <code class="docutils literal notranslate"><span class="pre">_s</span></code>，但由于整个函数是有 <code class="docutils literal notranslate"><span class="pre">const</span></code> 后缀修饰的，所以不能修改；</p></li>
-<li><p>除数是形参 <code class="docutils literal notranslate"><span class="pre">a</span></code>，它是常引用，也不能修改；</p></li>
-<li><p>我们需要生成一个临时的 <code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">q</span></code> 用于计算商。因为我们知道商的长度不大于被除数的长度，所以我们可以在计算开始前将其设为与被除数相同长度并且全零。</p></li>
-<li><p>我们显然还需要一个临时的 <code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">part</span></code> 用来存放每一次部分除法的部分被除数。</p></li>
+<li><p>被除数是 <code class="docutils literal notranslate"><span class="pre">*this</span></code>，它可以直接访问内部成员变量 <code class="docutils literal notranslate"><span class="pre">_s</span></code>，但由于整个函数是有 <code class="docutils literal notranslate"><span class="pre">const</span></code> 后缀修饰的，所以不能修改。</p></li>
+<li><p>除数是形参 <code class="docutils literal notranslate"><span class="pre">a</span></code>，它是常引用，也不能修改。</p></li>
+<li><p>我们需要一个临时变量 <code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">q</span></code> 用于存放商。因为我们知道商的长度不大于被除数的长度，所以我们可以在计算开始前将其设为与被除数相同长度并且全零。</p></li>
+<li><p>我们显然还需要一个临时的变量 <code class="docutils literal notranslate"><span class="pre">BigInt</span> <span class="pre">part</span></code> 用来存放每一次部分除法的部分被除数。</p></li>
 </ul>
 <p>下面是除法的实现代码：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">BigInt</span> <span class="n">BigInt</span><span class="o">::</span><span class="k">operator</span><span class="o">/</span><span class="p">(</span><span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">)</span> <span class="k">const</span>
@@ -139,18 +139,18 @@
 <p class="admonition-title">注解</p>
 <ol class="arabic simple">
 <li><p>还记得那个 <code class="docutils literal notranslate"><span class="pre">throw</span></code> 命令吗？不记得的话可以回到顺序表这一节去看一看，那里有简单的介绍。</p></li>
-<li><p>要记住C++中所有的顺序容器，包括数组、vector等等都是从0开始计数的，用来指示当前部分除法所处位置的变量 <code class="docutils literal notranslate"><span class="pre">i</span></code> 在进入循环前的初始值 <code class="docutils literal notranslate"><span class="pre">_s.size()</span></code> 是指向被除数最高节后面的那个位置的。因此在循环的条件表达式里我们使用了前置 <code class="docutils literal notranslate"><span class="pre">--</span></code> 运算，这样第一次循环条件判断的时候它已经指向了被除数的最高节，循环也就相应地从最高节开始进行部分除了，同时每一次部分除的商也就顺理成章的由 <code class="docutils literal notranslate"><span class="pre">i</span></code> 来指示所在位置，即 <code class="docutils literal notranslate"><span class="pre">q._s[i]</span></code>。整个过程中 <code class="docutils literal notranslate"><span class="pre">i</span></code> 会始终跟随进度准确地指向合适位置，直到位置0，也就是最低节也完成了部分除，再一次循环条件判断时，<code class="docutils literal notranslate"><span class="pre">i</span></code> 先完成减一，变成了-1，循环随之结束。</p></li>
-<li><p>进入循环前，把 <code class="docutils literal notranslate"><span class="pre">part</span></code> 设为0。在以后的计算过程中，<code class="docutils literal notranslate"><span class="pre">part</span></code> 在每次部分除结束后保留的是余数，所以当某次部分除发生整除时，<code class="docutils literal notranslate"><span class="pre">part</span></code> 也会变成0。</p></li>
-<li><p>每一次部分除，首先把被除数当前位置的节 <code class="docutils literal notranslate"><span class="pre">_s[i]</span></code> 移入 <code class="docutils literal notranslate"><span class="pre">part</span></code> 的最低位，和前一次的余数拼接成这一次的被除数。这个过程要分为两种情况：一是 <code class="docutils literal notranslate"><span class="pre">part</span></code> 不为0的情况，这时候把 <code class="docutils literal notranslate"><span class="pre">_s[i]</span></code> 的值插入到 <code class="docutils literal notranslate"><span class="pre">part._s</span></code> 的首个元素位置即可；二是 <code class="docutils literal notranslate"><span class="pre">part</span></code> 为0时，应该直接把 <code class="docutils literal notranslate"><span class="pre">part._s[0]</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">_s[i]</span></code> 的值，否则就会出现 <code class="docutils literal notranslate"><span class="pre">part</span></code> 表示的部分被除数有一个多余的前导0，会给后面的运算带来不必要的麻烦。</p></li>
-<li><p>部分除要做的是两个 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量的除法 <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">/</span> <span class="pre">a</span></code>，这就出现了用自己来实现自己的问题，所以我们不是真正地去做除法，而是用多次循环减法来模拟这一次除法：循环地做 <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">-</span> <span class="pre">a</span></code> 直至 <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">&lt;</span> <span class="pre">a</span></code>，每减一次，对应的部分商加1，减了多少次就加了多少个1。由于我们事先把 <code class="docutils literal notranslate"><span class="pre">q</span></code> 设为了全0，所以这个循环可以保证得到正确的部分商，如果 <code class="docutils literal notranslate"><span class="pre">part</span></code> 一开始就小于 <code class="docutils literal notranslate"><span class="pre">a</span></code> 的话，这个循环根本不会被执行，部分商也就保持为0。可以看出这个过程是准确而完备的。</p></li>
+<li><p>C++所有顺序容器的元素下标都是从0开始计数的，用来指示当前部分除法所处位置的变量 <code class="docutils literal notranslate"><span class="pre">i</span></code> 在进入循环前的初始值 <code class="docutils literal notranslate"><span class="pre">_s.size()</span></code> 是指向被除数最高节后面的那个位置的。因此在循环的条件表达式里我们使用了前置 <code class="docutils literal notranslate"><span class="pre">--</span></code> 运算，这样第一次循环条件判断的时候它已经指向了被除数的最高节，循环也就相应地从最高节开始进行部分除了，同时每一次部分除的商也就顺理成章的由 <code class="docutils literal notranslate"><span class="pre">i</span></code> 来指示所在位置，即 <code class="docutils literal notranslate"><span class="pre">q._s[i]</span></code>。整个过程中 <code class="docutils literal notranslate"><span class="pre">i</span></code> 会始终跟随进度准确地指向合适的位置。一直到位置0，也就是最低节也完成了部分除之后，再一次循环条件判断时，<code class="docutils literal notranslate"><span class="pre">i</span></code> 先完成减一，变成-1，循环便随之结束。</p></li>
+<li><p>进入循环前把 <code class="docutils literal notranslate"><span class="pre">part</span></code> 设为0，计算过程中每次部分除之后余数就保留在 <code class="docutils literal notranslate"><span class="pre">part</span></code> 里，所以当某次部分除是整除时，<code class="docutils literal notranslate"><span class="pre">part</span></code> 会变成0。</p></li>
+<li><p>每一次计算部分除时先把被除数当前位置的节 <code class="docutils literal notranslate"><span class="pre">_s[i]</span></code> 移入 <code class="docutils literal notranslate"><span class="pre">part</span></code> 的最低节，和前一次的余数拼接成这一次的被除数。这个过程要分为两种情况：<code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">!=</span> <span class="pre">0</span></code> 时应把 <code class="docutils literal notranslate"><span class="pre">_s[i]</span></code> 的值插入到 <code class="docutils literal notranslate"><span class="pre">part._s</span></code> 的头部；<code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">==</span> <span class="pre">0</span></code> 时，则应直接令 <code class="docutils literal notranslate"><span class="pre">part._s[0]</span> <span class="pre">=</span> <span class="pre">_s[i]</span></code>，否则就会出现一个多余的前导0，这会给后面的运算带来不必要的麻烦。</p></li>
+<li><p>部分除 <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">/</span> <span class="pre">a</span></code> 本身就是两个 <code class="docutils literal notranslate"><span class="pre">BigInt</span></code> 变量的除法，这就出现了用自己来实现自己的问题。所以我们不是真正地去做除法，而是用多次循环减法来模拟除法：循环地做 <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">-</span> <span class="pre">a</span></code> 直至 <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">&lt;</span> <span class="pre">a</span></code>，每减一次，对应的部分商加1，减了多少次就加了多少个1。由于我们事先把 <code class="docutils literal notranslate"><span class="pre">q</span></code> 设为了全0，所以这个循环可以保证得到正确的部分商，如果 <code class="docutils literal notranslate"><span class="pre">part</span></code> 一开始就小于 <code class="docutils literal notranslate"><span class="pre">a</span></code> 的话，这个循环根本不会被执行，部分商也就保持为0。可以看出这个过程是准确而完备的。</p></li>
 <li><p>最后不要忘记删除 <code class="docutils literal notranslate"><span class="pre">q</span></code> 中多余的前导0。</p></li>
 </ol>
 </div>
-<p>高精度算法这种本身比较复杂，又涉及许多编程中的语言运用技巧的代码，在阅读的时候务必用几个具体的数字手工模拟运行一下。在看懂之后，务必要自己手打一遍，测试一下。</p>
+<p>高精度算法这种本身比较复杂，又涉及许多编程中的语言运用技巧，在阅读的时候务必用几个具体的数字手工模拟运行一下。在看懂之后还要自己手打一遍，测试一下。</p>
 </div>
 <div class="section" id="id1">
 <h2><span class="section-number">4.1.5.2. </span>BigInt取余运算<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
-<p>除法运算搞定之后，取余就自然搞定了。其实我们已经看到了，除法运算时那个用来存放部分被除数的临时变量 <code class="docutils literal notranslate"><span class="pre">part</span></code>，在整个除法运算结束之后里面存放的就是余数，把它返回出来就OK了，就这么简单！整个过程和除法完全一样，而且我们现在已经不需要计算商了，所以在运算过程中不需要那个保存商的变量 <code class="docutils literal notranslate"><span class="pre">q</span></code>。另外我们把变量 <code class="docutils literal notranslate"><span class="pre">part</span></code> 改名为 <code class="docutils literal notranslate"><span class="pre">r</span></code>，表示余数（remainder）。</p>
+<p>除法运算搞定之后，取余就自然搞定了。其实我们已经看到了，除法运算时那个用于部分除的临时变量 <code class="docutils literal notranslate"><span class="pre">part</span></code> 在整个除法运算结束之后里面存放的就是余数，把它返回出来就OK了，就这么简单！整个过程和除法完全一样。而且我们现在已经不需要计算商了，所以在运算过程中不需要那个保存商的变量 <code class="docutils literal notranslate"><span class="pre">q</span></code>。另外我们把变量 <code class="docutils literal notranslate"><span class="pre">part</span></code> 改名为 <code class="docutils literal notranslate"><span class="pre">r</span></code>，表示余数（remainder）。</p>
 <p>取余运算符重载为成员函数的原型：</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">BigInt</span> <span class="p">{</span>
         <span class="c1">// ...</span>
@@ -218,7 +218,7 @@
 <span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
 <span class="n">istream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">);</span>
 
-<span class="c1">// 以下为函数定义。算法编程中通常函数定义放在main()函数的后面，工程编程中函数定义往往写在另一个单独的程序文件里</span>
+<span class="c1">// 以下为函数定义。算法编程中通常函数定义放在main()函数的后面，工程编程中则往往写在另一个单独的程序文件里</span>
 <span class="n">ostream</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">BigInt</span> <span class="o">&amp;</span><span class="n">bi</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">bi</span><span class="p">.</span><span class="n">_s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
@@ -438,9 +438,9 @@
 </div>
 <div class="admonition attention">
 <p class="admonition-title">注意</p>
-<p>高精度算法是算法编程普及组阶段的难点之一，涉及比较复杂的模拟算法，很容易考虑不周全引入bug；涉及比较复杂的C++模板容器的应用，对vector容器的应用要有相当的熟悉度；涉及到初步的C++面向对象编程，对成员变量、成员函数、静态成员、构造函数、函数重载、运算符重载等面向对象的概念要有所了解，虽然还只是用struct来模拟初级阶段的面向对象，但还是有许多概念要理解，有许多固定写法要记住。</p>
-<p>不幸的是，高精度算法几乎是提高组的必考知识，普及组的难度越来越大，也不排除会出现在普及组的可能性。高精度算法难学难掌握，在考场上现场写一个极难在三次以内完全写准确，一定要自己完全理解，并多次动手实验才行。</p>
-<p>幸运的是，在C++语言强大的vector容器、面向对象等高阶技能的加持下，现在写高精度已经比当年用纯C语言和数组来写简单了许多许多。而且实际的题目中如果要用到高精度算法，是极少出现要求我们完整地实现所有高精度运算的，而且往往会在数据取值范围方面有一定的限制，使得计算过程可以简化。后面一节我们就将见到这样一个实际的题目。</p>
+<p>高精度算法是算法编程普及组阶段的难点之一，涉及比较复杂的模拟算法，很容易考虑不周引入bug；涉及比较复杂的C++模板容器应用，对 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器要有相当的熟悉度；涉及到初步的C++面向对象编程，对成员变量、成员函数、静态成员、构造函数、函数重载、运算符重载等概念要有所了解，虽然还只是用struct来模拟初级阶段的面向对象，但还是有许多概念要理解，有许多固定写法要记住。</p>
+<p>不幸的是，高精度算法几乎是提高组的必考知识，普及组的难度越来越大，也不排除会出现在普及组的可能性。高精度算法难学难掌握，在考试现场很难三次以内完全写对，一定要完全理解并多次动手实验才行。</p>
+<p>幸运的是，在C++语言强大的 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器、面向对象等高阶技能的加持下，现在写高精度已经比当年用纯C和数组来写简单了许多许多。而且实际的题目中如果要用到高精度算法，是极少要求完整实现所有运算的，而且往往会在数据取值范围方面有一定的限制，使得计算过程可以简化。后面一节我们就将见到这样一个实际的题目。</p>
 </div>
 </div>
 </div>
