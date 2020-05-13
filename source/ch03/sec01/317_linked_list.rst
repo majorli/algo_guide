@@ -14,6 +14,39 @@
 
 例如整数序列[1,2,3]，如果用链表来存储，那么三个元素在物理内存中各自可能存放在任意的位置中，但是相互之间用链来维持前后关系，如下图所示：
 
+.. image:: ../../images/317_linkedlist_mem.png
+
+其中红色的箭头线表示后链指针，蓝色的表示前链指针。但是这样的示意图看起来非常不舒服，一般我们把链表的示意图画成下面这样更为抽象但是更简洁易懂的方式：
+
+.. image:: ../../images/317_linkedlist.png
+
+这样，在一个链表的元素节点中，包含一个存放实际元素值的变量和一到两个存放链的指针变量。在用C++语言实现链表的时候，一般总是用一个结构来定义链表节点。如果链表元素的类型是C++内置数据类型，例如 ``int``\ ，最简单的单链表节点可以这样定义：
+
+.. code-block:: c++
+
+   struct Node {
+           int value;   // 元素值
+           Node *next;  // 后链指针
+
+           Node(int val = 0) { value = val; next = NULL; } // 构造函数
+   };
+
+如果希望将链表实现为一个抽象数据类型（ADT），支持任何数据类型，那么可以将节点定义为模板结构，比如下面这个双向链表节点：
+
+.. code-block:: c++
+
+   template <typename T>
+   struct Node {
+           T value;     // 元素值
+           Node *next;  // 后链指针
+           Node *prev;  // 前链指针
+
+           Node() { next = NULL; prev = NULL; }      // 默认构造函数
+           Node(const T &val) { value = val; next = NULL; prev = NULL; }  // 指定元素值的构造函数
+   };
+
+
+
 
 链表的操作
 ^^^^^^^^^^
