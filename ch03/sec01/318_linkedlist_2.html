@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1.8. 链表的C++实现 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.1.7. 线性表的链式存储结构：链表" href="317_linkedlist_1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="317_linkedlist_1.html" title="4.1.7. 线性表的链式存储结构：链表"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" accesskey="U"><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.1.8. 链表的C++实现</a><ul>
+<li><a class="reference internal" href="#id1">4.1.8.1. 单链表的实现</a></li>
+<li><a class="reference internal" href="#id2">4.1.8.2. 双链表的实现</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="317_linkedlist_1.html"
+                        title="上一章"><span class="section-number">4.1.7. </span>线性表的链式存储结构：链表</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec01/318_linkedlist_2.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="c">
+<h1><span class="section-number">4.1.8. </span>链表的C++实现<a class="headerlink" href="#c" title="永久链接至标题">¶</a></h1>
+<p>本节我们将使用C++语言实现单链表和双链表结构。作为数据结构这一领域的学习，我们将使用C++模板技术实现标准的链表ADT，可以接受任意类型的元素，具有以下标准功能：</p>
+<ol class="arabic simple">
+<li><p>基本功能：</p>
+<ol class="arabic simple">
+<li><p>获取链表长度，即表中元素的数量；</p></li>
+<li><p>判断链表是否为空；</p></li>
+<li><p>清空链表。</p></li>
+</ol>
+</li>
+<li><p>迭代访问：</p>
+<ol class="arabic simple">
+<li><p>获取链表首元素节点的指针，请注意是首元素的节点，不是头部的哑节点指针；</p></li>
+<li><p>获取双链表的尾部指针，请注意是尾部的哑节点指针，不是尾元素的节点指针；</p></li>
+<li><p>向后移动节点指针；</p></li>
+<li><p>向前移动双链表节点指针。</p></li>
+</ol>
+</li>
+<li><p>元素访问：</p>
+<ol class="arabic simple">
+<li><p>按照元素下标获取元素值；</p></li>
+<li><p>根据节点指针获取元素值；</p></li>
+<li><p>获取链表首元素；</p></li>
+<li><p>获取双链表尾元素；</p></li>
+<li><p>修改指定下标处的元素值；</p></li>
+<li><p>修改给定节点（由指针给定）处的元素值。</p></li>
+</ol>
+</li>
+<li><p>元素增删：</p>
+<ol class="arabic simple">
+<li><p>在链表头部插入新元素；</p></li>
+<li><p>在双链表尾部添加新元素；</p></li>
+<li><p>新元素插入为单链表给定节点（由指针给定）的后继；</p></li>
+<li><p>新元素插入为双链表给定节点（由指针给定）的前驱，类似于顺序表中在指定元素位置处插入新元素；</p></li>
+<li><p>删除链表首元素；</p></li>
+<li><p>删除双链表的尾元素；</p></li>
+<li><p>删除单链表给定节点（由指针给定）的后继；</p></li>
+<li><p>删除双链表给定节点（由指针给定）本身。</p></li>
+</ol>
+</li>
+</ol>
+<p>以上是链表的常见标准功能，在学习数据结构时应全部予以掌握，在实际编程中可能会有所取舍或改变。本节详细介绍单链表的完整实现代码，双链表只给出部分代码，剩余部分将作为本节的练习。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">4.1.8.1. </span>单链表的实现<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><strong>1、单链表的元素节点结构</strong></p>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">4.1.8.2. </span>双链表的实现<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>(待续)</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="317_linkedlist_1.html" title="4.1.7. 线性表的链式存储结构：链表"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" ><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

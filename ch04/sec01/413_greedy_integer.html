@@ -96,17 +96,27 @@
 <p class="admonition-title">警告</p>
 <p>有些货币面值的组合不能用贪心法求解找零问题，这样的问题只能用动态规划的方法来求解。</p>
 </div>
-<p>让人不快的是，任意给定一套货币，很难用一种通用的方法来判断它是否适用贪心法。一般我们依据经验和寻找反例来进行判断，大概可以有下面这么几条规则：</p>
+<p>让人不快的是，任意给定一套货币，证明它是否适用贪心法的方法并不简单。不过一般我们可以依据经验和寻找反例来进行判断，大概可以有下面这么几条规则：</p>
 <ol class="arabic simple">
 <li><p>真实世界在用的货币，比如人民币、美元等，一般都适用贪心法，即使只是取了其中一部分货币。例如著名的《算法导论》里的例题就使用了四种美元硬币：1美分、5美分、10美分和25美分，但它们也是可以用贪心法求解的。</p></li>
 <li><p>可以证明，货币的面值如果从1开始，构成等比数列 <span class="math notranslate nohighlight">\(\{1,c,c^2,\dots,c^k\},(c\gt1,k\gt0)\)</span> 的，一定适用贪心法。在《算法导论》里有详细的证明，但是证明过程比较玄学，这里就不详细解释了，记住这个结论就好。</p></li>
-<li><p>如果和通常的真实货币面值不同，特别是有一些奇怪的数值，例如7、11等，又构不成等比数列的就要小心了。遇到这样的数值可以用略高于那个奇怪的面值的数字来试试能不能找到反例。</p></li>
+<li><p>如果和通常的真实货币面值不同，特别是有一些奇怪的数值，例如7、11等，又构不成等比数列的就要小心了。遇到这样的数值可以用下面的方法来找反例：</p></li>
 </ol>
+<div class="admonition- admonition">
+<p class="admonition-title">找零问题反例检查规则</p>
+<p>1、如果只有两种面值，那么问题一定可以用贪心法求解。</p>
+<p>2、如果面值超过两种，先按面值大小排序：<span class="math notranslate nohighlight">\(c_1=1 \lt c_2 \lt c_3 \lt \cdots \lt c_n\)</span>。然后对 <span class="math notranslate nohighlight">\(c_3\)</span> 到 <span class="math notranslate nohighlight">\(c_{n-1}\)</span> 的各个面值依次进行反例检查。检查的金额就是恰好比下一个面值大的当前面值的倍数，即对于面值 <span class="math notranslate nohighlight">\(c_i\)</span>，我们计算出恰好比 <span class="math notranslate nohighlight">\(c_{i+1}\)</span> 大的那个 <span class="math notranslate nohighlight">\(c_i\)</span> 的倍数金额 <span class="math notranslate nohighlight">\(a=pc_i\)</span>，用它来进行反例检查。对于这个金额，如果不采用贪心法就是要用 <span class="math notranslate nohighlight">\(p\)</span> 张 <span class="math notranslate nohighlight">\(c_i\)</span> 面值的钱，再计算一下用贪心法需要用几张钱，和 <span class="math notranslate nohighlight">\(p\)</span> 进行比较看看贪心法是不是更优。只要找到一个反例，贪心法就被推翻了。如果找不到反例的话这套货币就适用贪心法，不需要再尝试找其他反例了（这个方法的证明很复杂，就不介绍了，记得方法就可以了）。</p>
+<p>请按上述方法对前面提高过的人民币、美元硬币、等比数列面值、奇怪的不适用贪心法的面值等进行验证。</p>
+</div>
 <p>至于可以使用贪心法的情况，程序的编写非常简单，以至于一般面向竞赛的OJ网站上都不会有完全使用贪心法即可解决的找零问题题目。比如力扣网站的322号和518号题目，都是找零问题，但是都不保证所有测试点都适用贪心法。但现在这个阶段请大家一定要自己动手编程试一试下面这个自编的问题：</p>
 <div class="admonition- admonition">
 <p class="admonition-title">人民币找零问题</p>
 <p>输入一个以元为单位的人民币金额 <span class="math notranslate nohighlight">\(a\ge1\)</span>，使用1元、2元、5元、10元、20元、50元、100元七种人民币纸币来组合出这个金额。请使用贪心法计算出使用纸币数量最少的组合方法。</p>
 <p>输出格式：一行七个整数，分别表示1元、2元、5元、10元、20元、50元、100元七种纸币的使用数量，不使用的为0，数字之间用一个空格分隔。</p>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">附加练习</p>
+<p>输入任意一套 <span class="math notranslate nohighlight">\(n\)</span> 种面值的货币，其中必须有一种面值为1。编程判断该套货币的找零问题能否适用贪心法。</p>
 </div>
 </div>
 <div class="section" id="id2">

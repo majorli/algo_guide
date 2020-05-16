@@ -275,7 +275,7 @@
 </div>
 </div>
 <div class="section" id="k">
-<h2><span class="section-number">3.5.4.4. </span>分区的应用：快速k位数算法<a class="headerlink" href="#k" title="永久链接至标题">¶</a></h2>
+<span id="index-0"></span><h2><span class="section-number">3.5.4.4. </span>分区的应用：快速k位数算法<a class="headerlink" href="#k" title="永久链接至标题">¶</a></h2>
 <p>利用分区的方法，可以设计一种二分的k位数算法，当然由于分区不一定每次都能得到二分的结果，所以实际运行效果只能是在平均情况下接近于二分，但平均情况也是 <span class="math notranslate nohighlight">\(O(\log n)\)</span> 的时间效率。</p>
 <p>我们先从整个无序序列 <span class="math notranslate nohighlight">\(A\)</span> 开始进行分区，分区后得到基准元素最终所在的位置 <span class="math notranslate nohighlight">\(p\)</span>。可以看出来，在元素 <span class="math notranslate nohighlight">\(A[p]\)</span> 之前一共有 <span class="math notranslate nohighlight">\(p\)</span> 个元素 <span class="math notranslate nohighlight">\(A[0],\dots,A[p-1]\)</span> ，它们都比 <span class="math notranslate nohighlight">\(A[p]\)</span> 小；它后面的所有元素 <span class="math notranslate nohighlight">\(A[p+1],\dots,A[r-1]\)</span> 则都大于等于它。因此 <span class="math notranslate nohighlight">\(A[p]\)</span> 就是整个序列中第 <span class="math notranslate nohighlight">\(p+1\)</span> 小的元素，即 <span class="math notranslate nohighlight">\(p+1\)</span> 位数。</p>
 <p>如果我们要找的k位数恰好满足 <span class="math notranslate nohighlight">\(k=p+1\)</span>，那么太好了，<span class="math notranslate nohighlight">\(A[p]\)</span> 就是我们要的答案。如果 <span class="math notranslate nohighlight">\(k\lt p+1\)</span>，那么说明要找的k位数在这次分区得到的前一部分里面，所以我们就可以在 <span class="math notranslate nohighlight">\(A[0, p]\)</span> 范围内继续进行分区，尝试能不能恰好分到 <span class="math notranslate nohighlight">\(k=p+1\)</span> 的结果。同样的，如果 <span class="math notranslate nohighlight">\(k\gt p+1\)</span>，那么说明要找的k位数在这次分区得到的后一部分里面，所以下一步在 <span class="math notranslate nohighlight">\(A[p+1, r]\)</span> 范围内继续尝试分区。</p>

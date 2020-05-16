@@ -7,7 +7,7 @@ C++算法编程指南
 =============================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :numbered:
    
    000_preface
