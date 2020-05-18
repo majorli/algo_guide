@@ -93,6 +93,7 @@ void LinkedList<T>::pop_front()
 template<typename T>
 void LinkedList<T>::erase(LinkedList<T>::Indicator prev)
 {
+	if (!prev._ptr || !prev._ptr->_next) return;
 	LinkedList<T>::_Node *node = prev._ptr->_next;
 	prev._ptr->_next = node->_next;
 	delete node;
