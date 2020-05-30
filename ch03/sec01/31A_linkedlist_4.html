@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1.10. 链表的应用（续） &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.1.9. 链表的应用" href="319_linkedlist_3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="319_linkedlist_3.html" title="4.1.9. 链表的应用"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" accesskey="U"><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.1.10. 链表的应用（续）</a><ul>
+<li><a class="reference internal" href="#id2">4.1.10.1. 两个有序单链表的归并</a></li>
+<li><a class="reference internal" href="#id3">4.1.10.2. 单链表实现基数排序</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="319_linkedlist_3.html"
+                        title="上一章"><span class="section-number">4.1.9. </span>链表的应用</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec01/31A_linkedlist_4.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.1.10. </span>链表的应用（续）<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>链表的优势在于快速地插入和删除元素，它不光能在链上任意一处以常数时间插入或删除单个元素节点，而且能以同样的常数时间插入或删除整段链表节点，因此非常适合多个链表之间的分段合并、拼接等操作。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">4.1.10.1. </span>两个有序单链表的归并<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>前一节说过，链表天生不适合归并排序。但是链表非常适合两个有序表的归并操作，虽然时间复杂度仍然为 <span class="math notranslate nohighlight">\(O(n)\)</span>，但是实际运行的速度要比顺序表归并快许多。而且和顺序表归并不同，链表可以直接将一个表归并入另一个表，也就是可以实现原地归并，不需要另外开辟一张临时表。这都得益于链表方便的成段拼接能力。</p>
+<p>下面仍然以单链表为例，介绍如何实现两个有序单链表的归并。设有两个有序整数序列 <span class="math notranslate nohighlight">\(A,B\)</span> 保存在两个单链表中，现在要将 <span class="math notranslate nohighlight">\(B\)</span> 中的所有元素归并入 <span class="math notranslate nohighlight">\(A\)</span>，并且我们要求在归并时若遇到值相等的元素，<span class="math notranslate nohighlight">\(B\)</span> 中的元素一律归并在 <span class="math notranslate nohighlight">\(A\)</span> 中所有等值元素的后面。</p>
+<p>我们先考虑对于表 <span class="math notranslate nohighlight">\(B\)</span> 的第一个元素 <span class="math notranslate nohighlight">\(b_0\)</span>，显然它要归并入表 <span class="math notranslate nohighlight">\(A\)</span> 中所有小于等于它的元素之后，第一个大于它的元素之前。因此我们第一步要在表 <span class="math notranslate nohighlight">\(A\)</span> 中寻找第一个大于 <span class="math notranslate nohighlight">\(b_0\)</span> 的元素 <span class="math notranslate nohighlight">\(a_i\)</span>，从而就确定了归并后元素 <span class="math notranslate nohighlight">\(b_0\)</span> 的前驱 <span class="math notranslate nohighlight">\(a_{i-1}\)</span>。</p>
+<p>链表归并时要充分利用其可以整段插入的优势，而不是像顺序表归并时那样一个元素一个元素地搬。现在既然已经知道了 <span class="math notranslate nohighlight">\(b_0\)</span> 的插入点为 <span class="math notranslate nohighlight">\(a_{i-1}\)</span> 的后继，那么实际上它后面的所有小于 <span class="math notranslate nohighlight">\(a_i\)</span> 的节点都应该插入在 <span class="math notranslate nohighlight">\(a_i\)</span> 之前。因此接下来我们从 <span class="math notranslate nohighlight">\(b_0\)</span> 出发沿着表 <span class="math notranslate nohighlight">\(B\)</span> 向后寻找所有小于 <span class="math notranslate nohighlight">\(a_i\)</span> 的节点，直到第一个大于等于 <span class="math notranslate nohighlight">\(a_i\)</span> 的元素 <span class="math notranslate nohighlight">\(b_j\)</span>。那么整个 <span class="math notranslate nohighlight">\(b_0\)</span> 到 <span class="math notranslate nohighlight">\(b_{j-1}\)</span> 这一段就是这一次归并要整体搬入表 <span class="math notranslate nohighlight">\(A\)</span> 中 <span class="math notranslate nohighlight">\(a_{i-1}\)</span> 和 <span class="math notranslate nohighlight">\(a_i\)</span> 之间的一段。如下图所示：</p>
+<img alt="../../_images/31A_linkedlist_merge_1.png" src="../../_images/31A_linkedlist_merge_1.png" />
+<p>上图所展示的是一般的情况，这里还有两种特殊情况需要考虑：</p>
+<ol class="arabic simple">
+<li><p>如果 <span class="math notranslate nohighlight">\(A\)</span> 的长度为0或者在寻找 <span class="math notranslate nohighlight">\(a_i\)</span> 的过程中一直找到 <span class="math notranslate nohighlight">\(A\)</span> 表末尾都没有找到大于 <span class="math notranslate nohighlight">\(b_0\)</span> 的元素，那么实际上整个表 <span class="math notranslate nohighlight">\(B\)</span> 就应该完整地挂接到表 <span class="math notranslate nohighlight">\(A\)</span> 的最后，这时候就不需要去寻找 <span class="math notranslate nohighlight">\(b_j\)</span> 了。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(B\)</span> 的长度为0或者在寻找 <span class="math notranslate nohighlight">\(b_j\)</span> 的过程中一直找到 <span class="math notranslate nohighlight">\(B\)</span> 表末尾都没有找到大于等于 <span class="math notranslate nohighlight">\(a_i\)</span> 的元素，那么整个表 <span class="math notranslate nohighlight">\(B\)</span> 都应该完整地插入到 <span class="math notranslate nohighlight">\(a_{i-1}\)</span> 之后。</p></li>
+</ol>
+<p>上述两种特殊情况在编程时的处理和一般情况是完全一致的，所以下面我们不单独给出它们的示意图。归并之后的情形如下图所示：</p>
+<img alt="../../_images/31A_linkedlist_merge_2.png" src="../../_images/31A_linkedlist_merge_2.png" />
+<p>在完成一段归并之后，表 <span class="math notranslate nohighlight">\(B\)</span> 的首元素实际上已经变成了 <span class="math notranslate nohighlight">\(b_j\)</span>，而它的插入位置一定是在 <span class="math notranslate nohighlight">\(a_i\)</span> 之后。所以我们下一次要寻找从 <span class="math notranslate nohighlight">\(b_j\)</span> 开始的某些元素归并入表 <span class="math notranslate nohighlight">\(A\)</span> 的位置时，应该从 <span class="math notranslate nohighlight">\(a_i\)</span> 的后继开始查找。我们只要在开始下一段归并之前，把表 <span class="math notranslate nohighlight">\(A\)</span> 的查找位置调整为从 <span class="math notranslate nohighlight">\(a_i\)</span> 的后继开始，就可以使得每一段归并的处理方法变得完全一致。</p>
+<p>因此我们在表 <span class="math notranslate nohighlight">\(A\)</span> 中应该保留一个查找起点指针 <code class="docutils literal notranslate"><span class="pre">i</span></code>，初始时让它指向表 <span class="math notranslate nohighlight">\(A\)</span> 的头部哑节点 <code class="docutils literal notranslate"><span class="pre">head_a</span></code>，每一次查找到 <span class="math notranslate nohighlight">\(a_i \gt b_0\)</span> 的时候，<code class="docutils literal notranslate"><span class="pre">i</span></code> 应该指向 <span class="math notranslate nohighlight">\(a_{i-1}\)</span>。每一次完成一段归并之后如果 <span class="math notranslate nohighlight">\(b_{j-1}\)</span> 的后继不是空那么就应该将 <code class="docutils literal notranslate"><span class="pre">i</span></code> 改为指向它，事实上它就是 <span class="math notranslate nohighlight">\(a_i\)</span>，也就是下一段归并的查找起点。而查找 <span class="math notranslate nohighlight">\(b_j \ge a_i\)</span> 的查找起点都是从表 <span class="math notranslate nohighlight">\(B\)</span> 的头部哑节点 <code class="docutils literal notranslate"><span class="pre">head_b</span></code> 开始。</p>
+<p>某一次归并时如果发生前面所述的两种特殊情况之一的，实际上整个归并过程就已经全部完成了，此时表 <span class="math notranslate nohighlight">\(B\)</span> 一定已经空了，所以整个过程的结束条件是 <code class="docutils literal notranslate"><span class="pre">head_b-&gt;next</span> <span class="pre">==</span> <span class="pre">NULL</span></code>。下面是两个有序整数单链表归并的程序代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+
+<span class="k">struct</span> <span class="n">Node</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+	<span class="n">Node</span><span class="p">()</span> <span class="p">{</span> <span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">clear</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">head</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">head</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">merge</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">head_a</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">head_b</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">head_a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">head_b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">tail_a</span> <span class="o">=</span> <span class="n">head_a</span><span class="p">,</span> <span class="o">*</span><span class="n">tail_b</span> <span class="o">=</span> <span class="n">head_b</span><span class="p">;</span>
+	<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">head_a</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">),</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">head_b</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">));</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">head_a</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Node</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">;</span>
+		<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">temp</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">));</span>
+		<span class="n">tail_a</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+		<span class="n">tail_a</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">head_b</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Node</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">;</span>
+		<span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">temp</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">));</span>
+		<span class="n">tail_b</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+		<span class="n">tail_b</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">print</span><span class="p">(</span><span class="n">head_a</span><span class="p">);</span>
+	<span class="n">print</span><span class="p">(</span><span class="n">head_b</span><span class="p">);</span>
+
+	<span class="n">merge</span><span class="p">(</span><span class="n">head_a</span><span class="p">,</span> <span class="n">head_b</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;merged</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="n">print</span><span class="p">(</span><span class="n">head_a</span><span class="p">);</span>
+	<span class="n">print</span><span class="p">(</span><span class="n">head_b</span><span class="p">);</span>
+
+	<span class="n">clear</span><span class="p">(</span><span class="n">head_a</span><span class="p">);</span>
+	<span class="n">clear</span><span class="p">(</span><span class="n">head_b</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">clear</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">head</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">temp</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">next</span> <span class="o">=</span> <span class="n">temp</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+		<span class="k">delete</span> <span class="n">temp</span><span class="p">;</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">head</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">temp</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d-&gt;&quot;</span><span class="p">,</span> <span class="n">temp</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">);</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;^</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">merge</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">head_a</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">head_b</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="hll">	<span class="n">Node</span> <span class="o">*</span><span class="n">i</span> <span class="o">=</span> <span class="n">head_a</span><span class="p">,</span> <span class="o">*</span><span class="n">j</span><span class="p">,</span> <span class="o">*</span><span class="n">temp</span><span class="p">;</span>
+</span><span class="hll">	<span class="k">while</span> <span class="p">(</span><span class="n">head_b</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="hll">		<span class="k">while</span> <span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">head_b</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">)</span>
+</span><span class="hll">			<span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">		<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="hll">			<span class="n">j</span> <span class="o">=</span> <span class="n">head_b</span><span class="p">;</span>
+</span><span class="hll">			<span class="k">while</span> <span class="p">(</span><span class="n">j</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">)</span>
+</span><span class="hll">				<span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">			<span class="n">temp</span> <span class="o">=</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">			<span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">head_b</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">			<span class="n">head_b</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">j</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">			<span class="n">j</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+</span><span class="hll">			<span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class="hll">			<span class="n">i</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">head_b</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class="hll">			<span class="n">head_b</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class="hll">		<span class="p">}</span>
+</span><span class="hll">	<span class="p">}</span>
+</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>编写一个生成随机测试数据的程序。输入两个整数 <span class="math notranslate nohighlight">\(m \ge 0,n \ge 0\)</span>。输出最多三行：第一行两个整数 <span class="math notranslate nohighlight">\(m,n\)</span>，中间用一个空格隔开；第二行为 <span class="math notranslate nohighlight">\(m\)</span> 个10000以内的随机自然数，用一个空格隔开，按升序排列，如果 <span class="math notranslate nohighlight">\(m=0\)</span> 就跳过此行；第三行为 <span class="math notranslate nohighlight">\(n\)</span> 个10000以内的随机自然数，用一个空格隔开，按升序排列，如果 <span class="math notranslate nohighlight">\(n=0\)</span> 就跳过此行。</p>
+<p>用这个工具程序生成测试数据，测试上面的有序单链表归并程序。特别注意观察如果有表为空的情况程序运行是否正确。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.1.10.2. </span>单链表实现基数排序<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>学习非比较型的桶排序和基数排序算法时我们曾经说过，这两个算法往往会使用链表而不是顺序表。关于这两个排序算法的详细介绍请复习 <a class="reference internal" href="../../ch02/sec05/255_non_cmp_sorts.html"><span class="doc">非比较型排序算法</span></a>。现在我们以基数排序为例来看看为什么用链表会比用顺序表更好。</p>
+<p>简单回顾一下，基数排序最常见的应用是对非负整数序列进行排序。我们采用10个桶分别代表从0到9的10个数码，第一步依次从序列中取出元素，按照其个位数将元素分到对应的桶里去，然后将10个桶按照从0号到9号的顺序把桶中元素依次倒出来拼接成一个新的序列，这个序列里所有元素已经按照个位数从小到大的顺序排列好了。第二步按照元素的十位数大小来重复上述操作，得到的新序列中就已经按照先十位数再个位数的顺序排列了。这样的依次分桶再重新拼接的过程一直重复下去直到某一位上所有元素该位都为0，这时候所有元素都会被分到0号桶中而且都已经按照元素值的大小有序了，把0号桶的元素依次取出来就得到了已经排好序的序列。</p>
+<p>以前我们曾经编写过用数组（也就是顺序表）来实现的基数排序算法程序，让我们分析一下它的工作量。假设原序列共有 <span class="math notranslate nohighlight">\(n\)</span> 个非负整数，最大的数一共有 <span class="math notranslate nohighlight">\(k\)</span> 位。那么算法总共要进行 <span class="math notranslate nohighlight">\(k\)</span> 轮，每一轮包括一次分桶和一次倒桶拼接，工作量均为 <span class="math notranslate nohighlight">\(n\)</span>。所以总的工作量为 <span class="math notranslate nohighlight">\(W(n)=2kn\)</span>，时间复杂度 <span class="math notranslate nohighlight">\(T(n)=O(kn)\)</span>。在空间方面，需要额外用到的存储空间为构成10个桶的10张顺序表，空间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<p>现在来看看改用链表能带来怎样的变化。假设采用单链表来保存序列，每一个桶也都使用单链表来实现，那么借助于链表的存储灵活性，我们可以带来以下改进：</p>
+<ol class="arabic simple">
+<li><p>分桶操作：从序列的首元素开始，每一个元素根据指定位上的数码得到所应分到的桶的编号，然后可以直接将该元素节点从原序列中分离出去，插入到对应桶链表的尾部。</p></li>
+<li><p>倒桶拼接：现在不需要将每一个桶中的元素按顺序复制到原序列中去，我们只需要从0号桶开始，依次把所有非空桶的链表首尾相接起来形成一个新的链表并接回原序列链表的尾部即可（经过分桶操作之后原序列链表已经清空）。</p></li>
+</ol>
+<p>例如对两位整数的序列 [34, 23, 1, 78, 67, 9, 45] 进行基数排序，第一轮按照每一个元素的个位数进行分桶，分完之后重新链接回原链表 <code class="docutils literal notranslate"><span class="pre">list</span></code>，过程如下图所示：</p>
+<img alt="../../_images/31A_radsort_1.png" src="../../_images/31A_radsort_1.png" />
+<p>然后对得到的新的 <code class="docutils literal notranslate"><span class="pre">list</span></code> 序列按照元素的十位数大小再进行上面的操作，如下图所示：</p>
+<img alt="../../_images/31A_radsort_2.png" src="../../_images/31A_radsort_2.png" />
+<p>对于两位整数的序列，进行这样的两轮操作排序就已经结束了。如果事先并不能知道最大的位数 <span class="math notranslate nohighlight">\(k\)</span> 是多少，那么一般就会再多进行一轮，即按 <span class="math notranslate nohighlight">\(k+1\)</span> 位上的数值大小再进行一轮操作。由于所有元素的第 <span class="math notranslate nohighlight">\(k+1\)</span> 位上都是0，所以一定会全部分到0号桶里去，并且顺序不变。所以和以前介绍过的方法一样，我们可以通过判断是不是所有元素都在0号桶里来进行排序是否完成的判断。一旦发现某一轮操作下来所有元素都被分进了0号桶，那么说明排序已经结束，把0号桶的单链表移回到 <code class="docutils literal notranslate"><span class="pre">list</span></code> 即可。</p>
+<p>可以看出，使用了单链表来作为数据存储结构后，整个排序的循环操作次数仍为 <span class="math notranslate nohighlight">\(k\)</span> 轮，每一轮的分桶步骤仍然需要 <span class="math notranslate nohighlight">\(n\)</span> 次常数时间的链表元素移动，拼接步骤则最多10次常数时间的单链表拼接。因此算法总的工作量为 <span class="math notranslate nohighlight">\(W(n)=k(n+10)\)</span>，时间复杂度 <span class="math notranslate nohighlight">\(O(kn)\)</span>。空间方面，没有用到额外的存储空间，因此空间复杂度为常数级 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
+<p>改用链表结构后，虽然从时间复杂度的上限函数来看都还是 <span class="math notranslate nohighlight">\(O(kn)\)</span>，但从工作量上来看就很容易看出现实际的工作量要小很多，运行速度会快于使用数组等顺序表数据结构，元素数量 <span class="math notranslate nohighlight">\(n\)</span> 越大，速度差距就越大。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>编写一个使用单链表作为数据存储结构的非负整数基数排序程序。输入两行，第一行为一个整数 <span class="math notranslate nohighlight">\(n \ge 2\)</span>，第二行为 <span class="math notranslate nohighlight">\(n\)</span> 个非负整数 <span class="math notranslate nohighlight">\(a_i\)</span>，都在 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型的取值范围之内，数和数使用一个空格隔开。输出一行，即已经按升序排好序的结果，数和数之间用一个空格隔开。</p>
+<p>使用随机序列生成器对程序进行测试。</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<ol class="arabic simple">
+<li><p>单链表的简单实现时，在头部哑节点中存放链表长度是一种常见的小技巧，但是在每次清空、插入、删除等操作的时候都要记得更新长度，不要忘了。</p></li>
+<li><p>为了方便单链表的首尾拼接和在尾部添加元素，最好还是给每一个单链表保存一个指向尾部节点的指针，初始的时候让它指向头部哑节点。</p></li>
+<li><p><strong>指针数组</strong>：多个同类型指针也可以定义为数组，比如 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*pt[10]</span></code> 定义的就是一个长度为10的 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型指针的数组，即数组中每一个元素都是一个指向类型为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的指针，共有10个。比如 <code class="docutils literal notranslate"><span class="pre">pt[0]</span></code> 就是其中的一个指针，而 <code class="docutils literal notranslate"><span class="pre">*pt[0]</span></code> 就是它所指向的一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型变量。</p></li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="319_linkedlist_3.html" title="4.1.9. 链表的应用"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" ><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
