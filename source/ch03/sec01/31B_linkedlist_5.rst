@@ -72,3 +72,107 @@ STL双链表容器list
    void splice(iterator position, list& x, iterator i); // 单个元素转入
    void splice(iterator position, list& x, iterator first, iterator last); // 指定范围转入
 
+三种版本都是将另一个链表中的全部或部分元素转入到迭代器 ``position`` 所指的位置处，即在 ``position`` 所指元素之前，如果迭代器 ``position`` 等于当前链表的尾迭代器 ``end()`` 那么就是链接到表后。
+
+第一个版本转入参数 ``x`` 这个链表中的所有元素；第二个版本转入 ``x`` 中迭代器 ``i`` 所指的那个元素；第三个版本转入 ``x`` 中由前后两个迭代器所指的范围 ``[first, last)`` 中的一段元素，注意是左闭右开区间。
+
+这里，调用者链表自身甚至可以和参数 ``x`` 是同一个链表，只要插入位置参数 ``position`` 不等于要转移的元素位置参数 ``i``\ （版本二）或不在要转移的范围参数 ``[first, last)`` 中（版本三）即可。这么做的时候，就相当于将调用者链表自身中的某一个或某一段元素移动位置。当然在使用版本一的时候，调用者自身和参数 ``x`` 是同一个链表就没有意义了。
+
+**按条件删除元素**
+
+``list`` 容器支持按条件删除元素的操作，共有两种，一种是删除等于某个特定值的所有元素，另一种是删除符合某个特定条件的所有元素：
+
+.. code-block:: c++
+
+   void remove (const value_type& val); // 删除等于val的元素
+   void remove_if (Predicate pred);     // 删除符合条件pred的元素
+
+注意，这两个成员函数会删除调用者链表中所有符合要求的元素，而不是仅删除一个。
+
+删除等于某个特定值 ``val`` 的元素这个操作很好理解，删除符合某个特定条件 ``pred`` 的所有元素就有点奇怪了。首先，参数 ``pred`` 的数据类型 ``Predicate`` 到底是个什么东西？其次，我们要用什么方式来表示这个条件参数？
+
+其实很简单，这个所谓的 ``Predicate`` 类型无非是指一个以此链表的元素类型为参数类型的单参数函数，一般建议参数传引用，函数的返回类型为 ``bool``\ ，表示是否符合条件。这和我们以前见过的使用自定义比较函数的算法库排序函数非常类似。请看下面这个例子，在一个链表中先后删除所有的个位数和所有的奇数：
+
+.. code-block:: c++
+
+   #include <iostream>
+   #include <list>
+   
+   // 条件判断函数1：判断是否为个位数
+   bool single_digit(const int& value) { return (value<10); }
+   
+   // 条件判断函数2：判断是否为奇数
+   bool is_odd(const int& value) { return (value%2)==1; }
+   
+   int main()
+   {
+           int myints[] = {15,36,7,17,20,39,4,1};
+           std::list<int> mylist(myints, myints + 8);   // 15 36 7 17 20 39 4 1
+   
+           mylist.remove_if(single_digit);           // 15 36 17 20 39
+   
+           mylist.remove_if(is_odd);               // 36 20
+   
+           std::cout << "mylist contains:";
+           for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+                   std::cout << ' ' << *it;
+           std::cout << '\n';
+   
+           return 0;
+   }
+
+运行后的输出为：
+
+.. code-block:: none
+
+   mylist contains: 36 20
+
+**单值化**
+
+所谓单值化就是指删除具有相同值的元素，只保留其中一个。链表的成员函数 ``unique()`` 实现单值化操作，具有两个版本：
+
+.. code-block:: c++
+
+   void unique();
+   void unique(BinaryPredicate binary_pred);
+
+第一个版本没有任何参数，单纯地用默认方式比较两个元素的值是否相等，因此需要元素的数据类型支持相等比较运算 ``==``\ 。例如所有内置数据类型、所有的自定义结构类型、C++ string和所有的STL容器都支持 ``==`` 运算。
+
+第二个版本需要提供一个自定义的相等比较函数，用来支持具有某些特殊规则的相等比较。事实上，和 ``remove_if()`` 函数的条件函数类似，这里的参数 ``BinaryPredicate binary_pred`` 实际上也就是一个返回类型为 ``bool`` 的函数，不同的是它需要接收两个与链表元素同类型的参数。
+
+例如我们用一个自定义结构 ``Point`` 来表示平面上的点，结构中保存点的横纵两个坐标值，我们定义一个链表 ``points`` 并随后在其中存放了多个点。
+
+.. code-block:: c++
+
+   struct Point {
+           double x, y;
+   };
+
+   list<Point> points;
+
+现在我们要对 ``points`` 中的点进行去重处理，规则是所有到原点距离相等的点视为相等。我们知道，自定义结构的 ``==`` 运算是比较所有成员变量的值，如果都相等就认为相等。所以我们如果单纯地调用 ``points.unique()`` 来进行去重将会去除所有完全相同的重复点，而不是到原点距离相等的点。这里我们就要用到自定义的等值判断函数了，利用勾股定理很容易写出判断两个点到原点的距离是否相等的判断函数：
+
+.. code-block:: c++
+
+   bool same_dist(Point &p1, Point &p2) // 判断距离相等不需要开根号出来哦
+   {
+           return p1.x * p1.x + p1.y * p1.y == p2.x * p2.x + p2.y * p2.y;
+   }
+
+   points.unique(same_dist); // 等距去重
+
+但是要千万注意，\ ``unique()`` 函数的单值化去重规则是：:emphasis:`每一个元素仅和它的前驱进行比较`\ 。这就意味着，如果等值元素不是全部紧挨着连在一起的，就不能被正确的单值化！
+
+.. warning::
+
+   使用 ``unique()`` 函数进行单值化处理，链表本身必须是有序的，或至少所有等值元素都是排列在一起的！对乱序的链表调用 ``unique()`` 函数毫无意义！
+
+   若使用自定义等值规则判断函数的，那么链表本身也必须是按照这个自定义的比较规则有序的，或能确保所有会被判断为等值的元素都排列在一起。
+
+**归并**
+
+
+**排序**
+
+
+
