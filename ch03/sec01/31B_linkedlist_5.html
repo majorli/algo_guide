@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.1.11. STL双链表容器list &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.1.10. 链表的应用（续）" href="31A_linkedlist_4.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="31A_linkedlist_4.html" title="4.1.10. 链表的应用（续）"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" accesskey="U"><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="31A_linkedlist_4.html"
+                        title="上一章"><span class="section-number">4.1.10. </span>链表的应用（续）</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec01/31B_linkedlist_5.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="stllist">
+<h1><span class="section-number">4.1.11. </span>STL双链表容器list<a class="headerlink" href="#stllist" title="永久链接至标题">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">list</span></code> 是STL容器的一种，它是一个双向链表，要使用 <code class="docutils literal notranslate"><span class="pre">list</span></code> 容器需要先引入 <code class="docutils literal notranslate"><span class="pre">list</span></code> 库，并使用 <code class="docutils literal notranslate"><span class="pre">std</span></code> 命名空间。</p>
+<p><code class="docutils literal notranslate"><span class="pre">list</span></code> 容器同样是一个线性表类型的容器，所以很多用法和规则都和 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器类似，也使用左闭右开区间来定义其中一段元素的范围。下表列出了和 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器相同的一些常用成员函数和运算：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>成员函数</p></th>
+<th class="head"><p>功能</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>构造器</p></td>
+<td><p>构造一个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 容器的变量（对象）</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">operator=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list</span></code> 变量之间的相互赋值</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">begin()</span></code></p></td>
+<td><p>获取头部迭代器，指向首元素</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">end()</span></code></p></td>
+<td><p>获取尾部迭代器，指向尾元素的后一个位置</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">empty()</span></code></p></td>
+<td><p>判断 <code class="docutils literal notranslate"><span class="pre">list</span></code> 是否为空</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">size()</span></code></p></td>
+<td><p>获取 <code class="docutils literal notranslate"><span class="pre">list</span></code> 的长度</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">front()</span></code></p></td>
+<td><p>获取首元素的引用</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">back()</span></code></p></td>
+<td><p>获取尾元素的引用</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">push_back()</span></code></p></td>
+<td><p>在尾部添加一个元素</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pop_back()</span></code></p></td>
+<td><p>删除尾部元素</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">insert()</span></code></p></td>
+<td><p>使用迭代器指定位置插入元素</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">erase()</span></code></p></td>
+<td><p>使用迭代器指定位置删除元素</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">swap()</span></code></p></td>
+<td><p>和另一个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 交换内容</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">clear()</span></code></p></td>
+<td><p>清空所有元素</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">assign()</span></code></p></td>
+<td><p>批量赋值，可使用迭代器指定赋值范围</p></td>
+</tr>
+<tr class="row-odd"><td><p>比较运算</p></td>
+<td><p>按字典序比较两个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 大小的六种比较运算</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">swap(x,</span> <span class="pre">y)</span></code></p></td>
+<td><p>非成员函数版交换两个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 的内容</p></td>
+</tr>
+</tbody>
+</table>
+<p>上表所列的函数和运算符的用法和 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 完全相同，所以不再一一举例细说，有不清楚的可以回到 <a class="reference internal" href="311_sequence_list.html#ref-311-vector"><span class="std std-ref">STL的vector容器</span></a> 一节回顾一下。接下来重点讲一讲和 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器不同的地方和 <code class="docutils literal notranslate"><span class="pre">list</span></code> 特有的几种用法。</p>
+<p>首先，和 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器最大的不同在于 <code class="docutils literal notranslate"><span class="pre">list</span></code> 容器不支持使用下标访问元素。如果我们有一个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 容器的变量 <code class="docutils literal notranslate"><span class="pre">a</span></code>，我们不能使用 <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> 这样的方式通过一个整数下标值 <code class="docutils literal notranslate"><span class="pre">i</span></code> 来访问 <code class="docutils literal notranslate"><span class="pre">a</span></code> 中的元素。这是因为通过下标值随机访问链表元素是低效操作，是不鼓励的，所以STL库干脆就不提供这种操作。</p>
+<p>但是 <code class="docutils literal notranslate"><span class="pre">list</span></code> 提供了在表头处插入删除元素的功能，这是 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 所不具备的，因为在顺序表的表头处增删元素也属于低效操作，是不被鼓励使用的。</p>
+<p><strong>表头增删元素</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">push_front</span> <span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">);</span> <span class="c1">// 在表头处增加元素，元素值为val</span>
+<span class="kt">void</span> <span class="nf">pop_front</span><span class="p">();</span>                        <span class="c1">// 删除表头元素</span>
+</pre></div>
+</div>
+<p>这两个函数的用法和在表尾增删元素的 <code class="docutils literal notranslate"><span class="pre">push_back()</span></code>、<code class="docutils literal notranslate"><span class="pre">pop_back()</span></code> 两个函数完全相同，只是操作位置在表头处而已，插入和删除的都是首元素。</p>
+<p>除此之外，<code class="docutils literal notranslate"><span class="pre">list</span></code> 还提供了以下一些自己特有的成员函数，都非常实用。</p>
+<p><strong>切片转移</strong></p>
+<p>成员函数 <code class="docutils literal notranslate"><span class="pre">splice()</span></code> 可以用来将另一个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 中的全部或一段元素切片出来并插入到自己一个由迭代器指定的位置处，即插入到该迭代器所指向的元素之前，转入完成之后，另一个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 中被切片出来的元素会被从表中删除，所以这个操作叫做切片和转移。</p>
+<p><code class="docutils literal notranslate"><span class="pre">splice()</span></code> 函数有三个重载版本：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">splice</span><span class="p">(</span><span class="n">iterator</span> <span class="n">position</span><span class="p">,</span> <span class="n">list</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">);</span> <span class="c1">// 整表转入</span>
+<span class="kt">void</span> <span class="nf">splice</span><span class="p">(</span><span class="n">iterator</span> <span class="n">position</span><span class="p">,</span> <span class="n">list</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">i</span><span class="p">);</span> <span class="c1">// 单个元素转入</span>
+<span class="kt">void</span> <span class="nf">splice</span><span class="p">(</span><span class="n">iterator</span> <span class="n">position</span><span class="p">,</span> <span class="n">list</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">first</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">last</span><span class="p">);</span> <span class="c1">// 指定范围转入</span>
+</pre></div>
+</div>
+<p>三种版本都是将另一个链表中的全部或部分元素转入到迭代器 <code class="docutils literal notranslate"><span class="pre">position</span></code> 所指的位置处，即在 <code class="docutils literal notranslate"><span class="pre">position</span></code> 所指元素之前，如果迭代器 <code class="docutils literal notranslate"><span class="pre">position</span></code> 等于当前链表的尾迭代器 <code class="docutils literal notranslate"><span class="pre">end()</span></code> 那么就是链接到表后。</p>
+<p>第一个版本转入参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 这个链表中的所有元素；第二个版本转入 <code class="docutils literal notranslate"><span class="pre">x</span></code> 中迭代器 <code class="docutils literal notranslate"><span class="pre">i</span></code> 所指的那个元素；第三个版本转入 <code class="docutils literal notranslate"><span class="pre">x</span></code> 中由前后两个迭代器所指的范围 <code class="docutils literal notranslate"><span class="pre">[first,</span> <span class="pre">last)</span></code> 中的一段元素，注意是左闭右开区间。</p>
+<p>这里，调用者链表自身甚至可以和参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 是同一个链表，只要插入位置参数 <code class="docutils literal notranslate"><span class="pre">position</span></code> 不等于要转移的元素位置参数 <code class="docutils literal notranslate"><span class="pre">i</span></code>（版本二）或不在要转移的范围参数 <code class="docutils literal notranslate"><span class="pre">[first,</span> <span class="pre">last)</span></code> 中（版本三）即可。这么做的时候，就相当于将调用者链表自身中的某一个或某一段元素移动位置。当然在使用版本一的时候，调用者自身和参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 是同一个链表就没有意义了。</p>
+<p><strong>按条件删除元素</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">list</span></code> 容器支持按条件删除元素的操作，共有两种，一种是删除等于某个特定值的所有元素，另一种是删除符合某个特定条件的所有元素：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">remove</span> <span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">);</span> <span class="c1">// 删除等于val的元素</span>
+<span class="kt">void</span> <span class="nf">remove_if</span> <span class="p">(</span><span class="n">Predicate</span> <span class="n">pred</span><span class="p">);</span>     <span class="c1">// 删除符合条件pred的元素</span>
+</pre></div>
+</div>
+<p>注意，这两个成员函数会删除调用者链表中所有符合要求的元素，而不是仅删除一个。</p>
+<p>删除等于某个特定值 <code class="docutils literal notranslate"><span class="pre">val</span></code> 的元素这个操作很好理解，删除符合某个特定条件 <code class="docutils literal notranslate"><span class="pre">pred</span></code> 的所有元素就有点奇怪了。首先，参数 <code class="docutils literal notranslate"><span class="pre">pred</span></code> 的数据类型 <code class="docutils literal notranslate"><span class="pre">Predicate</span></code> 到底是个什么东西？其次，我们要用什么方式来表示这个条件参数？</p>
+<p>其实很简单，这个所谓的 <code class="docutils literal notranslate"><span class="pre">Predicate</span></code> 类型无非是指一个以此链表的元素类型为参数类型的单参数函数，一般建议参数传引用，函数的返回类型为 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，表示是否符合条件。这和我们以前见过的使用自定义比较函数的算法库排序函数非常类似。请看下面这个例子，在一个链表中先后删除所有的个位数和所有的奇数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp"></span>
+
+<span class="c1">// 条件判断函数1：判断是否为个位数</span>
+<span class="kt">bool</span> <span class="nf">single_digit</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">value</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="c1">// 条件判断函数2：判断是否为奇数</span>
+<span class="kt">bool</span> <span class="nf">is_odd</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">value</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">myints</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">15</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">mylist</span><span class="p">(</span><span class="n">myints</span><span class="p">,</span> <span class="n">myints</span> <span class="o">+</span> <span class="mi">8</span><span class="p">);</span>   <span class="c1">// 15 36 7 17 20 39 4 1</span>
+
+        <span class="n">mylist</span><span class="p">.</span><span class="n">remove_if</span><span class="p">(</span><span class="n">single_digit</span><span class="p">);</span>           <span class="c1">// 15 36 17 20 39</span>
+
+        <span class="n">mylist</span><span class="p">.</span><span class="n">remove_if</span><span class="p">(</span><span class="n">is_odd</span><span class="p">);</span>               <span class="c1">// 36 20</span>
+
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;mylist contains:&quot;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span><span class="o">=</span><span class="n">mylist</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span><span class="o">!=</span><span class="n">mylist</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>运行后的输出为：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mylist contains: 36 20
+</pre></div>
+</div>
+<p><strong>单值化</strong></p>
+<p>所谓单值化就是指删除具有相同值的元素，只保留其中一个。链表的成员函数 <code class="docutils literal notranslate"><span class="pre">unique()</span></code> 实现单值化操作，具有两个版本：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">unique</span><span class="p">();</span>
+<span class="kt">void</span> <span class="nf">unique</span><span class="p">(</span><span class="n">BinaryPredicate</span> <span class="n">binary_pred</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>第一个版本没有任何参数，单纯地用默认方式比较两个元素的值是否相等，因此需要元素的数据类型支持相等比较运算 <code class="docutils literal notranslate"><span class="pre">==</span></code>。例如所有内置数据类型、所有的自定义结构类型、C++ string和所有的STL容器都支持 <code class="docutils literal notranslate"><span class="pre">==</span></code> 运算。</p>
+<p>第二个版本需要提供一个自定义的相等比较函数，用来支持具有某些特殊规则的相等比较。事实上，和 <code class="docutils literal notranslate"><span class="pre">remove_if()</span></code> 函数的条件函数类似，这里的参数 <code class="docutils literal notranslate"><span class="pre">BinaryPredicate</span> <span class="pre">binary_pred</span></code> 实际上也就是一个返回类型为 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 的函数，不同的是它需要接收两个与链表元素同类型的参数。</p>
+<p>例如我们用一个自定义结构 <code class="docutils literal notranslate"><span class="pre">Point</span></code> 来表示平面上的点，结构中保存点的横纵两个坐标值，我们定义一个链表 <code class="docutils literal notranslate"><span class="pre">points</span></code> 并随后在其中存放了多个点。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Point</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">list</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="n">points</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>现在我们要对 <code class="docutils literal notranslate"><span class="pre">points</span></code> 中的点进行去重处理，规则是所有到原点距离相等的点视为相等。我们知道，自定义结构的 <code class="docutils literal notranslate"><span class="pre">==</span></code> 运算是比较所有成员变量的值，如果都相等就认为相等。所以我们如果单纯地调用 <code class="docutils literal notranslate"><span class="pre">points.unique()</span></code> 来进行去重将会去除所有完全相同的重复点，而不是到原点距离相等的点。这里我们就要用到自定义的等值判断函数了，利用勾股定理很容易写出判断两个点到原点的距离是否相等的判断函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="nf">same_dist</span><span class="p">(</span><span class="n">Point</span> <span class="o">&amp;</span><span class="n">p1</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">p2</span><span class="p">)</span> <span class="c1">// 判断距离相等不需要开根号出来哦</span>
+<span class="p">{</span>
+        <span class="k">return</span> <span class="n">p1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">p1</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">p1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">p1</span><span class="p">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">p2</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">p2</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">p2</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">p2</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">points</span><span class="p">.</span><span class="n">unique</span><span class="p">(</span><span class="n">same_dist</span><span class="p">);</span> <span class="c1">// 等距去重</span>
+</pre></div>
+</div>
+<p>但是要千万注意，<code class="docutils literal notranslate"><span class="pre">unique()</span></code> 函数的单值化去重规则是：<em>每一个元素仅和它的前驱进行比较</em>。这就意味着，如果等值元素不是全部紧挨着连在一起的，就不能被正确的单值化！</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">unique()</span></code> 函数进行单值化处理，链表本身必须是有序的，或至少所有等值元素都是排列在一起的！对乱序的链表调用 <code class="docutils literal notranslate"><span class="pre">unique()</span></code> 函数毫无意义！</p>
+<p>若使用自定义等值规则判断函数的，那么链表本身也必须是按照这个自定义的比较规则有序的，或能确保所有会被判断为等值的元素都排列在一起。</p>
+</div>
+<p><strong>归并</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">list</span></code> 容器支持链表归并操作，通过成员函数 <code class="docutils literal notranslate"><span class="pre">merge()</span></code> 进行归并，具有以下两个版本：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">merge</span><span class="p">(</span><span class="n">list</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">);</span> <span class="c1">// 使用元素类型默认的小于运算(&lt;)进行归并</span>
+<span class="kt">void</span> <span class="nf">merge</span><span class="p">(</span><span class="n">list</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">Compare</span> <span class="n">comp</span><span class="p">);</span> <span class="c1">// 归并时使用自定义比较函数comp进行元素大小比较</span>
+</pre></div>
+</div>
+<p>和上一节我们介绍过的单链表归并类似，两个 <code class="docutils literal notranslate"><span class="pre">list</span></code> 的归并也需要作为调用者的原链表和要归并进来的链表 <code class="docutils literal notranslate"><span class="pre">x</span></code> 本身已经是元素有序的，否则归并就会出问题。归并完成之后，链表 <code class="docutils literal notranslate"><span class="pre">x</span></code> 会被清空，其中所有元素都被插入到调用者链表的合适位置上。</p>
+<p>与算法库排序函数的自定义比较函数一样，这里第二种重载版本的 <code class="docutils literal notranslate"><span class="pre">comp</span></code> 参数也应该是一个这样的函数：返回类型为 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，接受两个与链表中元素同类型的参数，当第一个参数应该排在第二个参数之前（先于或视同为小于）时返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>，否则返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>。</p>
+<p><strong>排序</strong></p>
+<p>不知道为什么 <code class="docutils literal notranslate"><span class="pre">list</span></code> 容器本身提供了一个用于排序的成员函数 <code class="docutils literal notranslate"><span class="pre">sort()</span></code>，不出意外，这个函数也有(1)使用默认的小于运算和(2)使用一个自定义比较函数这样两个版本：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">sort</span><span class="p">();</span> <span class="c1">// 使用元素类型默认的小于运算(&lt;)进行排序</span>
+<span class="kt">void</span> <span class="nf">sort</span><span class="p">(</span><span class="n">Compare</span> <span class="n">comp</span><span class="p">);</span> <span class="c1">// 使用自定义先于比较函数comp进行排序</span>
+</pre></div>
+</div>
+<p>这两个成员函数的使用说明就不赘述了，请自行测试一下即可。这里只说明两点：1、这个函数实现的是稳定排序；2、时间复杂度为 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>。</p>
+<p><strong>反转</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">list</span></code> 还提供了一个反转自身所有元素的顺序的成员函数 <code class="docutils literal notranslate"><span class="pre">reverse()</span></code>：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">reverse</span><span class="p">();</span> <span class="c1">// 元素顺序全部反转</span>
+</pre></div>
+</div>
+<p>这个就不多解释了，请自行体验一下即可。如果有时候不知道怎样对链表进行元素降序的排序，那么用普通的升序排序排完再反转一下也未尝不可。因为 <code class="docutils literal notranslate"><span class="pre">reverse()</span></code> 的时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>，而 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 则为更高阶的 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>，从时间复杂度的上限来看，先排序后反转也并没有增加整个过程的阶，<span class="math notranslate nohighlight">\(O(n)+O(n\log n)\)</span> 仍然是 <span class="math notranslate nohighlight">\(O(n\log n)\)</span>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>利用 <code class="docutils literal notranslate"><span class="pre">list</span></code> 构造一个链表来解决约瑟夫问题，也称为猴子选大王问题。问题如下：</p>
+<p>约瑟夫问题：有 <span class="math notranslate nohighlight">\(n\)</span> 只猴子，编号为 <span class="math notranslate nohighlight">\(1,2,\dots,n\)</span>，按顺时针方向围成一圈选大王，从第1号猴子开始报数，一直数到 <span class="math notranslate nohighlight">\(m\)</span>，数到 <span class="math notranslate nohighlight">\(m\)</span> 的猴子退到圈外，接下来从刚才退出的那只猴子的下一只开始继续从1开始报数到 <span class="math notranslate nohighlight">\(m\)</span>。就这样不断继续下去，直到圈内只剩下一只猴子时，这个猴子就是猴王。</p>
+<p>给定 <span class="math notranslate nohighlight">\(n,m\)</span>，要求编程求出猴王的编号。</p>
+<p>输入数据：用空格分开的两个整数 <span class="math notranslate nohighlight">\(n\)</span> 和 <span class="math notranslate nohighlight">\(m\)</span>其中 <span class="math notranslate nohighlight">\(0 \lt m, n \le 1,000,000\)</span>。</p>
+<p>输出要求：一个整数，即猴王的编号。</p>
+<p>输入样例：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>6 2
+</pre></div>
+</div>
+<p>输出样例：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>5
+</pre></div>
+</div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>无论是什么STL容器，是 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 也好、<code class="docutils literal notranslate"><span class="pre">list</span></code> 也好，还是任何今后要学到的其他容器，在使用成员函数 <code class="docutils literal notranslate"><span class="pre">erase()</span></code> 删除掉一个迭代器所指向的元素后，这个迭代器就会失效。假如我们运行下面的代码片段：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">monkeys</span><span class="p">;</span>
+<span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span><span class="p">;</span>
+<span class="c1">// ...</span>
+<span class="n">monkeys</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>在这一句删除语句之后，迭代器 <code class="docutils literal notranslate"><span class="pre">it</span></code> 会失效，变成无效迭代器，不能继续使用。但是一般我们都希望在进行这样的删除之后，<code class="docutils literal notranslate"><span class="pre">it</span></code> 能变成指向被删除元素的后继元素的迭代器，这是一种最自然的效果。要想达到这样的效果很简单，我们只需要这样调用：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">it</span> <span class="o">=</span> <span class="n">monkeys</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">erase()</span></code> 成员函数会把被删除元素的后继的迭代器作为返回值返回出来，所以我们只要这样简单的接收它就可以了。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="31A_linkedlist_4.html" title="4.1.10. 链表的应用（续）"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../310_linear_list.html" ><span class="section-number">4.1. </span>线性表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
