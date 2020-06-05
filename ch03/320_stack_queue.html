@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.2. 特殊线性表：栈和队列 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="4.2.1. 栈：基本概念和实现" href="sec02/321_stack_1.html" />
+    <link rel="prev" title="4.1.11. STL双链表容器list" href="sec01/31B_linkedlist_5.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="sec02/321_stack_1.html" title="4.2.1. 栈：基本概念和实现"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec01/31B_linkedlist_5.html" title="4.1.11. STL双链表容器list"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" accesskey="U"><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec01/31B_linkedlist_5.html"
+                        title="上一章"><span class="section-number">4.1.11. </span>STL双链表容器list</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="sec02/321_stack_1.html"
+                        title="下一章"><span class="section-number">4.2.1. </span>栈：基本概念和实现</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch03/320_stack_queue.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.2. </span>特殊线性表：栈和队列<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>前一部分我们介绍了线性表的概念和两种通常的实现线性表的数据结构：顺序表和链表。它们是根据元素的物理存储结构来进行分类的。</p>
+<p>本部分我们将介绍两种根据用法来特别区分的特殊线性表数据结构：栈和队列。这是计算机软件和算法里面极其重要的两种数据结构，在搜索算法、编译系统、操作系统等几乎所有计算机软件中都属于必不可缺的组件，大量高级算法都依赖于使用栈或者队列来实现。例如深度优先搜索就是利用栈实现了非递归化，而广度优先搜索则是使用了队列，再如计算机程序调用函数或子程序时利用栈来传递参数和保存状态。</p>
+<p>事实上无论是栈还是队列还是任何它们的变种，本质上都还是线性表。它们都可以用前一部分学过的顺序表和链表来实现，比如用顺序表实现的栈通常就叫做栈，而用链表来实现的栈一般叫做链栈。事实上栈和队列只不过是元素存取方式受到特定规则限制的线性表。</p>
+<p>在这一部分我们将学习栈和队列的基本概念，学习分别用顺序表和链表来自己实现最简单的栈和队列，学习它们的一些典型应用和例题，学习STL提供的栈和队列容器 <code class="docutils literal notranslate"><span class="pre">stack</span></code> 和 <code class="docutils literal notranslate"><span class="pre">queue</span></code> 的使用。至于优先级队列，我们留在学习堆这个数据结构的时候再进行介绍。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec02/321_stack_1.html">4.2.1. 栈：基本概念和实现</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec02/321_stack_1.html#id2">4.2.1.1. 栈的概念及基本操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec02/321_stack_1.html#stlstack">4.2.1.2. STL栈容器stack</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="sec02/321_stack_1.html" title="4.2.1. 栈：基本概念和实现"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec01/31B_linkedlist_5.html" title="4.1.11. STL双链表容器list"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

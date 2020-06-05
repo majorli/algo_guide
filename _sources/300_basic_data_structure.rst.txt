@@ -38,4 +38,5 @@
    :maxdepth: 2
 
    ch03/310_linear_list
+   ch03/320_stack_queue
    
