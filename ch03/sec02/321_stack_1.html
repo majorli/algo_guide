@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
   <head>
     <meta charset="utf-8" />
-    <title>4.2.1. 栈：基本概念和实现 &#8212; C++算法编程指南 0.1 文档</title>
+    <title>4.2.1. 栈：概念、stack容器和实现 &#8212; C++算法编程指南 0.1 文档</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -41,9 +41,10 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">目录</a></h3>
   <ul>
-<li><a class="reference internal" href="#">4.2.1. 栈：基本概念和实现</a><ul>
-<li><a class="reference internal" href="#id2">4.2.1.1. 栈的概念及基本操作</a></li>
+<li><a class="reference internal" href="#">4.2.1. 栈：概念、stack容器和实现</a><ul>
+<li><a class="reference internal" href="#id1">4.2.1.1. 栈的概念及基本操作</a></li>
 <li><a class="reference internal" href="#stlstack">4.2.1.2. STL栈容器stack</a></li>
+<li><a class="reference internal" href="#id2">4.2.1.3. 栈的编程实现</a></li>
 </ul>
 </li>
 </ul>
@@ -79,11 +80,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="id1">
-<h1><span class="section-number">4.2.1. </span>栈：基本概念和实现<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+  <div class="section" id="stack">
+<h1><span class="section-number">4.2.1. </span>栈：概念、stack容器和实现<a class="headerlink" href="#stack" title="永久链接至标题">¶</a></h1>
 <p>英语单词 stack 原本的意思是堆垛。想象这样一个仓库里的货物堆垛，它用来堆放一个一个的长方体标准货箱。当有新的货物要入库时，仓库工人用铲车将箱子堆放到堆垛的那个位置最方便？当然是最顶上了，一个一个箱子的依次向上堆就可以了。当货物要出库时，工人师傅又开着铲车进来取箱子，这时候取那个位置的箱子最方便呢？当然还是取最顶上的箱子了，一个一个箱子地依次向下取。这就是仓库里货物堆垛的规则。在这样的规则下，越先入库的货物就越被摆放在堆垛的下部，而越后入库的货物就会被越先取走出库。</p>
-<div class="section" id="id2">
-<h2><span class="section-number">4.2.1.1. </span>栈的概念及基本操作<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id1">
+<h2><span class="section-number">4.2.1.1. </span>栈的概念及基本操作<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
 <p>超级重要的数据结构<strong>栈</strong>的英文名称就叫做 stack，又叫做<strong>后进先出表</strong>（LIFO），意思是 Last In First Out。它就是模仿仓库里的货箱堆垛来实现元素存取的一种特殊的线性表，是我们对它的元素存取方式进行了这样的限制：只允许在它的表尾添加元素，不能在任何其他位置添加；只允许读取表尾的元素，不允许读取任何其他位置的元素。通过这样的限制就实现了先加入栈的元素总是会被后读取，后添加进栈的元素会被先读取到，也就是所谓的先进后出规则。</p>
 <p>栈作为一种特殊的线性表，有一些特殊的名称。栈的首元素所在元素称为<strong>栈底</strong>（bottom），尾元素称为<strong>栈顶元素</strong>，但通常会称其后一个位置为<strong>栈顶</strong>（top）。空栈没有栈顶元素，栈顶位置等于栈底位置。无论是用顺序表实现的栈还是用链表实现的栈，一般我们都用下面这样的方式来绘制栈的抽象的示意图：</p>
 <img alt="../../_images/321_stack.png" src="../../_images/321_stack.png" />
@@ -152,6 +153,78 @@
 <p class="admonition-title">警告</p>
 <p><code class="docutils literal notranslate"><span class="pre">stack</span></code> 容器除了 <code class="docutils literal notranslate"><span class="pre">top()</span></code> 成员函数，没有任何其他方法可以访问到任何元素！没有方括号加下标值！没有迭代器！</p>
 </div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">4.2.1.3. </span>栈的编程实现<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>有时候程序中要使用栈，但是我们不想引入 <code class="docutils literal notranslate"><span class="pre">stack</span></code> 容器，而是想自己实现。这也是非常简单的，栈既可以用顺序表来实现，也可以用单链表来实现，用链表实现的栈有时候也叫做链栈。</p>
+<p>如果能预知在程序运行过程中栈的最大长度，那么我们往往更倾向于自己用数组来实现一个轻量级的栈而不是用 <code class="docutils literal notranslate"><span class="pre">stack</span></code> 容器。假设栈的最大可能长度为1000个元素，那么用下面这样一个结构就可以定义出一个标准的栈来：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">Stack</span> <span class="p">{</span>
+        <span class="n">T</span> <span class="n">_elements</span><span class="p">[</span><span class="n">MAXN</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">_top</span><span class="p">;</span>
+
+        <span class="n">Stack</span><span class="p">()</span> <span class="p">{</span> <span class="n">_top</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_top</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_top</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="n">T</span> <span class="o">&amp;</span><span class="n">peek</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_elements</span><span class="p">[</span><span class="n">_top</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span> <span class="p">}</span>
+        <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span> <span class="n">_elements</span><span class="p">[</span><span class="n">_top</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">T</span> <span class="o">&amp;</span><span class="n">pop</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_elements</span><span class="p">[</span><span class="o">--</span><span class="n">_top</span><span class="p">];</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>上面这一个结构就利用数组实现了一个简单的模板栈，最大支持存放1000个元素，数据类型可以是任意的，例如 <code class="docutils literal notranslate"><span class="pre">Stack&lt;int&gt;</span></code> 为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型元素的栈。结构提供了五个成员函数，每一个都简单到只有一条语句。由于代码过于简单，就不给出注解了，请自行将其看懂。</p>
+<p>大小比较运算这里并没有实现，如果要实现也不难，但是一般算法程序确实不太用得到。如果数据类型是明确固定的，甚至可以不用模板，直接在代码里写死即可，那就更加简单了。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>仿照上面的代码，自己编写一个元素数据类型为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的简单栈，最多可容纳10000个元素，并且支持栈与栈之间的六种大小比较运算，比较规则为字典序，即：</p>
+<ol class="arabic simple">
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">_elements[0]</span></code> 开始逐个向后比较两个栈中相同位置的元素，首次出现不同时，那个栈中的元素值小，就认为这个栈小；</p></li>
+<li><p>若比较过的每一对相同位置的元素都等值，那么长度短的栈更小；</p></li>
+<li><p>若每一对相同位置的元素都等值，且两个栈长度相同，则认为两个栈相等；</p></li>
+<li><p>只要两个栈长度不相等，或者任意某一个位置上元素不等值，那么这两个栈就是不相等的。</p></li>
+</ol>
+<p>完成栈结构的编写后自行设法进行测试，确保栈的功能正确。</p>
+</div>
+<p>链栈的实现也不难，甚至不需要头部哑节点。但是链栈的栈顶指针无法表示栈的长度，所以我们另需一个单独的存放长度的成员变量。事实上，使用链栈一般都是为了应对程序运行过程中栈的长度无法预先确定的情况，比如在大规模的回溯搜索类算法中，解空间的树结构可能非常庞大（比如11皇后问题的解空间），难以用一个静态的数组来表示，如果要用C++的动态内存技术来实现动态数组那还不如直接使用链栈。</p>
+<p>下面是一个简单的链栈结构，其中缺少了部分成员函数的代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">Stack</span> <span class="p">{</span>
+        <span class="k">struct</span> <span class="n">_Node</span> <span class="p">{</span>
+                <span class="n">T</span> <span class="n">_value</span><span class="p">;</span>
+                <span class="n">Stack</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">_Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+                <span class="n">_Node</span><span class="p">()</span> <span class="p">{</span> <span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="p">}</span>
+                <span class="n">_Node</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span> <span class="n">_value</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span> <span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">_Node</span> <span class="o">*</span><span class="n">_top</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_size</span><span class="p">;</span>
+
+        <span class="n">Stack</span><span class="p">()</span> <span class="p">{</span> <span class="n">_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">_top</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="n">T</span> <span class="o">&amp;</span><span class="n">top</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_top</span><span class="o">-&gt;</span><span class="n">_value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 压栈</span>
+        <span class="p">}</span>
+        <span class="kt">void</span> <span class="n">pop</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 弹栈</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>请注意，链表本身就是一种依赖动态内存管理的动态数据结构，因此现在每压栈一个新元素，都需要动态分配一个新的节点出来并压入栈顶。同理每弹栈一个元素，就需要释放掉栈顶元素所使用的动态内存。所以链栈就不能在弹栈时返回栈顶元素的引用了。这就是 <code class="docutils literal notranslate"><span class="pre">stack</span></code> 容器那样设计操作方式的原因，我们在这里也采用了与之相同的方式。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>将上述代码中缺失的压栈和弹栈成员函数补全，并进行测试。</p>
+</div>
+<p>不过坦白地说，如果程序要使用链栈，我们还是建议使用STL库的 <code class="docutils literal notranslate"><span class="pre">stack</span></code> 容器更好，不要自己动手去编程实现了。</p>
 </div>
 </div>
 
