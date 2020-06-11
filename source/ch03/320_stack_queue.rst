@@ -12,5 +12,6 @@
 .. toctree::
    :maxdepth: 2
 
-   sec02/321_stack_1.rst
+   sec02/321_stack_1
+   sec02/322_stack_2
 
