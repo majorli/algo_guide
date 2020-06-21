@@ -14,4 +14,5 @@
 
    sec02/321_stack_1
    sec02/322_stack_2
+   sec02/323_queue_1
 
