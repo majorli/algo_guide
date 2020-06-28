@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.2.3. 队列：基本概念 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.2.2. 栈的应用：表达式求值" href="322_stack_2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="322_stack_2.html" title="4.2.2. 栈的应用：表达式求值"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../320_stack_queue.html" accesskey="U"><span class="section-number">4.2. </span>特殊线性表：栈和队列</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.2.3. 队列：基本概念</a><ul>
+<li><a class="reference internal" href="#id2">4.2.3.1. 顺序队列</a></li>
+<li><a class="reference internal" href="#id3">4.2.3.2. 环形队列</a></li>
+<li><a class="reference internal" href="#id4">4.2.3.3. 链式队列</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="322_stack_2.html"
+                        title="上一章"><span class="section-number">4.2.2. </span>栈的应用：表达式求值</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec02/323_queue_1.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.2.3. </span>队列：基本概念<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p><strong>队列</strong>（queue）也是一种访问受限的顺序表。和栈一样，队列也是计算机软件中极其重要、应用极其广泛的一种数据结构。</p>
+<p>栈可以看作是一种一端开口的顺序表，即除了栈顶这一端是对访问开放的，其他位置的元素都是封闭的，无论是增加、删除还是读取元素，都只能在栈顶这唯一的一个开放端进行。队列同样只能在特定的开放位置进行元素访问，不同的是它分别在首尾两端半开口，即元素只能在其中一端添加，只能在另一端删除和读取，其他位置则都是全封闭禁止任何访问的。通常我们把添加元素的一端叫做队尾（tail），把删除和读取元素的一端叫做队头（head），把元素添加入队尾的操作称作入队（enqueue），把元素从队头删除的操作称作出队（dequeue）。通常队列只允许读取队头元素，也不允许对其进行修改，有时候也会把读取队头元素的操作合并到出队操作中，即出队时同时把这个元素作为返回值返回出来。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>上述是队列的标准定义和规则，但是C++语言STL库提供的队列类容器在此基础上有一些不太一样的设计。</p>
+</div>
+<p>前面我们说过，栈模拟了仓库货物堆垛，那么从队列的规则可以明显看出，队列是模拟了排队而得到的数据结构。</p>
+<img alt="../../_images/323_queue_1.png" src="../../_images/323_queue_1.png" />
+<p>和栈一样，队列也可以根据存储结构的不同实现为<strong>顺序队列</strong>和<strong>链式队列</strong>两种类型。对于栈来说，顺序栈或者链栈除了存储结构不同以外就没有什么别的不同了，但是队列不一样，顺序队列和链式队列有不小的区别。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">4.2.3.1. </span>顺序队列<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>最简单的顺序队列就是利用一个数组和两个分别表示队头与队尾位置的下标值来构建的。元素总是从左向右地单向增删，队头在左，队尾在右。队头和队尾采用惯例的左闭右开规则，即队头下标指向当前队头元素，队尾则指向当前队尾元素的后一个位置。</p>
+<p>初始时，队头和队尾都在数组的最左边，即0号位置处，入下图所示：</p>
+<img alt="../../_images/323_queue_2.png" src="../../_images/323_queue_2.png" />
+<p>向这个队列中添加一个元素1，则变成下图所示的样子：</p>
+<img alt="../../_images/323_queue_3.png" src="../../_images/323_queue_3.png" />
+<p>可以看出，队列中元素的数量，即队列长度等于队尾下标减去队头下标的差，如果队尾下标等于队头下标，则表示队列为空。入队的操作，无非是很简单的两步：将元素放入当前队尾下标所指的位置，然后队尾下标加1。</p>
+<p>接下来我们连续入队2、3、4、5四个元素，队列变成下图所示的样子：</p>
+<img alt="../../_images/323_queue_4.png" src="../../_images/323_queue_4.png" />
+<p>出队的操作同样很简单，分为两步：删除队头下标所指的元素，队头下标加1。实际上顺序队列在编程的时候甚至不需要去做删除元素的操作，只要简单地将队头下标加1就可以认为已经将当前的队头元素删除出队了。例如接下来我们连续进行两次出队，再入队一个新元素6，整个过程的图示如下：</p>
+<img alt="../../_images/323_queue_5.png" src="../../_images/323_queue_5.png" />
+<p>顺序队列的编程实现确实非常简单，我们不打算详细讨论，直接将其作为练习。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>使用下面的结构实现一个最简单的顺序队列，元素类型为 <code class="docutils literal notranslate"><span class="pre">int</span></code>，请填写完整TODO注释处缺失的代码片段并进行测试。请注意入队、出队和读队头操作要判断是否可行，若不可行请用 <code class="docutils literal notranslate"><span class="pre">throw</span></code> 命令抛出异常。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Queue</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">_val</span><span class="p">[</span><span class="mi">1000</span><span class="p">];</span>   <span class="c1">// 底层数组，最大容纳1000个int型元素</span>
+        <span class="kt">int</span> <span class="n">_head</span><span class="p">;</span>        <span class="c1">// 队头指针</span>
+        <span class="kt">int</span> <span class="n">_tail</span><span class="p">;</span>        <span class="c1">// 队尾指针</span>
+
+        <span class="n">Queue</span><span class="p">()</span> <span class="p">{</span> <span class="n">_head</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">_tail</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>     <span class="c1">// 构造函数</span>
+        <span class="kt">void</span> <span class="n">enqueue</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 元素val入队，注意可入队条件判断</span>
+        <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">dequeue</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 队头元素出队，并返回出队元素的值</span>
+        <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">peek</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 读取当前队头元素值但不出队</span>
+        <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">size</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 返回当前队列长度</span>
+        <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// TODO 判断当前队列是否为空</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<p>随着不断地入队出队操作，最后当队尾下标等于数组的长度，即指向了数组最后一个元素的后面一个位置时，这个顺序队列就消耗空了，如下图所示：</p>
+<img alt="../../_images/323_queue_6.png" src="../../_images/323_queue_6.png" />
+<p>所以，顺序队列存在一个极大的问题，就是空间浪费问题。上图所示的队列，已经不能再入队任何新元素了，但是实际上数组中前9个元素位置都是空的。随着不断地单方向出队，前面的数组元素位置就不断被消耗，无法重复使用。</p>
+<p>为了解决这个问题，顺序队列往往采用一种叫做<strong>环形队列</strong>的变种，而不是上面这样的简单的顺序队列。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.2.3.2. </span>环形队列<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>环形队列是顺序队列的一个变种，为了解决顺序队列随着出队操作的进行不断浪费底层数组（或者其他底层顺序表结构）中元素空间的弊端，环形队列将顺序表假想成一个首尾相接的圆环形结构。这和我们前面学过的数组环形访问问题是一脉相承的，可以回顾一下这一节：<a class="reference internal" href="../../ch02/sec06/267_luogu_problems_2.html"><span class="doc">数组环形访问：玩具谜题（洛谷P1563）</span></a>。</p>
+<p>和顺序队列一样，初始的空环形队列，队头和队尾下标都为0；元素入队时，放入队尾下标所指的位置，将队尾下标加1并对数组长度取模；元素出队时，简单地将队头下标加1并对数组长度取模即可，如果需要返回出队的元素值则返回之。下图依次展示了一个底层数组长度为12的环形队列的初始状态、元素1入队后的状态、元素2、3、4依次入队并出队一次之后的状态：</p>
+<img alt="../../_images/323_queue_7.png" src="../../_images/323_queue_7.png" />
+<p>假设一直按照此规则陆续地入队连续自然数，时不时出队一些元素以保持队列长度为3，经过一段时间之后队头队尾可能就会跨越底层数组的头尾界限，并确保今后还可以入队新的元素，不至于浪费掉已出队元素所占用的空间，例如下图所示的情况：</p>
+<img alt="../../_images/323_queue_8.png" src="../../_images/323_queue_8.png" />
+<p>到目前为止，一切看起来都很顺利，除了每次头尾下标值加1之后要取一次模以外，其他和顺序队列并无任何区别。同样的，如果队头队尾两个坐标值相等就说明队列为空。队列的长度则需要略作修改，因为现在有可能出现上图这样的队头坐标值大于队尾坐标值的情况，所以 <code class="docutils literal notranslate"><span class="pre">队列长度=队尾-队头</span></code> 这个公式有可能计算出负数，这时的计算公式为 <code class="docutils literal notranslate"><span class="pre">队列长度=数组长度+队尾-队头</span></code>，使用判断语句或者三元运算可以轻松实现上面的计算规则。当然也可以用这个公式：<code class="docutils literal notranslate"><span class="pre">队列长度=(数组长度+队尾-队头)</span> <span class="pre">mod</span> <span class="pre">数组长度</span></code>（请想明白这个公式是怎么来的）。</p>
+<p>但是这样就没有任何问题了吗？当然不是，还有一个严重的bug存在。请先暂停五分钟，思考一下，能发现这个bug吗？</p>
+<p>我们前面说过，如果队头和队尾位置相同了，那么说明队列为空。可是如果我们连续入队，塞满了整个底层数组的时候呢？也就是说队列的长度等于底层数组的长度时，如下图所示：</p>
+<img alt="../../_images/323_queue_9.png" src="../../_images/323_queue_9.png" />
+<p>这时候队头下标也等于队尾下标！这样就无法区分队列是空还是满了！</p>
+<p>要解决这个问题，我们只能牺牲一个元素空间，即将队列的最大长度限制为底层数组长度减一。这样的话，我们用做示例的这个底层数组长度为12的环形队列，其队列的最大长度就是11，满队列的情况如下：</p>
+<img alt="../../_images/323_queue_10.png" src="../../_images/323_queue_10.png" />
+<p>请问现在要怎样判断队列是否已经满了？</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>将上一个顺序队列的练习改成环形队列，仍然使用上一个练习中给出的结构定义来补充实现并测试。</p>
+</div>
+<p>小结顺序队列和循环队列，假如某一算法程序在运行过程中总共可能入队的元素数量为 <span class="math notranslate nohighlight">\(M\)</span> 个，但在算法程序运行的任一时刻，队列中的元素数量不会超过 <span class="math notranslate nohighlight">\(m\)</span> 个，显然有 <span class="math notranslate nohighlight">\(m\le M\)</span> 成立。若使用顺序队列时，底层数组的长度必须不小于前后总共可能入队的元素数量 <span class="math notranslate nohighlight">\(M\)</span>。这个值往往会很大，当 <span class="math notranslate nohighlight">\(M\)</span> 很大且远远大于 <span class="math notranslate nohighlight">\(m\)</span> 时，使用顺序队列就会非常地不合理。而这种情况却是实际算法程序中普遍存在的，所以一般我们都会选择使用环形队列。</p>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">4.2.3.3. </span>链式队列<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>顺序队列，包括环形队列，虽然都有简单和高速这两个大优势，但都有最大容量受限的问题，它们的最大容量总是受限于底层数组的实际长度，而顺序队列的最大容量还会随着不断地出队操作而不断减少。所以当队列长度较长且不容易预计与控制的时候，我们宁愿编程稍微复杂一点，采用单链表来实现链式存储结构的队列，叫做<strong>链式队列</strong>。</p>
+<p>在实现链式队列时，我们需要一个空节点来表示队尾，这个节点不存放元素。初始的时候，队头和队尾的指针全部指向这个队尾空节点，入下图所示，图中用灰色节点表示队尾空节点：</p>
+<img alt="../../_images/323_linked_queue_1.png" src="../../_images/323_linked_queue_1.png" />
+<p>元素入队时，我们将元素值复制到队尾空节点中，使其变成一个正常的元素节点。然后将其后继指向一个新创建的空节点，同时队尾指针指向这个新的空节点。下图是入队一个元素1之后的情形：</p>
+<img alt="../../_images/323_linked_queue_2.png" src="../../_images/323_linked_queue_2.png" />
+<p>继续入队，依次入队两个元素2和3：</p>
+<img alt="../../_images/323_linked_queue_3.png" src="../../_images/323_linked_queue_3.png" />
+<p>元素出队的时候，将队头指针指向它的后继，并销毁原队头元素节点。如果有必要的话，可以在出队的时候返回被出队的原队头元素的值。如下图所示：</p>
+<img alt="../../_images/323_linked_queue_4.png" src="../../_images/323_linked_queue_4.png" />
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>使用C++语言，在这里很难做到以引用的方式返回元素，只能返回其值，所以如果元素类型是很大的结构变量，那么最好是像STL容器那样，把出队和访问分开为两个不同的函数。</p>
+</div>
+<p>容易看出，链式队列很容易判断其是否为空，如果头尾两个指针指向同一个元素节点，那么就是空队列。但是无法根据头尾指针来计算队中的元素数量，所以另外需要一个变量来跟踪队列长度。</p>
+<p>链式队列的C++实现相比顺序队列和环形队列要复杂一些，我们下一节详细介绍。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="322_stack_2.html" title="4.2.2. 栈的应用：表达式求值"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../320_stack_queue.html" ><span class="section-number">4.2. </span>特殊线性表：栈和队列</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
