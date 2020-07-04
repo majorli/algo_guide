@@ -18,4 +18,5 @@
 .. toctree::
    :maxdepth: 2
 
+   sec03/331_hash_1
 
