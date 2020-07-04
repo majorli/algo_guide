@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.3. 哈希表 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../400_basic_algo_design.html" />
+    <link rel="prev" title="4.2.4. 队列：C++实现、STL容器" href="sec02/324_queue_2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec02/324_queue_2.html" title="4.2.4. 队列：C++实现、STL容器"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" accesskey="U"><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec02/324_queue_2.html"
+                        title="上一章"><span class="section-number">4.2.4. </span>队列：C++实现、STL容器</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch03/330_hash.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.3. </span>哈希表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>前面介绍了线性表和线性表的两种存储结构。我们知道，无论是顺序表还是链表，它们都是按顺序依次存放所有元素，元素像一系列点一样排成一条线。表中有多少元素，就相应需要占用多少空间，即表的空间占用量和元素数量是成正比的。顺序表可以用位置下标来随机访问表中指定位置的元素，时间复杂度为 <span class="math notranslate nohighlight">\(O(1)\)</span>，但是增删元素的时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>；链表在任意指定位置增删元素的时间复杂度都为 <span class="math notranslate nohighlight">\(O(1)\)</span>，但是如果要按下标位置来访问元素，则需要 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间。</p>
+<p>这一部分要介绍另一种神奇的数据结构，<strong>哈希表</strong>（Hash Table），也叫做<strong>散列表</strong>。元素要存放入哈希表，除了自身有一个<strong>元素值</strong>（value）以外，还需要有一个<strong>关键字</strong>（key），然后程序使用一个特定的<strong>哈希函数</strong>，把关键字映射成一个非负整数值，也就是该元素对应的哈希函数值，简称<strong>哈希值</strong>。这个哈希值就是该元素存放在表中的位置。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>事实上，大量情况下元素自身的值就可以直接用做其关键字，并不需要一个额外的关键字。</p>
+</div>
+<p>通过这种方式，哈希表可以实现常数时间的元素增删查改所有操作，因为它可以通过计算一遍哈希值来直接定位元素应在的位置。但是这个常数时间的实际运行速度是取决于哈希函数计算的复杂度的，属于相对比较重量级的常数时间。另外，哈希表的空间占用量和元素的实际数量是不成比例的。</p>
+<p>哈希表是一种非常重要的基础数据结构，在大量的软件和算法领域有广泛应用。比如在信息安全领域，MD5、sha-1等经典的密钥算法都是基于哈希函数设计的。更重要的是，基于哈希表的原理，衍生出了两种非常重要的实用数据结构：集合和映射。如其名称所示，这两种数据结构与数学中的集合与映射这两个重要概念有非常密切的联系，也是大量实用软件和高级算法的基础数据结构。</p>
+<p>在本部分我们除了介绍哈希表的原理、常见的哈希表实现方法以外，还会介绍STL的集合容器 <code class="docutils literal notranslate"><span class="pre">set</span></code> 和映射容器 <code class="docutils literal notranslate"><span class="pre">map</span></code>、<code class="docutils literal notranslate"><span class="pre">multimap</span></code> 的使用。</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec02/324_queue_2.html" title="4.2.4. 队列：C++实现、STL容器"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.2.4. 队列：C++实现、STL容器 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="4.3. 哈希表" href="../330_hash.html" />
+    <link rel="prev" title="4.2.3. 队列：基本概念" href="323_queue_1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../330_hash.html" title="4.3. 哈希表"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="323_queue_1.html" title="4.2.3. 队列：基本概念"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../320_stack_queue.html" accesskey="U"><span class="section-number">4.2. </span>特殊线性表：栈和队列</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.2.4. 队列：C++实现、STL容器</a><ul>
+<li><a class="reference internal" href="#id1">4.2.4.1. 链式队列的实现</a></li>
+<li><a class="reference internal" href="#stl">4.2.4.2. STL队列容器</a></li>
+<li><a class="reference internal" href="#id2">4.2.4.3. STL双头队列容器</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="323_queue_1.html"
+                        title="上一章"><span class="section-number">4.2.3. </span>队列：基本概念</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../330_hash.html"
+                        title="下一章"><span class="section-number">4.3. </span>哈希表</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec02/324_queue_2.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="c-stl">
+<h1><span class="section-number">4.2.4. </span>队列：C++实现、STL容器<a class="headerlink" href="#c-stl" title="永久链接至标题">¶</a></h1>
+<p>本节介绍如果自己编程实现链式队列，并介绍STL库提供的两种队列容器：队列 <code class="docutils literal notranslate"><span class="pre">queue</span></code> 和有点奇怪的双头队列 <code class="docutils literal notranslate"><span class="pre">deque</span></code>。事实上，<code class="docutils literal notranslate"><span class="pre">deque</span></code> 与其说是一种队列的变种，更不如说是向量 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 的一种变种。至于优先级队列容器 <code class="docutils literal notranslate"><span class="pre">priority_queue</span></code>，我们留到以后讲解完堆这种高级数据结构之后再做介绍。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">4.2.4.1. </span>链式队列的实现<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>我们用C++语言实现一个标准意义上的队列，采用链式存储结构，支持模板类型，用编程管理来模拟封装。根据前面的介绍，我们应该把数据节点、底层单链表和具体的成员变量都隐蔽起来，对外只提供以下功能接口：</p>
+<ol class="arabic simple">
+<li><p>创建一个新队列，初始为空队列。</p></li>
+<li><p>元素入队。</p></li>
+<li><p>访问队头元素。</p></li>
+<li><p>队头元素出队。</p></li>
+<li><p>判断队列是否为空。</p></li>
+<li><p>获取队列长度。</p></li>
+</ol>
+<p>所以我们只要模仿以前实现过的单链表代码就可以很方便地实现这样一个链式队列，而且由于队列的访问限制，我们甚至不需要提供指示器之类的元素定位访问能力。如果有点忘记了，可以回顾一下这里：<a class="reference internal" href="../sec01/318_linkedlist_2.html"><span class="doc">链表的C++实现</span></a>。</p>
+<p>所有操作的原理我们在上一节已经介绍过了，这里先直接给出代码再进行说明。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">LinkedQueue</span> <span class="p">{</span>
+	<span class="k">struct</span> <span class="n">_Node</span> <span class="p">{</span>		<span class="c1">// 元素节点的结构，嵌套在队列结构内部</span>
+		<span class="n">T</span> <span class="n">_val</span><span class="p">;</span>		<span class="c1">// 元素值</span>
+		<span class="n">_Node</span> <span class="o">*</span><span class="n">_next</span><span class="p">;</span>	<span class="c1">// 后继指针</span>
+
+		<span class="n">_Node</span><span class="p">()</span> <span class="p">{</span> <span class="n">_next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="p">}</span>	<span class="c1">// 构造一个新的节点，后继为空</span>
+	<span class="p">};</span>
+
+	<span class="n">_Node</span> <span class="o">*</span><span class="n">_head</span><span class="p">,</span> <span class="o">*</span><span class="n">_tail</span><span class="p">;</span>	<span class="c1">// 头尾指针，注意可以省略命名限定 LinkedQueue&lt;T&gt;::</span>
+	<span class="kt">int</span> <span class="n">_size</span><span class="p">;</span>		<span class="c1">// 队列长度</span>
+
+	<span class="n">LinkedQueue</span><span class="p">()</span>		<span class="c1">// 构造一个新的空队列</span>
+	<span class="p">{</span>
+		<span class="n">_tail</span> <span class="o">=</span> <span class="k">new</span> <span class="n">_Node</span><span class="p">;</span>
+		<span class="n">_head</span> <span class="o">=</span> <span class="n">_tail</span><span class="p">;</span>
+		<span class="n">_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_head</span> <span class="o">==</span> <span class="n">_tail</span><span class="p">;</span> <span class="p">}</span>	<span class="c1">// 判断队列是否为空</span>
+	<span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">;</span> <span class="p">}</span>	<span class="c1">// 获取队列长度</span>
+	<span class="kt">void</span> <span class="n">enqueue</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">)</span>		<span class="c1">// 元素val入队</span>
+	<span class="p">{</span>
+		<span class="n">_tail</span><span class="o">-&gt;</span><span class="n">_val</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+		<span class="n">_tail</span><span class="o">-&gt;</span><span class="n">_next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">_Node</span><span class="p">;</span>
+		<span class="n">_tail</span> <span class="o">=</span> <span class="n">_tail</span><span class="o">-&gt;</span><span class="n">_next</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">_size</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">T</span> <span class="o">&amp;</span><span class="n">head</span><span class="p">()</span>				<span class="c1">// 访问队头元素</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">_head</span> <span class="o">==</span> <span class="n">_tail</span><span class="p">)</span> <span class="k">throw</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">_head</span><span class="o">-&gt;</span><span class="n">_val</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">void</span> <span class="n">dequeue</span><span class="p">()</span>				<span class="c1">// 队头元素出队</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">_head</span> <span class="o">==</span> <span class="n">_tail</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+		<span class="n">_Node</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="n">_head</span><span class="p">;</span>
+		<span class="n">_head</span> <span class="o">=</span> <span class="n">temp</span><span class="o">-&gt;</span><span class="n">_next</span><span class="p">;</span>
+		<span class="k">delete</span> <span class="n">temp</span><span class="p">;</span>
+		<span class="o">--</span><span class="n">_size</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="o">~</span><span class="n">LinkedQueue</span><span class="p">()</span>		<span class="c1">// 析构函数，删除队列，销毁当前队列中所有节点</span>
+	<span class="p">{</span>
+		<span class="k">while</span> <span class="p">(</span><span class="n">_head</span> <span class="o">!=</span> <span class="n">_tail</span><span class="p">)</span> <span class="n">dequeue</span><span class="p">();</span>
+		<span class="k">delete</span> <span class="n">_tail</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>相信真正理解了上一节介绍的链式队列原理之后是很容易看懂上面这段代码的，这里做一些简单说明：</p>
+<ol class="arabic simple">
+<li><p>节点结构 <code class="docutils literal notranslate"><span class="pre">_Node</span></code> 是队列结构 <code class="docutils literal notranslate"><span class="pre">LinkedQueue</span></code> 的内部结构，如我们在介绍链表的C++实现时所给出的代码，这个节点结构的全名应该在前面加上其父结构名称的命名修饰，即 <code class="docutils literal notranslate"><span class="pre">LinkedQueue&lt;T&gt;::_Node</span></code>。但是由于我们所有用到这个节点结构的代码都是定义在外部结构 <code class="docutils literal notranslate"><span class="pre">LinkedQueue&lt;T&gt;</span></code> 内的，也就是说是在 <code class="docutils literal notranslate"><span class="pre">_Node</span></code> 的命名空间内，所以我们实际上可以在代码中省略命名修饰。</p></li>
+<li><p>元素入队时，我们先将队尾指针所指向的空节点的元素值赋为要入队的元素值，这样这个空节点就变成了一个有效的元素节点，它是队列实际上的尾节点。然后我们要生成一个新节点作为它的后继，这个新节点就是新的队尾指针指向的空节点。最后别忘了修正队列长度。</p></li>
+<li><p>元素出队时，我们把队头指针改成它的后继，然后销毁原队头指针指向的队头元素节点即可，同样别忘了修正队列长度。</p></li>
+<li><p>元素出队和访问队头元素两个操作，都有可能遇到空队列的情况，对于空队列进行这样的操作就会引发错误操作或者让获得的结果不确定。所以我们在这两个操作中都做了预判处理，但是二者处理预判的方式不一样，这里有什么不同，又是什么原因，请自行弄懂。</p></li>
+<li><p>最后别忘了，凡是用到动态内存的结构，都需要有一个析构函数以便清除掉所有占用的空间。</p></li>
+</ol>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>模仿上面的代码，编写一个具体类型的链式队列结构并编写 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数进行测试，要求如下：</p>
+<ol class="arabic simple">
+<li><p>元素类型为 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
+<li><p>不提供 <code class="docutils literal notranslate"><span class="pre">head()</span></code> 函数以访问队头元素，而是在元素出队的时候同时返回被出队元素的值。</p></li>
+<li><p>甚至可以不采用封装惯例形式。</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="stl">
+<h2><span class="section-number">4.2.4.2. </span>STL队列容器<a class="headerlink" href="#stl" title="永久链接至标题">¶</a></h2>
+<p>C++的STL库当然也提供了队列容器，叫做 <code class="docutils literal notranslate"><span class="pre">queue</span></code>。和所有STL容器一样，要使用它就要先引入库 <code class="docutils literal notranslate"><span class="pre">queue</span></code> 并使用标准命名空间 <code class="docutils literal notranslate"><span class="pre">std</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">queue</span></code> 容器的使用非常简单，首先它同样具备所有STL容器都支持的以下几个常规功能：</p>
+<ol class="arabic simple">
+<li><p>构造函数，用于定义出一个新的空队列。</p></li>
+<li><p>成员函数 <code class="docutils literal notranslate"><span class="pre">empty()</span></code> 用于判断队列是否为空。</p></li>
+<li><p>成员函数 <code class="docutils literal notranslate"><span class="pre">size()</span></code> 用于获取队列长度。</p></li>
+<li><p>支持六种比较运算，比较两个队列的字典序先后。</p></li>
+</ol>
+<p>此外是队列的特殊操作：入队、出队、访问队头元素，而 <code class="docutils literal notranslate"><span class="pre">queue</span></code> 容器还额外提供了一个访问队尾元素的功能，这是标准的队列所没有的操作。注意，<code class="docutils literal notranslate"><span class="pre">queue</span></code> 的队头、队尾元素访问都是以引用的方式来返回元素的，可以直接修改函数返回值从而实现修改队头、队尾元素，这也是标准的队列所不具备的能力。另外，可能是出于STL容器名称一致性的考虑，<code class="docutils literal notranslate"><span class="pre">queue</span></code> 的成员函数命名并没有采用标准的数据结构惯用名称。</p>
+<ol class="arabic simple">
+<li><p>成员函数 <code class="docutils literal notranslate"><span class="pre">push()</span></code> 用于元素入队，该函数接收一个参数，即要入队的元素，没有返回值。</p></li>
+<li><p>成员函数 <code class="docutils literal notranslate"><span class="pre">pop()</span></code> 用于元素出队，该函数没有参数，也没有返回值，只是单纯地将当前队头元素删除。</p></li>
+<li><p>成员函数 <code class="docutils literal notranslate"><span class="pre">front()</span></code> 用于访问队头元素，该函数没有参数，返回队头元素的引用，并不删除该元素，因此可用于直接修改队头元素。</p></li>
+<li><p>成员函数 <code class="docutils literal notranslate"><span class="pre">back()</span></code> 用于访问队尾元素，该函数没有参数，返回队尾元素的引用，并不删除该元素，因此可用于直接修改队尾元素。</p></li>
+</ol>
+<p>例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>        <span class="c1">// 定义一个新的空队列q，元素类型为int</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>         <span class="c1">// 入队一个元素100</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+                <span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">-=</span> <span class="n">q</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+                <span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>不运行直接写出上面这段小程序的输出。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">4.2.4.3. </span>STL双头队列容器<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>STL库还提供了一个非常独特的队列容器：<strong>双头队列</strong>（deque），这个英文单词读作deck。虽然它的名称听起来是队列，但是实际上它更接近于顺序表。</p>
+<p>引入 <code class="docutils literal notranslate"><span class="pre">deque</span></code> 库，使用 <code class="docutils literal notranslate"><span class="pre">std</span></code> 命名空间，然后就可以使用 <code class="docutils literal notranslate"><span class="pre">deque</span></code> 容器了。它拥有和顺序表容器 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 几乎一模一样的使用方法，只是它支持常数时间效率的表头元素增删操作。</p>
+<p>我们知道，向量 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 是一种标准的顺序表数据结构，可以看作是一个动态长度的数组。由于顺序表的特性，在头部位置，即下标为0的位置增加或删除元素会导致表中所有现有元素的搬移，所以效率很低，是 <span class="math notranslate nohighlight">\(O(n)\)</span> 时间的操作。但是 <code class="docutils literal notranslate"><span class="pre">deque</span></code> 容器则不同，它支持 <span class="math notranslate nohighlight">\(O(1)\)</span> 时间效率的头部元素增删操作。因此它比 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 多这样两个成员函数：</p>
+<p>1、在头部插入一个元素：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">push_front</span><span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>这个函数接收一个参数，即要在头部插入的元素，以常数时间将其插入在队头位置上。它没有返回值。</p>
+<p>2、删除头部元素：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">pop_back</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>这个函数将队头元素删除，没有参数，也没有返回值。</p>
+<p>除了上述两个函数以外，<code class="docutils literal notranslate"><span class="pre">deque</span></code> 容器的所有其他功能和 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 几乎完全一样，有几乎完全一致的成员函数，也可以使用迭代器来访问元素，甚至可以用方括号加下标形式来访问队列中任意位置的元素。所以与其说 <code class="docutils literal notranslate"><span class="pre">deque</span></code> 是一种队列，不如说它更加是一个顺序表比较合适。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p><code class="docutils literal notranslate"><span class="pre">vector</span></code> 容器和 <code class="docutils literal notranslate"><span class="pre">deque</span></code> 容器的对比实验：</p>
+<ol class="arabic simple">
+<li><p>分别随机生成10<sup>6</sup>个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数用来填充一个 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 和一个 <code class="docutils literal notranslate"><span class="pre">deque</span></code>，均从头部插入，记录和对比整个过程二者的运行时间。（提示：<code class="docutils literal notranslate"><span class="pre">vector</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">insert()</span></code> 成员函数，<code class="docutils literal notranslate"><span class="pre">deque</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">push_front()</span></code> 成员函数）。</p></li>
+<li><p>使用STL算法库的 <code class="docutils literal notranslate"><span class="pre">sort()</span></code> 函数分别对上述的 <code class="docutils literal notranslate"><span class="pre">vector</span></code> 和 <code class="docutils literal notranslate"><span class="pre">deque</span></code> 进行排序，记录并对比二者的运行时间。</p></li>
+<li><p>从头部位置逐个删除元素直到清空，记录并对比二者的运行时间。</p></li>
+<li><p>分别用10<sup>5</sup>个和10<sup>4</sup>个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数的数据量再次做上述对比实验，对比观察随着数据量的倍增带来的运行时间增长规律。</p></li>
+</ol>
+<p>通过上述三个不同数据量的对比实验得到的九组运行时间数据，你能得出怎样的结论？</p>
+</div>
+<p>队列是一种非常重要的数据结构，它广泛应用在进程间通信、操作系统、编译系统、网络通讯等各种领域，在算法编程中也有极为广泛的应用，它是宽度优先搜索的基础数据结构。今后在讲述高级数据结构和算法的时候我们会看到许多队列结构的应用。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../330_hash.html" title="4.3. 哈希表"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="323_queue_1.html" title="4.2.3. 队列：基本概念"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../320_stack_queue.html" ><span class="section-number">4.2. </span>特殊线性表：栈和队列</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
