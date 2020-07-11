@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.3.1. 哈希表：基本概念 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.3. 哈希表" href="../330_hash.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="../330_hash.html" title="4.3. 哈希表"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../330_hash.html" accesskey="U"><span class="section-number">4.3. </span>哈希表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.3.1. 哈希表：基本概念</a><ul>
+<li><a class="reference internal" href="#id2">4.3.1.1. 哈希函数</a></li>
+<li><a class="reference internal" href="#id3">4.3.1.2. 最简单的哈希表</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="../330_hash.html"
+                        title="上一章"><span class="section-number">4.3. </span>哈希表</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec03/331_hash_1.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.3.1. </span>哈希表：基本概念<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p><strong>哈希表</strong>（Hash Table）是一种比较特殊，又相当重要的数据结构。在本部分的引言部分我们已经简单介绍过，哈希表虽然名字也叫做表，但是它不是简单的依次线性存放元素，在哈希表中，元素无法确保其插入顺序。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>哈希表不是一种线性表！</p>
+</div>
+<p>哈希表的主要目的是实现快速的数据存取访问。一般的线性表，要么是常数级访问线性级增删（顺序表），要么是常数级增删线性级访问（链表），而哈希表的目标是元素增删查改的操作全部常数时间。要怎样才能达到这个目的呢？如果我们有办法根据元素自身的一些特定特征直接得到一个唯一的编号，那么我们就可以用这个唯一编号作为位置信息，在一个顺序表里组织存放元素，这样就可以实现增删查改全部为常数级时间。</p>
+<p>为了实现上面的想法，我们首先需要每一个元素都有一个唯一的特定特征，不同的元素这个特征不会相同。通常我们称元素的这个唯一的特征为<strong>键</strong>（key），或者叫<strong>关键字</strong>。要存放在哈希表中的元素，除了自身的<strong>值</strong>（value）以外，还需要有一个不会重复的唯一的键。换句话说，如果两个元素的键相同，那么它们俩的值也一定相同。这样的元素也被称为<strong>键值对</strong>（key-value pair）。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>哈希表是用来存放键值对数据的数据结构，它能以常数 <span class="math notranslate nohighlight">\(O(1)\)</span> 时间实现元素的增删查改操作。</p>
+</div>
+<p>当然了，最简单的情况是元素值本身就无重复，那么就可以直接把元素的值当做键来使用，这在实际问题中是很常见的。事实上集合就是存放键值同一的元素的哈希表，映射则是存放键值不同的元素的哈希表。</p>
+<p>举个简单的例子，假如数据为若干个100以内的正整数，不含100，且互不相等。那么数据的值就可以直接用作键，最简单的哈希表就是开一个长度为100的逻辑型数组，初始化为全 <code class="docutils literal notranslate"><span class="pre">false</span></code>。要新增一个数，就用它的值作为数组的下标，将数组中对应位置改成 <code class="docutils literal notranslate"><span class="pre">true</span></code> 即可。要删除一个数，只要以这个数为下标修改数组中的值为 <code class="docutils literal notranslate"><span class="pre">false</span></code> 即可。如果要查找某个100以内的整数是不是在表中，就是以该数为下标去查看数组中对应位置是不是 <code class="docutils literal notranslate"><span class="pre">true</span></code>。这个例子里，修改元素无非是依次删除原元素、增加新元素而已。增删查改四种操作全部为 <span class="math notranslate nohighlight">\(O(1)\)</span> 时间。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>上面这个简单的例子，编程也非常简单，请自己动手试一试。</p>
+</div>
+<p>但是实际上极少有这么简单的情况。实际的情况往往会有以下这些问题：</p>
+<ol class="arabic simple">
+<li><p>键的取值范围非常大，比如数据在整个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 范围内取值，那上面这种简单的方法就需要开一个长度为2<sup>32</sup>的数组，也就是至少4GB的空间。如果数据的取值范围为 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 范围，那就需要开一个长度为2<sup>64</sup>的数组，怕是全世界也没有那么大内存可用。</p></li>
+<li><p>键的数据类型不是整数，比如浮点数、字符串或者别的更加复杂的结构类型，那么就无法把键值直接用作数组下标。</p></li>
+</ol>
+<p>上面两个问题是实际中普遍存在的，为了解决这些问题，我们需要定义和使用<strong>哈希函数</strong>（Hash Function）。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">4.3.1.1. </span>哈希函数<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>哈希函数是这样一种函数，它是一个从键到一定范围内的非负整数的映射。换句话说，哈希函数把数据元素的键值变成对应的哈希表下标值。哈希函数的自变量数据类型和取值范围和键完全相同，自变量的值就是键值。它返回的函数值是一个非负整数，并且有明确的取值范围。哈希函数的返回值被称为哈希值，当一个哈希函数被用来构建哈希表的时候，键值对应的哈希值就用做该元素要存放到底层数组中去时的数组下标值，因此用于构建哈希表的哈希函数返回值取值范围要求与底层数组的下标值范围一致。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>哈希函数并不一定是用来构建哈希表的，哈希值也并不总是用作哈希表的下标值。例如MD5算法其实就是一个哈希函数的算法，它的作用是为一段字符串生成一个密钥，用于数据传输校验或者数据加密。</p>
+</div>
+<p>用数学符号表示哈希函数为 <span class="math notranslate nohighlight">\(h=H(k)\)</span>，其中 <span class="math notranslate nohighlight">\(k\)</span> 为键值，<span class="math notranslate nohighlight">\(h\)</span> 表示其对应的哈希值。前面所举的那个简单例子，实际上是用了一个等值函数 <span class="math notranslate nohighlight">\(H(k)=k\)</span> 作为哈希函数构建了哈希表。而遇到两类实际问题的时候，显然我们需要一些更加精巧的哈希函数。</p>
+<p>用哈希函数来构建哈希表，有一个非常现实的问题，就是哈希值冲突，即不同的键值计算得到相同的哈希值。这是无法避免的，因为一般来说键的取值范围总是比哈希表底层数组的长度更大，有些键的取值范围可能是无穷大，比如区间 <span class="math notranslate nohighlight">\([0,100]\)</span> 上的所有实数，比如所有可能的人名字符串。所以冲突是不可避免一定存在的，如何减少冲突和处理冲突是设计哈希表及其哈希函数时要考虑的一个重要问题。</p>
+<p>总之，哈希函数是构建哈希表的关键要素，一个哈希表要优秀，它使用的哈希函数就不能不优秀。一般来说一个优秀的用于构建哈希表的哈希函数必须具有以下性质：</p>
+<ol class="arabic simple">
+<li><p>易于计算：优秀的哈希函数必须易于计算，绝不能本身就是一个复杂的算法。</p></li>
+<li><p>均匀分布：优秀的哈希函数计算得到的哈希值必须在其值域内呈均匀分布，或尽可能地接近均匀分布。</p></li>
+<li><p>极少冲突：优秀的哈希函数计算得到的哈希值冲突率应该尽可能的低。</p></li>
+</ol>
+<p>实际上，设计一个真正适合实际使用的优秀的哈希函数不是一件简单的事情，是一项复杂的技术活。实际应用中往往会直接调用现成的哈希函数库甚至直接调用已经实现好的哈希表，而不是自己去设计和实现。可惜的是，STL标准库只有集合和映射，并没有提供标准的哈希表类型。算法编程通常不允许使用其他第三方类库，所以掌握一些简单的哈希函数也是很有必要的。</p>
+<p>算法编程最常见的场景是整数型键，即键本身就是整数，其取值范围为 <span class="math notranslate nohighlight">\([a, b]\)</span>。这种情形最简单也是最实用的哈希函数是取模：</p>
+<div class="math notranslate nohighlight">
+\[h=H(k)=k \bmod m, (h,k,m\in\Bbb{Z}, k\in [a,b], m\le2, 0\le h\lt m)\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(k\)</span> 是键值，<span class="math notranslate nohighlight">\(m\)</span> 是模，<span class="math notranslate nohighlight">\(h\)</span> 是哈希值。</p>
+<p>要注意，C++的取模运算在遇到 <span class="math notranslate nohighlight">\(k\lt0\)</span> 时得到的余数也是负数，满足 <span class="math notranslate nohighlight">\(-m\lt h \le 0\)</span>。如果使用这个哈希函数，对于负的键值要进行处理。一般有两种处理方式，一是将得到的负余数加上模 <span class="math notranslate nohighlight">\(m\)</span> 就可以得到数学意义上的余数值，二是直接取绝对值。</p>
+<p>这个哈希函数基本符合上面所述的三大性质：</p>
+<ol class="arabic simple">
+<li><p>非常简单，易于计算。</p></li>
+<li><p>只要键值在其取值范围内分布均匀，哈希值也就在其取值范围内分布均匀。</p></li>
+<li><p>冲突率很容易控制，如果键值分布均匀，那么平均每 <span class="math notranslate nohighlight">\(m\)</span> 个键值产生一次冲突，冲突率为可以预期可以控制的 <span class="math notranslate nohighlight">\(\frac{m}{b-a+1}\)</span>。</p></li>
+</ol>
+<p>总的来说，对于整型键值的数据而言这是一个相当优秀的哈希函数。尽管整型键值还有很多其他优秀的哈希函数，比如折叠法、平方取中法等，但都不如取模来得简单，在算法编程时如果遇到此类场景，建议就用这个简单的哈希函数。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>玄学：使用取模哈希函数时有一个非常非常重要的技巧，模 <span class="math notranslate nohighlight">\(m\)</span> 用质数。这可以大大降低实际的冲突发生率。</p>
+</div>
+<p>另一种常见的场景是字符串型键。由于字符串理论上来说是有无穷多种，所以适用于字符串的哈希函数往往它的哈希值的取值范围也会很大，比如 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 型取值范围，不太适合直接用作构建哈希表。如果要构建字符串型键的哈希表，一般要把哈希值再做一次取模才行。</p>
+<p>例如经典的Java字符串类哈希函数，对于长度为 <span class="math notranslate nohighlight">\(n\)</span> 的字符串 <span class="math notranslate nohighlight">\(S\)</span>，它的哈希函数为：</p>
+<div class="math notranslate nohighlight">
+\[h = Hash(S) = S[0]\cdot31^{n-1}+S[1]\cdot31^{n-2}+\cdots+S[n-1]\]</div>
+<p>这个哈希值的取值范围很大，在Java语言中使用的是 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为其返回值类型，也就是说最大可能是2147483647。这个哈希函数的冲突率很低，而且哈希值在整个值域空间中基本上均匀分布。但如果要用这个哈希值来构建哈希表，那么一般我们还需要给它除一个合适的质数并取其余数作为底层数组的下标值，例如2069，请记住这个质数。</p>
+<p>还有一个比较简单的但很实用的字符串哈希函数，计算每一个字符的ASCII码值与其在字符串中所处位置的乘积之和作为哈希值，所处位置从1开始计数：</p>
+<div class="math notranslate nohighlight">
+\[h = Hash(S) = 1\cdot S[0] + 2\cdot S[1] + \cdots + n\cdot S[n-1]\]</div>
+<p>这个哈希函数的哈希值同样取值范围很大，但是分布很接近于均匀分布，冲突率很低。将其对某一合适的质数取模后可用以构建哈希表。例如我们对下面四个看上去差不多的字符串计算这个哈希函数值然后对质数2069取模，可以得到如下结果：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 72%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字符串</p></th>
+<th class="head"><p>哈希函数</p></th>
+<th class="head"><p>哈希值</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>abcdef</p></td>
+<td><p>(97*1+98*2+99*3+100*4+101*5+102*6)%2069</p></td>
+<td><p>38</p></td>
+</tr>
+<tr class="row-odd"><td><p>bcdefa</p></td>
+<td><p>(98*1+99*2+100*3+101*4+102*5+97*6)%2069</p></td>
+<td><p>23</p></td>
+</tr>
+<tr class="row-even"><td><p>cdefab</p></td>
+<td><p>(99*1+100*2+101*3+102*4+97*5+98*6)%2069</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>defabc</p></td>
+<td><p>(100*1+101*2+102*3+97*4+98*5+99*6)%2069</p></td>
+<td><p>11</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>编程实现上述两种字符串哈希函数的计算，注意选取合适的数据类型。分别用两种哈希函数值对2069取模得到最终的哈希值，完成下面的任务：</p>
+<p>输入文件：<a class="reference download internal" download="" href="../../_downloads/06b165225c17c38780bd80f5a0a1aadf/331_data.in"><code class="xref download docutils literal notranslate"><span class="pre">331_data.in</span></code></a>，内容是2014年和2018年两届世界杯冠军球队的23人大名单和主教练信息。一共48行，表示48个人，每一个人的信息包括球队名称、夺冠年份、球衣号码、位置、姓名，例如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>France 2018 1  GOALKEEPER Hugo LLORIS
+France 2018 16 GOALKEEPER Steve MANDANDA
+France 2018 23 GOALKEEPER Alphonse AREOLA
+...
+</pre></div>
+</div>
+<p>注意：姓名要求是中间有空格的完整的名和姓字符串。现在要求从这个文件中输入48名球员和教练的信息，定义一个结构类型用来存放一个人的完整信息，字符串建议采用C++ string形式。读入完成后，依次按以下格式输出每一个人的信息：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>TEAM: 队名
+YEAR: 夺冠年份
+NUMB: 球衣号码
+POSI: 位置
+NAME: 姓名
+HASH: 姓名字符串的哈希值(冲突数)
+一个空行
+</pre></div>
+</div>
+<p>注意每一个人的信息输出完整之后添加一个空行。其中冲突数是指这个哈希值的出现次数，如果未发生冲突，应该等于1，发生冲突一次变成2，冲突两次变成3，依此类推。例如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>TEAM: France
+YEAR: 2018
+NUMB: 1
+POSI: GOALKEEPER
+NAME: Hugo LLORIS
+HASH: 1082(1)
+
+TEAM: France
+YEAR: 2018
+NUMB: 16
+POSI: GOALKEEPER
+NAME: Steve MANDANDA
+HASH: 1466(1)
+
+TEAM: France
+YEAR: 2018
+NUMB: 23
+POSI: GOALKEEPER
+NAME: Alphonse AREOLA
+HASH: 1319(1)
+
+...
+</pre></div>
+</div>
+<p>上述示例是使用第二种哈希函数对2069取模计算得到的哈希值，采用这种哈希函数计算得到的完整输出文件为：<a class="reference download internal" download="" href="../../_downloads/62f1f696e4552cffbd2536e45f91b773/331_data.out"><code class="xref download docutils literal notranslate"><span class="pre">331_data.out</span></code></a>，可以下载下来对照参考。</p>
+<p>观察一下，这两种哈希函数各自都有没有引发冲突。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.3.1.2. </span>最简单的哈希表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>知道了哈希表的原理之后我们就可以很方便地构建一个简单的哈希表。第一步，确定数据量；第二步，选择一个比数据量大的质数作为长度定义好底层数组，数组的数据类型就是要存放的元素的数据类型；第三步，选择一个合适的哈希函数。通常要自己设计一个值域范围恰好和底层数组长度契合的哈希函数很难，常见的方法是选择一个经典哈希函数计算其值然后对底层数组长度取模。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>常用质数：101，1009，2003，5003，10007，20011。</p>
+<p>如果对大质数不熟悉，可以自己编一个简单的质数判断程序去试，这花不了多少时间。</p>
+</div>
+<p>简单起见，我们以整型数据为例。设数据为 <span class="math notranslate nohighlight">\(n\)</span> 个正整数，在整个 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></code> 范围内取值，不含0且互不相等，那么显然我们可以直接将数据的值当做键来使用。我们取一个大于 <span class="math notranslate nohighlight">\(n\)</span> 的质数 <span class="math notranslate nohighlight">\(p\)</span> 作为底层数组的长度，定义好底层数组 <span class="math notranslate nohighlight">\(A[p]\)</span> 并将其初始化为全0。哈希函数就是数据的值对 <span class="math notranslate nohighlight">\(p\)</span> 取模，即 <span class="math notranslate nohighlight">\(H(x)=x \bmod p\)</span>。这样一个哈希表都基本上构建完成了。</p>
+<p>我们定义符号 <span class="math notranslate nohighlight">\(HT=(A, p)\)</span> 来表示这样一张哈希表，其增删查改元素的操作可以这样实现：</p>
+<p>1、增加元素：要在 <span class="math notranslate nohighlight">\(HT\)</span> 中增加元素 <span class="math notranslate nohighlight">\(a\)</span>，计算位置 <span class="math notranslate nohighlight">\(j\leftarrow a \bmod p\)</span> 然后赋值 <span class="math notranslate nohighlight">\(A[j]\leftarrow a\)</span> 即可。时间复杂度 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
+<p>2、查找元素：要在 <span class="math notranslate nohighlight">\(HT\)</span> 中查询元素 <span class="math notranslate nohighlight">\(a\)</span> 是否存在，计算位置 <span class="math notranslate nohighlight">\(j\leftarrow a \bmod p\)</span> 然后判断是否 <span class="math notranslate nohighlight">\(A[j]=a\)</span> 即可。时间复杂度 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
+<p>3、删除元素：要在 <span class="math notranslate nohighlight">\(HT\)</span> 中删除元素 <span class="math notranslate nohighlight">\(a\)</span>，计算位置 <span class="math notranslate nohighlight">\(j\leftarrow a \bmod p\)</span> 然后赋值 <span class="math notranslate nohighlight">\(A[j]=0\)</span> 即可。时间复杂度 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
+<p>4、修改元素：对于 <span class="math notranslate nohighlight">\(HT\)</span> 这样的键与值合一的哈希表来说，修改元素没有什么意义，无非是删除一个元素再新增一个元素。对于并非键值合一的情况，例如足球队员信息，那么修改元素一般是指根据给出的键找到相应的元素，然后修改它的值。无论那种情况，时间复杂度也都是 <span class="math notranslate nohighlight">\(O(1)\)</span>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>设数据量为 <span class="math notranslate nohighlight">\(n\le 2000\)</span>，选择一个合适的质数，编程实现一张上述这样的最最简单的哈希表。为了方便起见，增加一个变量来存放表中的数据数量，然后将底层数组和表示数据量的变量组合为一个结构 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">HashTable</span></code>。</p>
+<p>要求以成员函数的方式实现以下功能：</p>
+<ol class="arabic simple">
+<li><p>初始化哈希表；</p></li>
+<li><p>元素的增删查（没有改）；</p></li>
+<li><p>判断表中是否没有数据；</p></li>
+<li><p>获取表中的数据数量；</p></li>
+<li><p>清空表中数据。</p></li>
+</ol>
+<p>再编写一个函数 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">print(HashTable</span> <span class="pre">ht);</span></code> 用以输出表中所有数据，每个数据占一行。最后编写 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数进行测试，看看这样一个简单的哈希表有没有存在什么问题。</p>
+</div>
+<p>如果认真地完成了上面的练习，做了足够周密的测试，一定会发现这样一个简单的哈希表存在一个非常严重的问题。这个非常严重的问题就是，没有对可能发生的哈希值冲突进行处理。当新增元素时发生哈希值冲突，新增的元素就会覆盖掉原有的元素，导致数据无声无息地丢失，同时数据量的统计也发生了错误。</p>
+<p>例如，假设我们采用的底层数组长度为2069，表中已经有三项数据 [1,2,3]。现在再新增一个元素2071，其哈希值为2，和原有的数据项2发生哈希冲突。此时程序直接将底层数组的2号元素赋值为2071，同时增加数据数量为4。于是原数据2丢失了，而数据量比实际数据的数量多了1个。</p>
+<p><strong>冲突率</strong> vs <strong>装填因子</strong></p>
+<p><strong>冲突率</strong>和<strong>装填因子</strong>是哈希表的两个重要参考因素。所谓冲突率就是数据在填入一张哈希表时不同键之间发生哈希冲突的概率，装填因子则是指一张哈希表中数据的数量占底层数组长度的比例，通常用希腊字母 <span class="math notranslate nohighlight">\(\alpha\)</span> 来表示。</p>
+<p>很显然，一张哈希表中已经填入的数据数量越多，即它的装填因子越大的时候，再新增一项新数据时发生哈希冲突的概率就越大。所以在设计哈希表时，一定要事先控制好装填因子的最大值。从实践经验总结和一些复杂的玄学证明可以知道一个大致的结论，当装填因子在20%以下的时候，冲突率是很低的。因此在设计哈希表的时候，最好把底层数组的长度放大到数据量的五倍左右。例如在上一个练习中，最大数据量为2000项，那么底层数组的长度最好是一万左右的质数，比如10007。</p>
+<p>然而就算有了上述的经验结论，问题还是无法完全避免的。首先，有时候数据量本身就很大，再要给哈希表留出五倍甚至更大的空间会导致内存使用过大的问题。其次，很多时候数据量无法预先估计，而哈希表又很难实现可调整的动态长度，因为一旦底层数组的长度发生改变，就需要将原有的所有数据项都重新计算哈希值并搬移位置，这太麻烦了，也太影响性能了。第三，哪怕使用了足够大空间的哈希表，冲突率也不会真正降到0，冲突的发生终究是不可避免的。</p>
+<p>因此，像上面所述的这种简单的哈希表其实只是一个练习阶段的雏形，是用来理解哈希表原理的。真正实用的哈希表要引入一些冲突处理的技术才行。最常用的有两种冲突处理技术：<strong>冲突探测法</strong>和<strong>链式哈希表</strong>，下一节我们将对它们进行详细介绍。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="../330_hash.html" title="4.3. 哈希表"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../330_hash.html" ><span class="section-number">4.3. </span>哈希表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

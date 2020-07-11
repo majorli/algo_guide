@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="5. 算法设计方法" href="../400_basic_algo_design.html" />
+    <link rel="next" title="4.3.1. 哈希表：基本概念" href="sec03/331_hash_1.html" />
     <link rel="prev" title="4.2.4. 队列：C++实现、STL容器" href="sec02/324_queue_2.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="../genindex.html" title="总目录"
              accesskey="I">索引</a></li>
         <li class="right" >
-          <a href="../400_basic_algo_design.html" title="5. 算法设计方法"
+          <a href="sec03/331_hash_1.html" title="4.3.1. 哈希表：基本概念"
              accesskey="N">下一页</a> |</li>
         <li class="right" >
           <a href="sec02/324_queue_2.html" title="4.2.4. 队列：C++实现、STL容器"
@@ -42,8 +42,8 @@
   <p class="topless"><a href="sec02/324_queue_2.html"
                         title="上一章"><span class="section-number">4.2.4. </span>队列：C++实现、STL容器</a></p>
   <h4>下一个主题</h4>
-  <p class="topless"><a href="../400_basic_algo_design.html"
-                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <p class="topless"><a href="sec03/331_hash_1.html"
+                        title="下一章"><span class="section-number">4.3.1. </span>哈希表：基本概念</a></p>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
     <ul class="this-page-menu">
@@ -81,6 +81,13 @@
 <p>哈希表是一种非常重要的基础数据结构，在大量的软件和算法领域有广泛应用。比如在信息安全领域，MD5、sha-1等经典的密钥算法都是基于哈希函数设计的。更重要的是，基于哈希表的原理，衍生出了两种非常重要的实用数据结构：集合和映射。如其名称所示，这两种数据结构与数学中的集合与映射这两个重要概念有非常密切的联系，也是大量实用软件和高级算法的基础数据结构。</p>
 <p>在本部分我们除了介绍哈希表的原理、常见的哈希表实现方法以外，还会介绍STL的集合容器 <code class="docutils literal notranslate"><span class="pre">set</span></code> 和映射容器 <code class="docutils literal notranslate"><span class="pre">map</span></code>、<code class="docutils literal notranslate"><span class="pre">multimap</span></code> 的使用。</p>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sec03/331_hash_1.html">4.3.1. 哈希表：基本概念</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sec03/331_hash_1.html#id2">4.3.1.1. 哈希函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sec03/331_hash_1.html#id3">4.3.1.2. 最简单的哈希表</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 
@@ -97,7 +104,7 @@
           <a href="../genindex.html" title="总目录"
              >索引</a></li>
         <li class="right" >
-          <a href="../400_basic_algo_design.html" title="5. 算法设计方法"
+          <a href="sec03/331_hash_1.html" title="4.3.1. 哈希表：基本概念"
              >下一页</a> |</li>
         <li class="right" >
           <a href="sec02/324_queue_2.html" title="4.2.4. 队列：C++实现、STL容器"
