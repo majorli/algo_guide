@@ -20,4 +20,5 @@
 
    sec03/331_hash_1
    sec03/332_hash_2
+   sec03/333_hash_3
 
