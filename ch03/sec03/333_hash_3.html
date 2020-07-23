@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.3.3. 冲突处理：链式哈希表 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.3.2. 冲突处理：冲突探测法" href="332_hash_2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="332_hash_2.html" title="4.3.2. 冲突处理：冲突探测法"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../330_hash.html" accesskey="U"><span class="section-number">4.3. </span>哈希表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.3.3. 冲突处理：链式哈希表</a><ul>
+<li><a class="reference internal" href="#id2">4.3.3.1. 链式哈希表</a></li>
+<li><a class="reference internal" href="#id3">4.3.3.2. 哈希表小结</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="332_hash_2.html"
+                        title="上一章"><span class="section-number">4.3.2. </span>冲突处理：冲突探测法</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec03/333_hash_3.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.3.3. </span>冲突处理：链式哈希表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>有了冲突探测技术就够了吗？采用冲突探测技术实现的哈希表存在什么缺点吗？当然有，这种哈希表最大的问题是，底层数组很难实现动态大小。如果事先无法预知数据量，也就无法预先确定底层数组的大小。而一旦填充因子达到上限之后还有新数据项要添加进来，那么要么牺牲效率，要么设法扩张底层数组。但是扩张底层数组的长度有几个难点：一是扩多少很难定，二是找一个大质数很费时间，三是最大的问题，所有表中已有的数据项都需要重新哈希，全体搬家。所以扩张底层数组说说看容易做做看难，尤其是表本身已经很大的时候再做扩张可能会非常费时。如果干脆牺牲效率，让填充因子进一步扩大，那也最多只能到全部填满，如果数据项的数量超过了底层数组的长度还是免不了要扩张底层数组本身。</p>
+<p>所以对于那些数据量很大而且事先无法预计的场景，采用冲突探测法就显得不太合适了。这时候我们一般会使用另一种处理哈希冲突的方法，构建<strong>链式哈希表</strong>。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">4.3.3.1. </span>链式哈希表<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>链式哈希表，顾名思义，就是指采用链表结构来存放数据项的哈希表。使用链式存储结构之后，每一个底层数组的元素其实都是一个单链表的头节点，初始时候都是空指针。当一个数据项的哈希值计算完成，确定了它应该存放在底层数组的哪一个位置之后，我们并不是把这个数据项直接存放在数组的这个元素里，而是把它插入到数组元素所指向的那个单链表里。通过这样的方法，所有具有相同哈希值的数据项就在该哈希值所指定的底层数组元素后面形成了一个理论上长度无限的单链表，从而让哈希表可以存放理论上无穷多的数据项。</p>
+<p>仍然采用上一节的例子，用长度为13的底层数组构建哈希表，依次存入键值为16,74,60,43,54,90,46,31,29,88,77的11个数据项。这次我们采用链式哈希表，其过程如下图所示：</p>
+<img alt="../../_images/333_linked_hashtable.png" src="../../_images/333_linked_hashtable.png" />
+<p><strong>添加数据项</strong></p>
+<p>在链式哈希表中添加数据项非常简单，根据键值计算出哈希值，确定在底层数组中对应的位置，然后在该位置的单链表头部插入该数据项即可。这里需要注意的是插入数据项是在单链表的头部完成的，也就是说哈希值相同的数据项，后添加进来的在前，先添加进来的在后。这是为了编程的便利性，如果要按照添加顺序来保持链表中数据项的节点顺序，那么我们就需要额外为每一个单链表维护一个尾节点指针。这就会增加编程的复杂度，但是哈希表本身就不保持数据项的添加顺序，也不保证任何别的元素顺序，所以在链表中保持添加顺序没有什么意义。</p>
+<p>可以看出，不管有没有发生哈希冲突，链式哈希表的添加数据项操作都是 <span class="math notranslate nohighlight">\(O(1)\)</span> 的时间复杂度，忠实地满足哈希表的设计要求。</p>
+<p><strong>查找与删除</strong></p>
+<p>在链式哈希表中根据键值查找一个数据项的操作也很简单，先根据键值计算出哈希值，确定底层数组中该数据项应该存在的那个单链表，然后在这个单链表里沿着链顺序搜索下去直到找到或找不到为止即可。删除数据项无非是先查找该数据项，如果找到了，执行单链表的节点删除操作即可。</p>
+<p>计算哈希值只需要一次常数时间的操作，随后在单链表中的搜索是一个线性搜索过程，根据线性表的知识我们知道，设该链表的长度为 <span class="math notranslate nohighlight">\(k\)</span>，则搜索的平均时间复杂度为 <span class="math notranslate nohighlight">\(O(k)\)</span>。如果要删除这个数据项，链表的节点删除也是常数时间的。所以对于一个有 <span class="math notranslate nohighlight">\(k\)</span> 个冲突项的键值，查找和删除操作的时间复杂度都是 <span class="math notranslate nohighlight">\(O(k)\)</span>。</p>
+<p>但是这个结论是不够的，每一个哈希值的冲突数随时都在变化，而且是不确定的，我们希望知道在一张底层数组长度为 <span class="math notranslate nohighlight">\(p\)</span>、数据项数量为 <span class="math notranslate nohighlight">\(n\)</span> 的哈希表中执行查找和删除操作的时间复杂度。事实上这个时间复杂度是很难精确估计的，但是我们可以从一些例子出发尝试了解它的工作量取值范围。由于计算哈希值和删除链表节点都是常数时间操作，所以我们可以不考虑它们所耗费的工作量，而是以在链表中查找的步数作为基本工作量来估算时间复杂度。</p>
+<p>下面先看三种具体的情况，设在一个底层数组长度为5的链式哈希表中存放了6个元素，有A、B、C三种情况如下图所示，其中数据项节点中的数字表示要查找到该数据项所需要的链表搜索步数：</p>
+<img alt="../../_images/333_linked_ht_1.png" src="../../_images/333_linked_ht_1.png" />
+<p>情况A是比较普通的情况，这种情况下的平均查找步数为：</p>
+<div class="math notranslate nohighlight">
+\[W_A=\frac{(1+2+3)+(1)+(1+2)}{6}=\frac{10}{6}\approx1.667\]</div>
+<p>情况B是一种比较特殊的情况，6个数据项平均地分布在3个链表中，每个链表2个数据项，此时的平均查找步数为：</p>
+<div class="math notranslate nohighlight">
+\[W_B=\frac{(1+2)+(1+2)+(1+2)}{6}=\frac{9}{6}=1.5\]</div>
+<p>情况C是另一种特殊情况，6个数据项哈希值全部相同，都集中在一个链表里，此时的平均查找步数为：</p>
+<div class="math notranslate nohighlight">
+\[W_C=\frac{1+2+3+4+5+6}{6}=\frac{21}{6}=3.5\]</div>
+<p>现在我们大致可以看出一些端倪。虽然很难计算出像情况A这种普遍现象下的平均工作量的精确期望值，但是从情况B和情况C可以归纳出平均工作量的上下限，即最好情况和最差情况，如下图所示：</p>
+<img alt="../../_images/333_linked_ht_2.png" src="../../_images/333_linked_ht_2.png" />
+<p>显然情况B代表了比较好的状况，我们可以确信，数据项在各条链表中分布越均匀，平均查找工作量就越低。如果完全均匀地分布在 <span class="math notranslate nohighlight">\(q\)</span> 条链表中，每条链表恰好 <cite>k</cite> 项，那么平均工作量为：</p>
+<div class="math notranslate nohighlight">
+\[\frac{q(1+2+\cdots+k)}{qk}=\frac{{1\over2}qk(k+1)}{qk}=\frac{k+1}{2}\]</div>
+<p>数据项的总数量为 <span class="math notranslate nohighlight">\(n=qk\)</span>，所以当 <span class="math notranslate nohighlight">\(q\)</span> 达到最大值 <span class="math notranslate nohighlight">\(q=p\)</span> 时，<span class="math notranslate nohighlight">\(k\)</span> 会达到最小值 <span class="math notranslate nohighlight">\(k={n\over p}\)</span>，此时的平均查找工作量也达到最小。这就是最佳情况：<em>数据项的数量恰为底层数组长度的倍数且所有数据项完全均匀地分布在所有哈希值上</em>。这种最好情况下的查找时间复杂度为 <span class="math notranslate nohighlight">\(O({n\over p})\)</span>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">思考</p>
+<p>实际情况下，不能指望数据项的数量 <span class="math notranslate nohighlight">\(n\)</span> 总是底层数组长度 <span class="math notranslate nohighlight">\(p\)</span> 的倍数。通常的情况可以设 <span class="math notranslate nohighlight">\(n=kp+r\)</span>，其中 <span class="math notranslate nohighlight">\(0\le r \lt p\)</span>，即 <span class="math notranslate nohighlight">\(r\)</span> 是余数。这时的最好情况是什么？平均查找工作量会在什么范围内？时间复杂度有没有变化呢？更进一步，能不能推导出工作量的表达式呢？</p>
+</div>
+<p>最差情况当然就是类似情况C的样子，<em>所有数据项集中在一个哈希值上</em>。此时哈希表事实上已经退化成了一个单链表，或者说退化成了线性表。以前已经讲述过，此时查找的平均工作量为：</p>
+<div class="math notranslate nohighlight">
+\[\frac{1+2+\cdots+n}{n}=\frac{n+1}{2}\]</div>
+<p>所以最差情况的查找时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>。综上所述，链式哈希表查找和删除数据项的平均时间复杂度在 <span class="math notranslate nohighlight">\(O({n\over p})\)</span> 和 <span class="math notranslate nohighlight">\(O(n)\)</span> 之间。如果哈希函数足够优秀，能够把数据项的哈希值尽可能均匀地分布在 <span class="math notranslate nohighlight">\([0,p)\)</span> 的范围内，那么时间复杂度就会趋近于最好情况，反之如果哈希函数不够好，哈希冲突大量产生，那么就会趋向于退化成线性表的最差情况。</p>
+<p>很多实用工程级别的数据结构库中实际上都不会单纯地使用线性冲突探测或者单链表式的哈希表，一般都会使用经过优化的链式结构。比如Java语言容器库中的 <code class="docutils literal notranslate"><span class="pre">HashSet</span></code> 和 <code class="docutils literal notranslate"><span class="pre">HashMap</span></code> 这两个基于哈希表的容器，就使用了一种叫做<strong>红黑树</strong>的高级平衡二叉搜索树结构来代替单链表，从而把查找删除数据项的平均时间复杂度上限降到了非常优秀的 <span class="math notranslate nohighlight">\(O(\log n)\)</span> 级别。但是C++语言STL库的集合容器 <code class="docutils literal notranslate"><span class="pre">set</span></code> 和映射容器 <code class="docutils literal notranslate"><span class="pre">map</span></code> 使用的另一套技术，后面我们会进行介绍。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>使用链式哈希表实现上一节所述的线性冲突探测的整数数据类型哈希表，要求实现的功能完全相同，仅是采用的哈希冲突处理技术不同。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.3.3.2. </span>哈希表小结<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>哈希表的原理到此全部介绍完毕，它是一种比线性表更为复杂一些的简单数据结构，用于存放键值对类型的数据项，键值合一是其中一种特例。它能够实现接近于常数时间级别的数据增删查改操作。下面对哈希表进行简单的小结。</p>
+<p>使用哈希表的主要目的是为了高效地增删查改数据项，是为了节约时间而不是空间。通常来说哈希表要使用比线性表更多的存储空间。</p>
+<p>哈希表的关键是哈希函数，这个哈希函数一定要能让数据项的哈希值尽可能地呈现均匀分布。通常实际情况下很多数据的键值本身的取值并非均匀分布的，有时候甚至会很不均匀。例如身份证号码、电话号码、商品标准编码等字段码类型的键都不是在整个字符串空间中均匀分布的，因此选择一个合适的哈希函数，让哈希值能够在范围 <span class="math notranslate nohighlight">\([0, p)\)</span> 范围内接近甚至达到均匀分布是最为关键的要点。</p>
+<p>冲突探测法和链式哈希表在实现的难度上差距并不大，二者其实都不算太难编程，到底选择谁主要看数据量。如果数据量能够实现预计并且不是太大（百万级以内），那么线性冲突探测法就很好。因为编程毕竟最简单，而且只要控制好填充因子不超过80%，选择一个合适的底层数组长度，那么可以很好得把平均探测次数控制在3次以内，非常接近常数时间。</p>
+<p>如果数据量无法实现预计，或者非常大，那么可能用链式哈希表更为合适。填充因子为6.0左右，即数据总量是哈希表底层数组长度的六倍左右时，链式哈希表的平均查删时间复杂度还是很接近常数时间的，而其插入新数据操作可以确保为常数时间。</p>
+<p>总之，在选择实现一个怎样的哈希表时，最为重要的关注点依次是：<em>数据总量、键值的分布情况、哈希函数、底层数组长度</em>。</p>
+<p>在算法竞赛问题中绝少遇到需要自己实现一个哈希表的题目，即使有，一般也是简单的模版题。在实际应用中，哈希表也很少作为一个单独的独立使用的数据结构，它大多数时候是被用来作为更复杂数据结构的底层结构。例如集合和映射这样的容器。</p>
+<p>如果是键值合一的数据项类型，那么哈希表就事实上相当于实现了一个集合，如果键与值是不同的，那么哈希表事实上就是实现了一个映射。后面我们就将详细介绍一下STL的集合和映射容器。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="332_hash_2.html" title="4.3.2. 冲突处理：冲突探测法"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../330_hash.html" ><span class="section-number">4.3. </span>哈希表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

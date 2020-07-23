@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.3.2. 冲突处理：冲突探测法 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="4.3.3. 冲突处理：链式哈希表" href="333_hash_3.html" />
+    <link rel="prev" title="4.3.1. 哈希表：基本概念" href="331_hash_1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="333_hash_3.html" title="4.3.3. 冲突处理：链式哈希表"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="331_hash_1.html" title="4.3.1. 哈希表：基本概念"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../330_hash.html" accesskey="U"><span class="section-number">4.3. </span>哈希表</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.3.2. 冲突处理：冲突探测法</a><ul>
+<li><a class="reference internal" href="#id2">4.3.2.1. 冲突探测法</a></li>
+<li><a class="reference internal" href="#id3">4.3.2.2. 线性冲突探测哈希表的实现</a></li>
+<li><a class="reference internal" href="#id4">4.3.2.3. 填充因子详解</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="331_hash_1.html"
+                        title="上一章"><span class="section-number">4.3.1. </span>哈希表：基本概念</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="333_hash_3.html"
+                        title="下一章"><span class="section-number">4.3.3. </span>冲突处理：链式哈希表</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec03/332_hash_2.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.3.2. </span>冲突处理：冲突探测法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>要实现一个能解决哈希冲突，并能尽可能充分地利用起底层数组空间的哈希表并不是一件容易的事情，有许多相互纠缠项目矛盾的因素需要权衡。</p>
+<p>最重要的是要有一个合适的方法来处理冲突，当要新增进表中的数据项和表中某个已有数据项发生哈希冲突的时候，我们要有方法让这个新数据项仍然能被填进表中，并且在今后仍然能在表中被找到，这就是所谓的冲突处理技术。利用冲突处理技术，我们可以让哈希表的装填因子增大，可以尽量多地存放数据。但是随着装填因子的不断增大，冲突率也一定会随之增大，会发生越来越多的冲突。而此时表中实际上存在哈希冲突的数据项也就会越来越多，一定会耗费更多的时间以处理冲突，从而导致运行效率的下降。</p>
+<p>经过不断地实践探索，现在已经有许多实用的冲突处理技术，其中最为简单和常用的有两种：<strong>冲突探测法</strong>和<strong>链式哈希表</strong>。</p>
+<div class="section" id="id2">
+<h2><span class="section-number">4.3.2.1. </span>冲突探测法<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p><strong>冲突探测法</strong>又叫<strong>开放地址法</strong>，它有很多种不同的探测方法，我们只介绍其中最简单的<strong>线性探测法</strong>。线性探测是所有冲突探测方法的基础，虽然简单，但是很实用，其他复杂的地址探测方法都只是对它的优化改进而已。考虑到算法问题很少需要自己动手实现一个几近完美的哈希表，所以现阶段我们只学习线性探测法就够了。</p>
+<p>所有冲突探测法的处理思路都是当冲突发生时，我们按照某种确定的探测方法在底层数组中再探测一个可用位置以放置新数据项。而线性探测法是简单地向后逐个寻找空位，找到第一个可用的空位置即可，如果找到底层数组的最后一个位置还是没有空位，就再从头开始向后找。显然，只要填充因子还没有到100%，就一定能找到一个空位置。</p>
+<p>为一个数据项探测位置的次数称为该数据项的<strong>探测次数</strong>，如果新数据项填入表中时没有发生哈希冲突，那么它的探测次数为一，即通过哈希函数的一次计算就得到了位置。如果发生哈希冲突，那么前后总共探测了几个位置（含计算哈希函数那一次）它的探测次数就是几。</p>
+<p>例如，我们的哈希函数为除13取模：<span class="math notranslate nohighlight">\(Hash(k)=k % 13\)</span>，其中 <span class="math notranslate nohighlight">\(k\)</span> 为键值，是正整数。底层数组的长度为13。现在依次向表中填入键值为16,74,60,43,54,90,46,31,29,88,77的11个数据项，从16开始到31为止都没有发生哈希冲突，数据项都以其键值除以13得到的余数为下标存放在表中，如下图：</p>
+<img alt="../../_images/332_hash_1.png" src="../../_images/332_hash_1.png" />
+<p>到目前为止填入表中的8个数据项的探测次数都是1。接下来要填入键值为29的一个新数据项，计算得到哈希值为3，和现有的键值为16的数据项发生哈希冲突。按照线性探测法，我们从这个位置(3)开始逐个向后寻找第一个空位，发现位置(4)和(5)都已经填入了数据项，位置(6)是第一个找到的空位，探测结束，把键为29的新数据项填入其中。这个过程总共探测了从(3)到(6)的四个位置，所以探测次数为4。结果如下图：</p>
+<img alt="../../_images/332_hash_2.png" src="../../_images/332_hash_2.png" />
+<p>可以看出，今后如果要在表中按键值29查找或删除数据项，同样要从哈希值所指示的位置(3)开始向后探测，前后总共探测4次抵达位置(6)就能访问到这个数据项。</p>
+<p>接着我们再插入键值为88的数据项，哈希值为10，没有冲突，一次探测完成插入，如下图所示：</p>
+<img alt="../../_images/332_hash_3.png" src="../../_images/332_hash_3.png" />
+<p>最后插入键值为77的数据项，哈希值为12，和已有的键值为90的数据项发生冲突。向后探测已经抵达哈希表底层数组的末尾，按照线性探测规则绕回头部探测，发现位置(0)为空。所以经过2次探测，我们找到了可以存放的空位，如下图所示：</p>
+<img alt="../../_images/332_hash_4.png" src="../../_images/332_hash_4.png" />
+<p>最终11个元素全部插入进总长度为13的哈希表中，空间几乎用满。而其中有两个数据项是发生了哈希冲突的，分别用4次探测和2次探测找到了新位置，今后在访问它们的时候也同样会经历完全一样的4次探测和2次探测。</p>
+<p>由此可见，线性冲突法解决哈希冲突可用于较好地实现一个实用的哈希表。但是也应该看到，随着装填因子的增大，发生冲突时的探测次数也会上升。如果装填因子达到100%，很可能出现探测次数接近于哈希表长度的情况。冲突处理的结果是导致那些发生冲突的数据项的增删查效率下降，数据访问的平均时间复杂度不再严格是哈希表承诺的 <span class="math notranslate nohighlight">\(O(1)\)</span>，极端情况可能会接近甚至达到 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<p>因此实现这样的哈希表时，必须对装填因子设置上限。上限设为多少是很难从理论上给出预计的，不断实践测试的结果表明，通常0.7到0.8之间是一个比较合适的区间，超过0.8就会比较明显地引起性能下降。</p>
+<p>下面我们将学习一个采用线性冲突探测的哈希表的具体实现例子。事实上这里面涉及的技术问题还是不少的。</p>
+<p><strong>键与值的选择</strong></p>
+<p>理论上来讲，哈希表是用来存放键值对类型的数据项的。这样的数据项分为两个部分，键和值。键是用来计算哈希值确定存储位置的部分，所有数据项的键必须互不相同而且不能更改。值是数据项真正的数据部分，是可以重复也可以修改的。例如每一位中国公民的身份证号码和姓名就可以构成一个键值对数据项，其中身份证号码可以用做键，因为身份证的规则保证了没有两个不同的人有相同的身份证号码而且同一个人的身份证号码终身不变，死后作废不会重复利用。而姓名相同却是很常见的情况，而且国家允许公民改名。</p>
+<p>所以一般来说存放进哈希表的数据就是这样的键值对，通常在用C++语言实现时会构造成结构类型，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Person</span> <span class="p">{</span>
+        <span class="n">string</span> <span class="n">id</span><span class="p">;</span>   <span class="c1">// 身份证号码</span>
+        <span class="n">string</span> <span class="n">name</span><span class="p">;</span> <span class="c1">// 姓名</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>这种形式的数据项，一旦存放入哈希表中，可以通过键值查找到它并且允许修改其作为值的部分，但是键是不允许修改的。</p>
+<p>但是如果我们能确保所有数据项本身都不会两两相同，而且没有修改数据的需要的话，当然也可以把整个数据项键值合一，键就是值，值就是键。尤其是数据本身并不复杂的情况下，键值合一可以大大简化程序代码。例如我们的数据项仅仅是身份证号码，那么我们就干脆把数据项本身既作为键又作为值就好。但是要注意，这种情况下就不允许修改表中的数据项了，因为数据项一变，对应的哈希值也就变了，存储位置也会发生变化。如果非要把A改成B，那就先删除A，再插入B。</p>
+<p>接下来我们用做例子的哈希表，就采用键值合一的方式，数据项就是一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型的整数，不允许出现重复，不允许修改表中数据的值。如果愣是往表中添加一个已经有了的整数，那就什么也不做，探测次数规定为零。</p>
+<p><strong>存放数据还是数据的指针</strong></p>
+<p>从上一节的最简单的哈希表原理我们已经知道，哈希表中的数据实际上是存放在一个底层数组中的。当时我们存放的是正整数，底层数组就用了一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型数组，数据直接存放在数组元素中，元素值为0就表示这个位置是空的。但这是一种特殊的简化版方式，实际的哈希表底层数组不能这样直接存放数据，而是应该用<strong>指针数据</strong>来存放指向数据项的指针。</p>
+<p>例如我们将要实现的例子中，数据项为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 类型的整数，那么我们就需要用一个 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span></code> 类型的指针数组来做底层数组，每一个数组元素都是一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型指针，而不是 <code class="docutils literal notranslate"><span class="pre">int</span></code> 型变量，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="o">*</span><span class="n">_dp</span><span class="p">[</span><span class="mi">1003</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>于是当要增删元素时，我们需要用到动态内存分配，例如：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// 插入元素1004，哈希值为1</span>
+<span class="n">_dp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">;</span>
+<span class="o">*</span><span class="n">_dp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1004</span><span class="p">;</span>
+<span class="c1">// 删除元素1004</span>
+<span class="k">delete</span> <span class="n">_dp</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">_dp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>为什么要这么麻烦呢？为什么上一节的简单哈希表就能直接往里填数据呢？这是因为底层数组的每一个元素都需要能够分辨它是空的还是满的。在上一节的简单例子中我们的数据是<em>正整数</em>，即不会有负数也不会有零，所以我们可以用特殊值零来表示元素位置上是不是空的。但是这里（大多数实际情况下）我们没有特殊值可以用了，无论元素中的数值是什么，我们都无法判断这个位置是不是空的。采用指针的方式这个问题就好解决了，指针有特殊值，即空指针 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，它的值是零，可以用来表示空位置，因为实际分配到的动态内存地址指针永远不可能为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.3.2.2. </span>线性冲突探测哈希表的实现<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>现在我们可以来实现这样一个采用线性冲突探测的哈希表了。首先我们还是把整个哈希表的数据和功能整合成一个结构定义，同样的采用数据封装的惯例，并且把简单的功能直接在结构定义中内联实现。我们要实现的功能包括：</p>
+<ol class="arabic simple">
+<li><p>构造新哈希表</p></li>
+<li><p>销毁哈希表</p></li>
+<li><p>空表判断</p></li>
+<li><p>获取数据项数量</p></li>
+<li><p>添加数据</p></li>
+<li><p>删除数据</p></li>
+<li><p>查找数据是否存在</p></li>
+<li><p>清空哈希表</p></li>
+</ol>
+<p>因为采用了动态内存，按照有借有还的原则，我们需要有一个用于销毁表中所有数据项所分配到的动态内存的析构函数。另外我们把哈希函数实现为一个仅供内部使用的内联成员函数。现在我们可以先写出下面这样一个哈希表结构的定义了：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mi">20011</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">HashTable</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="o">*</span><span class="n">_dp</span><span class="p">[</span><span class="n">MAXN</span><span class="p">];</span>
+	<span class="kt">int</span> <span class="n">_size</span><span class="p">;</span>
+
+	<span class="n">HashTable</span><span class="p">()</span> <span class="p">{</span> <span class="n">memset</span><span class="p">(</span><span class="n">_dp</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_dp</span><span class="p">));</span> <span class="n">_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+	<span class="o">~</span><span class="n">HashTable</span><span class="p">()</span>			<span class="c1">// 析构函数，释放所有分配到的动态内存</span>
+	<span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAXN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">_dp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">delete</span> <span class="n">_dp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+	<span class="p">}</span>
+
+	<span class="kt">int</span> <span class="n">_hash</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">key</span> <span class="o">%</span> <span class="n">MAXN</span><span class="p">;</span> <span class="p">}</span>	<span class="c1">// 哈希函数，内部使用</span>
+
+	<span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">!</span><span class="n">_size</span><span class="p">;</span> <span class="p">}</span>
+	<span class="kt">int</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">;</span> <span class="p">}</span>
+
+	<span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">);</span>			<span class="c1">// 添加数据</span>
+	<span class="kt">void</span> <span class="nf">remove</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">);</span>		<span class="c1">// 删除数据</span>
+	<span class="kt">bool</span> <span class="nf">contains</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>	<span class="c1">// 判断数据是否存在</span>
+	<span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>				<span class="c1">// 清空</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>接下来就是完成四个最重要的功能的成员函数的编写。</p>
+<p>成员函数 <code class="docutils literal notranslate"><span class="pre">HashTable::add()</span></code> 用来新增一项数据，接受一个参数 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">value</span></code>，就是要新增的数据，返回一个整数表示新增入的这个 <code class="docutils literal notranslate"><span class="pre">value</span></code> 的探测次数。这里要注意，因为我们的数据类型是基础数据类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>，所以直接使用了传值的方式来传递参数，如果遇到数据类型是比较大的结构类型的那么还是应该用常引用传递参数，即参数应该定义为 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T</span> <span class="pre">&amp;value</span></code> 的形式。</p>
+<p>新增一项数据的步骤上面已经说过，但在实际实现的时候还需要注意两种特殊情况。如果哈希表本身已经满了，即元素数量已经和底层数组的长度相等了，那么新元素加入不进去，我们约定这种情况下什么也不做并且返回-1。另外就是如果要新增的数据项在表中已经存在了，那么实际上就不需要再新增这个数据了，我们约定这种情况下也是什么都不做，但是返回0。</p>
+<p>下面就是这个成员函数的定义代码：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// 返回值：探测次数，若是已经存在的则返回0，若已满则返回-1</span>
+<span class="kt">int</span> <span class="n">HashTable</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">_size</span> <span class="o">==</span> <span class="n">MAXN</span><span class="p">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">probs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_hash</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+		<span class="o">++</span><span class="n">pos</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">==</span> <span class="n">MAXN</span><span class="p">)</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">probs</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span> <span class="p">{</span>
+		<span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">;</span>
+		<span class="o">*</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">_size</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">probs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">probs</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<ol class="arabic simple">
+<li><p>变量 <code class="docutils literal notranslate"><span class="pre">prob,</span> <span class="pre">h,</span> <span class="pre">pos</span></code> 分别表示探测次数、哈希值和探测的位置。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NULL</span></code> 真正的值是0，所以在逻辑判断条件中指针变量若为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 可以视为 <code class="docutils literal notranslate"><span class="pre">false</span></code>。因此 <code class="docutils literal notranslate"><span class="pre">while</span></code> 语句的循环条件是 <code class="docutils literal notranslate"><span class="pre">pos</span></code> 位置上不空而且里面的值不等于要插入的新数据值。</p></li>
+<li><p>根据上面的描述，循环结束的条件为找到了一个空位置，或找到了一个位置上的数据和要新增的数据相同。所以在循环结束后如果该位置不是空位置，那么说明这个数据项重复了，否则就插入这个新数据项。</p></li>
+</ol>
+</div>
+<p>看懂了新增元素的代码之后，我们再来看看怎么删除一项数据。成员函数 <code class="docutils literal notranslate"><span class="pre">HashTable::remove()</span></code> 用于删除数据项，它接受一个参数 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">value</span></code>，即要删除的数据项，没有返回值。删除就是新增的逆操作，过程是类似的，但是要略微简单一些。我们先还是进行探测，如果找到了这个数据项那么就删除它，找不到（探测到一个空位置）就什么都不做。代码如下：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="n">HashTable</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_hash</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+		<span class="o">++</span><span class="n">pos</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">==</span> <span class="n">MAXN</span><span class="p">)</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">==</span> <span class="n">h</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span> <span class="p">{</span>
+		<span class="k">delete</span> <span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">];</span>
+		<span class="n">_dp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="o">--</span><span class="n">_size</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<ol class="arabic simple">
+<li><p>不需要先特判表是不是空，因为后面的探测循环能兼容哈希表为空的情况。</p></li>
+<li><p>探测的方法和新增数据时一样，结束时有两种情况，一是探测到一个空位置，说明表中本来就没有这个数据项，所以什么都不用做；另一种是探测到了这个数据项，那么就销毁它。</p></li>
+<li><p>注意，销毁一项数据之后我们要把该位置上的数据项指针重设为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，表示这个位置空出来了，如果不手动赋值一下，<code class="docutils literal notranslate"><span class="pre">delete</span></code> 命令是不会自动将地址设为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 的，而是保留了原来的值。</p></li>
+</ol>
+</div>
+<p>最后是成员函数 <code class="docutils literal notranslate"><span class="pre">HashTable::contains()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">HashTable::clear()</span></code>，分别用来查找数据项和清空哈希表。到这里为止，完成这两项任务并不难了吧。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>完成哈希表 <code class="docutils literal notranslate"><span class="pre">HashTable</span></code> 剩余的两个功能的函数代码编写并进行测试。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">4.3.2.3. </span>填充因子详解<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>上面我们已经完成了一个虽然简单但是完整而且可以实用的哈希表的例子，采用线性冲突探测技术来解决哈希冲突问题。不过不难想象，随着表中数据项数量的不断增多，哈希冲突的情况也会越来越多，数据项在填入表中时的探测次数也会越来越大。</p>
+<p>根据冲突探测技术的特点，一个数据项在填入表中时的探测次数就是查找它时候所需要比较的次数。这样的哈希表，它的数据项增删查操作的时间复杂度为 <span class="math notranslate nohighlight">\(O(t)\)</span>，其中 <span class="math notranslate nohighlight">\(t\)</span> 是表中数据项的平均探测次数。显然，<span class="math notranslate nohighlight">\(t\)</span> 是关于填充因子 <span class="math notranslate nohighlight">\(\alpha\)</span> 的函数 <span class="math notranslate nohighlight">\(t=f(\alpha)\)</span>，而且这是一个递增函数。随着 <span class="math notranslate nohighlight">\(\alpha\)</span> 的不断增大，<span class="math notranslate nohighlight">\(t\)</span> 也不断增大，并且 <span class="math notranslate nohighlight">\(t=f(\alpha)\ge1\)</span>。</p>
+<p>因此现实中的哈希表，并不能达到理论上增删查操作均为 <span class="math notranslate nohighlight">\(O(1)\)</span> 时间的效率标准，总是会略微低效一点。我们的目标是把平均探测次数 <span class="math notranslate nohighlight">\(t\)</span> 控制在一个比较小的接近于一的范围之内。方法很简单，因为 <span class="math notranslate nohighlight">\(t\)</span> 是关于 <span class="math notranslate nohighlight">\(\alpha\)</span> 的递增函数，所以我们可以通过控制填充因子来实现对平均探测次数的控制。</p>
+<p>那么到底应该把填充因子控制在怎样的范围内呢？理论计算可以得到一个填充因子的上限，是在0.7到0.8之间。只要填充因子的最大值控制在这个范围里，平均探测次数都是可以接受的。怎样通过概率论的数学方法来证明我们就不介绍了，但是我们可以通过实验来观察一下。</p>
+<p>下面是一段测试代码，它用上面的这个哈希表来进行实验，统计填充因子分别达到 <span class="math notranslate nohighlight">\(0.05,0.1,0.15,\dots,1.0\)</span> 这些阈值的时候的平均探测次数。数据使用函数 <code class="docutils literal notranslate"><span class="pre">rand()</span></code> 来随机生成，是均匀分布的整形数。为了节约篇幅，下面的代码省略了哈希表结构定义的部分。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstdlib&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp"></span>
+
+<span class="c1">//const int MAXN = 2003;</span>
+<span class="c1">//const int MAXN = 5003;</span>
+<span class="c1">//const int MAXN = 10007;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAXN</span> <span class="o">=</span> <span class="mi">20011</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">HashTable</span> <span class="p">{</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">HashTable</span> <span class="n">ht</span><span class="p">;</span>
+	<span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+	<span class="kt">int</span> <span class="n">total_probs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">step</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">ht</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">MAXN</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">total_probs</span> <span class="o">+=</span> <span class="n">ht</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">rand</span><span class="p">());</span>
+		<span class="kt">double</span> <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">ht</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="n">MAXN</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">&gt;=</span> <span class="n">step</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">&quot;alpha = %lf, avg probs = %lf</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span>
+					<span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">total_probs</span> <span class="o">/</span> <span class="n">ht</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+			<span class="n">step</span> <span class="o">+=</span> <span class="mf">0.05</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;alpha = %lf, avg probs = %lf</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span>
+			<span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">total_probs</span> <span class="o">/</span> <span class="n">ht</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果运行一下这个程序，可能会得到下面这样的结果。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>alpha = 0.050009, avg probs = 1.027989
+alpha = 0.100018, avg probs = 1.055178
+alpha = 0.150007, avg probs = 1.088776
+alpha = 0.200016, avg probs = 1.126362
+alpha = 0.250005, avg probs = 1.170359
+alpha = 0.300014, avg probs = 1.210077
+alpha = 0.350003, avg probs = 1.262054
+alpha = 0.400012, avg probs = 1.323769
+alpha = 0.450001, avg probs = 1.403599
+alpha = 0.500010, avg probs = 1.489802
+alpha = 0.550019, avg probs = 1.604137
+alpha = 0.600008, avg probs = 1.738228
+alpha = 0.650017, avg probs = 1.917374
+alpha = 0.700006, avg probs = 2.147795
+alpha = 0.750015, avg probs = 2.474499
+alpha = 0.800004, avg probs = 2.996276
+alpha = 0.850013, avg probs = 3.808116
+alpha = 0.900002, avg probs = 5.398178
+alpha = 0.950011, avg probs = 10.066595
+alpha = 1.000000, avg probs = 91.931495
+</pre></div>
+</div>
+<p>由于这是一个利用随机数来进行测试的随机实验，所以每一次运行得到的结果都不尽相同。但是多运行几次就可以发现，得到的结果数值大同小异，说明平均探测次数和填充因子之间是有符合统计意义的明确规律的。再用不同的底层数组长度 <code class="docutils literal notranslate"><span class="pre">MAXN</span></code> 值试试，可以发现数据还是差不多的，统计规律仍然是一样的。所以这样的实验结果是有效的，很明显，在填充因子 <span class="math notranslate nohighlight">\(\alpha\le0.7\)</span> 的时候，平均探测次数小于2，而且增长缓慢。<span class="math notranslate nohighlight">\(0.7\le\alpha\le0.8\)</span> 这一段里，平均探测次数会从2左右增加到3左右，一般不超过3.2，还是完全可以接受的，但是增长速度已经开始提起来了。而一旦超过这个范围，即 <span class="math notranslate nohighlight">\(\alpha\ge0.8\)</span> 之后，平均探测次数就开始飞速增长，到底层数组完全填满，<span class="math notranslate nohighlight">\(\alpha=1.0\)</span> 时平均探测次数就实现了一次暴涨式的飞跃。</p>
+<p>这就是填充因子上限要控制在0.7到0.8之间的原因，到底要控制在0.7还是0.8还是它们中间的某个点，要根据内存空间和数据量来确定。在算法题目中，一般很少直接用到哈希表，如果遇到了基本上也都可以根据题目给出的数据情况来进行预判，在编程时可以事先确定底层数组的长度以达到控制填充因子上限的效果。比如题目中告诉我们最多有可能有 <span class="math notranslate nohighlight">\(n\)</span> 项数据，而我们希望将填充因子控制在0.7以内，那么我们把底层数组的长度设置为一个略大于 <span class="math notranslate nohighlight">\(n/0.7\)</span> 的质数即可。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="333_hash_3.html" title="4.3.3. 冲突处理：链式哈希表"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="331_hash_1.html" title="4.3.1. 哈希表：基本概念"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../330_hash.html" ><span class="section-number">4.3. </span>哈希表</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
