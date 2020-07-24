@@ -60,7 +60,7 @@
 
            // 构造函数
            Node() { _next = NULL; }                             // 默认构造函数
-           Node(const &T val) { _value = val; _next = NULL; }   // 指定元素值的构造器
+           Node(const T &val) { _value = val; _next = NULL; }   // 指定元素值的构造器
    };
 
 这样就可以了，我们在成员变量的名称前加上下划线 ``'_'`` 只是为了表示数据封装的惯例，提醒编程人员不要在外部程序中直接访问使用这些成员变量。比如像下面这样的传统写法，现代程序设计理念认为是恶劣的：
@@ -83,7 +83,7 @@
 
            // 构造函数
            Node() { _next = NULL; }                             // 默认构造函数
-           Node(const &T val) { _value = val; _next = NULL; }   // 指定元素值的构造器
+           Node(const T &val) { _value = val; _next = NULL; }   // 指定元素值的构造器
            // 访问器函数
            T &value() { return _value; }                        // 访问元素值
            Node<T> *next() { return _next; }                    // 返回后继指针
