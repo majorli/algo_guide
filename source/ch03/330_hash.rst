@@ -22,5 +22,4 @@
    sec03/332_hash_2
    sec03/333_hash_3
    sec03/334_set
-   sec03/335_map
 
