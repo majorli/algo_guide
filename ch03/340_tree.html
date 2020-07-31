@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.4. 树和森林 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../400_basic_algo_design.html" />
+    <link rel="prev" title="4.3.4. STL容器：集合和映射" href="sec03/334_set.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sec03/334_set.html" title="4.3.4. STL容器：集合和映射"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" accesskey="U"><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sec03/334_set.html"
+                        title="上一章"><span class="section-number">4.3.4. </span>STL容器：集合和映射</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ch03/340_tree.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">4.4. </span>树和森林<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>树是一种极其重要，应用极其广泛的数据结构，可以说没有一款软件可以离开树这种数据结构。其实在生活中树形结构也是普遍存在的。比如某公司的组织机构图：</p>
+<a class="reference internal image-reference" href="../_images/340_organization.png"><img alt="../_images/340_organization.png" src="../_images/340_organization.png" style="width: 50%;" /></a>
+<p>又比如古代大家族的族谱：</p>
+<img alt="../_images/340_family_tree.jpg" src="../_images/340_family_tree.jpg" />
+<p>而计算机软件领域所谓的树就是对生活中大量的这种层次型组织进行抽象后总结出来一种极为重要的非线性数据结构。所谓非线性数据结构，就是说数据项不是一个接一个地排列成一条线的形状的。</p>
+<p><strong>树</strong>（tree）是一种单向的层次结构，数据存放的地方叫做树的<strong>节点</strong>（node），每一个节点存放一个数据项（或者叫元素），节点之间有层次上的先后关系。每一个节点在它的下一层可以直接连接着零个或者若干个<strong>子节点</strong>（child），如果一个节点没有子节点，那么就称之为<strong>叶子节点</strong>（leaf）。每一个节点在它的上一层都直接连接着零个或一个<strong>父节点</strong>（parent），每一个节点都至多只有一个父节点，整棵树上只有且仅有一个节点没有父节点，这个节点就叫做这棵树的<strong>根节点</strong>（root）。</p>
+<p>一个节点，它的子节点可能有多个，那么这些子节点就互为<strong>兄弟节点</strong>，也叫<strong>同胞节点</strong>（sibling）。一个节点的子节点也可以有它自己的子节点，子节点的子节点也可以有它们自己的子节点……如此下去，从一个节点出发向下衍生出来的子子孙孙们，都称为它的<strong>后代节点</strong>（descendant）。反过来看，从一个节点沿着向上的路径，所有它的父节点、父节点的父节点……都称为它的<strong>祖先节点</strong>（ancestor）。</p>
+<p>按照定义，最简单的树只有一个根节点，这个根节点没有子节点，也就是一个孤零零的根，这虽然很难看，但它也是一棵树。每一个节点的子节点数量称为它的<strong>分叉数</strong>，如果一棵树中除了叶子以外，其他所有节点的分叉数都有一个共同的上限，都最多有n个分叉，那么我们就称这样的树为<strong>n叉树</strong>。所有树结构中最为重要的一类就是所谓的<strong>二叉树</strong>，即除了叶子以外，每一个节点都有最多两个子节点。</p>
+<p>树是有<strong>高度</strong>的，我们会对树的每一层进行编号，树根所在的为第0层，根节点的子节点是第1层，依此类推，直到最低的叶子节点所在的层。一棵树一共有几层，就称它的高度是几。因此，一棵树如果高度为 <span class="math notranslate nohighlight">\(h\)</span>，那么它的最低的叶子节点所在的就是第 <span class="math notranslate nohighlight">\(h-1\)</span> 层。</p>
+<p>作为一种数据结构的树，我们通常用小圆圈来表示节点，用连接父子节点的直线表示其先后代关系，把根画在最上方，依次向下摆放各层的节点，同一层的所有节点放在同一条水平线上。例如：</p>
+<img alt="../_images/340_trees.png" src="../_images/340_trees.png" />
+<p>如果把若干棵树放在一起形成一个组，这样形成的新的数据结构我们就称之为<strong>森林</strong>（forest）。森林里可以只有一棵树，所以每一棵单独的树本身也就是一个森林。</p>
+<p>本部分重点要学习的内容是二叉树及其应用，包括二叉检索树和堆等等，另外也会学习一部分关于通常的树和森林的知识。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sec03/334_set.html" title="4.3.4. STL容器：集合和映射"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
