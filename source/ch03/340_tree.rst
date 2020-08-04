@@ -32,4 +32,5 @@
    :maxdepth: 2
 
    sec04/341_bitree_1
+   sec04/342_bitree_2
 
