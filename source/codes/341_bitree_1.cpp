@@ -1,22 +1,33 @@
 #include <cstddef>
 #include <cstdio>
 
+template<typename T>
 struct Node {
-	int _value;
-	Node *_left;
-	Node *_right;
+	T _value;
+	Node *left;
+	Node *right;
 
-	Node(int value) { _value = value; _left = NULL; _right = NULL; }
-
-	int &value() { return _value; }
+	Node(const T &value) { _value = value; left = NULL; right = NULL; }
+	T &value() { return _value; }
 };
+
+typedef Node<int> *BiTree;	// 定义一个具体的二叉树指针类型，数据为int型
 
 int main()
 {
-	Node *root = new Node(4);
-	printf("%d\n", root->value());
+	// 生成根节点，值为4
+	BiTree root = new Node<int>(4);
+	printf("root = %d\n", root->value());
+	// 修改根节点的值
 	++root->value();
-	printf("%d\n", root->value());
+	printf("root = %d\n", root->value());
+	// 添加左右子节点
+	BiTree left_child = new Node<int>(10);
+	root->left = left_child;
+	root->right = new Node<int>(20);
+	printf("left = %d, right = %d\n", root->left->value(), root->right->value());
+	delete root->left;
+	delete root->right;
 	delete root;
 	
 	return 0;
