@@ -11,7 +11,7 @@ struct Node {
 	T &value() { return _value; }
 };
 
-typedef Node<int> *BiTree;	// 定义一个具体的二叉树指针类型，数据为int型
+typedef Node<int> *BiTree;	// 定义一个具体的二叉树节点的指针类型，数据为int型
 
 int main()
 {
