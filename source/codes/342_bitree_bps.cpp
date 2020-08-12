@@ -11,7 +11,7 @@ struct Node {
 	Node() { left = NULL; right = NULL; }
 };
 
-typedef Node *BiTree;
+typedef Node *BiTree;	// 将节点指针定义为一个自定义类型
 
 BiTree create(int n);			// 按层序创建完全二叉树
 void show_by_layers(BiTree root);	// 按层序输出二叉树节点数据（层序遍历，或宽度优先搜索）
