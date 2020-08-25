@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.4.3. 二叉树(III) 先序遍历与深度优先搜索 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.4.2. 二叉树(II) 层序遍历与宽度优先搜索" href="342_bitree_2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="342_bitree_2.html" title="4.4.2. 二叉树(II) 层序遍历与宽度优先搜索"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../340_tree.html" accesskey="U"><span class="section-number">4.4. </span>树和森林</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.4.3. 二叉树(III) 先序遍历与深度优先搜索</a><ul>
+<li><a class="reference internal" href="#id1">4.4.3.1. 先序遍历的递归实现</a></li>
+<li><a class="reference internal" href="#id2">4.4.3.2. 深度优先搜索</a></li>
+<li><a class="reference internal" href="#id3">4.4.3.3. 先序遍历非递归实现</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="342_bitree_2.html"
+                        title="上一章"><span class="section-number">4.4.2. </span>二叉树(II) 层序遍历与宽度优先搜索</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec04/343_bitree_3.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="iii">
+<h1><span class="section-number">4.4.3. </span>二叉树(III) 先序遍历与深度优先搜索<a class="headerlink" href="#iii" title="永久链接至标题">¶</a></h1>
+<p>二叉树的三种遍历，是二叉树最为重要的基础知识，分别是<strong>先序遍历</strong>（也叫<strong>前序遍历</strong>）、<strong>中序遍历</strong>和<strong>后序遍历</strong>，必须熟练掌握。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">4.4.3.1. </span>先序遍历的递归实现<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>树是一种可以递归定义的数据结构，二叉树当然也是。一棵二叉树可以被定义为一个根节点及其左右两棵子树，这两棵子树也都是二叉树，这就是二叉树的递归定义。其中根节点和两棵子树都可以为空，如果根节点为空那么称之为一棵<strong>空树</strong>。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>根据二叉树的递归定义，在编程时实际上树、子树、节点三者是等价的。用一个节点就可以代表以该节点为根的一棵二叉树，而树和子树则完全是相同的东西。</p>
+</div>
+<p>二叉树的先序遍历（Pre-ordered traversal）是指以这样一种顺序来进行遍历：<em>先访问根节点，然后遍历其左子树，然后遍历其右子树，对左右子树的遍历采用相同的规则</em>，如下图所示：</p>
+<img alt="../../_images/343_pre_ord_concept.png" src="../../_images/343_pre_ord_concept.png" />
+<p>可以看出，这显然是一个递归过程，可以用下面的算法来描述：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">二叉树先序遍历算法</p>
+<p><span class="math notranslate nohighlight">\(\text{PreOrderedTraversal}(tree, visit):\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree == \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ visit(tree)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{PreOrderedTraversal}(tree.left, visit)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{PreOrderedTraversal}(tree.right, visit)\)</span></p>
+</div>
+<p>其中算法参数 <span class="math notranslate nohighlight">\(tree\)</span> 是要遍历的二叉树的根节点，<span class="math notranslate nohighlight">\(tree.left\)</span> 和 <span class="math notranslate nohighlight">\(tree.right\)</span> 分别是它的左右子节点，<span class="math notranslate nohighlight">\(visit\)</span> 是访问节点中数据项的方法。</p>
+<p>根据前面介绍的<code class="docutils literal notranslate"><span class="pre">树=子树=根节点</span></code>的原则，左右子节点也用来表示左右子树，左右子树同时也是二叉树，所以上述算法只用两次递归调用就可以完成先序遍历，最前面的判断语句是递归终止条件，即遇到空树就直接返回。</p>
+<p>下面看一个具体例子，我们要对下面这样一棵二叉树进行先序遍历：</p>
+<img alt="../../_images/343_pre_ord_example.png" src="../../_images/343_pre_ord_example.png" />
+<p>总的原则就是按照先根、后左子树、后右子树的顺序进行递归的遍历，我们用灰色表示还没有被访问到的节点，用绿色表示已经被访问过的节点，用虚线框表示下一步要遍历的子树。整个过程一共9步，完整地访问所有9个节点各一次，如下图所示：</p>
+<img alt="../../_images/343_pre_ord_r_1.png" src="../../_images/343_pre_ord_r_1.png" />
+<img alt="../../_images/343_pre_ord_r_2.png" src="../../_images/343_pre_ord_r_2.png" />
+<p>对其中某些片段进行分析。观察树中以节点4为根的子树，它的左子树为节点7，右子树为节点8。第3步进入这棵树，先访问根节点4，随后在第4步访问了节点7之后，其左子树已经全部遍历完了，于是下一步就进入它的右子树，即节点8。第5步节点8也访问完之后，这棵以节点4为根的子树就遍历完了，于是第6步就进入它的父节点2的右子树，即节点5。</p>
+<p>再观察第7步，此时进入了以节点6为根的子树，第8步先访问其根节点6，但是它没有左子树，所以下一步直接进入它的右子树，即节点9。第9步访问完右子树的根节点9，发现它没有子树，所以整个以6为根的子树部分遍历就结束了。这时候应该回到节点6的父节点3的右子树，但是节点3没有右子树，所以节点3为根的子树部分也遍历完了。进一步回到节点3的父节点1，这是整棵树的根节点，而且节点3是节点1的右子树，这就说明整棵树的先序遍历全部结束了。最终得到的先序遍历序列为：<code class="docutils literal notranslate"><span class="pre">124785369</span></code>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">先序遍历序列的特点</p>
+<p>先序遍历得到的节点访问序列的特点是：<em>序列的第一个元素对应了整棵树的根节点，但是无法分辨后面的其他元素属于那棵子树。</em></p>
+<p>例如先序序列 <code class="docutils literal notranslate"><span class="pre">123</span></code>，我们可以确定根节点一定是 <code class="docutils literal notranslate"><span class="pre">1</span></code>，但是后面的 <code class="docutils literal notranslate"><span class="pre">23</span></code> 就无法确定所在位置了，事实上下面几种二叉树的先序序列都是 <code class="docutils literal notranslate"><span class="pre">123</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  1            1        1       1        1
+ / \          /        /         \        \
+2   3        2        2           2        2
+            /          \         /          \
+           3            3       3            3
+</pre></div>
+</div>
+<p><em>仅凭一个先序序列，无法还原出二叉树。</em></p>
+</div>
+<p>要实现这样一个先序遍历算法的程序可以说是再简单不过了，我们继续沿用数据项为整数的示例，下面是树节点的结构类型定义：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Node</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
+
+	<span class="n">Node</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="n">left</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="n">right</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">typedef</span> <span class="n">Node</span> <span class="o">*</span><span class="n">BiTree</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>可以用下面的代码来构造出示例中的二叉树，当然也可以用类似的方法来自己构造一些不同形状的二叉树用于测试：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>	<span class="c1">// 创建测试用二叉树</span>
+	<span class="n">BiTree</span> <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">right</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">right</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>利用函数递归调用来实现真的非常非常简单（假设节点访问只是输出其中的数据）：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">pre_ord_trav</span><span class="p">(</span><span class="n">BiTree</span> <span class="n">tree</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">tree</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">tree</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+		<span class="n">pre_ord_trav</span><span class="p">(</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+		<span class="n">pre_ord_trav</span><span class="p">(</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">4.4.3.2. </span>深度优先搜索<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>上一节我们看到过二叉树的层序遍历是和宽度优先搜索相对应的，现在我们将看到先序遍历是和深度优先搜索相对应的。如果要在一棵二叉树中搜索一个特定的节点，按照先序遍历的顺序逐个节点去查找的过程就叫做<strong>深度优先搜索</strong>（DPS）。宽度优先搜索是先探索所有同层节点，逐层向下推进直到最底层。深度优先搜索则是优先向下探索，沿一个方向一路走到叶子，然后再回上一层，换另一个方向继续向下探索。向下探索的过程叫做下探，往回换方向的过程叫做回溯。和BPS一样，DPS也不仅仅是针对二叉树的，它能适用于任何形状的树，甚至是图结构。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>五大算法中的回溯算法和分支限界算法就是基于BPS和DPS两种搜索来构造的，所以BPS和DPS是极其重要的基础算法，在后面讲解回溯算法时会进行详细介绍。</p>
+</div>
+<p>为什么说二叉树的DPS就是依先序遍历的顺序进行的搜索，可以看一下上面这个例子的遍历过程。我们用箭头标出了整个遍历的节点游历顺序，其中红色箭头对应了下探过程，蓝色箭头对应回溯过程。</p>
+<img alt="../../_images/343_bitree_dps.png" src="../../_images/343_bitree_dps.png" />
+<p>可以看出，遍历的过程果然就是沿着DPS的搜索方式完成的。首先从根节点开始一路沿着左支下探，直到最左端的节点，然后一层一层的回溯，每回溯一层就尝试去访问它的右支。一旦回溯进入右支，仍然按照同样的规则，先沿着左支一路下探到最左下位置的节点，然后层层回溯。注意，沿左路下探抵达的最左端的节点并不一定是叶子节点，而是指没有左子树的那个节点，如本例中的节点6。</p>
+<p>所以理论上我们可以用上面的先序遍历算法来改造成二叉树的DPS算法，只要在访问节点的方法 <span class="math notranslate nohighlight">\(visit\)</span> 中进行条件判断，一旦发现了符合条件的搜索结果，立即终止遍历过程即可。但是在实际编程的时候却是存在一些问题的，事实上要彻底终止一个递归过程可能会比较麻烦，有可能需要设置额外的标识变量（flag）来表明一次函数返回是正常的递归返回还是要终止整个递归过程。</p>
+<p>另外，递归进行先序遍历本身也有一点小小的不足。我们知道利用函数的递归调用来实现递归过程时空间和时间都会有比较多的消耗，如果二叉树的结构比较庞大，深度很深的话，递归过程可能会耗尽内存，造成栈溢出错误（Stack Overflow），这是一个和段错误一样经典的运行时错误。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">题外话</p>
+<p>全世界最著名的计算机知识问答网站就叫做StackOverflow，可见这个错误在软件开发领域有多么的“深入人心”。</p>
+</div>
+<p>尽管很少会有一棵真实存在的二叉树大到能导致Stack Overflow的程度，但如果是在DPS算法中就不一定了，DPS算法要搜索的树往往不是真实存在的树，而是随着搜索不断生长的虚拟树。如果用递归的方法来进行DPS，发生栈溢出还是很有可能的。况且运行速度也会受影响。</p>
+<p>因此，我们还是希望能有一种不采用递归调用来实现的DPS算法，在二叉树来说就是非递归方式的先序遍历算法。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.4.3.3. </span>先序遍历非递归实现<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>不使用函数递归调用的先序遍历（或DPS）算法，要用到一个栈来作为辅助。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>在算法领域有这样一条规律：递推性质的过程在实现的时候常要用到队列，递归的过程则往往利用栈。</p>
+</div>
+<p>先序遍历所使用的栈，和层序遍历使用的队列作用是一样的，就是用来存放接下来要遍历的子树的根。每一次从栈中取出栈顶上的节点，它就是接下来要遍历的子树的根节点。依照先序遍历的规则，根节点先访问，所以弹栈后自然是先访问这个节点，然后依次将其右子节点和左子节点压栈，它们就是接下来要遍历的子树的树根。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>由于先序遍历的顺序是“根、左、右”，即根节点访问之后先访问左子树，而栈是后入先出的，所以在压栈的时候要将顺序反过来，先压右儿子再压左儿子。</p>
+</div>
+<p>下面先看示例，刚才这棵二叉树，现在我们用非递归调用的方法来对它进行先序遍历，第一步先将整棵树的根节点压栈，如下图：</p>
+<img alt="../../_images/343_pre_ord_norec_1.png" src="../../_images/343_pre_ord_norec_1.png" />
+<p>接下来就不断重复前面所述的步骤，从栈顶节点开始，边访问边压栈，直到栈弹空为止，先序遍历就完成了。</p>
+<img alt="../../_images/343_pre_ord_norec_2.png" src="../../_images/343_pre_ord_norec_2.png" />
+<img alt="../../_images/343_pre_ord_norec_3.png" src="../../_images/343_pre_ord_norec_3.png" />
+<p>下面是二叉树先序遍历的非递归调用版算法，也是所有DPS算法的基本模式：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">二叉树先序遍历算法</p>
+<p><span class="math notranslate nohighlight">\(\text{PreOrderTrav}(tree, visit):\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ s \leftarrow \text{AN EMPTY STACK}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree = \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ s.push(tree)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{WHILE}\ \ \ \ s\ \ \ \ \text{IS NOT EMPTY}:\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n \leftarrow s.top()\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s.pop()\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visit(n)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{IF}\ \ \ \ n.left\neq\text{NULL}\ \ \ \ \text{THEN}\ \ \ \ s.push(n.left)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{IF}\ \ \ \ n.right\neq\text{NULL}\ \ \ \ \text{THEN}\ \ \ \ s.push(n.right)\)</span></p>
+</div>
+<p>要实现上面这段代码事实上也是极简单的，基本上只是把算法伪代码一一对应地翻译成C++语言而已，如下面这个函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stack&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">pre_ord_trav_norec</span><span class="p">(</span><span class="n">BiTree</span> <span class="n">tree</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 如果树根为空，则直接返回</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tree</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">// 这是存放待处理节点的栈</span>
+	<span class="n">stack</span><span class="o">&lt;</span><span class="n">BiTree</span><span class="o">&gt;</span> <span class="n">stk</span><span class="p">;</span>
+	<span class="c1">// 从根节点开始遍历</span>
+	<span class="n">stk</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tree</span><span class="p">);</span>
+	<span class="c1">// 遍历直到栈空为止</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">stk</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+		<span class="c1">// 获取当前栈顶节点</span>
+		<span class="n">BiTree</span> <span class="n">node</span> <span class="o">=</span> <span class="n">stk</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+		<span class="c1">// 访问该节点（输出其值）</span>
+		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+		<span class="c1">// 该节点已经访问过，从栈中弹出</span>
+		<span class="n">stk</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+		<span class="c1">// 依次将其右儿子和左儿子压栈，作为待访问节点。</span>
+		<span class="c1">// 依据栈的先进后出规则，左儿子今后会先出栈，所以下一轮循环访问</span>
+		<span class="c1">// 的将是当前所访问节点的左儿子。</span>
+		<span class="c1">// 而访问了左儿子之后，又回依次压入左儿子的右、左两个儿子......</span>
+		<span class="c1">// 所以当前所访问的节点之后一定是先访问完它的左子树后才会接着</span>
+		<span class="c1">// 访问它的右子树。</span>
+		<span class="c1">// 每一个节点被访问之后都是按照这个规则开始它的后续访问，所以</span>
+		<span class="c1">// 最终实现的就是先序遍历，也就是深度优先的规则。</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span> <span class="n">stk</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>  <span class="n">stk</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>1、读懂本节给出的所有代码，将它们整合进一个程序里，然后自己编写 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数，完成测试用二叉树的创建和两种先序遍历算法函数的测试。</p>
+<p>2、上一节已经说过，需要有一个用于销毁整棵二叉树的工具函数，并且在上一节我们用层序的方法来完成了这样一个函数 <code class="docutils literal notranslate"><span class="pre">destroy()</span></code>。那么请问：能不能用先序遍历的顺序来销毁呢？如果能的话，是使用递归调用的方式呢还是非递归调用？请尝试正确地写出一个先序遍历顺序的 <code class="docutils literal notranslate"><span class="pre">destroy()</span></code> 函数并进行测试。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="342_bitree_2.html" title="4.4.2. 二叉树(II) 层序遍历与宽度优先搜索"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../340_tree.html" ><span class="section-number">4.4. </span>树和森林</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>

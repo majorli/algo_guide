@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
   <head>
     <meta charset="utf-8" />
-    <title>4.4.2. 二叉树(II) 层序访问与宽度优先搜索 &#8212; C++算法编程指南 0.1 文档</title>
+    <title>4.4.2. 二叉树(II) 层序遍历与宽度优先搜索 &#8212; C++算法编程指南 0.1 文档</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="next" title="4.4.3. 二叉树(III) 先序遍历与深度优先搜索" href="343_bitree_3.html" />
     <link rel="prev" title="4.4.1. 二叉树(I) 基础知识" href="341_bitree_1.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="../../genindex.html" title="总目录"
              accesskey="I">索引</a></li>
         <li class="right" >
-          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+          <a href="343_bitree_3.html" title="4.4.3. 二叉树(III) 先序遍历与深度优先搜索"
              accesskey="N">下一页</a> |</li>
         <li class="right" >
           <a href="341_bitree_1.html" title="4.4.1. 二叉树(I) 基础知识"
@@ -41,7 +41,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">目录</a></h3>
   <ul>
-<li><a class="reference internal" href="#">4.4.2. 二叉树(II) 层序访问与宽度优先搜索</a><ul>
+<li><a class="reference internal" href="#">4.4.2. 二叉树(II) 层序遍历与宽度优先搜索</a><ul>
 <li><a class="reference internal" href="#id1">4.4.2.1. 层序创建完全二叉树</a></li>
 <li><a class="reference internal" href="#id2">4.4.2.2. 二叉树的层序遍历</a></li>
 <li><a class="reference internal" href="#id3">4.4.2.3. 二叉树的层序销毁</a></li>
@@ -53,8 +53,8 @@
   <p class="topless"><a href="341_bitree_1.html"
                         title="上一章"><span class="section-number">4.4.1. </span>二叉树(I) 基础知识</a></p>
   <h4>下一个主题</h4>
-  <p class="topless"><a href="../../400_basic_algo_design.html"
-                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <p class="topless"><a href="343_bitree_3.html"
+                        title="下一章"><span class="section-number">4.4.3. </span>二叉树(III) 先序遍历与深度优先搜索</a></p>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
     <ul class="this-page-menu">
@@ -81,7 +81,7 @@
           <div class="body" role="main">
             
   <div class="section" id="ii">
-<h1><span class="section-number">4.4.2. </span>二叉树(II) 层序访问与宽度优先搜索<a class="headerlink" href="#ii" title="永久链接至标题">¶</a></h1>
+<h1><span class="section-number">4.4.2. </span>二叉树(II) 层序遍历与宽度优先搜索<a class="headerlink" href="#ii" title="永久链接至标题">¶</a></h1>
 <p>前面学习了二叉树的基本知识和链式、顺序两种存储结构的实现方法。但是我们发现，光这些完全不足以有效地使用二叉树结构，甚至无法有效地创建出一棵二叉树。</p>
 <p>造成这一问题的原因是树结构的特殊性。对于一棵二叉树中的某一个节点，不能像线性表元素一样有一个确定的毫无歧义的序号来标定它所在的位置。要让计算机程序知道二叉树中某一个节点的位置，需要一条从根节点出发的路径。因此，如果我们只有一系列的数据项是不足以创建出所需要的二叉树的，还需要数据项的路径或确定路径的规则才行。</p>
 <p>实际的二叉树节点路径规则是多种多样的，不同的规则能生成出不同的二叉树，比如二叉检索树、红黑树等。这一节我们将介绍一种最简单的层序访问规则，按从上到下的顺序从根节点依次访问直到最底层，在同一层中按照从左到右的顺序依次访问所有节点，遇到空节点直接跳过。这个规则可以归纳为<strong>从上到下、从左到右</strong>。</p>
@@ -275,7 +275,7 @@
           <a href="../../genindex.html" title="总目录"
              >索引</a></li>
         <li class="right" >
-          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+          <a href="343_bitree_3.html" title="4.4.3. 二叉树(III) 先序遍历与深度优先搜索"
              >下一页</a> |</li>
         <li class="right" >
           <a href="341_bitree_1.html" title="4.4.1. 二叉树(I) 基础知识"
