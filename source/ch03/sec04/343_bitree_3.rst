@@ -22,7 +22,7 @@
 
    :math:`\text{PreOrderedTraversal}(tree, visit):`
 
-   :math:`\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree == \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}`
+   :math:`\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree = \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}`
 
    :math:`\ \ \ \ \ \ \ \ visit(tree)`
 

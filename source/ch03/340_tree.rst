@@ -34,4 +34,5 @@
    sec04/341_bitree_1
    sec04/342_bitree_2
    sec04/343_bitree_3
+   sec04/344_bitree_4
 
