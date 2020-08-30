@@ -138,9 +138,9 @@
 
 下面是二叉树先序遍历的非递归调用版算法，也是所有DPS算法的基本模式：
 
-.. admonition:: 二叉树先序遍历算法
+.. admonition:: 非递归二叉树先序遍历算法
 
-   :math:`\text{PreOrderTrav}(tree, visit):`
+   :math:`\text{PreOrderTravWOR}(tree, visit):`
 
    :math:`\ \ \ \ \ \ \ \ s \leftarrow \text{AN EMPTY STACK}`
 
