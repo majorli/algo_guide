@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="next" title="4.4.4. 二叉树(IV) 中序遍历" href="344_bitree_4.html" />
     <link rel="prev" title="4.4.2. 二叉树(II) 层序遍历与宽度优先搜索" href="342_bitree_2.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="../../genindex.html" title="总目录"
              accesskey="I">索引</a></li>
         <li class="right" >
-          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+          <a href="344_bitree_4.html" title="4.4.4. 二叉树(IV) 中序遍历"
              accesskey="N">下一页</a> |</li>
         <li class="right" >
           <a href="342_bitree_2.html" title="4.4.2. 二叉树(II) 层序遍历与宽度优先搜索"
@@ -53,8 +53,8 @@
   <p class="topless"><a href="342_bitree_2.html"
                         title="上一章"><span class="section-number">4.4.2. </span>二叉树(II) 层序遍历与宽度优先搜索</a></p>
   <h4>下一个主题</h4>
-  <p class="topless"><a href="../../400_basic_algo_design.html"
-                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <p class="topless"><a href="344_bitree_4.html"
+                        title="下一章"><span class="section-number">4.4.4. </span>二叉树(IV) 中序遍历</a></p>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
     <ul class="this-page-menu">
@@ -96,7 +96,7 @@
 <div class="admonition- admonition">
 <p class="admonition-title">二叉树先序遍历算法</p>
 <p><span class="math notranslate nohighlight">\(\text{PreOrderedTraversal}(tree, visit):\)</span></p>
-<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree == \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree = \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ visit(tree)\)</span></p>
 <p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{PreOrderedTraversal}(tree.left, visit)\)</span></p>
 <p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{PreOrderedTraversal}(tree.right, visit)\)</span></p>
@@ -202,8 +202,8 @@
 <img alt="../../_images/343_pre_ord_norec_3.png" src="../../_images/343_pre_ord_norec_3.png" />
 <p>下面是二叉树先序遍历的非递归调用版算法，也是所有DPS算法的基本模式：</p>
 <div class="admonition- admonition">
-<p class="admonition-title">二叉树先序遍历算法</p>
-<p><span class="math notranslate nohighlight">\(\text{PreOrderTrav}(tree, visit):\)</span></p>
+<p class="admonition-title">非递归二叉树先序遍历算法</p>
+<p><span class="math notranslate nohighlight">\(\text{PreOrderTravWOR}(tree, visit):\)</span></p>
 <p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ s \leftarrow \text{AN EMPTY STACK}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree = \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ s.push(tree)\)</span></p>
@@ -271,7 +271,7 @@
           <a href="../../genindex.html" title="总目录"
              >索引</a></li>
         <li class="right" >
-          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+          <a href="344_bitree_4.html" title="4.4.4. 二叉树(IV) 中序遍历"
              >下一页</a> |</li>
         <li class="right" >
           <a href="342_bitree_2.html" title="4.4.2. 二叉树(II) 层序遍历与宽度优先搜索"
