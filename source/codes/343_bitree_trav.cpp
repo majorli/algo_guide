@@ -17,13 +17,13 @@ typedef Node *BiTree;
 void destroy(BiTree tree);
 
 void pre_ord_trav(BiTree tree);
-void pre_ord_trav_norec(BiTree tree);
+void pre_ord_trav_wor(BiTree tree);
 
 void in_ord_trav(BiTree tree);
-void in_ord_trav_norec(BiTree tree);
+void in_ord_trav_wor(BiTree tree);
 
 void post_ord_trav(BiTree tree);
-void post_ord_trav_norec(BiTree tree);
+void post_ord_trav_wor(BiTree tree);
 
 int main()
 {
@@ -43,16 +43,16 @@ int main()
 	pre_ord_trav(tree);
 	cout << endl;
 	cout << "Pre-ordered traversal  (no-re): ";
-	pre_ord_trav_norec(tree);
+	pre_ord_trav_wor(tree);
 	cout << endl;
 	cout << "Pre-ordered traversal an empty tree: ";
-	pre_ord_trav_norec(NULL);
+	pre_ord_trav_wor(NULL);
 	cout << endl;
 	cout << "Pre-ordered traversal a single node tree: ";
-	pre_ord_trav_norec(tree->left->right);
+	pre_ord_trav_wor(tree->left->right);
 	cout << endl;
 	cout << "Pre-ordered traversal a linear tree: ";
-	pre_ord_trav_norec(tree->right);
+	pre_ord_trav_wor(tree->right);
 	cout << endl;
 
 	// 中序遍历测试
@@ -60,16 +60,16 @@ int main()
 	in_ord_trav(tree);
 	cout << endl;
 	cout << "In-ordered traversal   (no-re): ";
-	in_ord_trav_norec(tree);
+	in_ord_trav_wor(tree);
 	cout << endl;
 	cout << "In-ordered traversal an empty tree: ";
-	in_ord_trav_norec(NULL);
+	in_ord_trav_wor(NULL);
 	cout << endl;
 	cout << "In-ordered traversal a single node tree: ";
-	in_ord_trav_norec(tree->left->right);
+	in_ord_trav_wor(tree->left->right);
 	cout << endl;
 	cout << "In-ordered traversal a linear tree: ";
-	in_ord_trav_norec(tree->right);
+	in_ord_trav_wor(tree->right);
 	cout << endl;
 
 	// 后序遍历测试
@@ -77,16 +77,16 @@ int main()
 	post_ord_trav(tree);
 	cout << endl;
 	cout << "Post-ordered traversal (no-re): ";
-	post_ord_trav_norec(tree);
+	post_ord_trav_wor(tree);
 	cout << endl;
 	cout << "Post-ordered traversal an empty tree: ";
-	post_ord_trav_norec(NULL);
+	post_ord_trav_wor(NULL);
 	cout << endl;
 	cout << "Post-ordered traversal a single node tree: ";
-	post_ord_trav_norec(tree->left->right);
+	post_ord_trav_wor(tree->left->right);
 	cout << endl;
 	cout << "Post-ordered traversal a linear tree: ";
-	post_ord_trav_norec(tree->right);
+	post_ord_trav_wor(tree->right);
 	cout << endl;
 
 	destroy(tree);
@@ -116,7 +116,7 @@ void pre_ord_trav(BiTree tree)
 	}
 }
 
-void pre_ord_trav_norec(BiTree tree)
+void pre_ord_trav_wor(BiTree tree)
 {
 	// 如果树根为空，则直接返回
 	if (!tree) return;
@@ -154,7 +154,7 @@ void in_ord_trav(BiTree tree)
 	}
 }
 
-void in_ord_trav_norec(BiTree tree)
+void in_ord_trav_wor(BiTree tree)
 {
 	// 这是下一棵要遍历的子树，并不是下一个要访问的节点
 	// 看树结构的代码，一定要牢记：根节点就是树，树就是子树
@@ -214,7 +214,7 @@ void post_ord_trav(BiTree tree)
 	}
 }
 
-void post_ord_trav_norec(BiTree tree)
+void post_ord_trav_wor(BiTree tree)
 {
 	// node是下一棵要遍历的子树，last_node是上一次刚遍历过的子树
 	// 因为是后序遍历，所以last_node一定是刚访问过的那个节点
