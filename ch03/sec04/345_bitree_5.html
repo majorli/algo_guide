@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>4.4.5. 二叉树(V) 后序遍历和遍历算法分析 &#8212; C++算法编程指南 0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script async="async" src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5. 算法设计方法" href="../../400_basic_algo_design.html" />
+    <link rel="prev" title="4.4.4. 二叉树(IV) 中序遍历" href="344_bitree_4.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="344_bitree_4.html" title="4.4.4. 二叉树(IV) 中序遍历"
+             accesskey="P">上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../340_tree.html" accesskey="U"><span class="section-number">4.4. </span>树和森林（一）</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.4.5. 二叉树(V) 后序遍历和遍历算法分析</a><ul>
+<li><a class="reference internal" href="#id1">4.4.5.1. 后序遍历的概念及其递归实现</a></li>
+<li><a class="reference internal" href="#id2">4.4.5.2. 后序遍历的非递归实现</a></li>
+<li><a class="reference internal" href="#id3">4.4.5.3. 二叉树遍历算法小结</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="344_bitree_4.html"
+                        title="上一章"><span class="section-number">4.4.4. </span>二叉树(IV) 中序遍历</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="../../400_basic_algo_design.html"
+                        title="下一章"><span class="section-number">5. </span>算法设计方法</a></p>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ch03/sec04/345_bitree_5.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="v">
+<h1><span class="section-number">4.4.5. </span>二叉树(V) 后序遍历和遍历算法分析<a class="headerlink" href="#v" title="永久链接至标题">¶</a></h1>
+<p>这一节学习后序遍历及其两种实现，然后分析一下二叉树遍历算法的时间复杂度。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">4.4.5.1. </span>后序遍历的概念及其递归实现<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>后序遍历，显然就是按照“左右中”的顺序，先遍历左子树，再遍历右子树，最后访问根节点的遍历方法，子树的遍历当然也是用后序遍历的规则，构成一个递归过程。</p>
+<img alt="../../_images/345_postord_concept.png" src="../../_images/345_postord_concept.png" />
+<p>所以后序遍历的递归算法只不过是将先序或者中序遍历递归算法中访问根节点的那一句放到最后面而已：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">二叉树后序遍历算法</p>
+<p><span class="math notranslate nohighlight">\(\text{PostOrderedTraversal}(tree, visit):\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{IF}\ \ \ \ tree = \text{NULL}\ \ \ \ \text{THEN}\ \ \ \ \text{RETURN}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{PostOrderedTraversal}(tree.left, visit)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{PostOrderedTraversal}(tree.right, visit)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ visit(tree)\)</span></p>
+</div>
+<p>看起来一切都是那么简单得顺理成章，让我们仍然用前节的那棵示例二叉树来模拟一下后序遍历的过程。和中序遍历相比，现在只需要改变一下表示子树遍历序列的括号位置就可以了。例如第一轮的时候得到的待定后序序列就是 <code class="docutils literal notranslate"><span class="pre">(...)</span> <span class="pre">(...)</span> <span class="pre">1</span></code>，前一个括号里将来放左子树的后序序列，后一个括号里将来放右子树的后序序列。整个过程如下图所示：</p>
+<img alt="../../_images/345_postord_1.png" src="../../_images/345_postord_1.png" />
+<p>最终得到的后序遍历序列为 <code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">8</span> <span class="pre">4</span> <span class="pre">5</span> <span class="pre">2</span> <span class="pre">9</span> <span class="pre">6</span> <span class="pre">3</span> <span class="pre">1</span></code>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>仍然使用上一节示例程序所用的结构定义，完成递归调用方式的二叉树后序遍历函数：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">post_ord_trav</span><span class="p">(</span><span class="n">BiTree</span> <span class="n">tree</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>访问节点的方式仍然仅为输出节点数据即可。</p>
+<p>编写 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 函数，构造一些不同形状的二叉树来进行测试。</p>
+</div>
+<p>后序遍历序列的特点和先序遍历一样，根据一个给定的后序序列，我们可以马上知道根节点是什么，但是无法区分出左右两棵子树的后序序列。因此，若一个后序序列和一个中序序列搭配起来，也可以还原出原二叉树的形态。</p>
+<p>但是后序序列加上先序序列的组合是无法还原二叉树的，因为仍然没有办法区分子树。例如下面这两棵非常简单的二叉树，它们本身并不相同，但是有完全相同的先序序列和后序序列：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  1                 1
+ /                   \
+2                     2
+</pre></div>
+</div>
+<p>这两棵二叉树的先序遍历序列都是 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span></code>，后序遍历序列都是 <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">1</span></code>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>给定先序遍历序列 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span> <span class="pre">3</span></code> 和后序遍历序列 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">2</span> <span class="pre">1</span></code>，试着找出所有可能的二叉树。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">4.4.5.2. </span>后序遍历的非递归实现<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>后序遍历的非递归实现和中序遍历非常相似，只有很小的一点改动。</p>
+<p>先来回顾一下中序遍历的非递归算法。算法中最核心的部分是一个栈，它用来依次存放从某个节点（最初是根节点）开始一路向左向下探索过程中途径的各个子树根节点。当出现回溯的时候，如果是从左支回溯到父节点，按照算法压栈的顺序，父节点一定在栈顶，所以依照“左中右”的顺序访问栈顶节点并弹栈，然后将其右儿子作为接下来要遍历的子树树根即可。如果发生从右支的回溯，根据中序遍历规则，父节点肯定已经从栈中弹掉了，如果父节点是爷爷节点的右儿子，即上一层也是从右支回溯，那么爷爷节点也一定已经从栈中弹掉了，依此类推，一路向上回溯总归会归结于两种情况：要么抵达了一次从左支的回溯，处理这一回溯即可，要么一路右回溯直到整棵树的根节点，整个中序遍历过程结束。</p>
+<p>综上所述，中序遍历的规则决定了非递归算法时只要遇到回溯，无论是从左还是从右的，都可以一样地进行处理，因为右回溯总会自动归结到左回溯的情况去（或者遍历结束）。后序遍历的非递归算法基本上也是这样一种思路，栈的用法是一样的，只是现在遇到了一个小小的问题：后序遍历在发生回溯的时候，不同的回溯方向处理方法不一样。从左支回溯的时候，要先进入父节点的右子树而不能访问父节点；从右支回溯的时候才访问父节点。这就需要我们能够知道回溯是来自于左支的还是右支的。</p>
+<p>为此我们需要一个辅助变量：上一次刚访问掉的节点。发生回溯时，如果上一次访问的节点是栈顶节点的右儿子，那么说明是从右支回溯的。另外，如果栈顶节点没有右儿子，那么虽然这次一定是从左支回溯的，但是父节点没有右子树需要遍历，所以应该视为从右支回溯来处理。</p>
+<p>所以后序遍历非递归算法中处理回溯时要判断回溯的方向，如果是从左支返回的（栈顶节点有右子树而且上一次访问的节点不是它的右儿子）就把接下来要遍历的子树设置为栈顶节点的右子树。反之，如果栈顶节点没有右子树或者上一次访问的节点就是它的右儿子，那么访问栈顶节点并弹栈，同时千万记得要更新上一次访问的节点，并将接下来要遍历的子树设置为空。</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>在访问完一个节点之后，除了要立即更新上一次访问的节点这个辅助变量外，还应该立即把接下来要遍历的子树设为空。这是因为按照后序遍历的规则，每次访问完一个节点，就说明以该节点为根的子树已经遍历完毕了，接下来应该发生一次回溯，把接下来要遍历的子树设为空就是为了在下一轮循环的时候能够正确地进入回溯的分支。</p>
+</div>
+<p>根据这个思路，我们可以通过修改中序遍历非递归算法来得到后序遍历的非递归算法。要修改的地方就是发生回溯的分支，即当接下来要遍历的子树为空的时候。在回溯的分支中我们要进一步判断是从左支还是从右支的回溯，根据回溯方向的不同采取不同的处理即可。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">非递归二叉树后序遍历算法</p>
+<p><span class="math notranslate nohighlight">\(\text{PostOrderTravWOR}(tree, visit):\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ n \leftarrow tree\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ last \leftarrow \text{NULL}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ s \leftarrow \text{AN EMPTY STACK}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \text{WHILE}\ \ \ \ s\ \ \ \ \text{IS NOT EMPTY}\ \ \ \ \text{OR}\ \ \ \ n \neq \text{NULL}:\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{IF}\ \ \ \ n \neq \text{NULL}\ \ \ \ \text{THEN}:\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s.push(n)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\leftarrow n.left\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{ELSE}:\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n \leftarrow s.top()\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{IF}\ \ \ \ n.right \neq \text{NULL}\ \ \ \ \text{AND}\ \ \ \ n.right \neq last\ \ \ \ \text{THEN}:\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n \leftarrow n.right\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{ELSE}:\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s.pop()\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visit(n)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last \leftarrow n\)</span></p>
+<p><span class="math notranslate nohighlight">\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n \leftarrow \text{NULL}\)</span></p>
+</div>
+<p>要弄明白这个算法最好的办法还是用一些简单的二叉树来自己手动模拟运行一下，例如用前面两节使用过的那个示例二叉树。</p>
+<img alt="../../_images/343_pre_ord_example.png" src="../../_images/343_pre_ord_example.png" />
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>模仿上一节讲述中序遍历时的方法，手动模拟运行上面的后序遍历非递归算法，对示例二叉树完成后序遍历。注意后序遍历的时候要多用一个辅助变量来跟踪上一次刚访问过的节点。</p>
+</div>
+<p>然后完成编程练习。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">练习</p>
+<p>编写并测试二叉树后序遍历的非递归算法函数，要求和上一节编写中序遍历函数一样。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">post_ord_trav_wor</span><span class="p">(</span><span class="n">BiTree</span> <span class="n">tree</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>这里有一个完整的三种二叉树遍历程序，可以在上述练习全部完成之后下载下来进行对照：<a class="reference download internal" download="" href="../../_downloads/912f8e2d9e6b7d3aadafdfc877ceed72/343_bitree_trav.cpp"><code class="xref download docutils literal notranslate"><span class="pre">二叉树遍历</span></code></a>。这个程序里面有非常详细的注释，如果对非递归遍历算法的理解还有所疑惑的，可以再参考一下这些注释。</p>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">4.4.5.3. </span>二叉树遍历算法小结<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>现在二叉树的层序遍历和先中后三序遍历都已经讲解完毕，这四种遍历算法都是非常重要的，在算法编程中有着极其丰富和重要的应用，必须完全掌握。那么这些遍历算法的时间复杂度是多少呢？我们用对节点的一次访问作为基本运算来进行分析。</p>
+<p>层序遍历的时间复杂度很容易分析，因为它就是单线条的从根节点开始逐层向下，每一层上从左到右地逐个节点进行访问，很显然对于节点数为 <span class="math notranslate nohighlight">\(n\)</span> 的一棵二叉树（事实上可以是任意的树而并不一定是二叉树）进行一次层序遍历的时间复杂度为 <span class="math notranslate nohighlight">\(O(n)\)</span>。</p>
+<p>先中后三序遍历的时间复杂度分析就会略为复杂一点。但是从三者的递归算法来看，三种遍历的时间复杂度是一样的，因为它们只不过是递归调用的顺序有所不同而已，其他完全一样。</p>
+<p>假设一棵二叉树的节点总数为 <span class="math notranslate nohighlight">\(n\)</span>，其根节点的左子树有 <span class="math notranslate nohighlight">\(n_1\)</span> 个节点，右子树有 <span class="math notranslate nohighlight">\(n_2\)</span> 个节点，那么三序遍历的总工作量可以表示为：</p>
+<div class="math notranslate nohighlight">
+\[W(n)=W(n_1)+W(n_2)+1\]</div>
+<p>接下来，设左子树的左子树有 <span class="math notranslate nohighlight">\(n_{11}\)</span> 个节点，左子树的右子树有 <span class="math notranslate nohighlight">\(n_{12}\)</span> 个节点，右子树的左子树有 <span class="math notranslate nohighlight">\(n_{21}\)</span> 个节点，右子树的右子树有 <span class="math notranslate nohighlight">\(n_{22}\)</span> 个节点，那么上面这个工作量的表达式可以进一步细化为：</p>
+<div class="math notranslate nohighlight">
+\[W(n)=[W(n_{11})+W(n_{12})+1]+[W(n_{21})+W(n_{22})+1]+1=W(n_{11})+W(n_{12})+W(n_{21})+W(n_{22})+3\]</div>
+<p>一直这样分解下去，例如左子树的左子树的左子树的节点数量可以表示为 <span class="math notranslate nohighlight">\(n_{111}\)</span>，而右子树的左子树的右子树的节点数量可以表示为 <span class="math notranslate nohighlight">\(n_{212}\)</span>。一直到所有的分支都抵达空子树为止，这时候，每一个工作量的分量 <span class="math notranslate nohighlight">\(W(n_{\dots})\)</span> 都为 <span class="math notranslate nohighlight">\(0\)</span>，而过程中每一次分叉都会留下一个根节点访问工作量 <span class="math notranslate nohighlight">\(1\)</span>。所以最终的工作量就是所有的节点数：<span class="math notranslate nohighlight">\(W(n)=n\)</span>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">结论</p>
+<p>二叉树的层序和先中后三种序的遍历算法时间复杂度都是 <span class="math notranslate nohighlight">\(O(n)\)</span>，其中 <span class="math notranslate nohighlight">\(n\)</span> 是节点总数。</p>
+</div>
+<p>假如任意一个数据项存放在二叉树中每一个节点位置的概率都是均等的，也就是说都是 <span class="math notranslate nohighlight">\(1\over n\)</span>，那么按照任何一种遍历顺序在二叉树中查找数据项的平均时间复杂度也一定是 <span class="math notranslate nohighlight">\(O(n)\)</span>。这在讲解顺序表元素查找的时间复杂度时已经演算过了，道理是一样的，因为二叉树遍历的结果就是一个顺序序列。</p>
+<p>那么问题来了，既然时间复杂度和顺序表是一样的，存储上也没有任何优势，实现起来还复杂了不少，那么二叉树存在的意义是什么呢？只是为了好看吗？当然不是。上面我们所说的结论有一个前提，即<em>任意一个数据项存放在二叉树中每一个节点位置的概率都是均等的</em>。但是我们可以给二叉树的节点位置定一些特定的规则，让不同的数据项根据规则存放在特定的节点上，从而打破这个前提假设，让二叉树的查找效率不再是 <span class="math notranslate nohighlight">\(O(n)\)</span>。规则都是人定的，我们可以根据问题的需要，利用二叉树的分叉结构来定义出一些特殊的二叉树，达到大大提高节点增删查改的效率的目的。可以说，没有特定的节点定位规则的二叉树都不是真正有用的二叉树。这方面一个最为经典的例子就是下一节要讲述的<strong>二叉检索树</strong>，它是二叉树最最经典的用途。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../../400_basic_algo_design.html" title="5. 算法设计方法"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="344_bitree_4.html" title="4.4.4. 二叉树(IV) 中序遍历"
+             >上一页</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">C++算法编程指南 0.1 文档</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../300_basic_data_structure.html" ><span class="section-number">4. </span>基础数据结构</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../340_tree.html" ><span class="section-number">4.4. </span>树和森林（一）</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; 版权所有 2019, Libin.
+      由 <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0 创建。
+    </div>
+  </body>
+</html>
